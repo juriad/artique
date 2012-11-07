@@ -1,0 +1,22 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+		
+	</ui:style>
+	<g:HTMLPanel>
+		<g:Anchor ui:field="signOut">Sign out</g:Anchor>
+
+
+		<g:Label ui:field="msg"></g:Label>
+		<br />
+
+		<g:TextBox ui:field="source"></g:TextBox>
+		<g:Button ui:field="add">Add</g:Button>
+		<br />
+
+		<g:Button ui:field="refresh">Refresh</g:Button>
+		<br />
+		<g:FlexTable ui:field="list"></g:FlexTable>
+	</g:HTMLPanel>
+</ui:UiBinder>
