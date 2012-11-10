@@ -4,9 +4,13 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.slim3.datastore.Attribute;
+import org.slim3.datastore.Datastore;
 import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
+
+import cz.artique.server.meta.source.RegionMeta;
+import cz.artique.shared.utils.Utils;
 
 @Model(schemaVersion = 1)
 public class Region implements Serializable {
@@ -18,11 +22,6 @@ public class Region implements Serializable {
 
 	@Attribute(version = true)
 	private Long version;
-
-	/**
-	 * Specifies how many users uses this region
-	 */
-	private int usage;
 
 	/**
 	 * Name of this region, not personalizable
@@ -42,14 +41,9 @@ public class Region implements Serializable {
 	private List<String> negativeSelectors;
 
 	/**
-	 * Reference to HTMLSource
+	 * Reference to HTMLSource (either PageChange or WebSite)
 	 */
 	private Key htmlSource;
-
-	/**
-	 * Type of this region
-	 */
-	private HTMLSourceType type;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -98,14 +92,6 @@ public class Region implements Serializable {
 		return positiveSelector;
 	}
 
-	public HTMLSourceType getType() {
-		return type;
-	}
-
-	public int getUsage() {
-		return usage;
-	}
-
 	/**
 	 * Returns the version.
 	 * 
@@ -149,14 +135,6 @@ public class Region implements Serializable {
 		this.positiveSelector = positiveSelector;
 	}
 
-	public void setType(HTMLSourceType type) {
-		this.type = type;
-	}
-
-	public void setUsage(int usage) {
-		this.usage = usage;
-	}
-
 	/**
 	 * Sets the version.
 	 * 
@@ -165,5 +143,12 @@ public class Region implements Serializable {
 	 */
 	public void setVersion(Long version) {
 		this.version = version;
+	}
+
+	public Key genKey() {
+		String prefix = "REGION";
+		String name = getName();
+		return Datastore.createKey(getHtmlSource(), RegionMeta.get(),
+			Utils.combineStringParts(prefix, name));
 	}
 }

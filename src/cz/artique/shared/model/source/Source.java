@@ -8,7 +8,6 @@ import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Link;
-import com.google.appengine.api.datastore.Text;
 
 @Model(schemaVersion = 1)
 public abstract class Source implements Serializable {
@@ -22,7 +21,7 @@ public abstract class Source implements Serializable {
 	private Long version;
 
 	/**
-	 * URL of this source; this must be unique
+	 * URL of this source
 	 */
 	private Link url;
 
@@ -32,36 +31,30 @@ public abstract class Source implements Serializable {
 	private int usage;
 
 	/**
-	 * Wraps usage
+	 * Wraps usage (true iff usage>0)
 	 */
 	private boolean enabled;
-
-	/**
-	 * Last change on this source
-	 */
-	@Attribute(unindexed = true)
-	private Date lastChange;
-
-	/**
-	 * Content of source used for comparison
-	 */
-	@Attribute(unindexed = true)
-	private Text lastContent;
 
 	/**
 	 * Planned next check
 	 */
 	private Date nextCheck;
-	
+
 	/**
 	 * How many last checks were errors
 	 */
 	private int errorSequence;
 
+	/**
+	 * Parent source
+	 */
+	private Key parent;
+
 	public Source() {}
 
-	protected Source(Link url) {
+	protected Source(Link url, Key parent) {
 		setUrl(url);
+		setParent(parent);
 	}
 
 	@Override
@@ -93,14 +86,6 @@ public abstract class Source implements Serializable {
 	 */
 	public Key getKey() {
 		return key;
-	}
-
-	public Text getLastContent() {
-		return lastContent;
-	}
-
-	public Date getLastChange() {
-		return lastChange;
 	}
 
 	public Link getUrl() {
@@ -138,21 +123,12 @@ public abstract class Source implements Serializable {
 		this.key = key;
 	}
 
-	public void setLastContent(Text lastContent) {
-		this.lastContent = lastContent;
-	}
-
-	public void setLastChange(Date lastChange) {
-		this.lastChange = lastChange;
-	}
-
 	public void setUrl(Link url) {
 		this.url = url;
 	}
 
 	public void setUsage(int usage) {
 		this.usage = usage;
-		setEnabled(usage > 0);
 	}
 
 	/**
@@ -188,5 +164,15 @@ public abstract class Source implements Serializable {
 	public void setErrorSequence(int errorSequence) {
 		this.errorSequence = errorSequence;
 	}
+
+	public Key getParent() {
+		return parent;
+	}
+
+	public void setParent(Key parent) {
+		this.parent = parent;
+	}
+
+	public abstract Key genKey();
 
 }

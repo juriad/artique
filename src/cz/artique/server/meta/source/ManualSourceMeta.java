@@ -1,11 +1,11 @@
 package cz.artique.server.meta.source;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-10 13:12:21")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-10 17:16:23")
 /** */
 public final class ManualSourceMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.source.ManualSource> {
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, com.google.appengine.api.users.User> owner = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, com.google.appengine.api.users.User>(this, "owner", "owner", com.google.appengine.api.users.User.class);
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, com.google.appengine.api.users.User> user = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, com.google.appengine.api.users.User>(this, "user", "user", com.google.appengine.api.users.User.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, java.lang.Boolean> enabled = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, java.lang.Boolean>(this, "enabled", "enabled", boolean.class);
@@ -17,13 +17,10 @@ public final class ManualSourceMeta extends org.slim3.datastore.ModelMeta<cz.art
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
 
     /** */
-    public final org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.source.ManualSource, java.util.Date> lastChange = new org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.source.ManualSource, java.util.Date>(this, "lastChange", "lastChange", java.util.Date.class);
-
-    /** */
-    public final org.slim3.datastore.UnindexedAttributeMeta<cz.artique.shared.model.source.ManualSource, com.google.appengine.api.datastore.Text> lastContent = new org.slim3.datastore.UnindexedAttributeMeta<cz.artique.shared.model.source.ManualSource, com.google.appengine.api.datastore.Text>(this, "lastContent", "lastContent", com.google.appengine.api.datastore.Text.class);
-
-    /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, java.util.Date> nextCheck = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, java.util.Date>(this, "nextCheck", "nextCheck", java.util.Date.class);
+
+    /** */
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, com.google.appengine.api.datastore.Key> parent = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, com.google.appengine.api.datastore.Key>(this, "parent", "parent", com.google.appengine.api.datastore.Key.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, com.google.appengine.api.datastore.Link> url = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, com.google.appengine.api.datastore.Link>(this, "url", "url", com.google.appengine.api.datastore.Link.class);
@@ -51,13 +48,12 @@ public final class ManualSourceMeta extends org.slim3.datastore.ModelMeta<cz.art
     @Override
     public cz.artique.shared.model.source.ManualSource entityToModel(com.google.appengine.api.datastore.Entity entity) {
         cz.artique.shared.model.source.ManualSource model = new cz.artique.shared.model.source.ManualSource();
-        model.setOwner((com.google.appengine.api.users.User) entity.getProperty("owner"));
+        model.setUser((com.google.appengine.api.users.User) entity.getProperty("user"));
         model.setEnabled(booleanToPrimitiveBoolean((java.lang.Boolean) entity.getProperty("enabled")));
         model.setErrorSequence(longToPrimitiveInt((java.lang.Long) entity.getProperty("errorSequence")));
         model.setKey(entity.getKey());
-        model.setLastChange((java.util.Date) entity.getProperty("lastChange"));
-        model.setLastContent((com.google.appengine.api.datastore.Text) entity.getProperty("lastContent"));
         model.setNextCheck((java.util.Date) entity.getProperty("nextCheck"));
+        model.setParent((com.google.appengine.api.datastore.Key) entity.getProperty("parent"));
         model.setUrl((com.google.appengine.api.datastore.Link) entity.getProperty("url"));
         model.setUsage(longToPrimitiveInt((java.lang.Long) entity.getProperty("usage")));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
@@ -73,12 +69,11 @@ public final class ManualSourceMeta extends org.slim3.datastore.ModelMeta<cz.art
         } else {
             entity = new com.google.appengine.api.datastore.Entity(kind);
         }
-        entity.setProperty("owner", m.getOwner());
+        entity.setProperty("user", m.getUser());
         entity.setProperty("enabled", m.isEnabled());
         entity.setProperty("errorSequence", m.getErrorSequence());
-        entity.setUnindexedProperty("lastChange", m.getLastChange());
-        entity.setUnindexedProperty("lastContent", m.getLastContent());
         entity.setProperty("nextCheck", m.getNextCheck());
+        entity.setProperty("parent", m.getParent());
         entity.setProperty("url", m.getUrl());
         entity.setProperty("usage", m.getUsage());
         entity.setProperty("version", m.getVersion());
@@ -145,9 +140,9 @@ public final class ManualSourceMeta extends org.slim3.datastore.ModelMeta<cz.art
         cz.artique.shared.model.source.ManualSource m = (cz.artique.shared.model.source.ManualSource) model;
         writer.beginObject();
         org.slim3.datastore.json.Default encoder0 = new org.slim3.datastore.json.Default();
-        if(m.getOwner() != null){
-            writer.setNextPropertyName("owner");
-            encoder0.encode(writer, m.getOwner());
+        if(m.getUser() != null){
+            writer.setNextPropertyName("user");
+            encoder0.encode(writer, m.getUser());
         }
         writer.setNextPropertyName("enabled");
         encoder0.encode(writer, m.isEnabled());
@@ -157,17 +152,13 @@ public final class ManualSourceMeta extends org.slim3.datastore.ModelMeta<cz.art
             writer.setNextPropertyName("key");
             encoder0.encode(writer, m.getKey());
         }
-        if(m.getLastChange() != null){
-            writer.setNextPropertyName("lastChange");
-            encoder0.encode(writer, m.getLastChange());
-        }
-        if(m.getLastContent() != null && m.getLastContent().getValue() != null){
-            writer.setNextPropertyName("lastContent");
-            encoder0.encode(writer, m.getLastContent());
-        }
         if(m.getNextCheck() != null){
             writer.setNextPropertyName("nextCheck");
             encoder0.encode(writer, m.getNextCheck());
+        }
+        if(m.getParent() != null){
+            writer.setNextPropertyName("parent");
+            encoder0.encode(writer, m.getParent());
         }
         if(m.getUrl() != null){
             writer.setNextPropertyName("url");
@@ -187,20 +178,18 @@ public final class ManualSourceMeta extends org.slim3.datastore.ModelMeta<cz.art
         cz.artique.shared.model.source.ManualSource m = new cz.artique.shared.model.source.ManualSource();
         org.slim3.datastore.json.JsonReader reader = null;
         org.slim3.datastore.json.Default decoder0 = new org.slim3.datastore.json.Default();
-        reader = rootReader.newObjectReader("owner");
-        m.setOwner(decoder0.decode(reader, m.getOwner()));
+        reader = rootReader.newObjectReader("user");
+        m.setUser(decoder0.decode(reader, m.getUser()));
         reader = rootReader.newObjectReader("enabled");
         m.setEnabled(decoder0.decode(reader, m.isEnabled()));
         reader = rootReader.newObjectReader("errorSequence");
         m.setErrorSequence(decoder0.decode(reader, m.getErrorSequence()));
         reader = rootReader.newObjectReader("key");
         m.setKey(decoder0.decode(reader, m.getKey()));
-        reader = rootReader.newObjectReader("lastChange");
-        m.setLastChange(decoder0.decode(reader, m.getLastChange()));
-        reader = rootReader.newObjectReader("lastContent");
-        m.setLastContent(decoder0.decode(reader, m.getLastContent()));
         reader = rootReader.newObjectReader("nextCheck");
         m.setNextCheck(decoder0.decode(reader, m.getNextCheck()));
+        reader = rootReader.newObjectReader("parent");
+        m.setParent(decoder0.decode(reader, m.getParent()));
         reader = rootReader.newObjectReader("url");
         m.setUrl(decoder0.decode(reader, m.getUrl()));
         reader = rootReader.newObjectReader("usage");

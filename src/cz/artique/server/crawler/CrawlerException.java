@@ -1,12 +1,7 @@
 package cz.artique.server.crawler;
 
-/**
- * TODO Auto-generated RuntimeException
- */
 public class CrawlerException extends RuntimeException {
-	/**
-	 * TODO Auto-generated Default Serial Version UID
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	/**

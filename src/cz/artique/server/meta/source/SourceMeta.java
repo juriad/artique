@@ -1,6 +1,6 @@
 package cz.artique.server.meta.source;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-10 13:12:35")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-10 17:14:08")
 /** */
 public final class SourceMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.source.Source> {
 
@@ -14,13 +14,10 @@ public final class SourceMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Source, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Source, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
 
     /** */
-    public final org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.source.Source, java.util.Date> lastChange = new org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.source.Source, java.util.Date>(this, "lastChange", "lastChange", java.util.Date.class);
-
-    /** */
-    public final org.slim3.datastore.UnindexedAttributeMeta<cz.artique.shared.model.source.Source, com.google.appengine.api.datastore.Text> lastContent = new org.slim3.datastore.UnindexedAttributeMeta<cz.artique.shared.model.source.Source, com.google.appengine.api.datastore.Text>(this, "lastContent", "lastContent", com.google.appengine.api.datastore.Text.class);
-
-    /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Source, java.util.Date> nextCheck = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Source, java.util.Date>(this, "nextCheck", "nextCheck", java.util.Date.class);
+
+    /** */
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Source, com.google.appengine.api.datastore.Key> parent = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Source, com.google.appengine.api.datastore.Key>(this, "parent", "parent", com.google.appengine.api.datastore.Key.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Source, com.google.appengine.api.datastore.Link> url = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Source, com.google.appengine.api.datastore.Link>(this, "url", "url", com.google.appengine.api.datastore.Link.class);

@@ -1,6 +1,6 @@
 package cz.artique.server.meta.source;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-10 13:12:21")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-10 17:16:09")
 /** */
 public final class HTMLSourceMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.source.HTMLSource> {
 
@@ -14,13 +14,10 @@ public final class HTMLSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.HTMLSource, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.HTMLSource, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
 
     /** */
-    public final org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.source.HTMLSource, java.util.Date> lastChange = new org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.source.HTMLSource, java.util.Date>(this, "lastChange", "lastChange", java.util.Date.class);
-
-    /** */
-    public final org.slim3.datastore.UnindexedAttributeMeta<cz.artique.shared.model.source.HTMLSource, com.google.appengine.api.datastore.Text> lastContent = new org.slim3.datastore.UnindexedAttributeMeta<cz.artique.shared.model.source.HTMLSource, com.google.appengine.api.datastore.Text>(this, "lastContent", "lastContent", com.google.appengine.api.datastore.Text.class);
-
-    /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.HTMLSource, java.util.Date> nextCheck = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.HTMLSource, java.util.Date>(this, "nextCheck", "nextCheck", java.util.Date.class);
+
+    /** */
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.HTMLSource, com.google.appengine.api.datastore.Key> parent = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.HTMLSource, com.google.appengine.api.datastore.Key>(this, "parent", "parent", com.google.appengine.api.datastore.Key.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.HTMLSource, com.google.appengine.api.datastore.Link> url = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.HTMLSource, com.google.appengine.api.datastore.Link>(this, "url", "url", com.google.appengine.api.datastore.Link.class);
@@ -51,9 +48,8 @@ public final class HTMLSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         model.setEnabled(booleanToPrimitiveBoolean((java.lang.Boolean) entity.getProperty("enabled")));
         model.setErrorSequence(longToPrimitiveInt((java.lang.Long) entity.getProperty("errorSequence")));
         model.setKey(entity.getKey());
-        model.setLastChange((java.util.Date) entity.getProperty("lastChange"));
-        model.setLastContent((com.google.appengine.api.datastore.Text) entity.getProperty("lastContent"));
         model.setNextCheck((java.util.Date) entity.getProperty("nextCheck"));
+        model.setParent((com.google.appengine.api.datastore.Key) entity.getProperty("parent"));
         model.setUrl((com.google.appengine.api.datastore.Link) entity.getProperty("url"));
         model.setUsage(longToPrimitiveInt((java.lang.Long) entity.getProperty("usage")));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
@@ -71,9 +67,8 @@ public final class HTMLSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         }
         entity.setProperty("enabled", m.isEnabled());
         entity.setProperty("errorSequence", m.getErrorSequence());
-        entity.setUnindexedProperty("lastChange", m.getLastChange());
-        entity.setUnindexedProperty("lastContent", m.getLastContent());
         entity.setProperty("nextCheck", m.getNextCheck());
+        entity.setProperty("parent", m.getParent());
         entity.setProperty("url", m.getUrl());
         entity.setProperty("usage", m.getUsage());
         entity.setProperty("version", m.getVersion());
@@ -148,17 +143,13 @@ public final class HTMLSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
             writer.setNextPropertyName("key");
             encoder0.encode(writer, m.getKey());
         }
-        if(m.getLastChange() != null){
-            writer.setNextPropertyName("lastChange");
-            encoder0.encode(writer, m.getLastChange());
-        }
-        if(m.getLastContent() != null && m.getLastContent().getValue() != null){
-            writer.setNextPropertyName("lastContent");
-            encoder0.encode(writer, m.getLastContent());
-        }
         if(m.getNextCheck() != null){
             writer.setNextPropertyName("nextCheck");
             encoder0.encode(writer, m.getNextCheck());
+        }
+        if(m.getParent() != null){
+            writer.setNextPropertyName("parent");
+            encoder0.encode(writer, m.getParent());
         }
         if(m.getUrl() != null){
             writer.setNextPropertyName("url");
@@ -184,12 +175,10 @@ public final class HTMLSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         m.setErrorSequence(decoder0.decode(reader, m.getErrorSequence()));
         reader = rootReader.newObjectReader("key");
         m.setKey(decoder0.decode(reader, m.getKey()));
-        reader = rootReader.newObjectReader("lastChange");
-        m.setLastChange(decoder0.decode(reader, m.getLastChange()));
-        reader = rootReader.newObjectReader("lastContent");
-        m.setLastContent(decoder0.decode(reader, m.getLastContent()));
         reader = rootReader.newObjectReader("nextCheck");
         m.setNextCheck(decoder0.decode(reader, m.getNextCheck()));
+        reader = rootReader.newObjectReader("parent");
+        m.setParent(decoder0.decode(reader, m.getParent()));
         reader = rootReader.newObjectReader("url");
         m.setUrl(decoder0.decode(reader, m.getUrl()));
         reader = rootReader.newObjectReader("usage");

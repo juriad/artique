@@ -15,8 +15,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-import cz.artique.client.service.Test1Service;
-import cz.artique.client.service.Test1ServiceAsync;
+import cz.artique.client.service.ClientSourceService;
+import cz.artique.client.service.ClientSourceServiceAsync;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.source.Source;
 
@@ -35,7 +35,7 @@ public class Test1 extends Composite {
 	Anchor signOut;
 
 	private static MainUiBinder uiBinder = GWT.create(MainUiBinder.class);
-	private static Test1ServiceAsync service = GWT.create(Test1Service.class);
+	private static ClientSourceServiceAsync service = GWT.create(ClientSourceService.class);
 
 	interface MainUiBinder extends UiBinder<Widget, Test1> {}
 
