@@ -5,7 +5,6 @@ import java.util.Date;
 
 import org.slim3.datastore.Model;
 
-import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.source.Source;
 
 @Model(schemaVersion = 1)

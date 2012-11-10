@@ -10,9 +10,8 @@ public class UserInfo implements Serializable {
 	private String logoutUrl;
 	private String emailAddress;
 	private String nickname;
-	
-	public UserInfo() {
-	}
+
+	public UserInfo() {}
 
 	public boolean isLoggedIn() {
 		return loggedIn;

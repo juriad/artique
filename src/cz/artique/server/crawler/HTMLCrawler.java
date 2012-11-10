@@ -1,18 +1,24 @@
 package cz.artique.server.crawler;
 
+import java.net.URL;
+
 import cz.artique.shared.model.source.HTMLSource;
 
-public class HTMLCrawler implements Crawler<HTMLSource> {
-
-	private final HTMLSource source;
+public class HTMLCrawler extends AbstractCrawler<HTMLSource> {
 
 	public HTMLCrawler(HTMLSource source) {
-		this.source = source;
+		super(source);
 	}
 
 	public CrawlerResult fetchItems() {
-		// TODO Auto-generated method stub
-		return null;
+		CrawlerResult result = new CrawlerResult();
+
+		URL url = getURL(result);
+		if (url == null) {
+			return result;
+		}
+
+		return result;
 	}
 
 }

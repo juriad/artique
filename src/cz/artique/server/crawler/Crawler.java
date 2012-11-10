@@ -1,5 +1,7 @@
 package cz.artique.server.crawler;
 
-public interface Crawler<E> {
+import cz.artique.shared.model.source.Source;
+
+public interface Crawler<E extends Source> {
 	CrawlerResult fetchItems();
 }

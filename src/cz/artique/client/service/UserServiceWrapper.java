@@ -7,5 +7,5 @@ import cz.artique.client.UserInfo;
 
 @RemoteServiceRelativePath("userService")
 public interface UserServiceWrapper extends RemoteService {
-    public UserInfo login(String requestUri);
+	public UserInfo login(String requestUri);
 }

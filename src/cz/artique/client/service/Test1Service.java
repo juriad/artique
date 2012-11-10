@@ -11,6 +11,6 @@ import cz.artique.shared.model.source.Source;
 @RemoteServiceRelativePath("service.s3gwt")
 public interface Test1Service extends RemoteService {
 	Source addSource(String url);
-	
+
 	List<Item> getItems();
 }

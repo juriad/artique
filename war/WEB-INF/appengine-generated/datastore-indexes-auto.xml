@@ -1,4 +1,11 @@
-<!-- Indices written at Wed, 7 Nov 2012 11:56:47 CET -->
+<!-- Indices written at Fri, 9 Nov 2012 00:32:18 CET -->
 
-<datastore-indexes/>
+<datastore-indexes>
 
+    <!-- Used 1 time in query history -->
+    <datastore-index kind="Source" ancestor="false" source="auto">
+        <property name="enabled" direction="asc"/>
+        <property name="nextCheck" direction="asc"/>
+    </datastore-index>
+
+</datastore-indexes>

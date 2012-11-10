@@ -93,6 +93,7 @@ public class CrawlerService {
 	}
 
 	private void setNextCheck(Source source, CrawlerResult cr) {
+		// TODO rozsirit
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.MINUTE, 10);
 		Date next = calendar.getTime();
@@ -105,7 +106,7 @@ public class CrawlerService {
 			Datastore
 				.query(meta)
 				.filter(meta.nextCheck.lessThanOrEqual(new Date()))
-				.filterInMemory(meta.usage.greaterThan(0))
+				.filter(meta.enabled.equal(true))
 				.asList();
 
 		for (Source s : sources) {

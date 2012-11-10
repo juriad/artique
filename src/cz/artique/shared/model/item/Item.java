@@ -47,7 +47,7 @@ public class Item implements Serializable {
 	 * Content of item
 	 */
 	private Text content;
-	
+
 	/**
 	 * Type of content
 	 */
@@ -57,7 +57,7 @@ public class Item implements Serializable {
 	 * Type of item
 	 */
 	private ItemType itemType;
-	
+
 	/**
 	 * Hash of this item; used for comparison
 	 */

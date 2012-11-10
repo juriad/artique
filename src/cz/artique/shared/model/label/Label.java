@@ -2,11 +2,11 @@ package cz.artique.shared.model.label;
 
 import java.io.Serializable;
 
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.users.User;
-
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
+
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.users.User;
 
 @Model(schemaVersion = 1)
 public class Label implements Serializable {

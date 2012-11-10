@@ -25,26 +25,38 @@ public abstract class Source implements Serializable {
 	 * URL of this source; this must be unique
 	 */
 	private Link url;
-	
+
 	/**
 	 * Specifies how many users uses this source
 	 */
 	private int usage;
 
 	/**
+	 * Wraps usage
+	 */
+	private boolean enabled;
+
+	/**
 	 * Last change on this source
 	 */
+	@Attribute(unindexed = true)
 	private Date lastChange;
 
 	/**
 	 * Content of source used for comparison
 	 */
+	@Attribute(unindexed = true)
 	private Text lastContent;
 
 	/**
 	 * Planned next check
 	 */
 	private Date nextCheck;
+	
+	/**
+	 * How many last checks were errors
+	 */
+	private int errorSequence;
 
 	public Source() {}
 
@@ -140,6 +152,7 @@ public abstract class Source implements Serializable {
 
 	public void setUsage(int usage) {
 		this.usage = usage;
+		setEnabled(usage > 0);
 	}
 
 	/**
@@ -159,5 +172,21 @@ public abstract class Source implements Serializable {
 	public void setNextCheck(Date nextCheck) {
 		this.nextCheck = nextCheck;
 	}
-	
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public int getErrorSequence() {
+		return errorSequence;
+	}
+
+	public void setErrorSequence(int errorSequence) {
+		this.errorSequence = errorSequence;
+	}
+
 }

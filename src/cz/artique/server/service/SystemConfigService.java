@@ -11,8 +11,7 @@ import cz.artique.shared.model.user.StringConfig;
 
 public class SystemConfigService {
 
-	public SystemConfigService() {
-	}
+	public SystemConfigService() {}
 
 	public Double getFloatConfig(ConfigOption option) {
 		FloatConfig fc =

@@ -30,13 +30,13 @@ public class Test1 extends Composite {
 
 	@UiField
 	Label msg;
-	
+
 	@UiField
 	Anchor signOut;
 
 	private static MainUiBinder uiBinder = GWT.create(MainUiBinder.class);
 	private static Test1ServiceAsync service = GWT.create(Test1Service.class);
-    
+
 	interface MainUiBinder extends UiBinder<Widget, Test1> {}
 
 	public Test1(UserInfo userInfo) {
@@ -69,7 +69,7 @@ public class Test1 extends Composite {
 			public void onSuccess(List<Item> result) {
 				msg.setText("loaded items: " + result.size());
 				list.clear();
-				
+
 				for (int i = 0; i < result.size(); i++) {
 					Item item = result.get(i);
 					list.setHTML(i, 0, item.getTitle());

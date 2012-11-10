@@ -1,14 +1,20 @@
 package cz.artique.server.meta.source;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-07 13:17:23")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-10 13:12:20")
 /** */
 public final class XMLSourceMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.source.XMLSource> {
+
+    /** */
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.XMLSource, java.lang.Boolean> enabled = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.XMLSource, java.lang.Boolean>(this, "enabled", "enabled", boolean.class);
+
+    /** */
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.XMLSource, java.lang.Integer> errorSequence = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.XMLSource, java.lang.Integer>(this, "errorSequence", "errorSequence", int.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.XMLSource, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.XMLSource, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.XMLSource, java.util.Date> lastChange = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.XMLSource, java.util.Date>(this, "lastChange", "lastChange", java.util.Date.class);
+    public final org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.source.XMLSource, java.util.Date> lastChange = new org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.source.XMLSource, java.util.Date>(this, "lastChange", "lastChange", java.util.Date.class);
 
     /** */
     public final org.slim3.datastore.UnindexedAttributeMeta<cz.artique.shared.model.source.XMLSource, com.google.appengine.api.datastore.Text> lastContent = new org.slim3.datastore.UnindexedAttributeMeta<cz.artique.shared.model.source.XMLSource, com.google.appengine.api.datastore.Text>(this, "lastContent", "lastContent", com.google.appengine.api.datastore.Text.class);
@@ -42,6 +48,8 @@ public final class XMLSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiqu
     @Override
     public cz.artique.shared.model.source.XMLSource entityToModel(com.google.appengine.api.datastore.Entity entity) {
         cz.artique.shared.model.source.XMLSource model = new cz.artique.shared.model.source.XMLSource();
+        model.setEnabled(booleanToPrimitiveBoolean((java.lang.Boolean) entity.getProperty("enabled")));
+        model.setErrorSequence(longToPrimitiveInt((java.lang.Long) entity.getProperty("errorSequence")));
         model.setKey(entity.getKey());
         model.setLastChange((java.util.Date) entity.getProperty("lastChange"));
         model.setLastContent((com.google.appengine.api.datastore.Text) entity.getProperty("lastContent"));
@@ -61,7 +69,9 @@ public final class XMLSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiqu
         } else {
             entity = new com.google.appengine.api.datastore.Entity(kind);
         }
-        entity.setProperty("lastChange", m.getLastChange());
+        entity.setProperty("enabled", m.isEnabled());
+        entity.setProperty("errorSequence", m.getErrorSequence());
+        entity.setUnindexedProperty("lastChange", m.getLastChange());
         entity.setUnindexedProperty("lastContent", m.getLastContent());
         entity.setProperty("nextCheck", m.getNextCheck());
         entity.setProperty("url", m.getUrl());
@@ -130,6 +140,10 @@ public final class XMLSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiqu
         cz.artique.shared.model.source.XMLSource m = (cz.artique.shared.model.source.XMLSource) model;
         writer.beginObject();
         org.slim3.datastore.json.Default encoder0 = new org.slim3.datastore.json.Default();
+        writer.setNextPropertyName("enabled");
+        encoder0.encode(writer, m.isEnabled());
+        writer.setNextPropertyName("errorSequence");
+        encoder0.encode(writer, m.getErrorSequence());
         if(m.getKey() != null){
             writer.setNextPropertyName("key");
             encoder0.encode(writer, m.getKey());
@@ -164,6 +178,10 @@ public final class XMLSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiqu
         cz.artique.shared.model.source.XMLSource m = new cz.artique.shared.model.source.XMLSource();
         org.slim3.datastore.json.JsonReader reader = null;
         org.slim3.datastore.json.Default decoder0 = new org.slim3.datastore.json.Default();
+        reader = rootReader.newObjectReader("enabled");
+        m.setEnabled(decoder0.decode(reader, m.isEnabled()));
+        reader = rootReader.newObjectReader("errorSequence");
+        m.setErrorSequence(decoder0.decode(reader, m.getErrorSequence()));
         reader = rootReader.newObjectReader("key");
         m.setKey(decoder0.decode(reader, m.getKey()));
         reader = rootReader.newObjectReader("lastChange");

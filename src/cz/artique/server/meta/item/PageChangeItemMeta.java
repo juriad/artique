@@ -1,6 +1,6 @@
 package cz.artique.server.meta.item;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-07 13:17:24")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-10 13:12:21")
 /** */
 public final class PageChangeItemMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.item.PageChangeItem> {
 

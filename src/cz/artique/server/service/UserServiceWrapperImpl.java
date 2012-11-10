@@ -8,27 +8,27 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import cz.artique.client.UserInfo;
 import cz.artique.client.service.UserServiceWrapper;
 
-public class UserServiceWrapperImpl extends RemoteServiceServlet implements
-        UserServiceWrapper {
+public class UserServiceWrapperImpl extends RemoteServiceServlet
+		implements UserServiceWrapper {
 
-    private static final long serialVersionUID = 1L;
-    final static public UserService userService = UserServiceFactory
-        .getUserService();
+	private static final long serialVersionUID = 1L;
+	final static public UserService userService = UserServiceFactory
+		.getUserService();
 
-    public UserInfo login(String requestUri) {
-        UserService userService = UserServiceFactory.getUserService();
-        User user = userService.getCurrentUser();
-        UserInfo loginInfo = new UserInfo();
+	public UserInfo login(String requestUri) {
+		UserService userService = UserServiceFactory.getUserService();
+		User user = userService.getCurrentUser();
+		UserInfo loginInfo = new UserInfo();
 
-        if (user != null) {
-            loginInfo.setLoggedIn(true);
-            loginInfo.setEmailAddress(user.getEmail());
-            loginInfo.setNickname(user.getNickname());
-            loginInfo.setLogoutUrl(userService.createLogoutURL(requestUri));
-        } else {
-            loginInfo.setLoggedIn(false);
-            loginInfo.setLoginUrl(userService.createLoginURL(requestUri));
-        }
-        return loginInfo;
-    }
+		if (user != null) {
+			loginInfo.setLoggedIn(true);
+			loginInfo.setEmailAddress(user.getEmail());
+			loginInfo.setNickname(user.getNickname());
+			loginInfo.setLogoutUrl(userService.createLogoutURL(requestUri));
+		} else {
+			loginInfo.setLoggedIn(false);
+			loginInfo.setLoginUrl(userService.createLoginURL(requestUri));
+		}
+		return loginInfo;
+	}
 }

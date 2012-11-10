@@ -6,5 +6,5 @@ import cz.artique.client.UserInfo;
 
 public interface UserServiceWrapperAsync {
 
-    void login(String requestUri, AsyncCallback<UserInfo> callback);
+	void login(String requestUri, AsyncCallback<UserInfo> callback);
 }

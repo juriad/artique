@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import org.slim3.datastore.Model;
 
-import cz.artique.shared.model.label.Filter;
-
 @Model(schemaVersion = 1)
 public class Export extends Filter implements Serializable {
 

@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import org.slim3.datastore.Model;
 
-import cz.artique.shared.model.user.UserConfig;
-
 @Model(schemaVersion = 1)
 public class IntConfig extends UserConfig implements Serializable {
 

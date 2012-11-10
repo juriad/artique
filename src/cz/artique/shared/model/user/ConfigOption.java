@@ -2,7 +2,6 @@ package cz.artique.shared.model.user;
 
 import com.google.appengine.api.users.User;
 
-
 public enum ConfigOption {
 	LABEL_ASSIGNED_COLOR("server.theme.label.assigned-color",
 			ConfigType.STRING_CONFIG, new DefaultOption("#ffffff")),

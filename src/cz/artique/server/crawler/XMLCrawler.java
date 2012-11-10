@@ -1,7 +1,6 @@
 package cz.artique.server.crawler;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -18,12 +17,10 @@ import cz.artique.shared.model.item.ArticleItem;
 import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.source.XMLSource;
 
-public class XMLCrawler implements Crawler<XMLSource> {
-
-	private final XMLSource source;
+public class XMLCrawler extends AbstractCrawler<XMLSource> {
 
 	public XMLCrawler(XMLSource source) {
-		this.source = source;
+		super(source);
 	}
 
 	public CrawlerResult fetchItems() {

@@ -32,9 +32,9 @@ public class SourceService {
 			s = new XMLSource(url);
 			break;
 		}
-		
+
 		s.setNextCheck(new Date());
-		
+
 		Key key = Datastore.put(s);
 		s.setKey(key);
 		return s;

@@ -7,7 +7,6 @@ import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Text;
 
-import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.source.Source;
 
 @Model(schemaVersion = 1)

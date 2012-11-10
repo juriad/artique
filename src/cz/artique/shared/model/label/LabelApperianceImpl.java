@@ -19,26 +19,33 @@ public class LabelApperianceImpl implements LabelApperiance {
 	String unAssignedTextBackground = null;
 
 	public LabelApperianceImpl() {}
+
 	public LabelApperianceImpl(VisibilityLevel visibilityLevel,
 			ApperianceType apperianceType) {
 		setVisibilityLevel(visibilityLevel);
 		setApperianceType(apperianceType);
 	}
+
 	public ApperianceType getApperianceType() {
 		return apperianceType;
 	}
+
 	public String getAssignedIcon() {
 		return assignedIcon;
 	}
+
 	public String getAssignedTextBackground() {
 		return assignedTextBackground;
 	}
+
 	public String getAssignedTextColor() {
 		return assignedTextColor;
 	}
+
 	public String getUnAssignedIcon() {
 		return unAssignedIcon;
 	}
+
 	public String getUnAssignedTextBackground() {
 		return unAssignedTextBackground;
 	}

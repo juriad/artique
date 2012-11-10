@@ -16,7 +16,7 @@ public class LabelService {
 
 	public LabelService(User user) {
 		this.user = user;
-	} 
+	}
 
 	public List<Label> getAllLabels() {
 		LabelMeta meta = LabelMeta.get();

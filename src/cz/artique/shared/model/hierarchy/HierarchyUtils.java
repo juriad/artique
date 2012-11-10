@@ -8,6 +8,7 @@ public class HierarchyUtils {
 
 	private static final String format = "%0" + fillZeros + "d";
 	public static final String root = formatNumber(0) + "root";
+
 	public static String formatNumber(int number) {
 		return String.format(format, number);
 	}

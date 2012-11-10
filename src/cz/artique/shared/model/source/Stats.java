@@ -3,10 +3,10 @@ package cz.artique.shared.model.source;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.google.appengine.api.datastore.Key;
-
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
+
+import com.google.appengine.api.datastore.Key;
 
 @Model(schemaVersion = 1)
 public class Stats implements Serializable {
@@ -34,12 +34,12 @@ public class Stats implements Serializable {
 	 * Negative for an error
 	 */
 	private int itemsAcquired;
-	
+
 	/**
 	 * Error message
 	 */
 	private String error;
-	
+
 	/**
 	 * Returns the key.
 	 * 

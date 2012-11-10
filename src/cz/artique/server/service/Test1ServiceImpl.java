@@ -14,28 +14,28 @@ import cz.artique.utils.SourceException;
 
 public class Test1ServiceImpl implements Test1Service {
 
-    public Source addSource(String url) {
-        SourceService ss = new SourceService();
-        Link l = ss.getLink(url);
-        if (l == null) {
-            throw new SourceException("invalid link");
-        }
-        Source source = null;
-        source = ss.getSource(l);
-        if (source == null) {
-            source = ss.createSource(l, SourceType.XML_SOURCE);
-        }
+	public Source addSource(String url) {
+		SourceService ss = new SourceService();
+		Link l = ss.getLink(url);
+		if (l == null) {
+			throw new SourceException("invalid link");
+		}
+		Source source = null;
+		source = ss.getSource(l);
+		if (source == null) {
+			source = ss.createSource(l, SourceType.XML_SOURCE);
+		}
 
-        source.setUsage(1);
-        Datastore.put(source);
+		source.setUsage(1);
+		Datastore.put(source);
 
-        return source;
-    }
+		return source;
+	}
 
-    public List<Item> getItems() {
-        ItemMeta meta = ItemMeta.get();
-        List<Item> items = Datastore.query(meta).sort(meta.added.desc).asList();
-        return items;
-    }
+	public List<Item> getItems() {
+		ItemMeta meta = ItemMeta.get();
+		List<Item> items = Datastore.query(meta).sort(meta.added.desc).asList();
+		return items;
+	}
 
 }

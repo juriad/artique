@@ -7,8 +7,6 @@ import org.slim3.datastore.Model;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
-import cz.artique.shared.model.source.UserSource;
-
 @Model(schemaVersion = 1)
 public class HTMLUserSource extends UserSource implements Serializable {
 
