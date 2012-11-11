@@ -18,17 +18,14 @@ public class UserServiceWrapperImpl extends RemoteServiceServlet
 	public UserInfo login(String requestUri) {
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
-		UserInfo loginInfo = new UserInfo();
+		UserInfo userInfo = new UserInfo();
 
 		if (user != null) {
-			loginInfo.setLoggedIn(true);
-			loginInfo.setEmailAddress(user.getEmail());
-			loginInfo.setNickname(user.getNickname());
-			loginInfo.setLogoutUrl(userService.createLogoutURL(requestUri));
+			userInfo.setUser(user);
+			userInfo.setLogoutUrl(userService.createLogoutURL(requestUri));
 		} else {
-			loginInfo.setLoggedIn(false);
-			loginInfo.setLoginUrl(userService.createLoginURL(requestUri));
+			userInfo.setLoginUrl(userService.createLoginURL(requestUri));
 		}
-		return loginInfo;
+		return userInfo;
 	}
 }

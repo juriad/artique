@@ -40,6 +40,7 @@ public class XMLCrawler extends AbstractCrawler<XMLSource> {
 		return result;
 	}
 
+	@Override
 	protected URL getURL(CrawlerResult result) {
 		URL url = null;
 		try {

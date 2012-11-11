@@ -1,7 +1,7 @@
 package cz.artique.shared.utils;
 
-public class Utils {
-	private Utils() {}
+public class SharedUtils {
+	private SharedUtils() {}
 
 	public static String combineStringParts(String... strings) {
 		if (strings.length == 0) {

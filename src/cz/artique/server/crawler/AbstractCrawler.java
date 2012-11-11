@@ -8,7 +8,7 @@ import cz.artique.shared.model.source.Source;
 public abstract class AbstractCrawler<E extends Source> implements Crawler<E> {
 
 	protected final E source;
-	
+
 	protected AbstractCrawler(E source) {
 		this.source = source;
 	}

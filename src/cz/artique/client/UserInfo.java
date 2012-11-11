@@ -2,24 +2,16 @@ package cz.artique.client;
 
 import java.io.Serializable;
 
+import com.google.appengine.api.users.User;
+
 public class UserInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private boolean loggedIn = false;
 	private String loginUrl;
 	private String logoutUrl;
-	private String emailAddress;
-	private String nickname;
+	private User user;
 
 	public UserInfo() {}
-
-	public boolean isLoggedIn() {
-		return loggedIn;
-	}
-
-	public void setLoggedIn(boolean loggedIn) {
-		this.loggedIn = loggedIn;
-	}
 
 	public String getLoginUrl() {
 		return loginUrl;
@@ -37,19 +29,11 @@ public class UserInfo implements Serializable {
 		this.logoutUrl = logoutUrl;
 	}
 
-	public String getEmailAddress() {
-		return emailAddress;
+	public User getUser() {
+		return user;
 	}
 
-	public void setEmailAddress(String emailAddress) {
-		this.emailAddress = emailAddress;
-	}
-
-	public String getNickname() {
-		return nickname;
-	}
-
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
+	public void setUser(User user) {
+		this.user = user;
 	}
 }

@@ -2,18 +2,16 @@ package cz.artique.shared.model.source;
 
 import java.io.Serializable;
 
-import org.slim3.datastore.Datastore;
 import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
-import cz.artique.server.meta.source.ManualSourceMeta;
-import cz.artique.server.service.SourceType;
-import cz.artique.shared.utils.Utils;
+import cz.artique.shared.utils.GenKey;
+import cz.artique.shared.utils.SharedUtils;
 
 @Model(schemaVersion = 1)
-public class ManualSource extends Source implements Serializable {
+public class ManualSource extends Source implements Serializable, GenKey {
 
 	private static final long serialVersionUID = 1L;
 
@@ -26,19 +24,21 @@ public class ManualSource extends Source implements Serializable {
 		setUser(user);
 	}
 
-	@Override
-	public Key genKey() {
-		String prefix = SourceType.MANUAL.name();
-		String userId = user.getUserId();
-		return Datastore.createKey(ManualSourceMeta.get(),
-			Utils.combineStringParts(prefix, userId));
-	}
-
 	public User getUser() {
 		return user;
 	}
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public Key getKeyParent() {
+		return null;
+	}
+
+	public String getKeyName() {
+		String prefix = "MANUAL_SOURCE";
+		String userId = user.getUserId();
+		return SharedUtils.combineStringParts(prefix, userId);
 	}
 }

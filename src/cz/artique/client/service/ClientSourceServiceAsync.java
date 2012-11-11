@@ -4,12 +4,10 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.shared.model.hierarchy.Hierarchy;
 import cz.artique.shared.model.source.HTMLSource;
 import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Region;
-import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.model.source.WebSiteSource;
 import cz.artique.shared.model.source.XMLSource;
@@ -27,13 +25,9 @@ public interface ClientSourceServiceAsync {
 
 	void getRegions(HTMLSource source, AsyncCallback<List<Region>> callback);
 
-	void watchSource(Source source, AsyncCallback<UserSource> callback);
+	void addUserSource(UserSource userSource, AsyncCallback<UserSource> callback);
 
-	void unwatchSource(UserSource source, AsyncCallback<Void> callback);
+	void updateUserSource(UserSource userSource, AsyncCallback<Void> callback);
 
-	void getHierarchy(AsyncCallback<Hierarchy<UserSource>> callback);
-
-	void updateHierarchy(Hierarchy<UserSource> hierarchy,
-			AsyncCallback<Hierarchy<UserSource>> callback);
-
+	void getUserSources(AsyncCallback<List<UserSource>> callback);
 }

@@ -28,7 +28,7 @@ public class Main implements EntryPoint {
 
 				public void onSuccess(UserInfo result) {
 					userInfo = result;
-					if (userInfo.isLoggedIn()) {
+					if (userInfo.getUser() != null) {
 						loadArtique();
 					} else {
 						loadLogin();

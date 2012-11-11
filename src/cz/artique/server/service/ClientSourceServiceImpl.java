@@ -2,18 +2,19 @@ package cz.artique.server.service;
 
 import java.util.List;
 
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserServiceFactory;
+
 import cz.artique.client.service.ClientSourceService;
 import cz.artique.server.meta.source.HTMLSourceMeta;
 import cz.artique.server.meta.source.ManualSourceMeta;
 import cz.artique.server.meta.source.PageChangeSourceMeta;
 import cz.artique.server.meta.source.WebSiteSourceMeta;
 import cz.artique.server.meta.source.XMLSourceMeta;
-import cz.artique.shared.model.hierarchy.Hierarchy;
 import cz.artique.shared.model.source.HTMLSource;
 import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Region;
-import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.model.source.WebSiteSource;
 import cz.artique.shared.model.source.XMLSource;
@@ -71,24 +72,20 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		return ss.getRegions(source);
 	}
 
-	public UserSource watchSource(Source source) {
-		// TODO Auto-generated method stub
-		return null;
+	public UserSource addUserSource(UserSource userSource) {
+		UserSourceService uss = new UserSourceService();
+		return uss.creatIfNotExist(userSource);
 	}
 
-	public void unwatchSource(UserSource source) {
-		// TODO Auto-generated method stub
-
+	public void updateUserSource(UserSource userSource) {
+		UserSourceService uss = new UserSourceService();
+		uss.updateUserSource(userSource);
 	}
 
-	public Hierarchy<UserSource> getHierarchy() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Hierarchy<UserSource> updateHierarchy(Hierarchy<UserSource> hierarchy) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<UserSource> getUserSources() {
+		UserSourceService uss = new UserSourceService();
+		User user = UserServiceFactory.getUserService().getCurrentUser();
+		return uss.getUserSources(user);
 	}
 
 }

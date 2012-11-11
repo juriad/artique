@@ -9,8 +9,10 @@ import org.slim3.datastore.Model;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Link;
 
+import cz.artique.shared.utils.GenKey;
+
 @Model(schemaVersion = 1)
-public abstract class Source implements Serializable {
+public abstract class Source implements Serializable, GenKey {
 
 	private static final long serialVersionUID = 1L;
 
@@ -172,7 +174,5 @@ public abstract class Source implements Serializable {
 	public void setParent(Key parent) {
 		this.parent = parent;
 	}
-
-	public abstract Key genKey();
 
 }

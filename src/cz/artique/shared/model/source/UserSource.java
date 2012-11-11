@@ -6,12 +6,14 @@ import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.users.User;
 
-import cz.artique.shared.model.hierarchy.SupportsHierarchy;
+import cz.artique.shared.utils.GenKey;
+import cz.artique.shared.utils.SharedUtils;
 
 @Model(schemaVersion = 1)
-public class UserSource implements Serializable, SupportsHierarchy {
+public class UserSource implements Serializable, GenKey {
 
 	private static final long serialVersionUID = 1L;
 
@@ -40,6 +42,8 @@ public class UserSource implements Serializable, SupportsHierarchy {
 	 * Hierarchy of sources
 	 */
 	private String hierarchy;
+
+	private boolean watching;
 
 	public UserSource() {}
 
@@ -147,5 +151,23 @@ public class UserSource implements Serializable, SupportsHierarchy {
 	 */
 	public void setVersion(Long version) {
 		this.version = version;
+	}
+
+	public boolean isWatching() {
+		return watching;
+	}
+
+	public void setWatching(boolean watching) {
+		this.watching = watching;
+	}
+
+	public Key getKeyParent() {
+		return null;
+	}
+
+	public String getKeyName() {
+		String userId = getUser().getUserId();
+		String sourceId = KeyFactory.keyToString(getSource());
+		return SharedUtils.combineStringParts(userId, sourceId);
 	}
 }

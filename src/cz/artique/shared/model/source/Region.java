@@ -4,16 +4,15 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.slim3.datastore.Attribute;
-import org.slim3.datastore.Datastore;
 import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
 
-import cz.artique.server.meta.source.RegionMeta;
-import cz.artique.shared.utils.Utils;
+import cz.artique.shared.utils.GenKey;
+import cz.artique.shared.utils.SharedUtils;
 
 @Model(schemaVersion = 1)
-public class Region implements Serializable {
+public class Region implements Serializable, GenKey {
 
 	private static final long serialVersionUID = 1L;
 
@@ -145,10 +144,13 @@ public class Region implements Serializable {
 		this.version = version;
 	}
 
-	public Key genKey() {
+	public Key getKeyParent() {
+		return getHtmlSource();
+	}
+
+	public String getKeyName() {
 		String prefix = "REGION";
 		String name = getName();
-		return Datastore.createKey(getHtmlSource(), RegionMeta.get(),
-			Utils.combineStringParts(prefix, name));
+		return SharedUtils.combineStringParts(prefix, name);
 	}
 }

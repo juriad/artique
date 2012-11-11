@@ -5,12 +5,10 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-import cz.artique.shared.model.hierarchy.Hierarchy;
 import cz.artique.shared.model.source.HTMLSource;
 import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Region;
-import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.model.source.WebSiteSource;
 import cz.artique.shared.model.source.XMLSource;
@@ -28,12 +26,10 @@ public interface ClientSourceService extends RemoteService {
 
 	List<Region> getRegions(HTMLSource source);
 
-	UserSource watchSource(Source source);
+	UserSource addUserSource(UserSource userSource);
 
-	void unwatchSource(UserSource source);
-	
-	Hierarchy<UserSource> getHierarchy();
+	void updateUserSource(UserSource userSource);
 
-	Hierarchy<UserSource> updateHierarchy(Hierarchy<UserSource> hierarchy);
+	List<UserSource> getUserSources();
 
 }
