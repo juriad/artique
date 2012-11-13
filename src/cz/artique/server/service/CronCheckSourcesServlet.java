@@ -1,11 +1,21 @@
 package cz.artique.server.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.slim3.datastore.Datastore;
+
+import com.google.appengine.api.datastore.Key;
+
+import cz.artique.server.meta.source.SourceMeta;
 
 public class CronCheckSourcesServlet extends HttpServlet {
 
@@ -42,7 +52,36 @@ public class CronCheckSourcesServlet extends HttpServlet {
 	 */
 	protected void process(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		CrawlerService cw = new CrawlerService();
-		cw.crawl();
+		SourceMeta meta = SourceMeta.get();
+		@SuppressWarnings("unchecked")
+		Map<String, String[]> parameterMap = req.getParameterMap();
+
+		List<Key> keyList;
+		if (parameterMap.containsKey("normal")) {
+			keyList =
+				Datastore
+					.query(meta)
+					.filter(meta.enabled.equal(Boolean.TRUE))
+					.filter(meta.nextCheck.lessThan(new Date()))
+					.filter(meta.parent.equal(null))
+					.filter(meta.errorSequence.equal(0))
+					.asKeyList();
+		} else if (parameterMap.containsKey("error")) {
+			keyList =
+				Datastore
+					.query(meta)
+					.filter(meta.enabled.equal(Boolean.TRUE))
+					.filter(meta.parent.equal(null))
+					.filter(meta.errorSequence.greaterThan(0))
+					.asKeyList();
+		} else {
+			keyList = new ArrayList<Key>();
+		}
+
+		CheckService cs = new CheckService();
+		for (Key key : keyList) {
+			cs.check(key);
+		}
+
 	}
 }

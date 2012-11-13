@@ -6,7 +6,7 @@
 		<g:Dock direction="NORTH">
 			<g:FlowPanel>
 				<g:Label ui:field="userName" />
-				<g:Anchor ui:field="logout" />
+				<g:Anchor ui:field="logout" >Logout</g:Anchor>
 			</g:FlowPanel>
 		</g:Dock>
 		<g:Dock direction="WEST">

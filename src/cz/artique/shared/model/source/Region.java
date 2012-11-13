@@ -149,8 +149,7 @@ public class Region implements Serializable, GenKey {
 	}
 
 	public String getKeyName() {
-		String prefix = "REGION";
 		String name = getName();
-		return SharedUtils.combineStringParts(prefix, name);
+		return SharedUtils.combineStringParts(name);
 	}
 }

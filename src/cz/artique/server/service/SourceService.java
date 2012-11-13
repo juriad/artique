@@ -7,7 +7,6 @@ import org.slim3.datastore.Datastore;
 import org.slim3.datastore.ModelMeta;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.Link;
 import com.google.appengine.api.datastore.Transaction;
 
 import cz.artique.server.meta.source.RegionMeta;
@@ -28,11 +27,6 @@ public class SourceService {
 	}
 
 	public <E extends Source> E creatIfNotExist(E source, ModelMeta<E> meta) {
-		Link l = ServerUtils.checkLink(source.getUrl());
-		if (l == null) {
-			return null;
-		}
-
 		Transaction tx = Datastore.beginTransaction();
 		Key key = ServerUtils.genKey(source);
 		E theSource = Datastore.getOrNull(tx, meta, key);
@@ -49,8 +43,7 @@ public class SourceService {
 	public Region addRegionIfNotExist(Region region) {
 		Transaction tx = Datastore.beginTransaction();
 		Key key = ServerUtils.genKey(region);
-		Region theRegion =
-			Datastore.getOrNull(tx, RegionMeta.get(), key);
+		Region theRegion = Datastore.getOrNull(tx, RegionMeta.get(), key);
 		if (theRegion == null) {
 			region.setKey(key);
 			Datastore.put(tx, region);

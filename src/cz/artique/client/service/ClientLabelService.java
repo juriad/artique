@@ -5,9 +5,13 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-import cz.artique.shared.model.item.UserItem;
+import cz.artique.shared.model.label.Label;
 
 @RemoteServiceRelativePath("service.s3gwt")
-public interface ClientItemService extends RemoteService {
-	List<UserItem> getItems();
+public interface ClientLabelService extends RemoteService {
+
+	List<Label> getAllLabels();
+
+	Label addLabel(Label label);
+
 }

@@ -8,8 +8,11 @@ import org.slim3.datastore.Model;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
+import cz.artique.shared.utils.GenKey;
+import cz.artique.shared.utils.SharedUtils;
+
 @Model(schemaVersion = 1)
-public class Label implements Serializable {
+public class Label implements Serializable, GenKey {
 
 	private static final long serialVersionUID = 1L;
 
@@ -149,5 +152,15 @@ public class Label implements Serializable {
 	 */
 	public void setVersion(Long version) {
 		this.version = version;
+	}
+
+	public Key getKeyParent() {
+		return null;
+	}
+
+	public String getKeyName() {
+		String userId = getUser().getUserId();
+		String name = getName();
+		return SharedUtils.combineStringParts(userId, name);
 	}
 }

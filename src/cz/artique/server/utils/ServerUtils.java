@@ -31,8 +31,8 @@ public class ServerUtils {
 		String name = model.getKeyName();
 		Class<? extends GenKey> clazz = model.getClass();
 		if (parent != null) {
-			return Datastore.createKey(clazz, name);
+			return Datastore.createKey(parent, clazz, name);
 		}
-		return Datastore.createKey(parent, clazz, name);
+		return Datastore.createKey(clazz, name);
 	}
 }

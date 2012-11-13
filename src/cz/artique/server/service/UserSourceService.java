@@ -62,17 +62,13 @@ public class UserSourceService {
 		if (diff != 0) {
 			Source s = Datastore.get(tx, SourceMeta.get(), us.getSource());
 			s.setUsage(s.getUsage() + diff);
-			if (s.getUsage() == 0) {
-				s.setEnabled(false);
-			}
+			s.setEnabled(s.getUsage() > 0);
 			Datastore.put(tx, s);
 
 			if (s.getParent() != null) {
 				Source s2 = Datastore.get(tx, SourceMeta.get(), s.getParent());
 				s2.setUsage(s2.getUsage() + diff);
-				if (s2.getUsage() == 0) {
-					s2.setEnabled(false);
-				}
+				s2.setEnabled(s2.getUsage() > 0);
 				Datastore.put(tx, s2);
 			}
 		}

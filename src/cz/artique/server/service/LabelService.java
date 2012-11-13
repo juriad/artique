@@ -5,44 +5,35 @@ import java.util.List;
 import org.slim3.datastore.Datastore;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.api.users.User;
 
 import cz.artique.server.meta.label.LabelMeta;
+import cz.artique.server.utils.ServerUtils;
 import cz.artique.shared.model.label.Label;
-import cz.artique.utils.SourceException;
 
 public class LabelService {
-	private final User user;
 
-	public LabelService(User user) {
-		this.user = user;
-	}
+	public LabelService() {}
 
-	public List<Label> getAllLabels() {
+	public List<Label> getAllLabels(User user) {
 		LabelMeta meta = LabelMeta.get();
 		List<Label> labels =
 			Datastore.query(meta).filter(meta.user.equal(user)).asList();
 		return labels;
 	}
 
-	public Label getLabelOrCreate(String name) {
+	public Label creatIfNotExist(Label label) {
+		Transaction tx = Datastore.beginTransaction();
+		Key key = ServerUtils.genKey(label);
 		LabelMeta meta = LabelMeta.get();
-		List<Label> labels =
-			Datastore
-				.query(meta)
-				.filter(meta.user.equal(user))
-				.filter(meta.name.equal(name))
-				.asList();
-		if (labels.size() == 0) {
-			Label l = new Label(user, name);
-			Key key = Datastore.put(l);
-			l.setKey(key);
-			return l;
-		} else if (labels.size() == 1) {
-			return labels.get(0);
-		} else {
-			throw new SourceException(
-				"Two labels with the same name for one user");
+		Label theLabel = Datastore.getOrNull(tx, meta, key);
+		if (theLabel == null) {
+			label.setKey(key);
+			Datastore.put(tx, label);
+			theLabel = label;
 		}
+		tx.commit();
+		return theLabel;
 	}
 }

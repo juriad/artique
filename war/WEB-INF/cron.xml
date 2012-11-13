@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries>
-  <cron>
-    <url>/cron/checkSources</url>
-    <description>fetches items from sources</description>
-    <schedule>every 2 minutes</schedule>
-  </cron>
+	<cron>
+		<url>/cron/checkSources?normal</url>
+		<description>fetches items from sources</description>
+		<schedule>every 1 minute</schedule>
+	</cron>
+	<cron>
+		<url>/cron/checkSources?error</url>
+		<description>probes error sources</description>
+		<schedule>every 12 hours</schedule>
+	</cron>
 </cronentries>

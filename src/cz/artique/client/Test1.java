@@ -24,6 +24,7 @@ import cz.artique.client.service.ClientSourceService;
 import cz.artique.client.service.ClientSourceServiceAsync;
 import cz.artique.shared.model.item.ArticleItem;
 import cz.artique.shared.model.item.Item;
+import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.model.source.XMLSource;
 
@@ -60,7 +61,7 @@ public class Test1 extends Composite {
 	@UiField
 	FlexTable logs;
 
-	Integer itemsCount = null;
+	int itemsCount = -1;
 
 	private UserInfo userInfo;
 
@@ -90,17 +91,18 @@ public class Test1 extends Composite {
 		logs.setHTML(index, 3, message);
 	}
 
-	class GetItemsCallback implements AsyncCallback<List<Item>> {
+	class GetItemsCallback implements AsyncCallback<List<UserItem>> {
 
-		public void onSuccess(List<Item> result) {
+		public void onSuccess(List<UserItem> result) {
 			if (result.size() == itemsCount) {
+				log("NEUTRAL", "items", "no new items");
 				return;
 			}
 			itemsCount = result.size();
 
 			items.clear();
 			for (int i = 0; i < result.size(); i++) {
-				Item it = result.get(i);
+				Item it = result.get(i).getFullItem();
 				items.setHTML(i, 0, it.getTitle());
 				items.setHTML(i, 1, it.getContent().getValue());
 				items.setHTML(i, 2, it.getAdded().toString());
@@ -131,9 +133,10 @@ public class Test1 extends Composite {
 
 			public void onSuccess(XMLSource result) {
 				UserSource us = new UserSource();
-				us.setName(name.getName());
+				us.setName(name.getText());
 				us.setSource(result.getKey());
 				us.setUser(userInfo.getUser());
+				us.setWatching(true);
 
 				css.addUserSource(us, new AddXMLSourceCallback());
 			}

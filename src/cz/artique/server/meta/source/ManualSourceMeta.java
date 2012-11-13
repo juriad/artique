@@ -1,6 +1,6 @@
 package cz.artique.server.meta.source;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-11 20:43:34")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-13 16:53:05")
 /** */
 public final class ManualSourceMeta
 		extends
@@ -15,6 +15,11 @@ public final class ManualSourceMeta
 	public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, java.lang.Boolean> enabled =
 		new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, java.lang.Boolean>(
 			this, "enabled", "enabled", boolean.class);
+
+	/** */
+	public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, java.lang.Boolean> enqued =
+		new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, java.lang.Boolean>(
+			this, "enqued", "enqued", boolean.class);
 
 	/** */
 	public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, java.lang.Integer> errorSequence =
@@ -79,6 +84,8 @@ public final class ManualSourceMeta
 			.getProperty("user"));
 		model.setEnabled(booleanToPrimitiveBoolean((java.lang.Boolean) entity
 			.getProperty("enabled")));
+		model.setEnqued(booleanToPrimitiveBoolean((java.lang.Boolean) entity
+			.getProperty("enqued")));
 		model.setErrorSequence(longToPrimitiveInt((java.lang.Long) entity
 			.getProperty("errorSequence")));
 		model.setKey(entity.getKey());
@@ -106,6 +113,7 @@ public final class ManualSourceMeta
 		}
 		entity.setProperty("user", m.getUser());
 		entity.setProperty("enabled", m.isEnabled());
+		entity.setProperty("enqued", m.isEnqued());
 		entity.setProperty("errorSequence", m.getErrorSequence());
 		entity.setProperty("nextCheck", m.getNextCheck());
 		entity.setProperty("parent", m.getParent());
@@ -188,6 +196,8 @@ public final class ManualSourceMeta
 		}
 		writer.setNextPropertyName("enabled");
 		encoder0.encode(writer, m.isEnabled());
+		writer.setNextPropertyName("enqued");
+		encoder0.encode(writer, m.isEnqued());
 		writer.setNextPropertyName("errorSequence");
 		encoder0.encode(writer, m.getErrorSequence());
 		if (m.getKey() != null) {
@@ -228,6 +238,8 @@ public final class ManualSourceMeta
 		m.setUser(decoder0.decode(reader, m.getUser()));
 		reader = rootReader.newObjectReader("enabled");
 		m.setEnabled(decoder0.decode(reader, m.isEnabled()));
+		reader = rootReader.newObjectReader("enqued");
+		m.setEnqued(decoder0.decode(reader, m.isEnqued()));
 		reader = rootReader.newObjectReader("errorSequence");
 		m.setErrorSequence(decoder0.decode(reader, m.getErrorSequence()));
 		reader = rootReader.newObjectReader("key");

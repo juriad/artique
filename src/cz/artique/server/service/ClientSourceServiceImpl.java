@@ -2,6 +2,7 @@ package cz.artique.server.service;
 
 import java.util.List;
 
+import com.google.appengine.api.datastore.Link;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
@@ -11,10 +12,12 @@ import cz.artique.server.meta.source.ManualSourceMeta;
 import cz.artique.server.meta.source.PageChangeSourceMeta;
 import cz.artique.server.meta.source.WebSiteSourceMeta;
 import cz.artique.server.meta.source.XMLSourceMeta;
+import cz.artique.server.utils.ServerUtils;
 import cz.artique.shared.model.source.HTMLSource;
 import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Region;
+import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.model.source.WebSiteSource;
 import cz.artique.shared.model.source.XMLSource;
@@ -23,21 +26,25 @@ import cz.artique.shared.model.source.XMLSource;
 public class ClientSourceServiceImpl implements ClientSourceService {
 
 	public XMLSource addSource(XMLSource source) {
+		addSourceCheck(source);
 		SourceService ss = new SourceService();
 		return ss.creatIfNotExist(source, XMLSourceMeta.get());
 	}
 
 	public ManualSource addSource(ManualSource source) {
+		addSourceCheck(source);
 		SourceService ss = new SourceService();
 		return ss.creatIfNotExist(source, ManualSourceMeta.get());
 	}
 
 	public HTMLSource addSource(HTMLSource source) {
+		addSourceCheck(source);
 		SourceService ss = new SourceService();
 		return ss.creatIfNotExist(source, HTMLSourceMeta.get());
 	}
 
 	public PageChangeSource addSource(PageChangeSource source) {
+		addSourceCheck(source);
 		SourceService ss = new SourceService();
 		if (source.getRegion() == null) {
 			if (source.getRegionObject() == null) {
@@ -53,6 +60,7 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 	}
 
 	public WebSiteSource addSource(WebSiteSource source) {
+		addSourceCheck(source);
 		SourceService ss = new SourceService();
 		if (source.getRegion() == null) {
 			if (source.getRegionObject() == null) {
@@ -65,6 +73,13 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 			}
 		}
 		return ss.creatIfNotExist(source, WebSiteSourceMeta.get());
+	}
+
+	private <E extends Source> void addSourceCheck(E source) {
+		Link l = ServerUtils.checkLink(source.getUrl());
+		if (l == null) {
+			// TODO throw new exception
+		}
 	}
 
 	public List<Region> getRegions(HTMLSource source) {

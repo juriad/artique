@@ -1,11 +1,24 @@
 <queue-entries>
-  <queue>
-    <name>default</name>
-    <rate>10/s</rate>
-  </queue>
-  <queue>
-    <name>slim3-gtx-queue</name>
-    <rate>10/s</rate>
-    <bucket-size>10</bucket-size>
-  </queue>
+	<queue>
+		<name>default</name>
+		<rate>10/s</rate>
+	</queue>
+	<queue>
+		<name>checkSource</name>
+		<rate>10/s</rate>
+		<bucket-size>5</bucket-size>
+		<max-concurrent-requests>10</max-concurrent-requests>
+		<retry-parameters>
+			<task-retry-limit>10</task-retry-limit>
+			<min-backoff-seconds>10</min-backoff-seconds>
+			<max-backoff-seconds>200</max-backoff-seconds>
+			<max-doublings>2</max-doublings>
+		</retry-parameters>
+
+	</queue>
+	<queue>
+		<name>slim3-gtx-queue</name>
+		<rate>10/s</rate>
+		<bucket-size>10</bucket-size>
+	</queue>
 </queue-entries>

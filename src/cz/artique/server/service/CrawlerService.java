@@ -15,7 +15,6 @@ import cz.artique.server.crawler.HTMLCrawler;
 import cz.artique.server.crawler.ManualCrawler;
 import cz.artique.server.crawler.XMLCrawler;
 import cz.artique.server.meta.item.ItemMeta;
-import cz.artique.server.meta.source.SourceMeta;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.source.HTMLSource;
 import cz.artique.shared.model.source.ManualSource;
@@ -100,19 +99,19 @@ public class CrawlerService {
 		source.setNextCheck(next);
 	}
 
-	public void crawl() {
-		SourceMeta meta = SourceMeta.get();
-		List<Source> sources =
-			Datastore
-				.query(meta)
-				.filter(meta.nextCheck.lessThanOrEqual(new Date()))
-				.filter(meta.enabled.equal(true))
-				.asList();
-
-		for (Source s : sources) {
-			CrawlerResult cr = fetchItems(s);
-			addStats(s, cr);
-			setNextCheck(s, cr);
+	private void setErrorSequence(Source source, CrawlerResult cr) {
+		if (cr.isError()) {
+			source.setErrorSequence(source.getErrorSequence() + 1);
+		} else {
+			source.setErrorSequence(0);
 		}
+	}
+
+	public boolean crawl(Source source) {
+		CrawlerResult cr = fetchItems(source);
+		addStats(source, cr);
+		setNextCheck(source, cr);
+		setErrorSequence(source, cr);
+		return !cr.isError();
 	}
 }

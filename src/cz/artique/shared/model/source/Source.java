@@ -37,6 +37,8 @@ public abstract class Source implements Serializable, GenKey {
 	 */
 	private boolean enabled;
 
+	private boolean enqued;
+
 	/**
 	 * Planned next check
 	 */
@@ -173,6 +175,14 @@ public abstract class Source implements Serializable, GenKey {
 
 	public void setParent(Key parent) {
 		this.parent = parent;
+	}
+
+	public boolean isEnqued() {
+		return enqued;
+	}
+
+	public void setEnqued(boolean enqued) {
+		this.enqued = enqued;
 	}
 
 }
