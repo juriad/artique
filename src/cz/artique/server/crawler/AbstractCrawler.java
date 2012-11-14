@@ -1,8 +1,15 @@
 package cz.artique.server.crawler;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+
+import cz.artique.server.utils.GAEConnectionManager;
 import cz.artique.shared.model.source.Source;
 
 public abstract class AbstractCrawler<E extends Source> implements Crawler<E> {
@@ -13,13 +20,22 @@ public abstract class AbstractCrawler<E extends Source> implements Crawler<E> {
 		this.source = source;
 	}
 
-	protected URL getURL(CrawlerResult result) {
-		URL url = null;
+	protected URI getURI(CrawlerResult result) {
+		URI uri = null;
 		try {
-			url = new URL(source.getUrl().getValue());
-		} catch (MalformedURLException e) {
-			result.addError(new CrawlerException("Malformed url", e));
+			uri = new URI(source.getUrl().getValue());
+
+		} catch (URISyntaxException e) {
+			result.addError(new CrawlerException("Wrong URI syntax", e));
 		}
-		return url;
+		return uri;
+	}
+
+	protected HttpClient getHttpClient() {
+		HttpParams httpParams = new BasicHttpParams();
+		ClientConnectionManager connectionManager = new GAEConnectionManager();
+		HttpClient httpClient =
+			new DefaultHttpClient(connectionManager, httpParams);
+		return httpClient;
 	}
 }

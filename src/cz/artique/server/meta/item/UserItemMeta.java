@@ -1,6 +1,6 @@
 package cz.artique.server.meta.item;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-13 21:50:32")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-14 11:22:30")
 /** */
 public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.item.UserItem> {
 
@@ -15,6 +15,9 @@ public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique
 
     /** */
     public final org.slim3.datastore.CollectionAttributeMeta<cz.artique.shared.model.item.UserItem, java.util.List<com.google.appengine.api.datastore.Key>, com.google.appengine.api.datastore.Key> labels = new org.slim3.datastore.CollectionAttributeMeta<cz.artique.shared.model.item.UserItem, java.util.List<com.google.appengine.api.datastore.Key>, com.google.appengine.api.datastore.Key>(this, "labels", "labels", java.util.List.class);
+
+    /** */
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.UserItem, java.util.Date> lastChanged = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.UserItem, java.util.Date>(this, "lastChanged", "lastChanged", java.util.Date.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.UserItem, java.util.Date> published = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.UserItem, java.util.Date>(this, "published", "published", java.util.Date.class);
@@ -49,6 +52,7 @@ public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique
         model.setItem((com.google.appengine.api.datastore.Key) entity.getProperty("item"));
         model.setKey(entity.getKey());
         model.setLabels(toList(com.google.appengine.api.datastore.Key.class, entity.getProperty("labels")));
+        model.setLastChanged((java.util.Date) entity.getProperty("lastChanged"));
         model.setPublished((java.util.Date) entity.getProperty("published"));
         model.setRead(booleanToPrimitiveBoolean((java.lang.Boolean) entity.getProperty("read")));
         model.setUser((com.google.appengine.api.users.User) entity.getProperty("user"));
@@ -68,6 +72,7 @@ public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique
         entity.setProperty("added", m.getAdded());
         entity.setProperty("item", m.getItem());
         entity.setProperty("labels", m.getLabels());
+        entity.setProperty("lastChanged", m.getLastChanged());
         entity.setProperty("published", m.getPublished());
         entity.setProperty("read", m.isRead());
         entity.setProperty("user", m.getUser());
@@ -158,6 +163,10 @@ public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique
             }
             writer.endArray();
         }
+        if(m.getLastChanged() != null){
+            writer.setNextPropertyName("lastChanged");
+            encoder0.encode(writer, m.getLastChanged());
+        }
         if(m.getPublished() != null){
             writer.setNextPropertyName("published");
             encoder0.encode(writer, m.getPublished());
@@ -205,6 +214,8 @@ public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique
                 m.setLabels(elements);
             }
         }
+        reader = rootReader.newObjectReader("lastChanged");
+        m.setLastChanged(decoder0.decode(reader, m.getLastChanged()));
         reader = rootReader.newObjectReader("published");
         m.setPublished(decoder0.decode(reader, m.getPublished()));
         reader = rootReader.newObjectReader("read");

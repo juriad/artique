@@ -26,7 +26,7 @@ public class Region implements Serializable, GenKey {
 	 * Name of this region, not personalizable
 	 */
 	private String name;
-
+	
 	/**
 	 * Selector of content which shall be processed
 	 */

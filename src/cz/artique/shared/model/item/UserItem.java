@@ -48,6 +48,8 @@ public class UserItem implements Serializable, GenKey {
 
 	private Date published;
 
+	private Date lastChanged;
+
 	@Attribute(persistent = false)
 	private Item fullItem;
 
@@ -182,5 +184,13 @@ public class UserItem implements Serializable, GenKey {
 
 	public void setPublished(Date published) {
 		this.published = published;
+	}
+
+	public Date getLastChanged() {
+		return lastChanged;
+	}
+
+	public void setLastChanged(Date lastChanged) {
+		this.lastChanged = lastChanged;
 	}
 }

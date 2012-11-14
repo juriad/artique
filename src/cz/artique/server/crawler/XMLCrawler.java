@@ -1,11 +1,15 @@
 package cz.artique.server.crawler;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 
 import com.google.appengine.api.datastore.Text;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -26,12 +30,12 @@ public class XMLCrawler extends AbstractCrawler<XMLSource> {
 	public CrawlerResult fetchItems() {
 		CrawlerResult result = new CrawlerResult();
 
-		URL url = getURL(result);
-		if (url == null) {
+		URI uri = getURI(result);
+		if (uri == null) {
 			return result;
 		}
 
-		SyndFeed feed = getFeed(result, url);
+		SyndFeed feed = getFeed(result, uri);
 		if (feed == null) {
 			return result;
 		}
@@ -40,22 +44,15 @@ public class XMLCrawler extends AbstractCrawler<XMLSource> {
 		return result;
 	}
 
-	@Override
-	protected URL getURL(CrawlerResult result) {
-		URL url = null;
-		try {
-			url = new URL(source.getUrl().getValue());
-		} catch (MalformedURLException e) {
-			result.addError(new CrawlerException("Malformed url", e));
-		}
-		return url;
-	}
-
-	protected SyndFeed getFeed(CrawlerResult result, URL url) {
+	protected SyndFeed getFeed(CrawlerResult result, URI uri) {
 		SyndFeedInput input = new SyndFeedInput();
 		SyndFeed feed = null;
 		try {
-			feed = input.build(new InputStreamReader(url.openStream()));
+			HttpClient client = getHttpClient();
+			HttpGet get = new HttpGet(uri);
+			HttpResponse resp = client.execute(get);
+			InputStream is = resp.getEntity().getContent();
+			feed = input.build(new InputStreamReader(is));
 		} catch (IllegalArgumentException e) {
 			result.addError(new CrawlerException("Unsupported feed", e));
 		} catch (FeedException e) {

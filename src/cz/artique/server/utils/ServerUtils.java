@@ -1,7 +1,7 @@
 package cz.artique.server.utils;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.slim3.datastore.Datastore;
 
@@ -19,9 +19,9 @@ public class ServerUtils {
 			return null;
 		}
 		try {
-			new URL(url.getValue()); // test url
+			new URI(url.getValue()); // test url
 			return url;
-		} catch (MalformedURLException e) {
+		} catch (URISyntaxException e) {
 			return null;
 		}
 	}

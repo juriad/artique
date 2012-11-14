@@ -2,13 +2,10 @@ package cz.artique.server.crawler;
 
 import cz.artique.shared.model.source.ManualSource;
 
-public class ManualCrawler implements Crawler<ManualSource> {
-
-	@SuppressWarnings("unused")
-	private final ManualSource source;
+public class ManualCrawler extends AbstractCrawler<ManualSource> {
 
 	public ManualCrawler(ManualSource source) {
-		this.source = source;
+		super(source);
 	}
 
 	public CrawlerResult fetchItems() {

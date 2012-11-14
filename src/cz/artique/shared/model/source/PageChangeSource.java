@@ -14,7 +14,7 @@ import cz.artique.shared.utils.SharedUtils;
 
 @Model(schemaVersion = 1)
 public class PageChangeSource extends HTMLSource
-		implements Serializable, GenKey {
+		implements Serializable, GenKey, SourceWithRegion {
 
 	private static final long serialVersionUID = 1L;
 	private Key region;
