@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -19,6 +18,7 @@ import com.sun.syndication.io.SyndFeedInput;
 
 import cz.artique.shared.model.item.ArticleItem;
 import cz.artique.shared.model.item.ContentType;
+import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.source.XMLSource;
 
 public class XMLCrawler extends AbstractCrawler<XMLSource> {
@@ -41,7 +41,20 @@ public class XMLCrawler extends AbstractCrawler<XMLSource> {
 		}
 
 		getItems(result, feed);
+		addItems(result);
 		return result;
+	}
+
+	protected void addItems(CrawlerResult result) {
+		CrawlerResult res = new CrawlerResult();
+		res.getErrors().addAll(result.getErrors());
+		for (Item item : result.getItems()) {
+			boolean added = putItemIfNotDuplicate(source, item);
+			if (added) {
+				res.addItem(item);
+			}
+		}
+		result = res;
 	}
 
 	protected SyndFeed getFeed(CrawlerResult result, URI uri) {
@@ -68,9 +81,8 @@ public class XMLCrawler extends AbstractCrawler<XMLSource> {
 		@SuppressWarnings("unchecked")
 		List<SyndEntry> entries = feed.getEntries();
 		for (SyndEntry entry : entries) {
-			ArticleItem a = new ArticleItem();
+			ArticleItem a = new ArticleItem(source);
 
-			a.setAdded(new Date());
 			a.setTitle(entry.getTitle());
 			a.setContent(new Text(entry.getDescription().getValue()));
 			a.setContentType(ContentType
@@ -78,7 +90,6 @@ public class XMLCrawler extends AbstractCrawler<XMLSource> {
 			a.setAuthor(entry.getAuthor());
 			a.setPublished(entry.getPublishedDate());
 
-			a.setSource(source.getKey());
 			try {
 				a.setHash(getHash(entry));
 			} catch (CrawlerException e) {
@@ -88,7 +99,7 @@ public class XMLCrawler extends AbstractCrawler<XMLSource> {
 		}
 	}
 
-	private String getHash(SyndEntry entry) {
+	protected String getHash(SyndEntry entry) {
 		String id = entry.getUri();
 		if (id == null) {
 			id = entry.getTitle();

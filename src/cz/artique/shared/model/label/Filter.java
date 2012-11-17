@@ -31,9 +31,12 @@ public class Filter implements Serializable {
 	private String name;
 
 	/**
-	 * Parent filter (if it consists of two levels)
+	 * Filter composition
 	 */
-	private Key parent;
+	private List<Key> filters;
+
+	@Attribute(persistent = false)
+	private List<Filter> filterObjects;
 
 	/**
 	 * Operands of this filter
@@ -88,10 +91,6 @@ public class Filter implements Serializable {
 		return operator;
 	}
 
-	public Key getParent() {
-		return parent;
-	}
-
 	public User getUser() {
 		return user;
 	}
@@ -135,10 +134,6 @@ public class Filter implements Serializable {
 		this.operator = operator;
 	}
 
-	public void setParent(Key parent) {
-		this.parent = parent;
-	}
-
 	public void setUser(User user) {
 		this.user = user;
 	}
@@ -151,5 +146,21 @@ public class Filter implements Serializable {
 	 */
 	public void setVersion(Long version) {
 		this.version = version;
+	}
+
+	public List<Key> getFilters() {
+		return filters;
+	}
+
+	public void setFilters(List<Key> filters) {
+		this.filters = filters;
+	}
+
+	public List<Filter> getFilterObjects() {
+		return filterObjects;
+	}
+
+	public void setFilterObjects(List<Filter> filterObjects) {
+		this.filterObjects = filterObjects;
 	}
 }

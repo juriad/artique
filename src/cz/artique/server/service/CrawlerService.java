@@ -1,21 +1,16 @@
 package cz.artique.server.service;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.slim3.datastore.Datastore;
 
-import com.google.appengine.api.datastore.Key;
-
 import cz.artique.server.crawler.Crawler;
 import cz.artique.server.crawler.CrawlerResult;
 import cz.artique.server.crawler.HTMLCrawler;
 import cz.artique.server.crawler.ManualCrawler;
 import cz.artique.server.crawler.XMLCrawler;
-import cz.artique.server.meta.item.ItemMeta;
-import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.source.HTMLSource;
 import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.Source;
@@ -26,24 +21,7 @@ public class CrawlerService {
 	public CrawlerResult fetchItems(Source source) {
 		Crawler<? extends Source> c = createCrawler(source);
 		CrawlerResult cr = c.fetchItems();
-		if (cr.isError()) {
-			return cr;
-		}
-
-		List<Item> items = new ArrayList<Item>(cr.getItems());
-		cr.getItems().clear();
-
-		outer: for (Item i : items) {
-			List<Item> sameHash = getItemsByHash(i.getHash());
-			for (Item i2 : sameHash) {
-				if (isDuplicate(i, i2)) {
-					continue outer;
-				}
-			}
-			Key key = Datastore.put(i);
-			i.setKey(key);
-			cr.addItem(i);
-		}
+		
 		return cr;
 	}
 
@@ -71,24 +49,6 @@ public class CrawlerService {
 		} else {
 			return null;
 		}
-	}
-
-	protected List<Item> getItemsByHash(String hash) {
-		ItemMeta meta = ItemMeta.get();
-		return Datastore.query(meta).filter(meta.hash.equal(hash)).asList();
-	}
-
-	public boolean isDuplicate(Item i1, Item i2) {
-		if (i1.getHash().equals(i2.getHash())) {
-			if (i1.getSource().equals(i2.getSource())) {
-				if ((i1.getUrl() != null && i2.getUrl() != null) ? i1
-					.getUrl()
-					.equals(i2.getUrl()) : i1.getUrl() == i2.getUrl()) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	private void setNextCheck(Source source, CrawlerResult cr) {

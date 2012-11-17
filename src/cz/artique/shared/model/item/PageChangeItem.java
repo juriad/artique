@@ -19,6 +19,8 @@ public class PageChangeItem extends Item implements Serializable {
 	 */
 	private Text diff;
 
+	private ContentType diffType;
+
 	/**
 	 * Diff was created against page of this date
 	 */
@@ -45,6 +47,14 @@ public class PageChangeItem extends Item implements Serializable {
 
 	public void setDiff(Text diff) {
 		this.diff = diff;
+	}
+
+	public ContentType getDiffType() {
+		return diffType;
+	}
+
+	public void setDiffType(ContentType diffType) {
+		this.diffType = diffType;
 	}
 
 }

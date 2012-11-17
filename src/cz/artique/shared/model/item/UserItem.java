@@ -34,6 +34,9 @@ public class UserItem implements Serializable, GenKey {
 	 */
 	private Key item;
 
+	@Attribute(persistent = false)
+	private Item itemObject;
+
 	/**
 	 * Assigned labels
 	 */
@@ -49,10 +52,9 @@ public class UserItem implements Serializable, GenKey {
 	private Date published;
 
 	private Date lastChanged;
-
-	@Attribute(persistent = false)
-	private Item fullItem;
-
+	
+	private Key userSource;
+	
 	/**
 	 * Returns the key.
 	 * 
@@ -162,14 +164,6 @@ public class UserItem implements Serializable, GenKey {
 		return SharedUtils.combineStringParts(userId);
 	}
 
-	public Item getFullItem() {
-		return fullItem;
-	}
-
-	public void setFullItem(Item fullItem) {
-		this.fullItem = fullItem;
-	}
-
 	public Date getAdded() {
 		return added;
 	}
@@ -192,5 +186,21 @@ public class UserItem implements Serializable, GenKey {
 
 	public void setLastChanged(Date lastChanged) {
 		this.lastChanged = lastChanged;
+	}
+
+	public Item getItemObject() {
+		return itemObject;
+	}
+
+	public void setItemObject(Item itemObject) {
+		this.itemObject = itemObject;
+	}
+
+	public Key getUserSource() {
+		return userSource;
+	}
+
+	public void setUserSource(Key userSource) {
+		this.userSource = userSource;
 	}
 }

@@ -43,7 +43,7 @@ public class Region implements Serializable, GenKey {
 	 * Reference to HTMLSource (either PageChange or WebSite)
 	 */
 	private Key htmlSource;
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {

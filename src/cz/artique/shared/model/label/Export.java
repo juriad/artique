@@ -11,6 +11,6 @@ public class Export extends Filter implements Serializable {
 
 	public Export() {
 		setOperator(Operator.OR);
-		setParent(null);
+		setFilters(null);
 	}
 }

@@ -54,6 +54,11 @@ public abstract class Source implements Serializable, GenKey {
 	 */
 	private Key parent;
 
+	@Attribute(persistent = false)
+	private Source parentObject;
+	
+	private Date lastCheck;
+
 	public Source() {}
 
 	protected Source(Link url, Key parent) {
@@ -183,6 +188,22 @@ public abstract class Source implements Serializable, GenKey {
 
 	public void setEnqued(boolean enqued) {
 		this.enqued = enqued;
+	}
+
+	public Source getParentObject() {
+		return parentObject;
+	}
+
+	public void setParentObject(Source parentObject) {
+		this.parentObject = parentObject;
+	}
+
+	public Date getLastCheck() {
+		return lastCheck;
+	}
+
+	public void setLastCheck(Date lastCheck) {
+		this.lastCheck = lastCheck;
 	}
 
 }

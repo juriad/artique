@@ -1,6 +1,7 @@
 package cz.artique.shared.model.source;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
@@ -33,6 +34,9 @@ public class UserSource implements Serializable, GenKey {
 	 */
 	private Key source;
 
+	@Attribute(persistent = false)
+	private Source sourceObject;
+
 	/**
 	 * Personalized name of source
 	 */
@@ -44,6 +48,8 @@ public class UserSource implements Serializable, GenKey {
 	private String hierarchy;
 
 	private boolean watching;
+
+	private List<Key> defaultLabels;
 
 	public UserSource() {}
 
@@ -169,5 +175,21 @@ public class UserSource implements Serializable, GenKey {
 		String userId = getUser().getUserId();
 		String sourceId = KeyFactory.keyToString(getSource());
 		return SharedUtils.combineStringParts(userId, sourceId);
+	}
+
+	public Source getSourceObject() {
+		return sourceObject;
+	}
+
+	public void setSourceObject(Source sourceObject) {
+		this.sourceObject = sourceObject;
+	}
+
+	public List<Key> getDefaultLabels() {
+		return defaultLabels;
+	}
+
+	public void setDefaultLabels(List<Key> defaultLabels) {
+		this.defaultLabels = defaultLabels;
 	}
 }

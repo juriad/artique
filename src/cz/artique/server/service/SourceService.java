@@ -80,7 +80,7 @@ public class SourceService {
 		return list;
 	}
 
-	public List<WebSiteSource> getWebSiteSource(HTMLSource parent) {
+	public List<WebSiteSource> getWebSiteSources(HTMLSource parent) {
 		WebSiteSourceMeta meta = WebSiteSourceMeta.get();
 		List<WebSiteSource> list =
 			Datastore

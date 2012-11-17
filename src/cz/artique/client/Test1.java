@@ -102,7 +102,7 @@ public class Test1 extends Composite {
 
 			items.clear();
 			for (int i = 0; i < result.size(); i++) {
-				Item it = result.get(i).getFullItem();
+				Item it = result.get(i).getItemObject();
 				items.setHTML(i, 0, it.getTitle());
 				items.setHTML(i, 1, it.getContent().getValue());
 				items.setHTML(i, 2, it.getAdded().toString());

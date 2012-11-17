@@ -1,6 +1,6 @@
 package cz.artique.server.meta.item;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-14 11:22:30")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-17 18:08:50")
 /** */
 public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.item.UserItem> {
 
@@ -27,6 +27,9 @@ public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.UserItem, com.google.appengine.api.users.User> user = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.UserItem, com.google.appengine.api.users.User>(this, "user", "user", com.google.appengine.api.users.User.class);
+
+    /** */
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.UserItem, com.google.appengine.api.datastore.Key> userSource = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.UserItem, com.google.appengine.api.datastore.Key>(this, "userSource", "userSource", com.google.appengine.api.datastore.Key.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.UserItem, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.UserItem, java.lang.Long>(this, "version", "version", java.lang.Long.class);
@@ -56,6 +59,7 @@ public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique
         model.setPublished((java.util.Date) entity.getProperty("published"));
         model.setRead(booleanToPrimitiveBoolean((java.lang.Boolean) entity.getProperty("read")));
         model.setUser((com.google.appengine.api.users.User) entity.getProperty("user"));
+        model.setUserSource((com.google.appengine.api.datastore.Key) entity.getProperty("userSource"));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
         return model;
     }
@@ -76,6 +80,7 @@ public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique
         entity.setProperty("published", m.getPublished());
         entity.setProperty("read", m.isRead());
         entity.setProperty("user", m.getUser());
+        entity.setProperty("userSource", m.getUserSource());
         entity.setProperty("version", m.getVersion());
         entity.setProperty("slim3.schemaVersion", 1);
         return entity;
@@ -143,13 +148,13 @@ public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique
             writer.setNextPropertyName("added");
             encoder0.encode(writer, m.getAdded());
         }
-        if(m.getFullItem() != null){
-            writer.setNextPropertyName("fullItem");
-            encoder0.encode(writer, m.getFullItem());
-        }
         if(m.getItem() != null){
             writer.setNextPropertyName("item");
             encoder0.encode(writer, m.getItem());
+        }
+        if(m.getItemObject() != null){
+            writer.setNextPropertyName("itemObject");
+            encoder0.encode(writer, m.getItemObject());
         }
         if(m.getKey() != null){
             writer.setNextPropertyName("key");
@@ -177,6 +182,10 @@ public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique
             writer.setNextPropertyName("user");
             encoder0.encode(writer, m.getUser());
         }
+        if(m.getUserSource() != null){
+            writer.setNextPropertyName("userSource");
+            encoder0.encode(writer, m.getUserSource());
+        }
         if(m.getVersion() != null){
             writer.setNextPropertyName("version");
             encoder0.encode(writer, m.getVersion());
@@ -191,10 +200,10 @@ public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique
         org.slim3.datastore.json.Default decoder0 = new org.slim3.datastore.json.Default();
         reader = rootReader.newObjectReader("added");
         m.setAdded(decoder0.decode(reader, m.getAdded()));
-        reader = rootReader.newObjectReader("fullItem");
-        m.setFullItem(decoder0.decode(reader, m.getFullItem(), cz.artique.shared.model.item.Item.class));
         reader = rootReader.newObjectReader("item");
         m.setItem(decoder0.decode(reader, m.getItem()));
+        reader = rootReader.newObjectReader("itemObject");
+        m.setItemObject(decoder0.decode(reader, m.getItemObject(), cz.artique.shared.model.item.Item.class));
         reader = rootReader.newObjectReader("key");
         m.setKey(decoder0.decode(reader, m.getKey()));
         reader = rootReader.newObjectReader("labels");
@@ -222,6 +231,8 @@ public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique
         m.setRead(decoder0.decode(reader, m.isRead()));
         reader = rootReader.newObjectReader("user");
         m.setUser(decoder0.decode(reader, m.getUser()));
+        reader = rootReader.newObjectReader("userSource");
+        m.setUserSource(decoder0.decode(reader, m.getUserSource()));
         reader = rootReader.newObjectReader("version");
         m.setVersion(decoder0.decode(reader, m.getVersion()));
         return m;

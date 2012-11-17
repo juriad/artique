@@ -1,6 +1,6 @@
 package cz.artique.server.meta.source;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-14 11:22:30")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-17 18:00:14")
 /** */
 public final class HTMLSourceMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.source.HTMLSource> {
 
@@ -15,6 +15,9 @@ public final class HTMLSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.HTMLSource, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.HTMLSource, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
+
+    /** */
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.HTMLSource, java.util.Date> lastCheck = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.HTMLSource, java.util.Date>(this, "lastCheck", "lastCheck", java.util.Date.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.HTMLSource, java.util.Date> nextCheck = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.HTMLSource, java.util.Date>(this, "nextCheck", "nextCheck", java.util.Date.class);
@@ -52,6 +55,7 @@ public final class HTMLSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         model.setEnqued(booleanToPrimitiveBoolean((java.lang.Boolean) entity.getProperty("enqued")));
         model.setErrorSequence(longToPrimitiveInt((java.lang.Long) entity.getProperty("errorSequence")));
         model.setKey(entity.getKey());
+        model.setLastCheck((java.util.Date) entity.getProperty("lastCheck"));
         model.setNextCheck((java.util.Date) entity.getProperty("nextCheck"));
         model.setParent((com.google.appengine.api.datastore.Key) entity.getProperty("parent"));
         model.setUrl((com.google.appengine.api.datastore.Link) entity.getProperty("url"));
@@ -72,6 +76,7 @@ public final class HTMLSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         entity.setProperty("enabled", m.isEnabled());
         entity.setProperty("enqued", m.isEnqued());
         entity.setProperty("errorSequence", m.getErrorSequence());
+        entity.setProperty("lastCheck", m.getLastCheck());
         entity.setProperty("nextCheck", m.getNextCheck());
         entity.setProperty("parent", m.getParent());
         entity.setProperty("url", m.getUrl());
@@ -150,6 +155,10 @@ public final class HTMLSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
             writer.setNextPropertyName("key");
             encoder0.encode(writer, m.getKey());
         }
+        if(m.getLastCheck() != null){
+            writer.setNextPropertyName("lastCheck");
+            encoder0.encode(writer, m.getLastCheck());
+        }
         if(m.getNextCheck() != null){
             writer.setNextPropertyName("nextCheck");
             encoder0.encode(writer, m.getNextCheck());
@@ -157,6 +166,10 @@ public final class HTMLSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         if(m.getParent() != null){
             writer.setNextPropertyName("parent");
             encoder0.encode(writer, m.getParent());
+        }
+        if(m.getParentObject() != null){
+            writer.setNextPropertyName("parentObject");
+            encoder0.encode(writer, m.getParentObject());
         }
         if(m.getUrl() != null){
             writer.setNextPropertyName("url");
@@ -184,10 +197,14 @@ public final class HTMLSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         m.setErrorSequence(decoder0.decode(reader, m.getErrorSequence()));
         reader = rootReader.newObjectReader("key");
         m.setKey(decoder0.decode(reader, m.getKey()));
+        reader = rootReader.newObjectReader("lastCheck");
+        m.setLastCheck(decoder0.decode(reader, m.getLastCheck()));
         reader = rootReader.newObjectReader("nextCheck");
         m.setNextCheck(decoder0.decode(reader, m.getNextCheck()));
         reader = rootReader.newObjectReader("parent");
         m.setParent(decoder0.decode(reader, m.getParent()));
+        reader = rootReader.newObjectReader("parentObject");
+        m.setParentObject(decoder0.decode(reader, m.getParentObject(), cz.artique.shared.model.source.Source.class));
         reader = rootReader.newObjectReader("url");
         m.setUrl(decoder0.decode(reader, m.getUrl()));
         reader = rootReader.newObjectReader("usage");

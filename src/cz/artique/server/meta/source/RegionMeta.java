@@ -1,6 +1,6 @@
 package cz.artique.server.meta.source;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-14 11:57:57")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-17 11:23:35")
 /** */
 public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.source.Region> {
 
@@ -18,9 +18,6 @@ public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
 
     /** */
     public final org.slim3.datastore.StringUnindexedAttributeMeta<cz.artique.shared.model.source.Region> positiveSelector = new org.slim3.datastore.StringUnindexedAttributeMeta<cz.artique.shared.model.source.Region>(this, "positiveSelector", "positiveSelector");
-
-    /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Region, cz.artique.shared.model.source.SelectorType> selectorType = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Region, cz.artique.shared.model.source.SelectorType>(this, "selectorType", "selectorType", cz.artique.shared.model.source.SelectorType.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Region, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Region, java.lang.Long>(this, "version", "version", java.lang.Long.class);
@@ -47,7 +44,6 @@ public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
         model.setName((java.lang.String) entity.getProperty("name"));
         model.setNegativeSelectors(toList(java.lang.String.class, entity.getProperty("negativeSelectors")));
         model.setPositiveSelector((java.lang.String) entity.getProperty("positiveSelector"));
-        model.setSelectorType(stringToEnum(cz.artique.shared.model.source.SelectorType.class, (java.lang.String) entity.getProperty("selectorType")));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
         return model;
     }
@@ -65,7 +61,6 @@ public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
         entity.setProperty("name", m.getName());
         entity.setUnindexedProperty("negativeSelectors", m.getNegativeSelectors());
         entity.setUnindexedProperty("positiveSelector", m.getPositiveSelector());
-        entity.setProperty("selectorType", enumToString(m.getSelectorType()));
         entity.setProperty("version", m.getVersion());
         entity.setProperty("slim3.schemaVersion", 1);
         return entity;
@@ -153,10 +148,6 @@ public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
             writer.setNextPropertyName("positiveSelector");
             encoder0.encode(writer, m.getPositiveSelector());
         }
-        if(m.getSelectorType() != null){
-            writer.setNextPropertyName("selectorType");
-            encoder0.encode(writer, m.getSelectorType());
-        }
         if(m.getVersion() != null){
             writer.setNextPropertyName("version");
             encoder0.encode(writer, m.getVersion());
@@ -194,8 +185,6 @@ public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
         }
         reader = rootReader.newObjectReader("positiveSelector");
         m.setPositiveSelector(decoder0.decode(reader, m.getPositiveSelector()));
-        reader = rootReader.newObjectReader("selectorType");
-        m.setSelectorType(decoder0.decode(reader, m.getSelectorType(), cz.artique.shared.model.source.SelectorType.class));
         reader = rootReader.newObjectReader("version");
         m.setVersion(decoder0.decode(reader, m.getVersion()));
         return m;

@@ -28,6 +28,9 @@ public class Item implements Serializable {
 	 */
 	private Key source;
 
+	@Attribute(persistent = false)
+	private Source sourceObject;
+
 	/**
 	 * URL of this item
 	 */
@@ -42,6 +45,11 @@ public class Item implements Serializable {
 	 * When the item was added to system
 	 */
 	private Date added;
+
+	/**
+	 * Date of publish
+	 */
+	private Date published;
 
 	/**
 	 * Content of item
@@ -68,6 +76,7 @@ public class Item implements Serializable {
 	public Item(Source source) {
 		setAdded(new Date());
 		setSource(source.getKey());
+		setItemType(ItemType.LINK);
 	}
 
 	@Override
@@ -200,6 +209,22 @@ public class Item implements Serializable {
 
 	public void setContentType(ContentType contentType) {
 		this.contentType = contentType;
+	}
+
+	public Source getSourceObject() {
+		return sourceObject;
+	}
+
+	public void setSourceObject(Source sourceObject) {
+		this.sourceObject = sourceObject;
+	}
+
+	public Date getPublished() {
+		return published;
+	}
+
+	public void setPublished(Date published) {
+		this.published = published;
 	}
 
 }

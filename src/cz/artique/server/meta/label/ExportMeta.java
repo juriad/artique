@@ -1,8 +1,11 @@
 package cz.artique.server.meta.label;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-14 11:22:30")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-17 11:22:08")
 /** */
 public final class ExportMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.label.Export> {
+
+    /** */
+    public final org.slim3.datastore.CollectionAttributeMeta<cz.artique.shared.model.label.Export, java.util.List<com.google.appengine.api.datastore.Key>, com.google.appengine.api.datastore.Key> filters = new org.slim3.datastore.CollectionAttributeMeta<cz.artique.shared.model.label.Export, java.util.List<com.google.appengine.api.datastore.Key>, com.google.appengine.api.datastore.Key>(this, "filters", "filters", java.util.List.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Export, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Export, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
@@ -15,9 +18,6 @@ public final class ExportMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Export, cz.artique.shared.model.label.Operator> operator = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Export, cz.artique.shared.model.label.Operator>(this, "operator", "operator", cz.artique.shared.model.label.Operator.class);
-
-    /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Export, com.google.appengine.api.datastore.Key> parent = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Export, com.google.appengine.api.datastore.Key>(this, "parent", "parent", com.google.appengine.api.datastore.Key.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Export, com.google.appengine.api.users.User> user = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Export, com.google.appengine.api.users.User>(this, "user", "user", com.google.appengine.api.users.User.class);
@@ -42,11 +42,11 @@ public final class ExportMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
     @Override
     public cz.artique.shared.model.label.Export entityToModel(com.google.appengine.api.datastore.Entity entity) {
         cz.artique.shared.model.label.Export model = new cz.artique.shared.model.label.Export();
+        model.setFilters(toList(com.google.appengine.api.datastore.Key.class, entity.getProperty("filters")));
         model.setKey(entity.getKey());
         model.setLabels(toList(com.google.appengine.api.datastore.Key.class, entity.getProperty("labels")));
         model.setName((java.lang.String) entity.getProperty("name"));
         model.setOperator(stringToEnum(cz.artique.shared.model.label.Operator.class, (java.lang.String) entity.getProperty("operator")));
-        model.setParent((com.google.appengine.api.datastore.Key) entity.getProperty("parent"));
         model.setUser((com.google.appengine.api.users.User) entity.getProperty("user"));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
         return model;
@@ -61,10 +61,10 @@ public final class ExportMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
         } else {
             entity = new com.google.appengine.api.datastore.Entity(kind);
         }
+        entity.setProperty("filters", m.getFilters());
         entity.setProperty("labels", m.getLabels());
         entity.setProperty("name", m.getName());
         entity.setProperty("operator", enumToString(m.getOperator()));
-        entity.setProperty("parent", m.getParent());
         entity.setProperty("user", m.getUser());
         entity.setProperty("version", m.getVersion());
         entity.setProperty("slim3.schemaVersion", 1);
@@ -130,6 +130,18 @@ public final class ExportMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
         cz.artique.shared.model.label.Export m = (cz.artique.shared.model.label.Export) model;
         writer.beginObject();
         org.slim3.datastore.json.Default encoder0 = new org.slim3.datastore.json.Default();
+        if(m.getFilterObjects() != null){
+            writer.setNextPropertyName("filterObjects");
+            // cz.artique.shared.model.label.Filter is not supported.
+        }
+        if(m.getFilters() != null){
+            writer.setNextPropertyName("filters");
+            writer.beginArray();
+            for(com.google.appengine.api.datastore.Key v : m.getFilters()){
+                encoder0.encode(writer, v);
+            }
+            writer.endArray();
+        }
         if(m.getKey() != null){
             writer.setNextPropertyName("key");
             encoder0.encode(writer, m.getKey());
@@ -150,10 +162,6 @@ public final class ExportMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
             writer.setNextPropertyName("operator");
             encoder0.encode(writer, m.getOperator());
         }
-        if(m.getParent() != null){
-            writer.setNextPropertyName("parent");
-            encoder0.encode(writer, m.getParent());
-        }
         if(m.getUser() != null){
             writer.setNextPropertyName("user");
             encoder0.encode(writer, m.getUser());
@@ -170,6 +178,24 @@ public final class ExportMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
         cz.artique.shared.model.label.Export m = new cz.artique.shared.model.label.Export();
         org.slim3.datastore.json.JsonReader reader = null;
         org.slim3.datastore.json.Default decoder0 = new org.slim3.datastore.json.Default();
+        reader = rootReader.newObjectReader("filterObjects");
+        reader = rootReader.newObjectReader("filters");
+        {
+            java.util.ArrayList<com.google.appengine.api.datastore.Key> elements = new java.util.ArrayList<com.google.appengine.api.datastore.Key>();
+            org.slim3.datastore.json.JsonArrayReader r = rootReader.newArrayReader("filters");
+            if(r != null){
+                reader = r;
+                int n = r.length();
+                for(int i = 0; i < n; i++){
+                    r.setIndex(i);
+                    com.google.appengine.api.datastore.Key v = decoder0.decode(reader, (com.google.appengine.api.datastore.Key)null)                    ;
+                    if(v != null){
+                        elements.add(v);
+                    }
+                }
+                m.setFilters(elements);
+            }
+        }
         reader = rootReader.newObjectReader("key");
         m.setKey(decoder0.decode(reader, m.getKey()));
         reader = rootReader.newObjectReader("labels");
@@ -193,8 +219,6 @@ public final class ExportMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
         m.setName(decoder0.decode(reader, m.getName()));
         reader = rootReader.newObjectReader("operator");
         m.setOperator(decoder0.decode(reader, m.getOperator(), cz.artique.shared.model.label.Operator.class));
-        reader = rootReader.newObjectReader("parent");
-        m.setParent(decoder0.decode(reader, m.getParent()));
         reader = rootReader.newObjectReader("user");
         m.setUser(decoder0.decode(reader, m.getUser()));
         reader = rootReader.newObjectReader("version");

@@ -32,7 +32,7 @@ public class ItemService {
 		ItemMeta iMeta = ItemMeta.get();
 		List<Item> items = Datastore.get(iMeta, itemKeys);
 		for (int i = 0; i < items.size(); i++) {
-			uItems.get(i).setFullItem(items.get(i));
+			uItems.get(i).setItemObject(items.get(i));
 		}
 
 		return uItems;
