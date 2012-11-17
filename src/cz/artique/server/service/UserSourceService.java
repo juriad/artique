@@ -7,10 +7,13 @@ import org.slim3.datastore.Datastore;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserServiceFactory;
 
+import cz.artique.server.meta.source.ManualSourceMeta;
 import cz.artique.server.meta.source.SourceMeta;
 import cz.artique.server.meta.source.UserSourceMeta;
 import cz.artique.server.utils.ServerUtils;
+import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
 
@@ -80,5 +83,17 @@ public class UserSourceService {
 			Datastore.query(meta).filter(meta.user.equal(user)).asList();
 		return userSources;
 	}
-	
+
+	public UserSource getManualSource() {
+		User user = UserServiceFactory.getUserService().getCurrentUser();
+		ManualSource ms = new ManualSource(user);
+		ManualSource manualSource =
+			Datastore.get(ManualSourceMeta.get(), ServerUtils.genKey(ms));
+		UserSource us = new UserSource(user, manualSource, "");
+		UserSource userSource =
+			Datastore.get(UserSourceMeta.get(), ServerUtils.genKey(us));
+		userSource.setSourceObject(ms);
+		return userSource;
+	}
+
 }

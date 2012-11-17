@@ -11,7 +11,9 @@ import com.google.appengine.api.users.User;
 import cz.artique.server.meta.item.ItemMeta;
 import cz.artique.server.meta.item.UserItemMeta;
 import cz.artique.shared.model.item.Item;
+import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.item.UserItem;
+import cz.artique.shared.model.source.UserSource;
 
 public class ItemService {
 	public List<UserItem> getItems(User user) {
@@ -36,5 +38,24 @@ public class ItemService {
 		}
 
 		return uItems;
+	}
+
+	public UserItem addManualItem(ManualItem item) {
+		UserSourceService uss = new UserSourceService();
+		UserSource manualSource = uss.getManualSource();
+
+		item.setSource(manualSource.getSource());
+		Key key = Datastore.put(item);
+		item.setKey(key);
+
+		UserItem ui = new UserItem();
+		ui.setUser(manualSource.getUser());
+		ui.setUserSource(manualSource.getKey());
+		ui.setItem(item.getKey());
+		ui.setLabels(manualSource.getDefaultLabels());
+
+		Key key2 = Datastore.put(ui);
+		ui.setKey(key2);
+		return ui;
 	}
 }
