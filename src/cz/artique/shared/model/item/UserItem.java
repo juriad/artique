@@ -10,6 +10,7 @@ import org.slim3.datastore.Model;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
+import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.utils.GenKey;
 import cz.artique.shared.utils.SharedUtils;
 
@@ -52,9 +53,23 @@ public class UserItem implements Serializable, GenKey {
 	private Date published;
 
 	private Date lastChanged;
-	
+
 	private Key userSource;
-	
+
+	public UserItem() {}
+
+	public UserItem(Item item, UserSource userSource) {
+		this.item = item.getKey();
+		this.added = item.getAdded();
+		this.published =
+			(item.getPublished() == null ? added : item.getPublished());
+		this.lastChanged = added;
+		this.userSource = userSource.getKey();
+		this.labels = userSource.getDefaultLabels();
+		this.user = userSource.getUser();
+		this.read = false;
+	}
+
 	/**
 	 * Returns the key.
 	 * 

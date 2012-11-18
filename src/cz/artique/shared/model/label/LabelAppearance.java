@@ -1,7 +1,7 @@
 package cz.artique.shared.model.label;
 
-public interface LabelApperiance {
-	ApperianceType getApperianceType();
+public interface LabelAppearance {
+	AppearanceType getApperianceType();
 
 	String getAssignedIcon();
 

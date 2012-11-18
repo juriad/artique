@@ -13,7 +13,7 @@ import com.google.appengine.api.datastore.Text;
 import cz.artique.shared.model.source.Source;
 
 @Model(schemaVersion = 1)
-public class Item implements Serializable {
+public abstract class Item implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -62,11 +62,6 @@ public class Item implements Serializable {
 	private ContentType contentType;
 
 	/**
-	 * Type of item
-	 */
-	private ItemType itemType;
-
-	/**
 	 * Hash of this item; used for comparison
 	 */
 	private String hash;
@@ -76,7 +71,6 @@ public class Item implements Serializable {
 	public Item(Source source) {
 		setAdded(new Date());
 		setSource(source.getKey());
-		setItemType(ItemType.LINK);
 	}
 
 	@Override
@@ -107,10 +101,6 @@ public class Item implements Serializable {
 
 	public Text getContent() {
 		return content;
-	}
-
-	public ItemType getItemType() {
-		return itemType;
 	}
 
 	/**
@@ -157,10 +147,6 @@ public class Item implements Serializable {
 
 	public void setContent(Text content) {
 		this.content = content;
-	}
-
-	public void setItemType(ItemType itemType) {
-		this.itemType = itemType;
 	}
 
 	/**

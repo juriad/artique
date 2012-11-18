@@ -10,6 +10,7 @@ import com.google.appengine.api.users.User;
 
 import cz.artique.server.meta.item.ItemMeta;
 import cz.artique.server.meta.item.UserItemMeta;
+import cz.artique.server.utils.ServerUtils;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.item.UserItem;
@@ -48,14 +49,13 @@ public class ItemService {
 		Key key = Datastore.put(item);
 		item.setKey(key);
 
-		UserItem ui = new UserItem();
-		ui.setUser(manualSource.getUser());
-		ui.setUserSource(manualSource.getKey());
-		ui.setItem(item.getKey());
-		ui.setLabels(manualSource.getDefaultLabels());
-
-		Key key2 = Datastore.put(ui);
-		ui.setKey(key2);
+		UserItem ui = new UserItem(item, manualSource);
+		ui.setKey(ServerUtils.genKey(ui));
+		Datastore.put(ui);
 		return ui;
+	}
+
+	public void updateUserItem(UserItem item) {
+		Datastore.put(item);
 	}
 }

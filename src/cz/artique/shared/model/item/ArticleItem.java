@@ -20,7 +20,6 @@ public class ArticleItem extends Item implements Serializable {
 
 	public ArticleItem(Source source) {
 		super(source);
-		setItemType(ItemType.ARTICLE);
 	}
 
 	public String getAuthor() {

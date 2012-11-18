@@ -13,6 +13,7 @@ import com.google.appengine.api.datastore.Text;
 
 import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.Item;
+import cz.artique.shared.model.item.LinkItem;
 import cz.artique.shared.model.source.WebSiteSource;
 
 public class WebSiteCrawler {
@@ -34,14 +35,14 @@ public class WebSiteCrawler {
 				continue;
 			}
 
-			Item item = getItem(link);
+			LinkItem item = getItem(link);
 			items.add(item);
 		}
 		return items;
 	}
 
-	private Item getItem(Element link) {
-		Item item = new Item(getSource());
+	private LinkItem getItem(Element link) {
+		LinkItem item = new LinkItem(getSource());
 		String linkHref = link.attr("href");
 		String linkText = link.text();
 

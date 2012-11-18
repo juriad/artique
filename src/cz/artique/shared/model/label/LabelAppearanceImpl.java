@@ -1,10 +1,10 @@
 package cz.artique.shared.model.label;
 
-public class LabelApperianceImpl implements LabelApperiance {
+public class LabelAppearanceImpl implements LabelAppearance {
 
 	VisibilityLevel visibilityLevel;
 
-	ApperianceType apperianceType;
+	AppearanceType apperianceType;
 
 	String assignedIcon = null;
 
@@ -18,15 +18,15 @@ public class LabelApperianceImpl implements LabelApperiance {
 
 	String unAssignedTextBackground = null;
 
-	public LabelApperianceImpl() {}
+	public LabelAppearanceImpl() {}
 
-	public LabelApperianceImpl(VisibilityLevel visibilityLevel,
-			ApperianceType apperianceType) {
+	public LabelAppearanceImpl(VisibilityLevel visibilityLevel,
+			AppearanceType apperianceType) {
 		setVisibilityLevel(visibilityLevel);
 		setApperianceType(apperianceType);
 	}
 
-	public ApperianceType getApperianceType() {
+	public AppearanceType getApperianceType() {
 		return apperianceType;
 	}
 
@@ -58,7 +58,7 @@ public class LabelApperianceImpl implements LabelApperiance {
 		return visibilityLevel;
 	}
 
-	public void setApperianceType(ApperianceType apperianceType) {
+	public void setApperianceType(AppearanceType apperianceType) {
 		this.apperianceType = apperianceType;
 	}
 

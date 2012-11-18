@@ -1,11 +1,11 @@
 package cz.artique.server.meta.label;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-14 19:53:34")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-18 16:52:03")
 /** */
 public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.label.Label> {
 
     /** */
-    public final org.slim3.datastore.UnindexedAttributeMeta<cz.artique.shared.model.label.Label, cz.artique.shared.model.label.LabelApperiance> apperiance = new org.slim3.datastore.UnindexedAttributeMeta<cz.artique.shared.model.label.Label, cz.artique.shared.model.label.LabelApperiance>(this, "apperiance", "apperiance", cz.artique.shared.model.label.LabelApperiance.class);
+    public final org.slim3.datastore.UnindexedAttributeMeta<cz.artique.shared.model.label.Label, cz.artique.shared.model.label.LabelAppearance> appearance = new org.slim3.datastore.UnindexedAttributeMeta<cz.artique.shared.model.label.Label, cz.artique.shared.model.label.LabelAppearance>(this, "appearance", "appearance", cz.artique.shared.model.label.LabelAppearance.class);
 
     /** */
     public final org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.label.Label, cz.artique.shared.model.label.BackupLevel> backupLevel = new org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.label.Label, cz.artique.shared.model.label.BackupLevel>(this, "backupLevel", "backupLevel", cz.artique.shared.model.label.BackupLevel.class);
@@ -39,8 +39,8 @@ public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
     @Override
     public cz.artique.shared.model.label.Label entityToModel(com.google.appengine.api.datastore.Entity entity) {
         cz.artique.shared.model.label.Label model = new cz.artique.shared.model.label.Label();
-        cz.artique.shared.model.label.LabelApperiance _apperiance = blobToSerializable((com.google.appengine.api.datastore.Blob) entity.getProperty("apperiance"));
-        model.setApperiance(_apperiance);
+        cz.artique.shared.model.label.LabelAppearance _appearance = blobToSerializable((com.google.appengine.api.datastore.Blob) entity.getProperty("appearance"));
+        model.setAppearance(_appearance);
         model.setBackupLevel(stringToEnum(cz.artique.shared.model.label.BackupLevel.class, (java.lang.String) entity.getProperty("backupLevel")));
         model.setKey(entity.getKey());
         model.setName((java.lang.String) entity.getProperty("name"));
@@ -58,7 +58,7 @@ public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
         } else {
             entity = new com.google.appengine.api.datastore.Entity(kind);
         }
-        entity.setUnindexedProperty("apperiance", serializableToBlob(m.getApperiance()));
+        entity.setUnindexedProperty("appearance", serializableToBlob(m.getAppearance()));
         entity.setUnindexedProperty("backupLevel", enumToString(m.getBackupLevel()));
         entity.setProperty("name", m.getName());
         entity.setProperty("user", m.getUser());
@@ -125,9 +125,9 @@ public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
         cz.artique.shared.model.label.Label m = (cz.artique.shared.model.label.Label) model;
         writer.beginObject();
         org.slim3.datastore.json.Default encoder0 = new org.slim3.datastore.json.Default();
-        if(m.getApperiance() != null){
-            writer.setNextPropertyName("apperiance");
-            encoder0.encode(writer, m.getApperiance());
+        if(m.getAppearance() != null){
+            writer.setNextPropertyName("appearance");
+            encoder0.encode(writer, m.getAppearance());
         }
         if(m.getBackupLevel() != null){
             writer.setNextPropertyName("backupLevel");
@@ -157,8 +157,8 @@ public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
         cz.artique.shared.model.label.Label m = new cz.artique.shared.model.label.Label();
         org.slim3.datastore.json.JsonReader reader = null;
         org.slim3.datastore.json.Default decoder0 = new org.slim3.datastore.json.Default();
-        reader = rootReader.newObjectReader("apperiance");
-        m.setApperiance(decoder0.decode(reader, m.getApperiance(), cz.artique.shared.model.label.LabelApperiance.class));
+        reader = rootReader.newObjectReader("appearance");
+        m.setAppearance(decoder0.decode(reader, m.getAppearance(), cz.artique.shared.model.label.LabelAppearance.class));
         reader = rootReader.newObjectReader("backupLevel");
         m.setBackupLevel(decoder0.decode(reader, m.getBackupLevel(), cz.artique.shared.model.label.BackupLevel.class));
         reader = rootReader.newObjectReader("key");

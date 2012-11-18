@@ -1,6 +1,6 @@
 package cz.artique.server.meta.item;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-17 18:34:18")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-18 16:52:04")
 /** */
 public final class PageChangeItemMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.item.PageChangeItem> {
 
@@ -24,9 +24,6 @@ public final class PageChangeItemMeta extends org.slim3.datastore.ModelMeta<cz.a
 
     /** */
     public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.item.PageChangeItem> hash = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.item.PageChangeItem>(this, "hash", "hash");
-
-    /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.PageChangeItem, cz.artique.shared.model.item.ItemType> itemType = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.PageChangeItem, cz.artique.shared.model.item.ItemType>(this, "itemType", "itemType", cz.artique.shared.model.item.ItemType.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.PageChangeItem, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.PageChangeItem, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
@@ -70,7 +67,6 @@ public final class PageChangeItemMeta extends org.slim3.datastore.ModelMeta<cz.a
         model.setContent((com.google.appengine.api.datastore.Text) entity.getProperty("content"));
         model.setContentType(stringToEnum(cz.artique.shared.model.item.ContentType.class, (java.lang.String) entity.getProperty("contentType")));
         model.setHash((java.lang.String) entity.getProperty("hash"));
-        model.setItemType(stringToEnum(cz.artique.shared.model.item.ItemType.class, (java.lang.String) entity.getProperty("itemType")));
         model.setKey(entity.getKey());
         model.setPublished((java.util.Date) entity.getProperty("published"));
         model.setSource((com.google.appengine.api.datastore.Key) entity.getProperty("source"));
@@ -96,7 +92,6 @@ public final class PageChangeItemMeta extends org.slim3.datastore.ModelMeta<cz.a
         entity.setUnindexedProperty("content", m.getContent());
         entity.setProperty("contentType", enumToString(m.getContentType()));
         entity.setProperty("hash", m.getHash());
-        entity.setProperty("itemType", enumToString(m.getItemType()));
         entity.setProperty("published", m.getPublished());
         entity.setProperty("source", m.getSource());
         entity.setProperty("title", m.getTitle());
@@ -193,10 +188,6 @@ public final class PageChangeItemMeta extends org.slim3.datastore.ModelMeta<cz.a
             writer.setNextPropertyName("hash");
             encoder0.encode(writer, m.getHash());
         }
-        if(m.getItemType() != null){
-            writer.setNextPropertyName("itemType");
-            encoder0.encode(writer, m.getItemType());
-        }
         if(m.getKey() != null){
             writer.setNextPropertyName("key");
             encoder0.encode(writer, m.getKey());
@@ -247,8 +238,6 @@ public final class PageChangeItemMeta extends org.slim3.datastore.ModelMeta<cz.a
         m.setContentType(decoder0.decode(reader, m.getContentType(), cz.artique.shared.model.item.ContentType.class));
         reader = rootReader.newObjectReader("hash");
         m.setHash(decoder0.decode(reader, m.getHash()));
-        reader = rootReader.newObjectReader("itemType");
-        m.setItemType(decoder0.decode(reader, m.getItemType(), cz.artique.shared.model.item.ItemType.class));
         reader = rootReader.newObjectReader("key");
         m.setKey(decoder0.decode(reader, m.getKey()));
         reader = rootReader.newObjectReader("published");

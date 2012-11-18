@@ -30,7 +30,6 @@ public class PageChangeItem extends Item implements Serializable {
 
 	public PageChangeItem(Source source) {
 		super(source);
-		setItemType(ItemType.PAGE_CHANGE);
 	}
 
 	public Date getComparedTo() {

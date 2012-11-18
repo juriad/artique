@@ -42,7 +42,7 @@ public class Label implements Serializable, GenKey {
 	 * Apperiance of this label
 	 */
 	@Attribute(lob = true)
-	private LabelApperiance apperiance;
+	private LabelAppearance appearance;
 
 	public Label() {}
 
@@ -50,8 +50,8 @@ public class Label implements Serializable, GenKey {
 		setUser(user);
 		setName(name);
 		setBackupLevel(BackupLevel.NO_BACKUP);
-		setApperiance(new LabelApperianceImpl(VisibilityLevel.ONLY_ASSIGNED,
-			ApperianceType.TEXT));
+		setAppearance(new LabelAppearanceImpl(VisibilityLevel.ONLY_ASSIGNED,
+			AppearanceType.TEXT));
 	}
 
 	@Override
@@ -76,8 +76,8 @@ public class Label implements Serializable, GenKey {
 		return true;
 	}
 
-	public LabelApperiance getApperiance() {
-		return apperiance;
+	public LabelAppearance getAppearance() {
+		return appearance;
 	}
 
 	public BackupLevel getBackupLevel() {
@@ -118,8 +118,8 @@ public class Label implements Serializable, GenKey {
 		return result;
 	}
 
-	public void setApperiance(LabelApperiance apperiance) {
-		this.apperiance = apperiance;
+	public void setAppearance(LabelAppearance appearance) {
+		this.appearance = appearance;
 	}
 
 	public void setBackupLevel(BackupLevel backupLevel) {

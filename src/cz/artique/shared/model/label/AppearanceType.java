@@ -1,6 +1,6 @@
 package cz.artique.shared.model.label;
 
-public enum ApperianceType {
+public enum AppearanceType {
 	ICON,
 	TEXT;
 }

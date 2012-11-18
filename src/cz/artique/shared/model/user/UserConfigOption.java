@@ -1,21 +1,22 @@
 package cz.artique.shared.model.user;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.users.User;
 
 import cz.artique.server.utils.ServerUtils;
 
-public enum ConfigOption implements DefaultValue {
+public enum UserConfigOption implements DefaultValue {
 	;
 
 	private final String configKey;
 	private final DefaultValue def;
-	private final Key key;
+	private final UserConfig userConfig;
 
-	private ConfigOption(String configKey, DefaultValue def) {
+	private UserConfigOption(String configKey, DefaultValue def) {
 		this.configKey = configKey;
 		this.def = def;
-		Config c = new Config(configKey);
-		this.key = ServerUtils.genKey(c);
+		UserConfig c = new UserConfig(configKey, null);
+		this.userConfig = c;
 	}
 
 	public String getConfigKey() {
@@ -38,7 +39,9 @@ public enum ConfigOption implements DefaultValue {
 		return def;
 	}
 
-	public Key getKey() {
+	public Key getKey(User user) {
+		userConfig.setUser(user);
+		Key key = ServerUtils.genKey(userConfig);
 		return key;
 	}
 }

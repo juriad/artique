@@ -1,37 +1,39 @@
-package cz.artique.utils;
+package cz.artique.shared.utils;
+
+import java.io.Serializable;
 
 /**
- * TODO Auto-generated RuntimeException
+ * Common ancestor for all exceptions
  */
-public class SourceException extends RuntimeException {
+public class ArtiqueException extends RuntimeException implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see RuntimeException#RuntimeException()
 	 */
-	public SourceException() {
+	public ArtiqueException() {
 		super();
 	}
 
 	/**
 	 * @see RuntimeException#RuntimeException(String)
 	 */
-	public SourceException(String message) {
+	public ArtiqueException(String message) {
 		super(message);
 	}
 
 	/**
 	 * @see RuntimeException#RuntimeException(String, Throwable)
 	 */
-	public SourceException(String message, Throwable cause) {
+	public ArtiqueException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @see RuntimeException#RuntimeException(Throwable)
 	 */
-	public SourceException(Throwable cause) {
+	public ArtiqueException(Throwable cause) {
 		super(cause);
 	}
 }

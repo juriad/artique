@@ -2,55 +2,55 @@ package cz.artique.server.meta.item;
 
 //@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-18 16:52:04")
 /** */
-public final class ManualItemMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.item.ManualItem> {
+public final class LinkItemMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.item.LinkItem> {
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, java.util.Date> added = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, java.util.Date>(this, "added", "added", java.util.Date.class);
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.LinkItem, java.util.Date> added = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.LinkItem, java.util.Date>(this, "added", "added", java.util.Date.class);
 
     /** */
-    public final org.slim3.datastore.UnindexedAttributeMeta<cz.artique.shared.model.item.ManualItem, com.google.appengine.api.datastore.Text> content = new org.slim3.datastore.UnindexedAttributeMeta<cz.artique.shared.model.item.ManualItem, com.google.appengine.api.datastore.Text>(this, "content", "content", com.google.appengine.api.datastore.Text.class);
+    public final org.slim3.datastore.UnindexedAttributeMeta<cz.artique.shared.model.item.LinkItem, com.google.appengine.api.datastore.Text> content = new org.slim3.datastore.UnindexedAttributeMeta<cz.artique.shared.model.item.LinkItem, com.google.appengine.api.datastore.Text>(this, "content", "content", com.google.appengine.api.datastore.Text.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, cz.artique.shared.model.item.ContentType> contentType = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, cz.artique.shared.model.item.ContentType>(this, "contentType", "contentType", cz.artique.shared.model.item.ContentType.class);
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.LinkItem, cz.artique.shared.model.item.ContentType> contentType = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.LinkItem, cz.artique.shared.model.item.ContentType>(this, "contentType", "contentType", cz.artique.shared.model.item.ContentType.class);
 
     /** */
-    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.item.ManualItem> hash = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.item.ManualItem>(this, "hash", "hash");
+    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.item.LinkItem> hash = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.item.LinkItem>(this, "hash", "hash");
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.LinkItem, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.LinkItem, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, java.util.Date> published = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, java.util.Date>(this, "published", "published", java.util.Date.class);
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.LinkItem, java.util.Date> published = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.LinkItem, java.util.Date>(this, "published", "published", java.util.Date.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, com.google.appengine.api.datastore.Key> source = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, com.google.appengine.api.datastore.Key>(this, "source", "source", com.google.appengine.api.datastore.Key.class);
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.LinkItem, com.google.appengine.api.datastore.Key> source = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.LinkItem, com.google.appengine.api.datastore.Key>(this, "source", "source", com.google.appengine.api.datastore.Key.class);
 
     /** */
-    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.item.ManualItem> title = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.item.ManualItem>(this, "title", "title");
+    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.item.LinkItem> title = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.item.LinkItem>(this, "title", "title");
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, com.google.appengine.api.datastore.Link> url = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, com.google.appengine.api.datastore.Link>(this, "url", "url", com.google.appengine.api.datastore.Link.class);
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.LinkItem, com.google.appengine.api.datastore.Link> url = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.LinkItem, com.google.appengine.api.datastore.Link>(this, "url", "url", com.google.appengine.api.datastore.Link.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, java.lang.Long>(this, "version", "version", java.lang.Long.class);
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.LinkItem, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.LinkItem, java.lang.Long>(this, "version", "version", java.lang.Long.class);
 
-    private static final ManualItemMeta slim3_singleton = new ManualItemMeta();
+    private static final LinkItemMeta slim3_singleton = new LinkItemMeta();
 
     /**
      * @return the singleton
      */
-    public static ManualItemMeta get() {
+    public static LinkItemMeta get() {
        return slim3_singleton;
     }
 
     /** */
-    public ManualItemMeta() {
-        super("Item", cz.artique.shared.model.item.ManualItem.class, java.util.Arrays.asList("cz.artique.shared.model.item.ManualItem"));
+    public LinkItemMeta() {
+        super("Item", cz.artique.shared.model.item.LinkItem.class, java.util.Arrays.asList("cz.artique.shared.model.item.LinkItem"));
     }
 
     @Override
-    public cz.artique.shared.model.item.ManualItem entityToModel(com.google.appengine.api.datastore.Entity entity) {
-        cz.artique.shared.model.item.ManualItem model = new cz.artique.shared.model.item.ManualItem();
+    public cz.artique.shared.model.item.LinkItem entityToModel(com.google.appengine.api.datastore.Entity entity) {
+        cz.artique.shared.model.item.LinkItem model = new cz.artique.shared.model.item.LinkItem();
         model.setAdded((java.util.Date) entity.getProperty("added"));
         model.setContent((com.google.appengine.api.datastore.Text) entity.getProperty("content"));
         model.setContentType(stringToEnum(cz.artique.shared.model.item.ContentType.class, (java.lang.String) entity.getProperty("contentType")));
@@ -66,7 +66,7 @@ public final class ManualItemMeta extends org.slim3.datastore.ModelMeta<cz.artiq
 
     @Override
     public com.google.appengine.api.datastore.Entity modelToEntity(java.lang.Object model) {
-        cz.artique.shared.model.item.ManualItem m = (cz.artique.shared.model.item.ManualItem) model;
+        cz.artique.shared.model.item.LinkItem m = (cz.artique.shared.model.item.LinkItem) model;
         com.google.appengine.api.datastore.Entity entity = null;
         if (m.getKey() != null) {
             entity = new com.google.appengine.api.datastore.Entity(m.getKey());
@@ -89,20 +89,20 @@ public final class ManualItemMeta extends org.slim3.datastore.ModelMeta<cz.artiq
 
     @Override
     protected com.google.appengine.api.datastore.Key getKey(Object model) {
-        cz.artique.shared.model.item.ManualItem m = (cz.artique.shared.model.item.ManualItem) model;
+        cz.artique.shared.model.item.LinkItem m = (cz.artique.shared.model.item.LinkItem) model;
         return m.getKey();
     }
 
     @Override
     protected void setKey(Object model, com.google.appengine.api.datastore.Key key) {
         validateKey(key);
-        cz.artique.shared.model.item.ManualItem m = (cz.artique.shared.model.item.ManualItem) model;
+        cz.artique.shared.model.item.LinkItem m = (cz.artique.shared.model.item.LinkItem) model;
         m.setKey(key);
     }
 
     @Override
     protected long getVersion(Object model) {
-        cz.artique.shared.model.item.ManualItem m = (cz.artique.shared.model.item.ManualItem) model;
+        cz.artique.shared.model.item.LinkItem m = (cz.artique.shared.model.item.LinkItem) model;
         return m.getVersion() != null ? m.getVersion().longValue() : 0L;
     }
 
@@ -112,7 +112,7 @@ public final class ManualItemMeta extends org.slim3.datastore.ModelMeta<cz.artiq
 
     @Override
     protected void incrementVersion(Object model) {
-        cz.artique.shared.model.item.ManualItem m = (cz.artique.shared.model.item.ManualItem) model;
+        cz.artique.shared.model.item.LinkItem m = (cz.artique.shared.model.item.LinkItem) model;
         long version = m.getVersion() != null ? m.getVersion().longValue() : 0L;
         m.setVersion(Long.valueOf(version + 1L));
     }
@@ -142,7 +142,7 @@ public final class ManualItemMeta extends org.slim3.datastore.ModelMeta<cz.artiq
 
     @Override
     protected void modelToJson(org.slim3.datastore.json.JsonWriter writer, java.lang.Object model, int maxDepth, int currentDepth) {
-        cz.artique.shared.model.item.ManualItem m = (cz.artique.shared.model.item.ManualItem) model;
+        cz.artique.shared.model.item.LinkItem m = (cz.artique.shared.model.item.LinkItem) model;
         writer.beginObject();
         org.slim3.datastore.json.Default encoder0 = new org.slim3.datastore.json.Default();
         if(m.getAdded() != null){
@@ -193,8 +193,8 @@ public final class ManualItemMeta extends org.slim3.datastore.ModelMeta<cz.artiq
     }
 
     @Override
-    protected cz.artique.shared.model.item.ManualItem jsonToModel(org.slim3.datastore.json.JsonRootReader rootReader, int maxDepth, int currentDepth) {
-        cz.artique.shared.model.item.ManualItem m = new cz.artique.shared.model.item.ManualItem();
+    protected cz.artique.shared.model.item.LinkItem jsonToModel(org.slim3.datastore.json.JsonRootReader rootReader, int maxDepth, int currentDepth) {
+        cz.artique.shared.model.item.LinkItem m = new cz.artique.shared.model.item.LinkItem();
         org.slim3.datastore.json.JsonReader reader = null;
         org.slim3.datastore.json.Default decoder0 = new org.slim3.datastore.json.Default();
         reader = rootReader.newObjectReader("added");

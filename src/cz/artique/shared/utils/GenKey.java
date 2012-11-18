@@ -6,4 +6,6 @@ public interface GenKey {
 	Key getKeyParent();
 
 	String getKeyName();
+	
+	Key getKey();
 }
