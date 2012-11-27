@@ -4,7 +4,7 @@
 		<rate>10/s</rate>
 	</queue>
 	<queue>
-		<name>checkSource</name>
+		<name>checkSources</name>
 		<rate>10/s</rate>
 		<bucket-size>5</bucket-size>
 		<max-concurrent-requests>10</max-concurrent-requests>

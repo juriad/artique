@@ -13,9 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slim3.datastore.Datastore;
 
-import com.google.appengine.api.datastore.Key;
-
 import cz.artique.server.meta.source.SourceMeta;
+import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.user.ConfigOption;
 
 public class CronCheckSourcesServlet extends HttpServlet {
@@ -60,31 +59,31 @@ public class CronCheckSourcesServlet extends HttpServlet {
 		int maxErrors =
 			(int) new ConfigService()
 				.getLongValue(ConfigOption.MAX_ERROR_SEQUENCE);
-		List<Key> keyList;
+		List<Source> sourcesList;
 		if (parameterMap.containsKey("normal")) {
-			keyList =
+			sourcesList =
 				Datastore
 					.query(meta)
 					.filter(meta.enabled.equal(Boolean.TRUE))
 					.filter(meta.nextCheck.lessThan(new Date()))
 					.filter(meta.parent.equal(null))
 					.filterInMemory(meta.errorSequence.lessThan(maxErrors))
-					.asKeyList();
+					.asList();
 		} else if (parameterMap.containsKey("error")) {
-			keyList =
+			sourcesList =
 				Datastore
 					.query(meta)
 					.filter(meta.enabled.equal(Boolean.TRUE))
 					.filter(meta.parent.equal(null))
 					.filter(meta.errorSequence.greaterThanOrEqual(maxErrors))
-					.asKeyList();
+					.asList();
 		} else {
-			keyList = new ArrayList<Key>();
+			sourcesList = new ArrayList<Source>();
 		}
 
 		CheckService cs = new CheckService();
-		for (Key key : keyList) {
-			cs.check(key);
+		for (Source s : sourcesList) {
+			cs.check(s);
 		}
 	}
 }

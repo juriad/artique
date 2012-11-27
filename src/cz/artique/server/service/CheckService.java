@@ -15,15 +15,15 @@ public class CheckService {
 
 	public CheckService() {}
 
-	public void check(Key key) {
-		SourceMeta meta = SourceMeta.get();
-		Source source = Datastore.get(meta, key);
+	public void check(Source source) {
 		if (source.getParent() != null) {
-			check(source.getParent());
+			SourceMeta meta = SourceMeta.get();
+			Source parent = Datastore.get(meta, source.getParent());
+			check(parent);
 		} else {
 			// this is root source
 			if (source.isEnabled() && !source.isEnqued()) {
-				enque(key);
+				enque(source.getKey());
 				source.setEnqued(true);
 				Datastore.put(source);
 			}

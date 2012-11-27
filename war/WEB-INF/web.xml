@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?><web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
 	<context-param>
 		<param-name>slim3.rootPackage</param-name>
 		<param-value>cz.artique</param-value>
@@ -26,13 +27,8 @@
 		<filter-class>org.slim3.controller.FrontController</filter-class>
 	</filter>
 
-<!-- 
-	<filter-mapping>
-		<filter-name>HotReloadingFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-	</filter-mapping>
-	-->
+	<!-- <filter-mapping> <filter-name>HotReloadingFilter</filter-name> <url-pattern>/*</url-pattern> 
+		<dispatcher>REQUEST</dispatcher> </filter-mapping> -->
 	<filter-mapping>
 		<filter-name>DatastoreFilter</filter-name>
 		<url-pattern>/*</url-pattern>
@@ -81,6 +77,16 @@
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 
+	<servlet>
+		<servlet-name>Test</servlet-name>
+		<servlet-class>cz.artique.server.utils.ListOfItems</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>Test</servlet-name>
+		<url-pattern>/test</url-pattern>
+	</servlet-mapping>
+
 	<servlet-mapping>
 		<servlet-name>GlobalTransactionServlet</servlet-name>
 		<url-pattern>/slim3/gtx</url-pattern>
@@ -124,25 +130,21 @@
 			<role-name>admin</role-name>
 		</auth-constraint>
 	</security-constraint>
-	<!-- <security-constraint>
-		<web-resource-collection>
-			<url-pattern>/cron/*</url-pattern>
-		</web-resource-collection>
-		<auth-constraint>
-		</auth-constraint>
-	</security-constraint>-->
-  <servlet>
-    <servlet-name>SystemServiceServlet</servlet-name>
-    <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
-    <init-param>
-      <param-name>services</param-name>
-      <param-value/>
-    </init-param>
-  </servlet>
+	<!-- <security-constraint> <web-resource-collection> <url-pattern>/cron/*</url-pattern> 
+		</web-resource-collection> <auth-constraint> </auth-constraint> </security-constraint> -->
+	<servlet>
+		<servlet-name>SystemServiceServlet</servlet-name>
+		<servlet-class>com.google.api.server.spi.SystemServiceServlet
+		</servlet-class>
+		<init-param>
+			<param-name>services</param-name>
+			<param-value />
+		</init-param>
+	</servlet>
 
-  <servlet-mapping>
-    <servlet-name>SystemServiceServlet</servlet-name>
-    <url-pattern>/_ah/spi/*</url-pattern>
-  </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>SystemServiceServlet</servlet-name>
+		<url-pattern>/_ah/spi/*</url-pattern>
+	</servlet-mapping>
 
 </web-app>
