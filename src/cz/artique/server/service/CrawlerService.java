@@ -21,7 +21,7 @@ public class CrawlerService {
 	public CrawlerResult fetchItems(Source source) {
 		Crawler<? extends Source> c = createCrawler(source);
 		CrawlerResult cr = c.fetchItems();
-		
+
 		return cr;
 	}
 
@@ -67,11 +67,18 @@ public class CrawlerService {
 		}
 	}
 
+	private void setLastCheck(Source source, CrawlerResult cr) {
+		if (!cr.isError()) {
+			source.setLastCheck(new Date());
+		}
+	}
+
 	public boolean crawl(Source source) {
 		CrawlerResult cr = fetchItems(source);
 		addStats(source, cr);
 		setNextCheck(source, cr);
 		setErrorSequence(source, cr);
+		setLastCheck(source, cr);
 		return !cr.isError();
 	}
 }

@@ -12,21 +12,24 @@ import com.google.appengine.api.datastore.Transaction;
 
 import cz.artique.server.meta.source.PageChangeSourceMeta;
 import cz.artique.server.meta.source.RegionMeta;
+import cz.artique.server.meta.source.SourceMeta;
 import cz.artique.server.meta.source.WebSiteSourceMeta;
 import cz.artique.server.utils.ServerUtils;
 import cz.artique.shared.model.source.HTMLSource;
 import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Region;
+import cz.artique.shared.model.source.RegionType;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.WebSiteSource;
 
 public class SourceService {
-	public List<Region> getRegions(HTMLSource source) {
+	public List<Region> getRegions(HTMLSource source, RegionType type) {
 		RegionMeta meta = RegionMeta.get();
 		List<Region> list =
 			Datastore
 				.query(meta)
 				.filter(meta.htmlSource.equal(source.getKey()))
+				.filter(meta.type.equal(type))
 				.asList();
 		return list;
 	}
@@ -100,5 +103,17 @@ public class SourceService {
 		}
 
 		return list;
+	}
+
+	public Source getSourceByKey(Key parent) {
+		SourceMeta meta = SourceMeta.get();
+		Source source = Datastore.getOrNull(meta, parent);
+		return source;
+	}
+
+	public Region getRegionByKey(Key region) {
+		RegionMeta meta = RegionMeta.get();
+		Region regionObject = Datastore.getOrNull(meta, region);
+		return regionObject;
 	}
 }

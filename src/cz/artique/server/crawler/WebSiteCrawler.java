@@ -46,15 +46,8 @@ public class WebSiteCrawler {
 		String linkHref = link.attr("href");
 		String linkText = link.text();
 
-		// fool eclipse: dead code
-		if (Boolean.TRUE.equals(true)) { // TODO user preference
-			item.setContent(new Text(link.parent().text()));
-			item.setContentType(ContentType.PLAIN_TEXT);
-		} else {
-			item.setContent(new Text(link.parent().outerHtml()));
-			item.setContentType(ContentType.HTML);
-		}
-
+		item.setContent(new Text(link.parent().outerHtml()));
+		item.setContentType(ContentType.HTML);
 		item.setTitle(linkText);
 		item.setUrl(new Link(linkHref));
 		item.setHash(getHash(item));

@@ -1,6 +1,6 @@
 package cz.artique.server.meta.source;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-18 16:52:03")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-20 22:27:21")
 /** */
 public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.source.Region> {
 
@@ -18,6 +18,9 @@ public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
 
     /** */
     public final org.slim3.datastore.StringUnindexedAttributeMeta<cz.artique.shared.model.source.Region> positiveSelector = new org.slim3.datastore.StringUnindexedAttributeMeta<cz.artique.shared.model.source.Region>(this, "positiveSelector", "positiveSelector");
+
+    /** */
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Region, cz.artique.shared.model.source.RegionType> type = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Region, cz.artique.shared.model.source.RegionType>(this, "type", "type", cz.artique.shared.model.source.RegionType.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Region, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Region, java.lang.Long>(this, "version", "version", java.lang.Long.class);
@@ -44,6 +47,7 @@ public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
         model.setName((java.lang.String) entity.getProperty("name"));
         model.setNegativeSelectors(toList(java.lang.String.class, entity.getProperty("negativeSelectors")));
         model.setPositiveSelector((java.lang.String) entity.getProperty("positiveSelector"));
+        model.setType(stringToEnum(cz.artique.shared.model.source.RegionType.class, (java.lang.String) entity.getProperty("type")));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
         return model;
     }
@@ -61,6 +65,7 @@ public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
         entity.setProperty("name", m.getName());
         entity.setUnindexedProperty("negativeSelectors", m.getNegativeSelectors());
         entity.setUnindexedProperty("positiveSelector", m.getPositiveSelector());
+        entity.setProperty("type", enumToString(m.getType()));
         entity.setProperty("version", m.getVersion());
         entity.setProperty("slim3.schemaVersion", 1);
         return entity;
@@ -148,6 +153,10 @@ public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
             writer.setNextPropertyName("positiveSelector");
             encoder0.encode(writer, m.getPositiveSelector());
         }
+        if(m.getType() != null){
+            writer.setNextPropertyName("type");
+            encoder0.encode(writer, m.getType());
+        }
         if(m.getVersion() != null){
             writer.setNextPropertyName("version");
             encoder0.encode(writer, m.getVersion());
@@ -185,6 +194,8 @@ public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
         }
         reader = rootReader.newObjectReader("positiveSelector");
         m.setPositiveSelector(decoder0.decode(reader, m.getPositiveSelector()));
+        reader = rootReader.newObjectReader("type");
+        m.setType(decoder0.decode(reader, m.getType(), cz.artique.shared.model.source.RegionType.class));
         reader = rootReader.newObjectReader("version");
         m.setVersion(decoder0.decode(reader, m.getVersion()));
         return m;

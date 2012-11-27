@@ -16,6 +16,7 @@ import org.slim3.datastore.Datastore;
 import com.google.appengine.api.datastore.Key;
 
 import cz.artique.server.meta.source.SourceMeta;
+import cz.artique.shared.model.user.ConfigOption;
 
 public class CronCheckSourcesServlet extends HttpServlet {
 
@@ -56,6 +57,9 @@ public class CronCheckSourcesServlet extends HttpServlet {
 		@SuppressWarnings("unchecked")
 		Map<String, String[]> parameterMap = req.getParameterMap();
 
+		int maxErrors =
+			(int) new ConfigService()
+				.getLongValue(ConfigOption.MAX_ERROR_SEQUENCE);
 		List<Key> keyList;
 		if (parameterMap.containsKey("normal")) {
 			keyList =
@@ -64,7 +68,7 @@ public class CronCheckSourcesServlet extends HttpServlet {
 					.filter(meta.enabled.equal(Boolean.TRUE))
 					.filter(meta.nextCheck.lessThan(new Date()))
 					.filter(meta.parent.equal(null))
-					.filter(meta.errorSequence.equal(0))
+					.filterInMemory(meta.errorSequence.lessThan(maxErrors))
 					.asKeyList();
 		} else if (parameterMap.containsKey("error")) {
 			keyList =
@@ -72,7 +76,7 @@ public class CronCheckSourcesServlet extends HttpServlet {
 					.query(meta)
 					.filter(meta.enabled.equal(Boolean.TRUE))
 					.filter(meta.parent.equal(null))
-					.filter(meta.errorSequence.greaterThan(0))
+					.filter(meta.errorSequence.greaterThanOrEqual(maxErrors))
 					.asKeyList();
 		} else {
 			keyList = new ArrayList<Key>();
@@ -82,6 +86,5 @@ public class CronCheckSourcesServlet extends HttpServlet {
 		for (Key key : keyList) {
 			cs.check(key);
 		}
-
 	}
 }

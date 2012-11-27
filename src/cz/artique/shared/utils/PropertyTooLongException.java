@@ -11,20 +11,14 @@ public class PropertyTooLongException extends PropertyValueException
 	private static final long serialVersionUID = 1L;
 
 	private final int limit;
-	private final String value;
 
 	public PropertyTooLongException(String property, String value, int limit) {
-		super(property);
-		this.value = value;
+		super(property, value, "property value is too long");
 		this.limit = limit;
 	}
 
 	public int getLimit() {
 		return limit;
-	}
-
-	public String getValue() {
-		return value;
 	}
 
 }

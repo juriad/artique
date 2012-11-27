@@ -26,7 +26,7 @@ public class Region implements Serializable, GenKey {
 	 * Name of this region, not personalizable
 	 */
 	private String name;
-	
+
 	/**
 	 * Selector of content which shall be processed
 	 */
@@ -40,10 +40,12 @@ public class Region implements Serializable, GenKey {
 	private List<String> negativeSelectors;
 
 	/**
-	 * Reference to HTMLSource (either PageChange or WebSite)
+	 * Reference to HTMLSource
 	 */
 	private Key htmlSource;
-	
+
+	private RegionType type;
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -149,7 +151,16 @@ public class Region implements Serializable, GenKey {
 	}
 
 	public String getKeyName() {
+		String regionType = getType().name();
 		String name = getName();
-		return SharedUtils.combineStringParts(name);
+		return SharedUtils.combineStringParts(regionType, name);
+	}
+
+	public RegionType getType() {
+		return type;
+	}
+
+	public void setType(RegionType type) {
+		this.type = type;
 	}
 }

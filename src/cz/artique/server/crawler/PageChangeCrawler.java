@@ -7,9 +7,11 @@ import org.jsoup.select.Elements;
 import com.google.appengine.api.datastore.Text;
 
 import cz.artique.server.crawler.DiffMatchPatch.Diff;
+import cz.artique.server.service.ConfigService;
 import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.PageChangeItem;
 import cz.artique.shared.model.source.PageChangeSource;
+import cz.artique.shared.model.user.ConfigOption;
 
 public class PageChangeCrawler {
 
@@ -21,7 +23,14 @@ public class PageChangeCrawler {
 
 	public PageChangeItem getPageChange(Elements doc) {
 		String newContent = doc.text();
-		String oldContent = getSource().getContent().getValue();
+		String oldContent =
+			getSource().getContent() == null ? null : getSource()
+				.getContent()
+				.getValue();
+		if (oldContent == null) {
+			oldContent = "";
+		}
+
 		String diff = generateDiff(oldContent, newContent);
 		if (diff == null) {
 			return null;
@@ -34,19 +43,12 @@ public class PageChangeCrawler {
 	protected PageChangeItem getPageChangeItem(Elements page, String diff) {
 		PageChangeItem change = new PageChangeItem(getSource());
 		change.setComparedTo(getSource().getLastCheck());
-		// fool eclipse: dead code
-		if (Boolean.TRUE.equals(true)) { // TODO user preference
-			change.setContent(new Text(page.text()));
-			change.setContentType(ContentType.PLAIN_TEXT);
-		} else {
-			change.setContent(new Text(page.outerHtml()));
-			change.setContentType(ContentType.HTML);
-		}
+		change.setContent(new Text(page.outerHtml()));
+		change.setContentType(ContentType.HTML);
 		change.setDiff(new Text(diff));
 		change.setDiffType(ContentType.HTML);
 
-		// TODO user preference
-		change.setTitle("Change of page");
+		change.setTitle("Change of page " + getSource().getUrl().getValue());
 		change.setUrl(getSource().getUrl());
 		change.setHash(getHash(change));
 		return change;
@@ -60,9 +62,11 @@ public class PageChangeCrawler {
 
 	protected String generateDiff(String oldContent, String newContent) {
 		DiffMatchPatch dmp = new DiffMatchPatch();
-		// TODO constants
-		dmp.Diff_EditCost = 10;
-		dmp.Diff_Timeout = 0.1f;
+		ConfigService cs = new ConfigService();
+		dmp.Diff_EditCost =
+			(short) cs.getLongValue(ConfigOption.DIFF_EDIT_COST);
+		dmp.Diff_Timeout = (float) cs.getDoubleValue(ConfigOption.DIFF_TIMEOUT);
+
 		LinkedList<Diff> diffs = dmp.diff_main(oldContent, newContent);
 		if (diffs.size() == 0) {
 			// texts are identical

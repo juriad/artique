@@ -28,9 +28,7 @@ public class UserSourceService {
 			Datastore.getOrNull(tx, UserSourceMeta.get(), key);
 		if (theUserSource == null) {
 			userSource.setKey(key);
-
 			updateUsage(userSource, tx);
-
 			Datastore.put(tx, userSource);
 			theUserSource = userSource;
 		}
@@ -63,7 +61,12 @@ public class UserSourceService {
 		}
 
 		if (diff != 0) {
-			Source s = Datastore.get(tx, SourceMeta.get(), us.getSource());
+			Source s;
+			if (us.getSourceObject() == null) {
+				s = Datastore.get(tx, SourceMeta.get(), us.getSource());
+			} else {
+				s = us.getSourceObject();
+			}
 			s.setUsage(s.getUsage() + diff);
 			s.setEnabled(s.getUsage() > 0);
 			Datastore.put(tx, s);
@@ -92,7 +95,32 @@ public class UserSourceService {
 		UserSource us = new UserSource(user, manualSource, "");
 		UserSource userSource =
 			Datastore.get(UserSourceMeta.get(), ServerUtils.genKey(us));
-		userSource.setSourceObject(ms);
+		userSource.setSourceObject(manualSource);
+		return userSource;
+	}
+
+	public UserSource ensureManualSource() {
+		User user = UserServiceFactory.getUserService().getCurrentUser();
+		ManualSource ms = new ManualSource(user);
+		ManualSource manualSource =
+			Datastore.getOrNull(ManualSourceMeta.get(), ServerUtils.genKey(ms));
+		if (manualSource == null) {
+			ms.setKey(ServerUtils.genKey(ms));
+			ms.setEnabled(false);
+			ms.setUsage(0);
+			Datastore.put(ms);
+			manualSource = ms;
+		}
+		UserSource us = new UserSource(user, manualSource, "");
+		UserSource userSource =
+			Datastore.getOrNull(UserSourceMeta.get(), ServerUtils.genKey(us));
+		if (userSource == null) {
+			us.setKey(ServerUtils.genKey(us));
+			us.setWatching(true);
+			Datastore.put(us);
+			userSource = us;
+		}
+		userSource.setSourceObject(manualSource);
 		return userSource;
 	}
 

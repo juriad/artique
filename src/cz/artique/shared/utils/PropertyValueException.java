@@ -10,13 +10,33 @@ public class PropertyValueException extends ArtiqueException
 
 	private static final long serialVersionUID = 1L;
 	private final String property;
+	private Object value;
+	private Object reason;
 
-	public PropertyValueException(String property) {
+	public PropertyValueException(String property, String value, String reason) {
 		super();
 		this.property = property;
+		this.setValue(value);
+		this.setReason(reason);
 	}
 
 	public String getProperty() {
 		return property;
+	}
+
+	public Object getValue() {
+		return value;
+	}
+
+	public void setValue(Object value) {
+		this.value = value;
+	}
+
+	public Object getReason() {
+		return reason;
+	}
+
+	public void setReason(Object reason) {
+		this.reason = reason;
 	}
 }

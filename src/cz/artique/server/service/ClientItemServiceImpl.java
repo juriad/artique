@@ -44,7 +44,7 @@ public class ClientItemServiceImpl implements ClientItemService {
 	public UserItem updateUserItem(UserItem item)
 			throws NullPointerException, SecurityBreachException {
 		if (item == null) {
-			throw new NullPointerException("Updating item may not be null");
+			throw new NullPointerException();
 		}
 		Sanitizer.checkUser("user", item.getUser());
 		Sanitizer.checkPreserveKey(item);

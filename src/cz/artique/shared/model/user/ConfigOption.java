@@ -5,7 +5,9 @@ import com.google.appengine.api.datastore.Key;
 import cz.artique.server.utils.ServerUtils;
 
 public enum ConfigOption implements DefaultValue {
-	;
+	MAX_ERROR_SEQUENCE("check.normal.max-error-sequence", new LongValue(5)),
+	DIFF_EDIT_COST("crawler.diff.edit-cost", new LongValue(10)),
+	DIFF_TIMEOUT("crawler.diff.timeot", new DoubleValue(0.1));
 
 	private final String configKey;
 	private final DefaultValue def;
