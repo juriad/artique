@@ -43,10 +43,7 @@ public class Filter implements Serializable {
 	 */
 	private List<Key> labels;
 
-	/**
-	 * Operator
-	 */
-	private Operator operator;
+	private FilterType type;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -85,10 +82,6 @@ public class Filter implements Serializable {
 
 	public String getName() {
 		return name;
-	}
-
-	public Operator getOperator() {
-		return operator;
 	}
 
 	public User getUser() {
@@ -130,10 +123,6 @@ public class Filter implements Serializable {
 		this.name = name;
 	}
 
-	public void setOperator(Operator operator) {
-		this.operator = operator;
-	}
-
 	public void setUser(User user) {
 		this.user = user;
 	}
@@ -162,5 +151,13 @@ public class Filter implements Serializable {
 
 	public void setFilterObjects(List<Filter> filterObjects) {
 		this.filterObjects = filterObjects;
+	}
+
+	public FilterType getType() {
+		return type;
+	}
+
+	public void setType(FilterType type) {
+		this.type = type;
 	}
 }

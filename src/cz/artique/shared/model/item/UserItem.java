@@ -11,11 +11,9 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
 import cz.artique.shared.model.source.UserSource;
-import cz.artique.shared.utils.GenKey;
-import cz.artique.shared.utils.SharedUtils;
 
 @Model(schemaVersion = 1)
-public class UserItem implements Serializable, GenKey {
+public class UserItem implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -168,15 +166,6 @@ public class UserItem implements Serializable, GenKey {
 
 	public void setRead(boolean read) {
 		this.read = read;
-	}
-
-	public Key getKeyParent() {
-		return getItem();
-	}
-
-	public String getKeyName() {
-		String userId = user.getUserId();
-		return SharedUtils.combineStringParts(userId);
 	}
 
 	public Date getAdded() {

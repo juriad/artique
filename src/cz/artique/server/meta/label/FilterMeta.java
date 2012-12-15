@@ -1,6 +1,6 @@
 package cz.artique.server.meta.label;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-11-27 19:18:47")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-12-15 10:21:24")
 /** */
 public final class FilterMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.label.Filter> {
 
@@ -17,7 +17,7 @@ public final class FilterMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
     public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.label.Filter> name = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.label.Filter>(this, "name", "name");
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Filter, cz.artique.shared.model.label.Operator> operator = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Filter, cz.artique.shared.model.label.Operator>(this, "operator", "operator", cz.artique.shared.model.label.Operator.class);
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Filter, cz.artique.shared.model.label.FilterType> type = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Filter, cz.artique.shared.model.label.FilterType>(this, "type", "type", cz.artique.shared.model.label.FilterType.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Filter, com.google.appengine.api.users.User> user = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Filter, com.google.appengine.api.users.User>(this, "user", "user", com.google.appengine.api.users.User.class);
@@ -46,7 +46,7 @@ public final class FilterMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
         model.setKey(entity.getKey());
         model.setLabels(toList(com.google.appengine.api.datastore.Key.class, entity.getProperty("labels")));
         model.setName((java.lang.String) entity.getProperty("name"));
-        model.setOperator(stringToEnum(cz.artique.shared.model.label.Operator.class, (java.lang.String) entity.getProperty("operator")));
+        model.setType(stringToEnum(cz.artique.shared.model.label.FilterType.class, (java.lang.String) entity.getProperty("type")));
         model.setUser((com.google.appengine.api.users.User) entity.getProperty("user"));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
         return model;
@@ -64,7 +64,7 @@ public final class FilterMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
         entity.setProperty("filters", m.getFilters());
         entity.setProperty("labels", m.getLabels());
         entity.setProperty("name", m.getName());
-        entity.setProperty("operator", enumToString(m.getOperator()));
+        entity.setProperty("type", enumToString(m.getType()));
         entity.setProperty("user", m.getUser());
         entity.setProperty("version", m.getVersion());
         entity.setProperty("slim3.schemaVersion", 1);
@@ -157,9 +157,9 @@ public final class FilterMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
             writer.setNextPropertyName("name");
             encoder0.encode(writer, m.getName());
         }
-        if(m.getOperator() != null){
-            writer.setNextPropertyName("operator");
-            encoder0.encode(writer, m.getOperator());
+        if(m.getType() != null){
+            writer.setNextPropertyName("type");
+            encoder0.encode(writer, m.getType());
         }
         if(m.getUser() != null){
             writer.setNextPropertyName("user");
@@ -216,8 +216,8 @@ public final class FilterMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
         }
         reader = rootReader.newObjectReader("name");
         m.setName(decoder0.decode(reader, m.getName()));
-        reader = rootReader.newObjectReader("operator");
-        m.setOperator(decoder0.decode(reader, m.getOperator(), cz.artique.shared.model.label.Operator.class));
+        reader = rootReader.newObjectReader("type");
+        m.setType(decoder0.decode(reader, m.getType(), cz.artique.shared.model.label.FilterType.class));
         reader = rootReader.newObjectReader("user");
         m.setUser(decoder0.decode(reader, m.getUser()));
         reader = rootReader.newObjectReader("version");

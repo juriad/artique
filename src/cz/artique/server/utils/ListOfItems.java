@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slim3.datastore.CompositeCriterion;
 import org.slim3.datastore.Datastore;
 import org.slim3.datastore.FilterCriterion;
 import org.slim3.datastore.S3QueryResultList;
@@ -15,10 +16,10 @@ import org.slim3.datastore.S3QueryResultList;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.users.User;
 
-import cz.artique.server.meta.item.ItemMeta;
-import cz.artique.shared.model.item.Item;
+import cz.artique.server.meta.source.SourceMeta;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Filter;
+import cz.artique.shared.model.source.Source;
 
 public class ListOfItems extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -32,41 +33,42 @@ public class ListOfItems extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		//User user = UserServiceFactory.getUserService().getCurrentUser();
+		// User user = UserServiceFactory.getUserService().getCurrentUser();
 		User user = new User("text@example.com", "gmail.com");
 		test(user);
 	}
 
 	public void test(User user) {
 		System.out.println("reading first 10 items:");
-		
-		ItemMeta meta = ItemMeta.get();
-		
+
+		SourceMeta meta = SourceMeta.get();
+
 		CompositeFilterOperator operator = CompositeFilterOperator.OR;
-        FilterCriterion[] criteria =
-            new FilterCriterion[] {
-                meta.hash.startsWith("5"),
-                meta.hash.startsWith("8") };
-        CompositeCriterion criterion =
-            new CompositeCriterion(meta, operator, criteria);
+		FilterCriterion[] criteria =
+			new FilterCriterion[] {
+				meta.version.equal(1L),
+				meta.version.equal(6L) };
+		CompositeCriterion criterion =
+			new CompositeCriterion(meta, operator, criteria);
 
-
-		S3QueryResultList<Item> uItems =
+		S3QueryResultList<Source> uItems =
 			Datastore
 				.query(meta)
-				.filter(meta.hash.startsWith("5"))
-				.sort(meta.added.desc)
-				.limit(10)
+				.filter(criterion)
+				//.filter(criteria[1])
+				.sort(meta.version.desc)
+				.sort(meta.key.asc)
+				.limit(1)
 				.asQueryResultList();
 
-		for (Item ui : uItems) {
+		for (Source ui : uItems) {
 			System.out.println(ui);
 		}
 
 		System.out.println("storing cursor");
 
 		String encodedCursor = uItems.getEncodedCursor();
-		String encodedFilters = uItems.getEncodedFilters();
+		String encodedFilters = uItems.getEncodedFilter();
 		String encodedSorts = uItems.getEncodedSorts();
 		// You can determine if a next entry exists
 		boolean hasNext = uItems.hasNext();
@@ -79,19 +81,19 @@ public class ListOfItems extends HttpServlet {
 				Datastore
 					.query(meta)
 					.encodedStartCursor(encodedCursor)
-					.encodedFilters(encodedFilters)
+					.encodedFilter(encodedFilters)
 					.encodedSorts(encodedSorts)
-					.limit(5)
+					.limit(1)
 					.asQueryResultList();
 
 			encodedCursor = uItems.getEncodedCursor();
-			encodedFilters = uItems.getEncodedFilters();
+			encodedFilters = uItems.getEncodedFilter();
 			encodedSorts = uItems.getEncodedSorts();
 
 			hasNext = uItems.hasNext();
 
 			System.out.println("next 5 items:");
-			for (Item ui : uItems) {
+			for (Source ui : uItems) {
 				System.out.println(ui);
 			}
 

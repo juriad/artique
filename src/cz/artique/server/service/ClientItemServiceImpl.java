@@ -1,12 +1,13 @@
 package cz.artique.server.service;
 
 import java.util.Date;
-import java.util.List;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.artique.client.service.ClientItemService;
+import cz.artique.shared.list.ListingUpdate;
+import cz.artique.shared.list.ListingUpdateRequest;
 import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.item.UserItem;
@@ -16,10 +17,11 @@ import cz.artique.shared.utils.SecurityBreachException;
 
 public class ClientItemServiceImpl implements ClientItemService {
 
-	public List<UserItem> getItems() {
+	public ListingUpdate<UserItem> getItems(ListingUpdateRequest request) {
+		// TODO sanitize getItems
 		ItemService is = new ItemService();
 		User user = UserServiceFactory.getUserService().getCurrentUser();
-		return is.getItems(user);
+		return is.getItems(user, request);
 	}
 
 	public UserItem addItem(ManualItem item)
@@ -47,7 +49,6 @@ public class ClientItemServiceImpl implements ClientItemService {
 			throw new NullPointerException();
 		}
 		Sanitizer.checkUser("user", item.getUser());
-		Sanitizer.checkPreserveKey(item);
 
 		ItemService is = new ItemService();
 		is.updateUserItem(item);

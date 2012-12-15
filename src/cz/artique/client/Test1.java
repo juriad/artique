@@ -18,10 +18,9 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-import cz.artique.client.service.ClientItemService;
-import cz.artique.client.service.ClientItemServiceAsync;
 import cz.artique.client.service.ClientSourceService;
 import cz.artique.client.service.ClientSourceServiceAsync;
+import cz.artique.shared.list.Listing;
 import cz.artique.shared.model.item.ArticleItem;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;
@@ -34,7 +33,7 @@ public class Test1 extends Composite {
 
 	interface MainUiBinder extends UiBinder<Widget, Test1> {}
 
-	ClientItemServiceAsync cis = GWT.create(ClientItemService.class);
+	Listing listing;
 
 	ClientSourceServiceAsync css = GWT.create(ClientSourceService.class);
 
@@ -74,10 +73,12 @@ public class Test1 extends Composite {
 
 		css.getUserSources(new GetSourcesCallback());
 
+		listing = new Listing(null, new GetItemsCallback());
+
 		timer = new Timer() {
 			@Override
 			public void run() {
-				cis.getItems(new GetItemsCallback());
+				listing.fetchUserItems(0);
 			}
 		};
 		timer.scheduleRepeating(5000);

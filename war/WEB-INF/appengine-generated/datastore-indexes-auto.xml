@@ -1,18 +1,11 @@
-<!-- Indices written at Tue, 27 Nov 2012 20:07:05 CET -->
+<!-- Indices written at Tue, 27 Nov 2012 20:55:33 CET -->
 
 <datastore-indexes>
 
-    <!-- Used 233 times in query history -->
+    <!-- Used 102 times in query history -->
     <datastore-index kind="UserItem" ancestor="false" source="auto">
         <property name="user" direction="asc"/>
         <property name="added" direction="desc"/>
-    </datastore-index>
-
-    <!-- Used 1 time in query history -->
-    <datastore-index kind="Source" ancestor="false" source="auto">
-        <property name="enabled" direction="asc"/>
-        <property name="parent" direction="asc"/>
-        <property name="nextCheck" direction="asc"/>
     </datastore-index>
 
 </datastore-indexes>
