@@ -40,6 +40,10 @@ public class ItemService {
 			if (fc != null) {
 				query = query.filter(fc);
 			}
+			
+			if(request.getRead()!=null) {
+				query = query.filter(meta.read.equal(request.getRead()));
+			}
 
 			addedSinceLast =
 				query
@@ -67,6 +71,10 @@ public class ItemService {
 			if (fc != null) {
 				query = query.filter(fc);
 			}
+			
+			if(request.getRead()!=null) {
+				query = query.filter(meta.read.equal(request.getRead()));
+			}
 
 			tail =
 				query
@@ -93,6 +101,10 @@ public class ItemService {
 				Datastore.query(meta).filter(meta.user.equal(user));
 			if (fc != null) {
 				query = query.filter(fc);
+			}
+			
+			if(request.getRead()!=null) {
+				query = query.filter(meta.read.equal(request.getRead()));
 			}
 
 			updatedSinceLast =

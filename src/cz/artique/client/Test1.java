@@ -20,7 +20,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.service.ClientSourceService;
 import cz.artique.client.service.ClientSourceServiceAsync;
-import cz.artique.shared.list.Listing;
 import cz.artique.shared.model.item.ArticleItem;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;

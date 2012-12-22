@@ -8,22 +8,20 @@ import cz.artique.shared.model.label.Filter;
 
 public class ListingUpdateRequest {
 	private final Filter filter;
-	private final Date lastFetch;
 	private final Key firstKey;
 	private final Key lastKey;
 	private final int fetchCount;
+	private final Boolean read;
+	private final Date lastFetch;
 
-	public ListingUpdateRequest(Filter filter, Date lastFetch, Key firstKey,
-			Key lastKey, int fetchCount) {
+	public ListingUpdateRequest(Filter filter, Key firstKey, Key lastKey,
+			int fetchCount, Boolean read, Date lastFetch) {
 		this.filter = filter;
-		this.lastFetch = lastFetch;
+		this.read = read;
 		this.firstKey = firstKey;
 		this.lastKey = lastKey;
 		this.fetchCount = fetchCount;
-	}
-
-	public Date getLastFetch() {
-		return lastFetch;
+		this.lastFetch = lastFetch;
 	}
 
 	public Key getFirstKey() {
@@ -40,5 +38,13 @@ public class ListingUpdateRequest {
 
 	public Filter getFilter() {
 		return filter;
+	}
+
+	public Boolean getRead() {
+		return read;
+	}
+
+	public Date getLastFetch() {
+		return lastFetch;
 	}
 }

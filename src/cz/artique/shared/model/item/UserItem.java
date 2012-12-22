@@ -41,9 +41,6 @@ public class UserItem implements Serializable {
 	 */
 	private List<Key> labels;
 
-	/**
-	 * same as labels.contains("read")
-	 */
 	private boolean read;
 
 	private Date added;
