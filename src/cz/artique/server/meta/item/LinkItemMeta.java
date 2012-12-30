@@ -1,6 +1,6 @@
 package cz.artique.server.meta.item;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-12-16 15:34:49")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2012-12-29 11:41:55")
 /** */
 public final class LinkItemMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.item.LinkItem> {
 

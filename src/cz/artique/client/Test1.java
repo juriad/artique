@@ -18,10 +18,11 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
+import cz.artique.client.artique.ArtiqueCell;
+import cz.artique.client.artique.ArtiqueList;
+import cz.artique.client.listing.InfiniteListCell;
 import cz.artique.client.service.ClientSourceService;
 import cz.artique.client.service.ClientSourceServiceAsync;
-import cz.artique.shared.model.item.ArticleItem;
-import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.model.source.XMLSource;
@@ -32,14 +33,12 @@ public class Test1 extends Composite {
 
 	interface MainUiBinder extends UiBinder<Widget, Test1> {}
 
-	Listing listing;
-
 	ClientSourceServiceAsync css = GWT.create(ClientSourceService.class);
 
 	Timer timer;
 
-	@UiField
-	FlexTable items;
+	@UiField(provided = true)
+	ArtiqueList items;
 
 	@UiField
 	FlexTable sources;
@@ -64,6 +63,9 @@ public class Test1 extends Composite {
 	private UserInfo userInfo;
 
 	public Test1(UserInfo userInfo) {
+		InfiniteListCell<UserItem> cell = new ArtiqueCell();
+		items = new ArtiqueList(cell, null);
+
 		initWidget(uiBinder.createAndBindUi(this));
 		this.userInfo = userInfo;
 
@@ -72,15 +74,6 @@ public class Test1 extends Composite {
 
 		css.getUserSources(new GetSourcesCallback());
 
-		listing = new Listing(null, new GetItemsCallback());
-
-		timer = new Timer() {
-			@Override
-			public void run() {
-				listing.fetchUserItems(0);
-			}
-		};
-		timer.scheduleRepeating(5000);
 	}
 
 	private void log(String status, String component, String message) {
@@ -89,40 +82,6 @@ public class Test1 extends Composite {
 		logs.setHTML(index, 1, status);
 		logs.setHTML(index, 2, component);
 		logs.setHTML(index, 3, message);
-	}
-
-	class GetItemsCallback implements AsyncCallback<List<UserItem>> {
-
-		public void onSuccess(List<UserItem> result) {
-			if (result.size() == itemsCount) {
-				log("NEUTRAL", "items", "no new items");
-				return;
-			}
-			itemsCount = result.size();
-
-			items.clear();
-			for (int i = 0; i < result.size(); i++) {
-				Item it = result.get(i).getItemObject();
-				items.setHTML(i, 0, it.getTitle());
-				items.setHTML(i, 1, it.getContent().getValue());
-				items.setHTML(i, 2, it.getAdded().toString());
-				if (it instanceof ArticleItem) {
-					ArticleItem a = (ArticleItem) it;
-					Date pub = a.getPublished();
-					items.setHTML(i, 3, pub == null ? "-" : pub.toString());
-				} else {
-					items.setHTML(i, 3, "--");
-				}
-			}
-			log("SUCCESS", "items", "refreshed; got " + result.size()
-				+ " items");
-		}
-
-		public void onFailure(Throwable caught) {
-			items.clear();
-			items.setHTML(0, 0, "Error");
-			log("ERROR", "items", caught.getLocalizedMessage());
-		}
 	}
 
 	@UiHandler("add")

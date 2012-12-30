@@ -1,24 +1,31 @@
-package cz.artique.client;
+package cz.artique.client.artique;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
-import com.google.gwt.view.client.AbstractDataProvider;
-import com.google.gwt.view.client.HasData;
 
+import cz.artique.client.RpcWithTimeoutRequestBuilder;
+import cz.artique.client.listing.InfiniteList;
+import cz.artique.client.listing.InfiniteListDataProvider;
+import cz.artique.client.listing.ListingSettings;
+import cz.artique.client.listing.ScrollEndEvent;
+import cz.artique.client.listing.ScrollEndHandler;
+import cz.artique.client.listing.ScrollEndEvent.ScrollEndType;
 import cz.artique.client.service.ClientItemService;
 import cz.artique.client.service.ClientItemServiceAsync;
 import cz.artique.shared.list.ListingUpdate;
 import cz.artique.shared.list.ListingUpdateRequest;
 import cz.artique.shared.model.item.UserItem;
 
-public class Listing extends AbstractDataProvider<UserItem> {
-	private List<UserItem> userItems;
+public class ArtiqueListDataProvider
+		implements InfiniteListDataProvider<UserItem> {
+	private Key first;
+
+	private Key last;
 
 	private Date lastFetch;
 
@@ -36,16 +43,29 @@ public class Listing extends AbstractDataProvider<UserItem> {
 
 	private boolean endReached;
 
-	public Listing(ListingSettings settings) {
+	private final InfiniteList<UserItem> list;
+
+	public ArtiqueListDataProvider(final ListingSettings settings,
+			InfiniteList<UserItem> list) {
 		super();
 		this.settings = settings;
-		this.userItems = new ArrayList<UserItem>();
 		this.lastFetch = new Date(0);
 		this.lastFetchProbe = new Date(0);
 		this.cis = GWT.create(ClientItemService.class);
 		((ServiceDefTarget) cis)
 			.setRpcRequestBuilder(new RpcWithTimeoutRequestBuilder(settings
 				.getTimeout()));
+
+		this.list = list;
+		list.clear();
+		list.addScrollEndHandler(new ScrollEndHandler() {
+			public void onScroll(ScrollEndEvent event) {
+				if (ScrollEndType.BOTTOM.equals(event.getScrollEndType())) {
+					// bottom end
+					fetchUserItems(settings.getStep());
+				}
+			}
+		});
 
 		fetchUserItems(settings.getInitSize());
 
@@ -64,7 +84,13 @@ public class Listing extends AbstractDataProvider<UserItem> {
 			if (lastFetchProbe.getTime() + settings.getTimeout() > new Date()
 				.getTime()) {
 				// last request may still be running
-				wantCount = count;
+				if (wantCount != null) {
+					if (wantCount < count) {
+						wantCount = count;
+					}
+				} else {
+					wantCount = count;
+				}
 				return;
 			}
 		}
@@ -74,13 +100,15 @@ public class Listing extends AbstractDataProvider<UserItem> {
 			wantCount = null;
 		}
 
+		if (endReached) {
+			wantCount = 0;
+		}
+
 		// ok, we can make the request
 
 		lastFetchProbe = new Date();
 		ListingUpdateRequest request =
-			new ListingUpdateRequest(settings.getFilter(), userItems
-				.get(0)
-				.getKey(), userItems.get(userItems.size() - 1).getKey(), count,
+			new ListingUpdateRequest(settings.getFilter(), first, last, count,
 				settings.getRead(), lastFetch);
 		cis.getItems(request, new AsyncCallback<ListingUpdate<UserItem>>() {
 
@@ -98,45 +126,26 @@ public class Listing extends AbstractDataProvider<UserItem> {
 	}
 
 	protected void applyFetchedData(ListingUpdate<UserItem> result) {
-		int minModified = Integer.MAX_VALUE;
-		int maxModified = Integer.MIN_VALUE;
-		// modified
-		{
-			int j = 0;
-			for (int i = 0; i < result.getModified().size(); i++) {
-				UserItem modified = result.getModified().get(i);
-				for (; j < userItems.size(); j++) {
-					minModified = Math.min(j, minModified);
-					maxModified = Math.max(j + 1, maxModified);
-					UserItem local = userItems.get(j);
-					if (local.equals(modified)) {
-						modified.setItem(local.getItem());
-						userItems.set(j, modified);
-					}
-				}
-			}
+		for (UserItem modified : result.getModified()) {
+			list.setValue(modified);
 		}
 
-		// tail
-		{
-			if (result.getTail().size() > 0) {
-				minModified = Math.min(userItems.size(), minModified);
-				userItems.addAll(result.getTail());
-				maxModified = userItems.size();
-			}
+		if (result.getHead().size() > 0) {
+			first = result.getHead().get(0).getKey();
 		}
 
-		if (minModified < Integer.MAX_VALUE) {
-			updateRowData(minModified,
-				userItems.subList(minModified, maxModified));
-			updateRowCount(userItems.size()-getHeadSize(), isEndReached());
+		if (result.getTail().size() > 0) {
+			last = result.getTail().get(result.getTail().size() - 1).getKey();
 		}
 
-		// head
-		{
-			userItems.addAll(0, result.getHead());
-			headSize += result.getHead().size();
-		}
+		list.appendValues(result.getTail());
+		list.prependValues(result.getHead());
+		list.setRowCount(-1, result.isEndReached());
+		list.showTail();
+	}
+
+	public Date getLastFetch() {
+		return lastFetch;
 	}
 
 	public int getHeadSize() {
@@ -144,27 +153,8 @@ public class Listing extends AbstractDataProvider<UserItem> {
 	}
 
 	public void pushHead() {
-		updateRowData(0, userItems);
+		list.showHead();
 		headSize = 0;
-	}
-
-	public List<UserItem> getUserItems() {
-		return userItems;
-	}
-
-	@Override
-	protected void onRangeChanged(HasData<UserItem> display) {
-		int size = userItems.size();
-		if (size > 0) {
-			// Do not push data if the data set is empty.
-			updateRowData(display, 0,
-				userItems.subList(getHeadSize(), userItems.size()));
-			updateRowCount(userItems.size()-getHeadSize(), isEndReached());
-		}
-	}
-
-	public Date getLastFetch() {
-		return lastFetch;
 	}
 
 	public boolean isEndReached() {

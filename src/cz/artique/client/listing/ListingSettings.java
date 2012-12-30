@@ -1,4 +1,4 @@
-package cz.artique.client;
+package cz.artique.client.listing;
 
 import cz.artique.shared.model.label.Filter;
 

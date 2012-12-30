@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.gwt.view.client.HasRows;
 
-public interface InfiniteList<V> extends HasRows {
+public interface InfiniteList<V> extends HasRows, HasScrollEndHandlers {
 
 	void appendValues(List<V> values);
 
