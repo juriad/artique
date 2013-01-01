@@ -63,7 +63,7 @@ public class ArtiqueCell extends InfiniteListCell<UserItem> {
 		// TODO label renderer, time renderer
 		SafeHtml header =
 			headerTemplate.header(userSourceRenderer.render(us), null,
-				titleRenderer.render(e.getItemObject().getTitle()), null);
+				titleRenderer.render(e), null);
 		return header;
 	}
 }

@@ -5,6 +5,7 @@
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name='com.google.gwt.uibinder.UiBinder' />
 	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+	<inherits name='com.google.code.GwtEyeCandy'/>
 	
 	<inherits name="org.slim3.gwt.emul.S3Emulation" />
 	<entry-point class="cz.artique.client.Main"/>
