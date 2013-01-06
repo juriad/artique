@@ -1,6 +1,10 @@
 package cz.artique.shared.model.label;
 
-public class LabelAppearanceImpl implements LabelAppearance {
+import java.io.Serializable;
+
+public class LabelAppearanceImpl implements LabelAppearance, Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	VisibilityLevel visibilityLevel;
 

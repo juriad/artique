@@ -16,6 +16,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SelectionChangeEvent.Handler;
@@ -106,7 +107,7 @@ public abstract class InfiniteListCell<E> extends AbstractCell<E>
 			sb.append(outerTemplate.cellItem(header, content, "hasContent"));
 		} else {
 			// collapsed
-			sb.append(outerTemplate.cellItem(header, null, ""));
+			sb.append(outerTemplate.cellItem(header, SafeHtmlUtils.EMPTY_SAFE_HTML, ""));
 		}
 	}
 

@@ -40,8 +40,8 @@ public class ItemService {
 			if (fc != null) {
 				query = query.filter(fc);
 			}
-			
-			if(request.getRead()!=null) {
+
+			if (request.getRead() != null) {
 				query = query.filter(meta.read.equal(request.getRead()));
 			}
 
@@ -51,7 +51,7 @@ public class ItemService {
 					.sort(meta.key.desc)
 					.asList();
 
-			List<Key> addedSinceLastKeys = getListOfKeys(addedSinceLast);
+			List<Key> addedSinceLastKeys = getListOfItemKeys(addedSinceLast);
 			fetchItemsForUserItems(addedSinceLast, addedSinceLastKeys);
 		} else {
 			addedSinceLast = new ArrayList<UserItem>();
@@ -71,8 +71,8 @@ public class ItemService {
 			if (fc != null) {
 				query = query.filter(fc);
 			}
-			
-			if(request.getRead()!=null) {
+
+			if (request.getRead() != null) {
 				query = query.filter(meta.read.equal(request.getRead()));
 			}
 
@@ -83,7 +83,7 @@ public class ItemService {
 					.limit(request.getFetchCount())
 					.asList();
 
-			List<Key> tailKeys = getListOfKeys(tail);
+			List<Key> tailKeys = getListOfItemKeys(tail);
 			fetchItemsForUserItems(tail, tailKeys);
 			if (tailKeys.size() < request.getFetchCount()) {
 				// not all items has been fetched
@@ -102,8 +102,8 @@ public class ItemService {
 			if (fc != null) {
 				query = query.filter(fc);
 			}
-			
-			if(request.getRead()!=null) {
+
+			if (request.getRead() != null) {
 				query = query.filter(meta.read.equal(request.getRead()));
 			}
 
@@ -162,10 +162,10 @@ public class ItemService {
 		}
 	}
 
-	private List<Key> getListOfKeys(List<UserItem> userItems) {
+	private List<Key> getListOfItemKeys(List<UserItem> userItems) {
 		List<Key> keys = new ArrayList<Key>(userItems.size());
 		for (UserItem ui : userItems) {
-			keys.add(ui.getKey());
+			keys.add(ui.getItem());
 		}
 		return keys;
 	}

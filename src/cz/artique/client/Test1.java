@@ -20,7 +20,9 @@ import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.artique.ArtiqueCell;
 import cz.artique.client.artique.ArtiqueList;
+import cz.artique.client.artique.ArtiqueListDataProvider;
 import cz.artique.client.listing.InfiniteListCell;
+import cz.artique.client.listing.ListingSettings;
 import cz.artique.client.service.ClientSourceService;
 import cz.artique.client.service.ClientSourceServiceAsync;
 import cz.artique.shared.model.item.UserItem;
@@ -65,6 +67,16 @@ public class Test1 extends Composite {
 	public Test1(UserInfo userInfo) {
 		InfiniteListCell<UserItem> cell = new ArtiqueCell();
 		items = new ArtiqueList(cell, null);
+		ListingSettings settings =
+			new ListingSettings(null, 20, null, 5, 20000, 5000);
+		final ArtiqueListDataProvider provider =
+			new ArtiqueListDataProvider(settings, items);
+		new Timer() {
+			public void run() {
+				GWT.log(provider.getHeadSize() + "");
+				provider.pushHead();
+			}
+		}.scheduleRepeating(30000);
 
 		initWidget(uiBinder.createAndBindUi(this));
 		this.userInfo = userInfo;

@@ -4,6 +4,8 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.safehtml.shared.SafeUri;
+import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
 
 import cz.artique.client.i18n.ArtiqueI18n;
@@ -15,7 +17,7 @@ public class TitleRenderer extends AbstractSafeHtmlRenderer<UserItem> {
 	interface TitleTemplate extends SafeHtmlTemplates {
 
 		@Template("<a href='{0}' target='_blank'>{1}</a>")
-		SafeHtml title(String url, String text);
+		SafeHtml title(SafeUri url, String text);
 	}
 
 	private static TitleTemplate titleTemplate;
@@ -42,6 +44,7 @@ public class TitleRenderer extends AbstractSafeHtmlRenderer<UserItem> {
 			return SafeHtmlUtils.fromString(title);
 		}
 
-		return titleTemplate.title(item.getUrl().getValue().trim(), title);
+		String url = item.getUrl().getValue().trim();
+		return titleTemplate.title(UriUtils.fromString(url), title);
 	}
 }

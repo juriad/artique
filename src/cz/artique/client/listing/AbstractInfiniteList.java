@@ -37,7 +37,7 @@ public class AbstractInfiniteList<E> extends Composite
 		cell.setModelAndList(selectionModel, list);
 		list.setSelectionModel(selectionModel);
 
-		scrollPanel = new ScrollPanel(list);
+		scrollPanel = new ScrollPanel();
 		scrollPanel.addScrollHandler(new ScrollHandler() {
 			public void onScroll(ScrollEvent event) {
 				int pos = scrollPanel.getVerticalScrollPosition();
@@ -50,6 +50,7 @@ public class AbstractInfiniteList<E> extends Composite
 			}
 		});
 		initWidget(scrollPanel);
+		scrollPanel.add(list);
 	}
 
 	public HandlerRegistration addRangeChangeHandler(

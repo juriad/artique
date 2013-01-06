@@ -3,6 +3,7 @@ package cz.artique.client.artique;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 
 import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.listing.InfiniteListCell;
@@ -43,7 +44,7 @@ public class ArtiqueCell extends InfiniteListCell<UserItem> {
 	public ArtiqueCell() {
 		super();
 		if (headerTemplate == null) {
-			GWT.create(HeaderTemplate.class);
+			headerTemplate = GWT.create(HeaderTemplate.class);
 		}
 	}
 
@@ -62,8 +63,9 @@ public class ArtiqueCell extends InfiniteListCell<UserItem> {
 		// TODO pokracovat zde
 		// TODO label renderer, time renderer
 		SafeHtml header =
-			headerTemplate.header(userSourceRenderer.render(us), null,
-				titleRenderer.render(e), null);
+			headerTemplate.header(userSourceRenderer.render(us),
+				SafeHtmlUtils.EMPTY_SAFE_HTML, titleRenderer.render(e),
+				SafeHtmlUtils.EMPTY_SAFE_HTML);
 		return header;
 	}
 }

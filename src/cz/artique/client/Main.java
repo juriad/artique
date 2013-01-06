@@ -22,6 +22,7 @@ public class Main implements EntryPoint {
 	public void onModuleLoad() {
 		UserServiceWrapperAsync userService =
 			GWT.create(UserServiceWrapper.class);
+		System.out.println("start");
 
 		userService.login(GWT.getHostPageBaseURL(),
 			new AsyncCallback<UserInfo>() {

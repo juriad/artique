@@ -2,6 +2,7 @@ package cz.artique.server.service;
 
 import org.slim3.datastore.Datastore;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
 import cz.artique.server.meta.user.UserConfigMeta;
@@ -53,7 +54,9 @@ public class UserConfigService {
 
 	private DefaultValue getUserConfig(UserConfigOption option) {
 		UserConfigMeta meta = UserConfigMeta.get();
-		UserConfig config = Datastore.getOrNull(meta, option.getKey(user));
+		option.setUser(user);
+		Key key = ServerUtils.genKey(option);
+		UserConfig config = Datastore.getOrNull(meta, key);
 		if (config == null) {
 			return option.getDefaultValue();
 		}

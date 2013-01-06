@@ -1,27 +1,32 @@
 package cz.artique.shared.list;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.google.appengine.api.datastore.Key;
 
 import cz.artique.shared.model.label.Filter;
 
-public class ListingUpdateRequest {
-	private final Filter filter;
-	private final Key firstKey;
-	private final Key lastKey;
-	private final int fetchCount;
-	private final Boolean read;
-	private final Date lastFetch;
+public class ListingUpdateRequest implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	private Filter filter;
+	private Key firstKey;
+	private Key lastKey;
+	private int fetchCount;
+	private Boolean read;
+	private Date lastFetch;
+
+	public ListingUpdateRequest() {}
 
 	public ListingUpdateRequest(Filter filter, Key firstKey, Key lastKey,
 			int fetchCount, Boolean read, Date lastFetch) {
-		this.filter = filter;
-		this.read = read;
-		this.firstKey = firstKey;
-		this.lastKey = lastKey;
-		this.fetchCount = fetchCount;
-		this.lastFetch = lastFetch;
+		this.setFilter(filter);
+		this.setRead(read);
+		this.setFirstKey(firstKey);
+		this.setLastKey(lastKey);
+		this.setFetchCount(fetchCount);
+		this.setLastFetch(lastFetch);
 	}
 
 	public Key getFirstKey() {
@@ -46,5 +51,29 @@ public class ListingUpdateRequest {
 
 	public Date getLastFetch() {
 		return lastFetch;
+	}
+
+	public void setFilter(Filter filter) {
+		this.filter = filter;
+	}
+
+	public void setFirstKey(Key firstKey) {
+		this.firstKey = firstKey;
+	}
+
+	public void setLastKey(Key lastKey) {
+		this.lastKey = lastKey;
+	}
+
+	public void setFetchCount(int fetchCount) {
+		this.fetchCount = fetchCount;
+	}
+
+	public void setRead(Boolean read) {
+		this.read = read;
+	}
+
+	public void setLastFetch(Date lastFetch) {
+		this.lastFetch = lastFetch;
 	}
 }

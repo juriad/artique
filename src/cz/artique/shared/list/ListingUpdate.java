@@ -1,22 +1,28 @@
 package cz.artique.shared.list;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class ListingUpdate<E> {
-	private final List<E> head;
-	private final List<E> modified;
-	private final List<E> tail;
-	private final Date fetched;
-	private final boolean endReached;
+public class ListingUpdate<E> implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	private List<E> head;
+	private List<E> modified;
+	private List<E> tail;
+	private Date fetched;
+	private boolean endReached;
+	
+	public ListingUpdate() {
+	}
 
 	public ListingUpdate(List<E> head, List<E> modified, List<E> tail,
 			Date fetched, boolean endReached) {
-		this.head = head;
-		this.modified = modified;
-		this.tail = tail;
-		this.fetched = fetched;
-		this.endReached = endReached;
+		this.setHead(head);
+		this.setModified(modified);
+		this.setTail(tail);
+		this.setFetched(fetched);
+		this.setEndReached(endReached);
 	}
 
 	public List<E> getHead() {
@@ -37,5 +43,25 @@ public class ListingUpdate<E> {
 
 	public boolean isEndReached() {
 		return endReached;
+	}
+
+	public void setHead(List<E> head) {
+		this.head = head;
+	}
+
+	public void setModified(List<E> modified) {
+		this.modified = modified;
+	}
+
+	public void setTail(List<E> tail) {
+		this.tail = tail;
+	}
+
+	public void setFetched(Date fetched) {
+		this.fetched = fetched;
+	}
+
+	public void setEndReached(boolean endReached) {
+		this.endReached = endReached;
 	}
 }
