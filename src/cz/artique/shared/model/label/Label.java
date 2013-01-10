@@ -32,6 +32,8 @@ public class Label implements Serializable, GenKey {
 	 */
 	private String name;
 
+	private LabelType labelType;
+
 	/**
 	 * Level of backup
 	 */
@@ -52,6 +54,7 @@ public class Label implements Serializable, GenKey {
 		setBackupLevel(BackupLevel.NO_BACKUP);
 		setAppearance(new LabelAppearanceImpl(VisibilityLevel.ONLY_ASSIGNED,
 			AppearanceType.TEXT));
+		setLabelType(LabelType.USER_DEFINED);
 	}
 
 	@Override
@@ -159,8 +162,17 @@ public class Label implements Serializable, GenKey {
 	}
 
 	public String getKeyName() {
+		String type = getLabelType().name();
 		String userId = getUser().getUserId();
 		String name = getName();
-		return SharedUtils.combineStringParts(userId, name);
+		return SharedUtils.combineStringParts(type, userId, name);
+	}
+
+	public LabelType getLabelType() {
+		return labelType;
+	}
+
+	public void setLabelType(LabelType labelType) {
+		this.labelType = labelType;
 	}
 }

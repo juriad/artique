@@ -1,6 +1,5 @@
 package cz.artique.client;
 
-import java.util.Date;
 import java.util.List;
 
 import com.google.appengine.api.datastore.Link;
@@ -18,14 +17,13 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-import cz.artique.client.artique.ArtiqueCell;
-import cz.artique.client.artique.ArtiqueList;
-import cz.artique.client.artique.ArtiqueListDataProvider;
-import cz.artique.client.listing.InfiniteListCell;
+import cz.artique.client.artique2.ArtiqueList;
+import cz.artique.client.artique2.TestProvider;
 import cz.artique.client.listing.ListingSettings;
+import cz.artique.client.listing2.TestRowData;
+import cz.artique.client.listing2.TestRowWidget;
 import cz.artique.client.service.ClientSourceService;
 import cz.artique.client.service.ClientSourceServiceAsync;
-import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.model.source.XMLSource;
 
@@ -40,7 +38,7 @@ public class Test1 extends Composite {
 	Timer timer;
 
 	@UiField(provided = true)
-	ArtiqueList items;
+	ArtiqueList<TestRowData, String> items;
 
 	@UiField
 	FlexTable sources;
@@ -57,20 +55,23 @@ public class Test1 extends Composite {
 	@UiField
 	Anchor logout;
 
-	@UiField
-	FlexTable logs;
-
 	int itemsCount = -1;
 
 	private UserInfo userInfo;
 
+	private static Resources resources;
+
+	static {
+		resources = GWT.create(Resources.class);
+		resources.css().ensureInjected();
+	}
+
 	public Test1(UserInfo userInfo) {
-		InfiniteListCell<UserItem> cell = new ArtiqueCell();
-		items = new ArtiqueList(cell, null);
+		items = new ArtiqueList<TestRowData, String>(TestRowWidget.factory);
+
 		ListingSettings settings =
 			new ListingSettings(null, 20, null, 5, 20000, 5000);
-		final ArtiqueListDataProvider provider =
-			new ArtiqueListDataProvider(settings, items);
+		final TestProvider provider = new TestProvider(settings, items);
 		new Timer() {
 			public void run() {
 				GWT.log(provider.getHeadSize() + "");
@@ -86,14 +87,6 @@ public class Test1 extends Composite {
 
 		css.getUserSources(new GetSourcesCallback());
 
-	}
-
-	private void log(String status, String component, String message) {
-		int index = logs.insertRow(0);
-		logs.setHTML(index, 0, new Date().toString());
-		logs.setHTML(index, 1, status);
-		logs.setHTML(index, 2, component);
-		logs.setHTML(index, 3, message);
 	}
 
 	@UiHandler("add")
@@ -112,9 +105,7 @@ public class Test1 extends Composite {
 				css.addUserSource(us, new AddXMLSourceCallback());
 			}
 
-			public void onFailure(Throwable caught) {
-				log("ERROR", "add", caught.getLocalizedMessage());
-			}
+			public void onFailure(Throwable caught) {}
 		});
 	}
 
@@ -123,11 +114,9 @@ public class Test1 extends Composite {
 		public void onFailure(Throwable caught) {
 			sources.clear();
 			sources.setHTML(0, 0, "Error");
-			log("ERROR", "add", caught.getLocalizedMessage());
 		}
 
 		public void onSuccess(UserSource result) {
-			log("SUCCESS", "add", "source has been added");
 			css.getUserSources(new GetSourcesCallback());
 		}
 	}
@@ -137,7 +126,6 @@ public class Test1 extends Composite {
 		public void onFailure(Throwable caught) {
 			sources.clear();
 			sources.setHTML(0, 0, "Error");
-			log("ERROR", "sources", caught.getLocalizedMessage());
 		}
 
 		public void onSuccess(List<UserSource> result) {
@@ -147,7 +135,6 @@ public class Test1 extends Composite {
 				sources.setHTML(i, 0, us.getName());
 				sources.setHTML(i, 1, us.getHierarchy());
 			}
-			log("SUCCESS", "sources", "got " + result.size() + " sources");
 		}
 	}
 }

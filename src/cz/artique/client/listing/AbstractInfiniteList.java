@@ -148,4 +148,8 @@ public class AbstractInfiniteList<E> extends Composite
 	public HandlerRegistration addScrollEndHandler(ScrollEndHandler handler) {
 		return addHandler(handler, ScrollEndEvent.getType());
 	}
+
+	public void setRowCountExact(boolean rowCountExact) {
+		this.exactCount = rowCountExact;
+	}
 }

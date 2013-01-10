@@ -1,18 +1,23 @@
 package cz.artique.server.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slim3.datastore.Datastore;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
+import cz.artique.server.meta.label.LabelMeta;
 import cz.artique.server.meta.source.ManualSourceMeta;
 import cz.artique.server.meta.source.SourceMeta;
 import cz.artique.server.meta.source.UserSourceMeta;
 import cz.artique.server.utils.ServerUtils;
+import cz.artique.shared.model.label.Label;
+import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
@@ -27,7 +32,21 @@ public class UserSourceService {
 		UserSource theUserSource =
 			Datastore.getOrNull(tx, UserSourceMeta.get(), key);
 		if (theUserSource == null) {
-			userSource.setKey(key);
+			List<Key> defaultLabels = new ArrayList<Key>();
+			{
+				Key labelKey = Datastore.allocateId(LabelMeta.get());
+				String labelName =
+					userSource.getName() + "$"
+						+ KeyFactory.keyToString(labelKey);
+				final Label l = new Label(userSource.getUser(), labelName);
+				l.setLabelType(LabelType.USER_SOURCE);
+				l.setKey(ServerUtils.genKey(l));
+				Datastore.put(l);
+
+				userSource.setKey(key);
+				defaultLabels.add(l.getKey());
+			}
+			userSource.setDefaultLabels(defaultLabels);
 			updateUsage(userSource, tx);
 			Datastore.put(tx, userSource);
 			theUserSource = userSource;

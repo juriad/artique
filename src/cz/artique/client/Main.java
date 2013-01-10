@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -41,7 +42,7 @@ public class Main implements EntryPoint {
 
 	protected void loadArtique() {
 		Test1 t = new Test1(userInfo);
-		RootPanel.get().add(t);
+		RootLayoutPanel.get().add(t);
 	}
 
 	private void loadLogin() {

@@ -1,6 +1,6 @@
 package cz.artique.server.meta.label;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-01-04 14:21:04")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-01-09 21:00:40")
 /** */
 public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.label.Label> {
 
@@ -12,6 +12,9 @@ public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Label, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Label, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
+
+    /** */
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Label, cz.artique.shared.model.label.LabelType> labelType = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Label, cz.artique.shared.model.label.LabelType>(this, "labelType", "labelType", cz.artique.shared.model.label.LabelType.class);
 
     /** */
     public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.label.Label> name = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.label.Label>(this, "name", "name");
@@ -43,6 +46,7 @@ public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
         model.setAppearance(_appearance);
         model.setBackupLevel(stringToEnum(cz.artique.shared.model.label.BackupLevel.class, (java.lang.String) entity.getProperty("backupLevel")));
         model.setKey(entity.getKey());
+        model.setLabelType(stringToEnum(cz.artique.shared.model.label.LabelType.class, (java.lang.String) entity.getProperty("labelType")));
         model.setName((java.lang.String) entity.getProperty("name"));
         model.setUser((com.google.appengine.api.users.User) entity.getProperty("user"));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
@@ -60,6 +64,7 @@ public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
         }
         entity.setUnindexedProperty("appearance", serializableToBlob(m.getAppearance()));
         entity.setUnindexedProperty("backupLevel", enumToString(m.getBackupLevel()));
+        entity.setProperty("labelType", enumToString(m.getLabelType()));
         entity.setProperty("name", m.getName());
         entity.setProperty("user", m.getUser());
         entity.setProperty("version", m.getVersion());
@@ -137,6 +142,10 @@ public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
             writer.setNextPropertyName("key");
             encoder0.encode(writer, m.getKey());
         }
+        if(m.getLabelType() != null){
+            writer.setNextPropertyName("labelType");
+            encoder0.encode(writer, m.getLabelType());
+        }
         if(m.getName() != null){
             writer.setNextPropertyName("name");
             encoder0.encode(writer, m.getName());
@@ -163,6 +172,8 @@ public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
         m.setBackupLevel(decoder0.decode(reader, m.getBackupLevel(), cz.artique.shared.model.label.BackupLevel.class));
         reader = rootReader.newObjectReader("key");
         m.setKey(decoder0.decode(reader, m.getKey()));
+        reader = rootReader.newObjectReader("labelType");
+        m.setLabelType(decoder0.decode(reader, m.getLabelType(), cz.artique.shared.model.label.LabelType.class));
         reader = rootReader.newObjectReader("name");
         m.setName(decoder0.decode(reader, m.getName()));
         reader = rootReader.newObjectReader("user");

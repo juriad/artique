@@ -17,6 +17,6 @@ public interface InfiniteList<V> extends HasRows, HasScrollEndHandlers {
 	int showTail();
 
 	void clear();
-
-	void refresh();
+	
+	void setRowCountExact(boolean rowCountExact);
 }
