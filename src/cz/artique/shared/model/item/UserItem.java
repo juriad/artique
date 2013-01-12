@@ -11,9 +11,10 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
 import cz.artique.shared.model.source.UserSource;
+import cz.artique.shared.utils.HasKey;
 
 @Model(schemaVersion = 1)
-public class UserItem implements Serializable {
+public class UserItem implements Serializable, HasKey<Key> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -45,8 +46,6 @@ public class UserItem implements Serializable {
 
 	private Date added;
 
-	private Date published;
-
 	private Date lastChanged;
 
 	private Key userSource;
@@ -56,8 +55,6 @@ public class UserItem implements Serializable {
 	public UserItem(Item item, UserSource userSource) {
 		this.item = item.getKey();
 		this.added = item.getAdded();
-		this.published =
-			(item.getPublished() == null ? added : item.getPublished());
 		this.lastChanged = added;
 		this.userSource = userSource.getKey();
 		this.labels = userSource.getDefaultLabels();
@@ -171,14 +168,6 @@ public class UserItem implements Serializable {
 
 	public void setAdded(Date added) {
 		this.added = added;
-	}
-
-	public Date getPublished() {
-		return published;
-	}
-
-	public void setPublished(Date published) {
-		this.published = published;
 	}
 
 	public Date getLastChanged() {

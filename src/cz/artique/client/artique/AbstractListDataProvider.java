@@ -1,8 +1,6 @@
-package cz.artique.client.artique2;
+package cz.artique.client.artique;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
@@ -14,18 +12,14 @@ import cz.artique.client.RpcWithTimeoutRequestBuilder;
 import cz.artique.client.listing.InfiniteList;
 import cz.artique.client.listing.InfiniteListDataProvider;
 import cz.artique.client.listing.ListingSettings;
-import cz.artique.client.listing.ScrollEndEvent;
-import cz.artique.client.listing.ScrollEndEvent.ScrollEndType;
-import cz.artique.client.listing.ScrollEndHandler;
-import cz.artique.client.listing2.TestRowData;
 import cz.artique.client.service.ClientItemService;
 import cz.artique.client.service.ClientItemServiceAsync;
 import cz.artique.shared.list.ListingUpdate;
 import cz.artique.shared.list.ListingUpdateRequest;
 import cz.artique.shared.model.item.UserItem;
 
-public class TestProvider implements InfiniteListDataProvider<TestRowData> {
-
+public class AbstractListDataProvider
+		implements InfiniteListDataProvider<UserItem> {
 	private Key first;
 
 	private Key last;
@@ -38,18 +32,16 @@ public class TestProvider implements InfiniteListDataProvider<TestRowData> {
 
 	private final ListingSettings settings;
 
-	private Timer periodicFetch;
+	private Timer periodicTimer;
 
 	private Integer wantCount;
 
-	private int headSize;
-
 	private boolean endReached;
 
-	private final InfiniteList<TestRowData> list;
+	private final InfiniteList<UserItem> list;
 
-	public TestProvider(final ListingSettings settings,
-			InfiniteList<TestRowData> list) {
+	public AbstractListDataProvider(final ListingSettings settings,
+			InfiniteList<UserItem> list) {
 		super();
 		this.settings = settings;
 		this.lastFetch = new Date(0);
@@ -60,28 +52,21 @@ public class TestProvider implements InfiniteListDataProvider<TestRowData> {
 				.getTimeout()));
 
 		this.list = list;
-		list.clear();
-		list.addScrollEndHandler(new ScrollEndHandler() {
-			public void onScroll(ScrollEndEvent event) {
-				if (ScrollEndType.BOTTOM.equals(event.getScrollEndType())) {
-					// bottom end
-					fetchUserItems(settings.getStep());
-				}
-			}
-		});
+		list.setProvider(this);
 
-		fetchUserItems(settings.getInitSize());
-
-		periodicFetch = new Timer() {
+		periodicTimer = new Timer() {
 			@Override
 			public void run() {
-				fetchUserItems(0);
+				fetch(0);
 			}
 		};
-		periodicFetch.scheduleRepeating(settings.getInterval());
+		periodicTimer.scheduleRepeating(settings.getInterval());
 	}
 
-	protected void fetchUserItems(int count) {
+	public void fetch(int count) {
+		if (count < 0) {
+			count = settings.getStep();
+		}
 		// check simultanous requests
 		if (lastFetchProbe != null) {
 			if (lastFetchProbe.getTime() + settings.getTimeout() > new Date()
@@ -108,7 +93,11 @@ public class TestProvider implements InfiniteListDataProvider<TestRowData> {
 		}
 
 		// ok, we can make the request
+		doFetch(count);
 
+	}
+
+	protected void doFetch(int count) {
 		lastFetchProbe = new Date();
 		ListingUpdateRequest request =
 			new ListingUpdateRequest(settings.getFilter(), first, last, count,
@@ -119,6 +108,9 @@ public class TestProvider implements InfiniteListDataProvider<TestRowData> {
 				endReached = result.isEndReached();
 				applyFetchedData(result);
 				lastFetch = result.getFetched();
+				if (endReached) {
+					periodicTimer.cancel();
+				}
 			}
 
 			public void onFailure(Throwable caught) {
@@ -130,7 +122,7 @@ public class TestProvider implements InfiniteListDataProvider<TestRowData> {
 
 	protected void applyFetchedData(ListingUpdate<UserItem> result) {
 		for (UserItem modified : result.getModified()) {
-			// list.setValue(modified);
+			list.setValue(modified);
 		}
 
 		if (result.getHead().size() > 0) {
@@ -141,50 +133,16 @@ public class TestProvider implements InfiniteListDataProvider<TestRowData> {
 			last = result.getTail().get(result.getTail().size() - 1).getKey();
 		}
 
-		{
-			List<TestRowData> l = new ArrayList<TestRowData>();
-			for (UserItem ui : result.getTail()) {
-				l.add(new TestRowData(ui.getItemObject().getTitle(), ui
-					.getItemObject()
-					.getContent()
-					.getValue()));
-			}
-			list.appendValues(l);
-		}
-
-		// list.appendValues(result.getTail());
-
-		{
-			List<TestRowData> l = new ArrayList<TestRowData>();
-			for (UserItem ui : result.getHead()) {
-				l.add(new TestRowData(ui.getItemObject().getTitle(), ui
-					.getItemObject()
-					.getContent()
-					.getValue()));
-			}
-			list.prependValues(l);
-		}
-		// list.prependValues(result.getHead());
-		// list.setRowCount(-1, result.isEndReached());
-		list.setRowCountExact(result.isEndReached());
-		list.showTail();
+		list.appendValues(result.getTail());
+		list.prependValues(result.getHead());
+		list.setRowCountExact(isEndReached());
 	}
 
 	public Date getLastFetch() {
 		return lastFetch;
 	}
 
-	public int getHeadSize() {
-		return headSize;
-	}
-
-	public void pushHead() {
-		list.showHead();
-		headSize = 0;
-	}
-
 	public boolean isEndReached() {
 		return endReached;
 	}
-
 }

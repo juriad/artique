@@ -1,12 +1,10 @@
-package cz.artique.client.listing2;
+package cz.artique.client.listing;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.event.dom.client.ScrollEvent;
-import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -19,10 +17,6 @@ import com.google.gwt.view.client.RowCountChangeEvent;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SelectionChangeEvent.HasSelectionChangedHandlers;
 
-import cz.artique.client.listing.InfiniteList;
-import cz.artique.client.listing.ScrollEndEvent;
-import cz.artique.client.listing.ScrollEndHandler;
-import cz.artique.client.listing.ScrollEndEvent.ScrollEndType;
 import cz.artique.shared.utils.HasKey;
 
 public class WidgetList<E extends HasKey<K>, K> extends Composite
@@ -39,6 +33,7 @@ public class WidgetList<E extends HasKey<K>, K> extends Composite
 	private boolean rowCountExact;
 	private final RowWidgetFactory<E, K> factory;
 	protected final ScrollPanel scrollPanel;
+	private InfiniteListDataProvider<E> provider;
 
 	public WidgetList(RowWidgetFactory<E, K> factory) {
 		this.factory = factory;
@@ -49,20 +44,6 @@ public class WidgetList<E extends HasKey<K>, K> extends Composite
 
 		scrollPanel = new ScrollPanel();
 		initWidget(scrollPanel);
-
-		// TODO watch ExpandCollapseEvent
-
-		scrollPanel.addScrollHandler(new ScrollHandler() {
-			public void onScroll(ScrollEvent event) {
-				int pos = scrollPanel.getVerticalScrollPosition();
-				if (pos == scrollPanel.getMinimumVerticalScrollPosition()) {
-					fireEvent(new ScrollEndEvent(ScrollEndType.TOP));
-				} else if (pos == scrollPanel
-					.getMaximumVerticalScrollPosition()) {
-					fireEvent(new ScrollEndEvent(ScrollEndType.BOTTOM));
-				}
-			}
-		});
 		scrollPanel.add(flowPanel);
 	}
 
@@ -134,6 +115,7 @@ public class WidgetList<E extends HasKey<K>, K> extends Composite
 			}
 
 			RowCountChangeEvent.fire(this, getRowCount(), isRowCountExact());
+			fetchToFillPage();
 		}
 		return l.size();
 	}
@@ -150,9 +132,12 @@ public class WidgetList<E extends HasKey<K>, K> extends Composite
 			}
 
 			RowCountChangeEvent.fire(this, getRowCount(), isRowCountExact());
+			fetchToFillPage();
 		}
 		return l.size();
 	}
+
+	protected void fetchToFillPage() {}
 
 	private RowWidget<E, K> createRow(E e) {
 		RowWidget<E, K> row = factory.createWidget(e);
@@ -225,24 +210,20 @@ public class WidgetList<E extends HasKey<K>, K> extends Composite
 		this.rowCountExact = rowCountExact;
 	}
 
-	public List<E> getAllValues() {
-		List<E> values = new ArrayList<E>();
-		for (RowWidget<E, K> w : rows.values()) {
-			values.add(w.getData(false));
-		}
-		return values;
-	}
-
-	public boolean isScrolling() {
-		// if it equals to 0, then floaPanel fits into height
-		return scrollPanel.getMaximumVerticalScrollPosition() != 0;
-	}
-
 	public void onExpandOrCollapse(ExpandCollapseEvent e) {
 		if (e.getSource() instanceof RowWidget) {
 			@SuppressWarnings("unchecked")
 			RowWidget<E, K> row = (RowWidget<E, K>) e.getSource();
 			setSelectedKey(row.getKey(), row.isExpanded());
 		}
+	}
+
+	public void setProvider(InfiniteListDataProvider<E> provider) {
+		clear();
+		this.provider = provider;
+	}
+
+	public InfiniteListDataProvider<E> getProvider() {
+		return provider;
 	}
 }

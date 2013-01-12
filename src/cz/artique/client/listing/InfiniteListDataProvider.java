@@ -1,9 +1,12 @@
 package cz.artique.client.listing;
 
-public interface InfiniteListDataProvider<E> {
-	int getHeadSize();
+import java.util.Date;
 
-	void pushHead();
+public interface InfiniteListDataProvider<E> {
 
 	boolean isEndReached();
+	
+	void fetch(int count);
+	
+	Date getLastFetch();
 }

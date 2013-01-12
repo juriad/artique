@@ -1,11 +1,11 @@
-package cz.artique.client.listing2;
+package cz.artique.client.listing;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import cz.artique.client.listing2.ExpandCollapseEvent.ExpandCollapseType;
+import cz.artique.client.listing.ExpandCollapseEvent.ExpandCollapseType;
 import cz.artique.shared.utils.HasKey;
 
 public abstract class AbstractRowWidget<E extends HasKey<K>, K>

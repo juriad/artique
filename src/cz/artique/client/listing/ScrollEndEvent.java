@@ -5,6 +5,8 @@ import com.google.gwt.event.shared.GwtEvent;
 public class ScrollEndEvent extends GwtEvent<ScrollEndHandler> {
 	public enum ScrollEndType {
 		TOP,
+		NEAR_TOP,
+		NEAR_BOTTOM,
 		BOTTOM;
 	}
 

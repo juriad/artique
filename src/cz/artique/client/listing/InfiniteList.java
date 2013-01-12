@@ -4,19 +4,23 @@ import java.util.List;
 
 import com.google.gwt.view.client.HasRows;
 
-public interface InfiniteList<V> extends HasRows, HasScrollEndHandlers {
+public interface InfiniteList<E> extends HasRows, HasScrollEndHandlers {
 
-	void appendValues(List<V> values);
+	void appendValues(List<E> values);
 
-	void prependValues(List<V> values);
+	void prependValues(List<E> values);
 
-	void setValue(V value);
+	void setValue(E value);
 
 	int showHead();
 
 	int showTail();
 
 	void clear();
-	
+
 	void setRowCountExact(boolean rowCountExact);
+
+	InfiniteListDataProvider<E> getProvider();
+
+	void setProvider(InfiniteListDataProvider<E> provider);
 }

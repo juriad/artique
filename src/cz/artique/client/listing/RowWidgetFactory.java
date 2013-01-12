@@ -1,4 +1,4 @@
-package cz.artique.client.listing2;
+package cz.artique.client.listing;
 
 import cz.artique.shared.utils.HasKey;
 

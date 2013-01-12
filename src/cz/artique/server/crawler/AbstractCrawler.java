@@ -89,8 +89,6 @@ public abstract class AbstractCrawler<E extends Source> implements Crawler<E> {
 	protected UserItem createUserItem(UserSource us, Item item) {
 		UserItem ui = new UserItem();
 		ui.setAdded(item.getAdded());
-		ui.setPublished(item.getPublished() == null ? item.getAdded() : item
-			.getPublished());
 		ui.setItem(item.getKey());
 		ui.setRead(false);
 		ui.setUser(us.getUser());

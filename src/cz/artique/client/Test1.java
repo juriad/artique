@@ -17,11 +17,10 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-import cz.artique.client.artique2.ArtiqueList;
-import cz.artique.client.artique2.TestProvider;
+import cz.artique.client.artique.ArtiqueList;
+import cz.artique.client.artique.ArtiqueListProvider;
+import cz.artique.client.artique.UserItemRow;
 import cz.artique.client.listing.ListingSettings;
-import cz.artique.client.listing2.TestRowData;
-import cz.artique.client.listing2.TestRowWidget;
 import cz.artique.client.service.ClientSourceService;
 import cz.artique.client.service.ClientSourceServiceAsync;
 import cz.artique.shared.model.source.UserSource;
@@ -38,7 +37,7 @@ public class Test1 extends Composite {
 	Timer timer;
 
 	@UiField(provided = true)
-	ArtiqueList<TestRowData, String> items;
+	ArtiqueList items;
 
 	@UiField
 	FlexTable sources;
@@ -67,17 +66,11 @@ public class Test1 extends Composite {
 	}
 
 	public Test1(UserInfo userInfo) {
-		items = new ArtiqueList<TestRowData, String>(TestRowWidget.factory);
+		items = new ArtiqueList(UserItemRow.factory);
 
 		ListingSettings settings =
 			new ListingSettings(null, 20, null, 5, 20000, 5000);
-		final TestProvider provider = new TestProvider(settings, items);
-		new Timer() {
-			public void run() {
-				GWT.log(provider.getHeadSize() + "");
-				provider.pushHead();
-			}
-		}.scheduleRepeating(30000);
+		final ArtiqueListProvider provider = new ArtiqueListProvider(settings, items);
 
 		initWidget(uiBinder.createAndBindUi(this));
 		this.userInfo = userInfo;
