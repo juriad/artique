@@ -66,20 +66,17 @@ public class Test1 extends Composite {
 	}
 
 	public Test1(UserInfo userInfo) {
+		this.userInfo = userInfo;
 		items = new ArtiqueList(UserItemRow.factory);
-
+		initWidget(uiBinder.createAndBindUi(this));
 		ListingSettings settings =
 			new ListingSettings(null, 20, null, 5, 20000, 5000);
 		final ArtiqueListProvider provider = new ArtiqueListProvider(settings, items);
-
-		initWidget(uiBinder.createAndBindUi(this));
-		this.userInfo = userInfo;
 
 		userName.setText(userInfo.getUser().getNickname());
 		logout.setHref(userInfo.getLogoutUrl());
 
 		css.getUserSources(new GetSourcesCallback());
-
 	}
 
 	@UiHandler("add")

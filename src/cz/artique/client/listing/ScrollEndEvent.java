@@ -30,7 +30,7 @@ public class ScrollEndEvent extends GwtEvent<ScrollEndHandler> {
 
 	@Override
 	protected void dispatch(ScrollEndHandler handler) {
-		handler.onScroll(this);
+		handler.onScrollEnd(this);
 	}
 
 	public ScrollEndType getScrollEndType() {

@@ -38,13 +38,10 @@ public class WidgetList<E extends HasKey<K>, K> extends Composite
 	public WidgetList(RowWidgetFactory<E, K> factory) {
 		this.factory = factory;
 		flowPanel = new FlowPanel();
-		rows = new HashMap<K, RowWidget<E, K>>();
-		head = new ArrayList<E>();
-		tail = new ArrayList<E>();
-
 		scrollPanel = new ScrollPanel();
 		initWidget(scrollPanel);
 		scrollPanel.add(flowPanel);
+		clear();
 	}
 
 	public HandlerRegistration addRangeChangeHandler(Handler handler) {
@@ -115,7 +112,7 @@ public class WidgetList<E extends HasKey<K>, K> extends Composite
 			}
 
 			RowCountChangeEvent.fire(this, getRowCount(), isRowCountExact());
-			fetchToFillPage();
+			rowsAdded();
 		}
 		return l.size();
 	}
@@ -132,12 +129,12 @@ public class WidgetList<E extends HasKey<K>, K> extends Composite
 			}
 
 			RowCountChangeEvent.fire(this, getRowCount(), isRowCountExact());
-			fetchToFillPage();
+			rowsAdded();
 		}
 		return l.size();
 	}
 
-	protected void fetchToFillPage() {}
+	protected void rowsAdded() {}
 
 	private RowWidget<E, K> createRow(E e) {
 		RowWidget<E, K> row = factory.createWidget(e);
@@ -147,8 +144,11 @@ public class WidgetList<E extends HasKey<K>, K> extends Composite
 
 	public void clear() {
 		flowPanel.clear();
-		rows.clear();
+		rows = new HashMap<K, RowWidget<E, K>>();
+		head = new ArrayList<E>();
+		tail = new ArrayList<E>();
 		selected = null;
+		rowCountExact = false;
 	}
 
 	public void setSelectedKey(K key, boolean isSelected) {

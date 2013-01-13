@@ -6,7 +6,7 @@ public interface InfiniteListDataProvider<E> {
 
 	boolean isEndReached();
 	
-	void fetch(int count);
+	boolean fetch(int count);
 	
 	Date getLastFetch();
 }

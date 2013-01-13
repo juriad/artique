@@ -28,6 +28,8 @@ public class AbstractListDataProvider
 
 	private Date lastFetchProbe;
 
+	private int lastFetchCount;
+
 	private final ClientItemServiceAsync cis;
 
 	private final ListingSettings settings;
@@ -61,9 +63,11 @@ public class AbstractListDataProvider
 			}
 		};
 		periodicTimer.scheduleRepeating(settings.getInterval());
+		fetch(settings.getInitSize());
 	}
 
-	public void fetch(int count) {
+	public boolean fetch(int count) {
+		GWT.log("fetching: " + count);
 		if (count < 0) {
 			count = settings.getStep();
 		}
@@ -72,14 +76,17 @@ public class AbstractListDataProvider
 			if (lastFetchProbe.getTime() + settings.getTimeout() > new Date()
 				.getTime()) {
 				// last request may still be running
-				if (wantCount != null) {
-					if (wantCount < count) {
+				if (count > lastFetchCount) {
+					count -= lastFetchCount;
+					if (wantCount != null) {
+						if (wantCount < count) {
+							wantCount = count;
+						}
+					} else {
 						wantCount = count;
 					}
-				} else {
-					wantCount = count;
 				}
-				return;
+				return false;
 			}
 		}
 
@@ -92,25 +99,28 @@ public class AbstractListDataProvider
 			wantCount = 0;
 		}
 
+		GWT.log("do fetch " + count);
+
 		// ok, we can make the request
 		doFetch(count);
-
+		return true;
 	}
 
 	protected void doFetch(int count) {
 		lastFetchProbe = new Date();
+		lastFetchCount = count;
 		ListingUpdateRequest request =
 			new ListingUpdateRequest(settings.getFilter(), first, last, count,
 				settings.getRead(), lastFetch);
 		cis.getItems(request, new AsyncCallback<ListingUpdate<UserItem>>() {
 
 			public void onSuccess(ListingUpdate<UserItem> result) {
-				endReached = result.isEndReached();
+				lastFetchProbe = null;
+				if (!endReached) {
+					endReached = result.isEndReached();
+				}
 				applyFetchedData(result);
 				lastFetch = result.getFetched();
-				if (endReached) {
-					periodicTimer.cancel();
-				}
 			}
 
 			public void onFailure(Throwable caught) {
@@ -122,7 +132,7 @@ public class AbstractListDataProvider
 
 	protected void applyFetchedData(ListingUpdate<UserItem> result) {
 		for (UserItem modified : result.getModified()) {
-			list.setValue(modified);
+			getList().setValue(modified);
 		}
 
 		if (result.getHead().size() > 0) {
@@ -133,9 +143,9 @@ public class AbstractListDataProvider
 			last = result.getTail().get(result.getTail().size() - 1).getKey();
 		}
 
-		list.appendValues(result.getTail());
-		list.prependValues(result.getHead());
-		list.setRowCountExact(isEndReached());
+		getList().appendValues(result.getTail());
+		getList().prependValues(result.getHead());
+		getList().setRowCountExact(isEndReached());
 	}
 
 	public Date getLastFetch() {
@@ -144,5 +154,9 @@ public class AbstractListDataProvider
 
 	public boolean isEndReached() {
 		return endReached;
+	}
+
+	public InfiniteList<UserItem> getList() {
+		return list;
 	}
 }
