@@ -17,9 +17,9 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-import cz.artique.client.artique.ArtiqueList;
-import cz.artique.client.artique.ArtiqueListProvider;
-import cz.artique.client.artique.UserItemRow;
+import cz.artique.client.artiqueListing.ArtiqueList;
+import cz.artique.client.artiqueListing.ArtiqueListProvider;
+import cz.artique.client.artiqueListing.UserItemRow;
 import cz.artique.client.listing.ListingSettings;
 import cz.artique.client.service.ClientSourceService;
 import cz.artique.client.service.ClientSourceServiceAsync;

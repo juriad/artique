@@ -9,10 +9,11 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
 import cz.artique.shared.utils.GenKey;
+import cz.artique.shared.utils.HasName;
 import cz.artique.shared.utils.SharedUtils;
 
 @Model(schemaVersion = 1)
-public class Label implements Serializable, GenKey {
+public class Label implements Serializable, GenKey, HasName {
 
 	private static final long serialVersionUID = 1L;
 
@@ -40,6 +41,8 @@ public class Label implements Serializable, GenKey {
 	@Attribute(unindexed = true)
 	private BackupLevel backupLevel;
 
+	private int priority;
+
 	/**
 	 * Apperiance of this label
 	 */
@@ -55,6 +58,7 @@ public class Label implements Serializable, GenKey {
 		setAppearance(new LabelAppearanceImpl(VisibilityLevel.ONLY_ASSIGNED,
 			AppearanceType.TEXT));
 		setLabelType(LabelType.USER_DEFINED);
+		setPriority(0);
 	}
 
 	@Override
@@ -174,5 +178,13 @@ public class Label implements Serializable, GenKey {
 
 	public void setLabelType(LabelType labelType) {
 		this.labelType = labelType;
+	}
+
+	public int getPriority() {
+		return priority;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
 	}
 }

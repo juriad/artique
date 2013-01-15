@@ -1,4 +1,4 @@
-package cz.artique.client.artique;
+package cz.artique.client.artiqueListing;
 
 import java.util.Date;
 

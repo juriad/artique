@@ -1,4 +1,4 @@
-package cz.artique.client.artique;
+package cz.artique.client.artiqueListing;
 
 import cz.artique.client.listing.InfiniteList;
 import cz.artique.client.listing.ListingSettings;

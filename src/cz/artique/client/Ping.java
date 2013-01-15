@@ -1,5 +1,5 @@
 package cz.artique.client;
 
 public interface Ping {
-	void ping();
+	void pong(boolean success);
 }

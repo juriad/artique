@@ -1,4 +1,4 @@
-package cz.artique.client.artique;
+package cz.artique.client.artiqueListing;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.code.gwteyecandy.Tooltip;
