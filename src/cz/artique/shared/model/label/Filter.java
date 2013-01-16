@@ -26,11 +26,6 @@ public class Filter implements Serializable {
 	private User user;
 
 	/**
-	 * Name of this filter
-	 */
-	private String name;
-
-	/**
 	 * Filter composition
 	 */
 	private List<Key> filters;
@@ -80,10 +75,6 @@ public class Filter implements Serializable {
 		return labels;
 	}
 
-	public String getName() {
-		return name;
-	}
-
 	public User getUser() {
 		return user;
 	}
@@ -117,10 +108,6 @@ public class Filter implements Serializable {
 
 	public void setLabels(List<Key> labels) {
 		this.labels = labels;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public void setUser(User user) {

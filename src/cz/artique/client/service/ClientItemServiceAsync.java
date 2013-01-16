@@ -14,6 +14,6 @@ public interface ClientItemServiceAsync {
 
 	void addItem(ManualItem item, AsyncCallback<UserItem> callback);
 
-	void updateUserItem(UserItem item, AsyncCallback<UserItem> callback);
+	void updateUserItem(UserItem item, AsyncCallback<Void> callback);
 
 }

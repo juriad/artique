@@ -9,7 +9,6 @@ import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.client.Ping;
 import cz.artique.client.service.ClientSourceService;
 import cz.artique.client.service.ClientSourceServiceAsync;
 import cz.artique.client.sources.SourcesManager;
@@ -25,12 +24,12 @@ public enum ArtiqueSourcesManager implements SourcesManager<UserSource, Key> {
 	private ClientSourceServiceAsync css = GWT
 		.create(ClientSourceService.class);
 
-	public void refresh(final Ping ping) {
+	public void refresh(final AsyncCallback<Void> ping) {
 		css.getUserSources(new AsyncCallback<List<UserSource>>() {
 
 			public void onFailure(Throwable caught) {
 				if (ping != null) {
-					ping.pong(false);
+					ping.onFailure(caught);
 				}
 			}
 
@@ -47,7 +46,7 @@ public enum ArtiqueSourcesManager implements SourcesManager<UserSource, Key> {
 				sourcesNames = newSourcesNames;
 
 				if (ping != null) {
-					ping.pong(true);
+					ping.onSuccess(null);
 				}
 			}
 		});
@@ -63,6 +62,16 @@ public enum ArtiqueSourcesManager implements SourcesManager<UserSource, Key> {
 
 	public UserSource getSourceByKey(Key key) {
 		return sourcesKeys.get(key);
+	}
+
+	public void setTimeout(int timeout) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public int getTimeout() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

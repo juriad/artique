@@ -7,10 +7,12 @@ import java.util.List;
 import org.slim3.datastore.CompositeCriterion;
 import org.slim3.datastore.Datastore;
 import org.slim3.datastore.FilterCriterion;
+import org.slim3.datastore.InMemorySortCriterion;
 import org.slim3.datastore.ModelQuery;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
+import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.api.users.User;
 
 import cz.artique.server.meta.item.ItemMeta;
@@ -21,109 +23,194 @@ import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Filter;
+import cz.artique.shared.model.label.FilterOrder;
+import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.source.UserSource;
+import cz.artique.shared.utils.SharedUtils;
 
 public class ItemService {
 	public ListingUpdate<UserItem> getItems(User user,
 			ListingUpdateRequest request) {
 		UserItemMeta meta = UserItemMeta.get();
-
 		Date date = new Date();
 
-		FilterCriterion fc = getCriterionForFilter(request.getFilter());
+		ListFilter listFilter;
+		if (request.getListFilter() != null) {
+			listFilter = request.getListFilter();
+		} else {
+			listFilter = new ListFilter();
+		}
 
-		// head
-		List<UserItem> addedSinceLast;
+		FilterCriterion fc =
+			getCriterionForFilter(listFilter != null ? listFilter
+				.getFilterObject() : null);
+
+		Key firstCut;
+		if (listFilter.getStartFrom() != null) {
+			firstCut = getLastBefore(listFilter.getStartFrom());
+		} else {
+			firstCut = Datastore.createKey(meta, -1);
+		}
+
+		Key firstHave;
 		if (request.getFirstKey() != null) {
-			ModelQuery<UserItem> query =
-				Datastore.query(meta).filter(meta.user.equal(user));
-			if (fc != null) {
-				query = query.filter(fc);
-			}
-
-			if (request.getRead() != null) {
-				query = query.filter(meta.read.equal(request.getRead()));
-			}
-
-			addedSinceLast =
-				query
-					.filter(meta.key.greaterThan(request.getFirstKey()))
-					.sort(meta.key.desc)
-					.asList();
-
-			List<Key> addedSinceLastKeys = getListOfItemKeys(addedSinceLast);
-			fetchItemsForUserItems(addedSinceLast, addedSinceLastKeys);
+			firstHave = request.getFirstKey();
 		} else {
-			addedSinceLast = new ArrayList<UserItem>();
+			firstHave = Datastore.createKey(meta, Long.MAX_VALUE);
 		}
 
-		// tail
-		boolean endReached = false;
+		Key lastCut;
+		if (listFilter.getEndTo() != null) {
+			lastCut = getFirstAfter(listFilter.getEndTo());
+		} else {
+			lastCut = Datastore.createKey(meta, Long.MAX_VALUE);
+		}
+
+		Key lastHave;
+		if (request.getLastKey() != null) {
+			lastHave = request.getLastKey();
+		} else {
+			lastHave = Datastore.createKey(meta, -1);
+		}
+
+		ModelQuery<UserItem> query =
+			Datastore.query(meta).filter(meta.user.equal(user));
+		if (fc != null) {
+			query = query.filter(fc);
+		}
+		if (listFilter.getRead() != null) {
+			query = query.filter(meta.read.equal(listFilter.getRead()));
+		}
+
+		boolean endReached;
+		List<UserItem> head;
 		List<UserItem> tail;
-		if (request.getFetchCount() > 0) {
-			Key lastKey = request.getLastKey();
-			if (lastKey == null) {
-				lastKey = Datastore.createKey(meta, Long.MAX_VALUE);
-			}
 
-			ModelQuery<UserItem> query =
-				Datastore.query(meta).filter(meta.user.equal(user));
-			if (fc != null) {
-				query = query.filter(fc);
-			}
+		if (FilterOrder.ASCENDING.equals(listFilter.getOrder())) {
+			// head
+			head = new ArrayList<UserItem>();
 
-			if (request.getRead() != null) {
-				query = query.filter(meta.read.equal(request.getRead()));
-			}
+			// tail
+			if (request.getFetchCount() > 0) {
+				ModelQuery<UserItem> ascQuery = query;
+				ascQuery =
+					ascQuery.filter(
+						meta.key.greaterThan(SharedUtils
+							.max(firstCut, lastHave))).filter(
+						meta.key.lessThan(lastCut));
 
-			tail =
-				query
-					.filter(meta.key.lessThan(lastKey))
-					.sort(meta.key.desc)
-					.limit(request.getFetchCount())
-					.asList();
-
-			List<Key> tailKeys = getListOfItemKeys(tail);
-			fetchItemsForUserItems(tail, tailKeys);
-			if (tailKeys.size() < request.getFetchCount()) {
-				// not all items has been fetched
-				// therefore, select reached the end
-				endReached = true;
+				tail =
+					ascQuery
+						.sort(meta.key.asc)
+						.limit(request.getFetchCount())
+						.asList();
+				List<Key> tailKeys = getListOfItemKeys(tail);
+				fetchItemsForUserItems(tail, tailKeys);
+				if (tail.size() < request.getFetchCount()) {
+					endReached = true;
+				} else {
+					endReached = false;
+				}
+			} else {
+				tail = new ArrayList<UserItem>();
+				endReached = false;
 			}
 		} else {
-			tail = new ArrayList<UserItem>();
+			// head
+			if (listFilter.getEndTo() == null) {
+				if (request.getLastKey() != null) {
+					ModelQuery<UserItem> headQuery = query;
+					headQuery =
+						headQuery.filter(meta.key.greaterThan(lastHave));
+					head = headQuery.sort(meta.key.desc).asList();
+					List<Key> headKeys = getListOfItemKeys(head);
+					fetchItemsForUserItems(head, headKeys);
+				} else {
+					head = new ArrayList<UserItem>();
+				}
+			} else {
+				head = new ArrayList<UserItem>();
+			}
+
+			// tail
+			if (request.getFetchCount() > 0) {
+				ModelQuery<UserItem> tailQuery = query;
+				tailQuery =
+					tailQuery.filter(meta.key.greaterThan(firstCut)).filter(
+						meta.key.lessThan(SharedUtils.min(firstHave, lastCut)));
+				tail =
+					tailQuery
+						.sort(meta.key.desc)
+						.limit(request.getFetchCount())
+						.asList();
+				List<Key> tailKeys = getListOfItemKeys(tail);
+				fetchItemsForUserItems(tail, tailKeys);
+				if (tail.size() < request.getFetchCount()) {
+					endReached = true;
+				} else {
+					endReached = false;
+				}
+			} else {
+				tail = new ArrayList<UserItem>();
+				endReached = false;
+			}
 		}
 
-		// updated
-		List<UserItem> updatedSinceLast;
-		if (request.getFirstKey() != null && request.getLastKey() != null) {
-			ModelQuery<UserItem> query =
-				Datastore.query(meta).filter(meta.user.equal(user));
-			if (fc != null) {
-				query = query.filter(fc);
+		List<UserItem> modified;
+		if (firstHave.compareTo(lastHave) <= 0) {
+			ModelQuery<UserItem> modifiedQuery = query;
+			modifiedQuery =
+				modifiedQuery.filter(meta.lastChanged
+					.greaterThanOrEqual(request.getLastFetch()));
+			modifiedQuery =
+				modifiedQuery.filterInMemory(
+					meta.key.greaterThanOrEqual(firstHave)).filterInMemory(
+					meta.key.lessThanOrEqual(lastHave));
+			InMemorySortCriterion sortCriterion;
+			if (FilterOrder.ASCENDING.equals(listFilter.getOrder())) {
+				sortCriterion = meta.key.asc;
+			} else {
+				sortCriterion = meta.key.desc;
 			}
-
-			if (request.getRead() != null) {
-				query = query.filter(meta.read.equal(request.getRead()));
-			}
-
-			updatedSinceLast =
-				query
-					.filter(
-						meta.lastChanged.greaterThanOrEqual(request
-							.getLastFetch()))
-					.filterInMemory(
-						meta.key.greaterThanOrEqual(request.getLastKey()))
-					.filterInMemory(
-						meta.key.lessThanOrEqual(request.getFirstKey()))
-					.sortInMemory(meta.key.desc)
-					.asList();
+			modified = modifiedQuery.sortInMemory(sortCriterion).asList();
 		} else {
-			updatedSinceLast = new ArrayList<UserItem>();
+			modified = new ArrayList<UserItem>();
 		}
 
-		return new ListingUpdate<UserItem>(addedSinceLast, updatedSinceLast,
-			tail, date, endReached);
+		return new ListingUpdate<UserItem>(head, modified, tail, date,
+			endReached);
+	}
+
+	private Key getLastBefore(Date cut) {
+		UserItemMeta meta = UserItemMeta.get();
+		List<Key> asKeyList =
+			Datastore
+				.query(meta)
+				.filter(meta.added.lessThan(cut))
+				.sort(meta.added.desc)
+				.limit(1)
+				.asKeyList();
+		if (asKeyList.size() > 0) {
+			return asKeyList.get(0);
+		} else {
+			return Datastore.createKey(meta, -1);
+		}
+	}
+
+	private Key getFirstAfter(Date cut) {
+		UserItemMeta meta = UserItemMeta.get();
+		List<Key> asKeyList =
+			Datastore
+				.query(meta)
+				.filter(meta.added.greaterThan(cut))
+				.sort(meta.added.asc)
+				.limit(1)
+				.asKeyList();
+		if (asKeyList.size() > 0) {
+			return asKeyList.get(0);
+		} else {
+			return Datastore.createKey(meta, Long.MAX_VALUE);
+		}
 	}
 
 	private FilterCriterion getCriterionForFilter(Filter filter) {
@@ -192,7 +279,13 @@ public class ItemService {
 	}
 
 	public void updateUserItem(UserItem item) {
-		item.setLastChanged(new Date());
-		Datastore.put(item);
+		UserItemMeta meta = UserItemMeta.get();
+		Transaction transaction = Datastore.beginTransaction();
+		UserItem userItem = Datastore.get(transaction, meta, item.getKey());
+		userItem.setLabels(item.getLabels());
+		userItem.setRead(item.isRead());
+		userItem.setLastChanged(new Date());
+		Datastore.put(transaction, userItem);
+		transaction.commit();
 	}
 }

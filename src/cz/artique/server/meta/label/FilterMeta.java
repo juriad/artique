@@ -1,6 +1,6 @@
 package cz.artique.server.meta.label;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-01-15 17:53:16")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-01-16 14:15:07")
 /** */
 public final class FilterMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.label.Filter> {
 
@@ -12,9 +12,6 @@ public final class FilterMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
 
     /** */
     public final org.slim3.datastore.CollectionAttributeMeta<cz.artique.shared.model.label.Filter, java.util.List<com.google.appengine.api.datastore.Key>, com.google.appengine.api.datastore.Key> labels = new org.slim3.datastore.CollectionAttributeMeta<cz.artique.shared.model.label.Filter, java.util.List<com.google.appengine.api.datastore.Key>, com.google.appengine.api.datastore.Key>(this, "labels", "labels", java.util.List.class);
-
-    /** */
-    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.label.Filter> name = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.label.Filter>(this, "name", "name");
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Filter, cz.artique.shared.model.label.FilterType> type = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Filter, cz.artique.shared.model.label.FilterType>(this, "type", "type", cz.artique.shared.model.label.FilterType.class);
@@ -45,7 +42,6 @@ public final class FilterMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
         model.setFilters(toList(com.google.appengine.api.datastore.Key.class, entity.getProperty("filters")));
         model.setKey(entity.getKey());
         model.setLabels(toList(com.google.appengine.api.datastore.Key.class, entity.getProperty("labels")));
-        model.setName((java.lang.String) entity.getProperty("name"));
         model.setType(stringToEnum(cz.artique.shared.model.label.FilterType.class, (java.lang.String) entity.getProperty("type")));
         model.setUser((com.google.appengine.api.users.User) entity.getProperty("user"));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
@@ -63,7 +59,6 @@ public final class FilterMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
         }
         entity.setProperty("filters", m.getFilters());
         entity.setProperty("labels", m.getLabels());
-        entity.setProperty("name", m.getName());
         entity.setProperty("type", enumToString(m.getType()));
         entity.setProperty("user", m.getUser());
         entity.setProperty("version", m.getVersion());
@@ -153,10 +148,6 @@ public final class FilterMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
             }
             writer.endArray();
         }
-        if(m.getName() != null){
-            writer.setNextPropertyName("name");
-            encoder0.encode(writer, m.getName());
-        }
         if(m.getType() != null){
             writer.setNextPropertyName("type");
             encoder0.encode(writer, m.getType());
@@ -214,8 +205,6 @@ public final class FilterMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
                 m.setLabels(elements);
             }
         }
-        reader = rootReader.newObjectReader("name");
-        m.setName(decoder0.decode(reader, m.getName()));
         reader = rootReader.newObjectReader("type");
         m.setType(decoder0.decode(reader, m.getType(), cz.artique.shared.model.label.FilterType.class));
         reader = rootReader.newObjectReader("user");

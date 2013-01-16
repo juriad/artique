@@ -1,36 +1,28 @@
 package cz.artique.client.listing;
 
-import cz.artique.shared.model.label.Filter;
+import cz.artique.shared.model.label.ListFilter;
 
 public class ListingSettings {
-	private final Filter filter;
+	private final ListFilter listFilter;
 	private final int initSize;
-	private final Boolean read;
 	private final int step;
 	private final int interval;
-	private final int timeout;
 
-	public ListingSettings(Filter filter, int initSize, Boolean read, int step,
-			int interval, int timeout) {
+	public ListingSettings(ListFilter listFilter, int initSize, int step,
+			int interval) {
 		super();
-		this.filter = filter;
+		this.listFilter = listFilter;
 		this.initSize = initSize;
-		this.read = read;
 		this.step = step;
 		this.interval = interval;
-		this.timeout = timeout;
 	}
 
-	public Filter getFilter() {
-		return filter;
+	public ListFilter getListFilter() {
+		return listFilter;
 	}
 
 	public int getInitSize() {
 		return initSize;
-	}
-
-	public Boolean getRead() {
-		return read;
 	}
 
 	public int getStep() {
@@ -40,9 +32,4 @@ public class ListingSettings {
 	public int getInterval() {
 		return interval;
 	}
-
-	public int getTimeout() {
-		return timeout;
-	}
-
 }

@@ -6,17 +6,15 @@ import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
 
-import cz.artique.client.RpcWithTimeoutRequestBuilder;
+import cz.artique.client.artiqueItems.ArtiqueItemsManager;
 import cz.artique.client.listing.InfiniteList;
 import cz.artique.client.listing.InfiniteListDataProvider;
 import cz.artique.client.listing.ListingSettings;
-import cz.artique.client.service.ClientItemService;
-import cz.artique.client.service.ClientItemServiceAsync;
 import cz.artique.shared.list.ListingUpdate;
 import cz.artique.shared.list.ListingUpdateRequest;
 import cz.artique.shared.model.item.UserItem;
+import cz.artique.shared.model.label.FilterOrder;
 
 public class AbstractListDataProvider
 		implements InfiniteListDataProvider<UserItem> {
@@ -26,15 +24,13 @@ public class AbstractListDataProvider
 
 	private Date lastFetch;
 
-	private Date lastFetchProbe;
+	private Date lastFetchProbeDate;
 
-	private int lastFetchCount;
-
-	private final ClientItemServiceAsync cis;
+	private int lastFetchProbeCount;
 
 	private final ListingSettings settings;
 
-	private Timer periodicTimer;
+	private final Timer periodicTimer;
 
 	private Integer wantCount;
 
@@ -42,16 +38,22 @@ public class AbstractListDataProvider
 
 	private final InfiniteList<UserItem> list;
 
+	private final ArtiqueItemsManager manager;
+
+	private final FilterOrder order;
+
 	public AbstractListDataProvider(final ListingSettings settings,
 			InfiniteList<UserItem> list) {
 		super();
 		this.settings = settings;
 		this.lastFetch = new Date(0);
-		this.lastFetchProbe = new Date(0);
-		this.cis = GWT.create(ClientItemService.class);
-		((ServiceDefTarget) cis)
-			.setRpcRequestBuilder(new RpcWithTimeoutRequestBuilder(settings
-				.getTimeout()));
+		this.lastFetchProbeDate = new Date(0);
+		this.manager = ArtiqueItemsManager.MANAGER;
+		if (settings.getListFilter() != null) {
+			order = settings.getListFilter().getOrder();
+		} else {
+			order = FilterOrder.DESCENDING;
+		}
 
 		this.list = list;
 		list.setProvider(this);
@@ -72,12 +74,12 @@ public class AbstractListDataProvider
 			count = settings.getStep();
 		}
 		// check simultanous requests
-		if (lastFetchProbe != null) {
-			if (lastFetchProbe.getTime() + settings.getTimeout() > new Date()
+		if (lastFetchProbeDate != null) {
+			if (lastFetchProbeDate.getTime() + manager.getTimeout() > new Date()
 				.getTime()) {
 				// last request may still be running
-				if (count > lastFetchCount) {
-					count -= lastFetchCount;
+				if (count > lastFetchProbeCount) {
+					count -= lastFetchProbeCount;
 					if (wantCount != null) {
 						if (wantCount < count) {
 							wantCount = count;
@@ -95,7 +97,7 @@ public class AbstractListDataProvider
 			wantCount = null;
 		}
 
-		if (endReached) {
+		if (endReached && FilterOrder.DESCENDING.equals(order)) {
 			wantCount = 0;
 		}
 
@@ -107,15 +109,15 @@ public class AbstractListDataProvider
 	}
 
 	protected void doFetch(int count) {
-		lastFetchProbe = new Date();
-		lastFetchCount = count;
+		lastFetchProbeDate = new Date();
+		lastFetchProbeCount = count;
 		ListingUpdateRequest request =
-			new ListingUpdateRequest(settings.getFilter(), first, last, count,
-				settings.getRead(), lastFetch);
-		cis.getItems(request, new AsyncCallback<ListingUpdate<UserItem>>() {
+			new ListingUpdateRequest(settings.getListFilter(), first, last,
+				lastFetch, count);
+		manager.getItems(request, new AsyncCallback<ListingUpdate<UserItem>>() {
 
 			public void onSuccess(ListingUpdate<UserItem> result) {
-				lastFetchProbe = null;
+				lastFetchProbeDate = null;
 				if (!endReached) {
 					endReached = result.isEndReached();
 				}
@@ -124,7 +126,7 @@ public class AbstractListDataProvider
 			}
 
 			public void onFailure(Throwable caught) {
-				lastFetchProbe = null;
+				lastFetchProbeDate = null;
 				// do nothing, will try later
 			}
 		});
@@ -135,12 +137,26 @@ public class AbstractListDataProvider
 			getList().setValue(modified);
 		}
 
-		if (result.getHead().size() > 0) {
-			first = result.getHead().get(0).getKey();
-		}
-
-		if (result.getTail().size() > 0) {
-			last = result.getTail().get(result.getTail().size() - 1).getKey();
+		if (FilterOrder.ASCENDING.equals(order)) {
+			// no head
+			if (!result.getTail().isEmpty()) {
+				if (first == null) {
+					first = result.getTail().get(0).getKey();
+				}
+				last =
+					result.getTail().get(result.getTail().size() - 1).getKey();
+			}
+		} else {
+			if (!result.getHead().isEmpty()) {
+				last = result.getHead().get(0).getKey();
+			}
+			if (!result.getTail().isEmpty()) {
+				if (last == null) {
+					last = result.getTail().get(0).getKey();
+				}
+				first =
+					result.getTail().get(result.getTail().size() - 1).getKey();
+			}
 		}
 
 		getList().appendValues(result.getTail());

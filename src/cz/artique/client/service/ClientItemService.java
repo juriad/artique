@@ -14,5 +14,5 @@ public interface ClientItemService extends RemoteService {
 
 	UserItem addItem(ManualItem item);
 
-	UserItem updateUserItem(UserItem item);
+	void updateUserItem(UserItem item);
 }

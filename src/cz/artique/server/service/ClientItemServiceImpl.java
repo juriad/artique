@@ -43,7 +43,7 @@ public class ClientItemServiceImpl implements ClientItemService {
 		return is.addManualItem(item);
 	}
 
-	public UserItem updateUserItem(UserItem item)
+	public void updateUserItem(UserItem item)
 			throws NullPointerException, SecurityBreachException {
 		if (item == null) {
 			throw new NullPointerException();
@@ -52,6 +52,5 @@ public class ClientItemServiceImpl implements ClientItemService {
 
 		ItemService is = new ItemService();
 		is.updateUserItem(item);
-		return item;
 	}
 }

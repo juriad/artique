@@ -5,28 +5,26 @@ import java.util.Date;
 
 import com.google.appengine.api.datastore.Key;
 
-import cz.artique.shared.model.label.Filter;
+import cz.artique.shared.model.label.ListFilter;
 
 public class ListingUpdateRequest implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private Filter filter;
+	private ListFilter listFilter;
 	private Key firstKey;
 	private Key lastKey;
-	private int fetchCount;
-	private Boolean read;
 	private Date lastFetch;
+	private int fetchCount;
 
 	public ListingUpdateRequest() {}
 
-	public ListingUpdateRequest(Filter filter, Key firstKey, Key lastKey,
-			int fetchCount, Boolean read, Date lastFetch) {
-		this.setFilter(filter);
-		this.setRead(read);
+	public ListingUpdateRequest(ListFilter listFilter, Key firstKey,
+			Key lastKey, Date lastFetch, int fetchCount) {
+		this.setListFilter(listFilter);
 		this.setFirstKey(firstKey);
 		this.setLastKey(lastKey);
-		this.setFetchCount(fetchCount);
 		this.setLastFetch(lastFetch);
+		this.setFetchCount(fetchCount);
 	}
 
 	public Key getFirstKey() {
@@ -37,24 +35,16 @@ public class ListingUpdateRequest implements Serializable {
 		return lastKey;
 	}
 
-	public int getFetchCount() {
-		return fetchCount;
-	}
-
-	public Filter getFilter() {
-		return filter;
-	}
-
-	public Boolean getRead() {
-		return read;
+	public ListFilter getListFilter() {
+		return listFilter;
 	}
 
 	public Date getLastFetch() {
 		return lastFetch;
 	}
 
-	public void setFilter(Filter filter) {
-		this.filter = filter;
+	public void setListFilter(ListFilter listFilter) {
+		this.listFilter = listFilter;
 	}
 
 	public void setFirstKey(Key firstKey) {
@@ -65,15 +55,15 @@ public class ListingUpdateRequest implements Serializable {
 		this.lastKey = lastKey;
 	}
 
-	public void setFetchCount(int fetchCount) {
-		this.fetchCount = fetchCount;
-	}
-
-	public void setRead(Boolean read) {
-		this.read = read;
-	}
-
 	public void setLastFetch(Date lastFetch) {
 		this.lastFetch = lastFetch;
+	}
+
+	public int getFetchCount() {
+		return fetchCount;
+	}
+
+	public void setFetchCount(int fetchCount) {
+		this.fetchCount = fetchCount;
 	}
 }

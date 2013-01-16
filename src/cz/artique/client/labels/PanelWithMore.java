@@ -151,4 +151,8 @@ public class PanelWithMore<E extends ComparableWidget<E>> extends Composite {
 		}
 		extraWidget = w;
 	}
+	
+	public List<E> getAll() {
+		return list;
+	}
 }

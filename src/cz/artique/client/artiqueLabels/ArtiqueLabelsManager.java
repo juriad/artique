@@ -12,7 +12,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import cz.artique.client.ArtiqueWorld;
-import cz.artique.client.Ping;
 import cz.artique.client.labels.LabelsManager;
 import cz.artique.client.service.ClientLabelService;
 import cz.artique.client.service.ClientLabelServiceAsync;
@@ -27,12 +26,12 @@ public enum ArtiqueLabelsManager implements LabelsManager<Label, Key> {
 	private ClientLabelServiceAsync cls = GWT.create(ClientLabelService.class);
 	private static Comparator<Label> comparator = null;
 
-	public void refreshAll(final Ping ping) {
+	public void refresh(final AsyncCallback<Void> ping) {
 		cls.getAllLabels(new AsyncCallback<List<Label>>() {
 
 			public void onFailure(Throwable caught) {
 				if (ping != null) {
-					ping.pong(false);
+					ping.onFailure(caught);
 				}
 			}
 
@@ -48,7 +47,7 @@ public enum ArtiqueLabelsManager implements LabelsManager<Label, Key> {
 				labelsNames = newLabelsNames;
 
 				if (ping != null) {
-					ping.pong(true);
+					ping.onSuccess(null);
 				}
 			}
 		});
@@ -62,13 +61,13 @@ public enum ArtiqueLabelsManager implements LabelsManager<Label, Key> {
 		return labelsNames.get(name);
 	}
 
-	public void createNewLabel(String name, final Ping ping) {
+	public void createNewLabel(String name, final AsyncCallback<Label> ping) {
 		Label label = new Label(ArtiqueWorld.WORLD.getUser(), name);
 		cls.addLabel(label, new AsyncCallback<Label>() {
 
 			public void onFailure(Throwable caught) {
 				if (ping != null) {
-					ping.pong(false);
+					ping.onFailure(null);
 				}
 			}
 
@@ -79,7 +78,7 @@ public enum ArtiqueLabelsManager implements LabelsManager<Label, Key> {
 				}
 
 				if (ping != null) {
-					ping.pong(true);
+					ping.onSuccess(result);
 				}
 			}
 		});
@@ -114,6 +113,16 @@ public enum ArtiqueLabelsManager implements LabelsManager<Label, Key> {
 			};
 		}
 		return comparator;
+	}
+
+	public void setTimeout(int timeout) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public int getTimeout() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

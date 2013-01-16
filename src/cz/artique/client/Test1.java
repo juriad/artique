@@ -69,9 +69,9 @@ public class Test1 extends Composite {
 		this.userInfo = userInfo;
 		items = new ArtiqueList(UserItemRow.factory);
 		initWidget(uiBinder.createAndBindUi(this));
-		ListingSettings settings =
-			new ListingSettings(null, 20, null, 5, 20000, 5000);
-		final ArtiqueListProvider provider = new ArtiqueListProvider(settings, items);
+		ListingSettings settings = new ListingSettings(null, 20, 5, 20000);
+		final ArtiqueListProvider provider =
+			new ArtiqueListProvider(settings, items);
 
 		userName.setText(userInfo.getUser().getNickname());
 		logout.setHref(userInfo.getLogoutUrl());

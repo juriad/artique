@@ -123,6 +123,16 @@ public abstract class LabelsBar<E extends HasName & HasKey<K>, K>
 		panel.remove(labelWidget);
 	}
 
+	protected void removeLabel(E label) {
+		getSelectedLabels().remove(label);
+		for (LabelWidget<E> w : panel.getAll()) {
+			if (w.getLabel().equals(label)) {
+				panel.remove(w);
+				break;
+			}
+		}
+	}
+
 	protected abstract void newLabelAdded(String name);
 
 	protected abstract void labelAdded(E label);
