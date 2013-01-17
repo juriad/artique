@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.google.appengine.api.datastore.Key;
 
+import cz.artique.shared.utils.HasHierarchy;
 import cz.artique.shared.utils.HasKey;
 import cz.artique.shared.utils.HasName;
 
@@ -12,7 +13,8 @@ import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 
 @Model(schemaVersion = 1)
-public class ListFilter implements Serializable, HasKey<Key>, HasName {
+public class ListFilter
+		implements Serializable, HasKey<Key>, HasName, HasHierarchy {
 
 	private static final long serialVersionUID = 1L;
 
@@ -36,6 +38,8 @@ public class ListFilter implements Serializable, HasKey<Key>, HasName {
 	private Date startFrom;
 
 	private Date endTo;
+
+	private String hierarchy;
 
 	/**
 	 * Returns the key.
@@ -159,5 +163,13 @@ public class ListFilter implements Serializable, HasKey<Key>, HasName {
 
 	public void setFilterObject(Filter filterObject) {
 		this.filterObject = filterObject;
+	}
+
+	public String getHierarchy() {
+		return hierarchy;
+	}
+
+	public void setHierarchy(String hierarchy) {
+		this.hierarchy = hierarchy;
 	}
 }

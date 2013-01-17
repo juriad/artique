@@ -11,11 +11,12 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.users.User;
 
 import cz.artique.shared.utils.GenKey;
+import cz.artique.shared.utils.HasHierarchy;
 import cz.artique.shared.utils.HasName;
 import cz.artique.shared.utils.SharedUtils;
 
 @Model(schemaVersion = 1)
-public class UserSource implements Serializable, GenKey, HasName {
+public class UserSource implements Serializable, GenKey, HasName, HasHierarchy {
 
 	private static final long serialVersionUID = 1L;
 

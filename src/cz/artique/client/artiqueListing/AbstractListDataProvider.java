@@ -42,6 +42,8 @@ public class AbstractListDataProvider
 
 	private final FilterOrder order;
 
+	private final Object lock = new Object();
+
 	public AbstractListDataProvider(final ListingSettings settings,
 			InfiniteList<UserItem> list) {
 		super();
@@ -74,21 +76,25 @@ public class AbstractListDataProvider
 			count = settings.getStep();
 		}
 		// check simultanous requests
-		if (lastFetchProbeDate != null) {
-			if (lastFetchProbeDate.getTime() + manager.getTimeout() > new Date()
-				.getTime()) {
-				// last request may still be running
-				if (count > lastFetchProbeCount) {
-					count -= lastFetchProbeCount;
-					if (wantCount != null) {
-						if (wantCount < count) {
+		synchronized (lock) {
+			if (lastFetchProbeDate != null) {
+				if (lastFetchProbeDate.getTime() + manager.getTimeout() > new Date()
+					.getTime()) {
+					// last request may still be running
+					if (count > lastFetchProbeCount) {
+						count -= lastFetchProbeCount;
+						if (wantCount != null) {
+							if (wantCount < count) {
+								wantCount = count;
+							}
+						} else {
 							wantCount = count;
 						}
-					} else {
-						wantCount = count;
 					}
+					return false;
+				} else {
+					lastFetchProbeDate = null;
 				}
-				return false;
 			}
 		}
 
@@ -109,7 +115,12 @@ public class AbstractListDataProvider
 	}
 
 	protected void doFetch(int count) {
-		lastFetchProbeDate = new Date();
+		synchronized (lock) {
+			if (lastFetchProbeDate != null) {
+				return;
+			}
+			lastFetchProbeDate = new Date();
+		}
 		lastFetchProbeCount = count;
 		ListingUpdateRequest request =
 			new ListingUpdateRequest(settings.getListFilter(), first, last,
@@ -117,16 +128,20 @@ public class AbstractListDataProvider
 		manager.getItems(request, new AsyncCallback<ListingUpdate<UserItem>>() {
 
 			public void onSuccess(ListingUpdate<UserItem> result) {
-				lastFetchProbeDate = null;
+				lastFetch = result.getFetched();
 				if (!endReached) {
 					endReached = result.isEndReached();
 				}
+				synchronized (lock) {
+					lastFetchProbeDate = null;
+				}
 				applyFetchedData(result);
-				lastFetch = result.getFetched();
 			}
 
 			public void onFailure(Throwable caught) {
-				lastFetchProbeDate = null;
+				synchronized (lock) {
+					lastFetchProbeDate = null;
+				}
 				// do nothing, will try later
 			}
 		});

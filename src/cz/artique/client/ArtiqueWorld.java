@@ -6,7 +6,7 @@ public enum ArtiqueWorld {
 	WORLD;
 
 	private UserInfo userInfo;
-
+	
 	public UserInfo getUserInfo() {
 		return userInfo;
 	}

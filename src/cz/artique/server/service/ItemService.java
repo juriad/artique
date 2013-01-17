@@ -26,7 +26,6 @@ import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.FilterOrder;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.source.UserSource;
-import cz.artique.shared.utils.SharedUtils;
 
 public class ItemService {
 	public ListingUpdate<UserItem> getItems(User user,
@@ -73,15 +72,6 @@ public class ItemService {
 			lastHave = Datastore.createKey(meta, -1);
 		}
 
-		ModelQuery<UserItem> query =
-			Datastore.query(meta).filter(meta.user.equal(user));
-		if (fc != null) {
-			query = query.filter(fc);
-		}
-		if (listFilter.getRead() != null) {
-			query = query.filter(meta.read.equal(listFilter.getRead()));
-		}
-
 		boolean endReached;
 		List<UserItem> head;
 		List<UserItem> tail;
@@ -92,11 +82,11 @@ public class ItemService {
 
 			// tail
 			if (request.getFetchCount() > 0) {
-				ModelQuery<UserItem> ascQuery = query;
+				ModelQuery<UserItem> ascQuery =
+					getBaseQuery(listFilter, fc, user);
 				ascQuery =
 					ascQuery.filter(
-						meta.key.greaterThan(SharedUtils
-							.max(firstCut, lastHave))).filter(
+						meta.key.greaterThan(max(firstCut, lastHave))).filter(
 						meta.key.lessThan(lastCut));
 
 				tail =
@@ -119,7 +109,8 @@ public class ItemService {
 			// head
 			if (listFilter.getEndTo() == null) {
 				if (request.getLastKey() != null) {
-					ModelQuery<UserItem> headQuery = query;
+					ModelQuery<UserItem> headQuery =
+						getBaseQuery(listFilter, fc, user);
 					headQuery =
 						headQuery.filter(meta.key.greaterThan(lastHave));
 					head = headQuery.sort(meta.key.desc).asList();
@@ -134,10 +125,11 @@ public class ItemService {
 
 			// tail
 			if (request.getFetchCount() > 0) {
-				ModelQuery<UserItem> tailQuery = query;
+				ModelQuery<UserItem> tailQuery =
+					getBaseQuery(listFilter, fc, user);
 				tailQuery =
 					tailQuery.filter(meta.key.greaterThan(firstCut)).filter(
-						meta.key.lessThan(SharedUtils.min(firstHave, lastCut)));
+						meta.key.lessThan(min(firstHave, lastCut)));
 				tail =
 					tailQuery
 						.sort(meta.key.desc)
@@ -158,7 +150,8 @@ public class ItemService {
 
 		List<UserItem> modified;
 		if (firstHave.compareTo(lastHave) <= 0) {
-			ModelQuery<UserItem> modifiedQuery = query;
+			ModelQuery<UserItem> modifiedQuery =
+				getBaseQuery(listFilter, fc, user);
 			modifiedQuery =
 				modifiedQuery.filter(meta.lastChanged
 					.greaterThanOrEqual(request.getLastFetch()));
@@ -179,6 +172,22 @@ public class ItemService {
 
 		return new ListingUpdate<UserItem>(head, modified, tail, date,
 			endReached);
+	}
+
+	private ModelQuery<UserItem> getBaseQuery(ListFilter listFilter,
+			FilterCriterion fc, User user) {
+		UserItemMeta meta = UserItemMeta.get();
+
+		ModelQuery<UserItem> query =
+			Datastore.query(meta).filter(meta.user.equal(user));
+		if (fc != null) {
+			query = query.filter(fc);
+		}
+		if (listFilter.getRead() != null) {
+			query = query.filter(meta.read.equal(listFilter.getRead()));
+		}
+
+		return query;
 	}
 
 	private Key getLastBefore(Date cut) {
@@ -211,6 +220,34 @@ public class ItemService {
 		} else {
 			return Datastore.createKey(meta, Long.MAX_VALUE);
 		}
+	}
+
+	public static Key min(Key... ks) {
+		if (ks == null || ks.length == 0) {
+			return null;
+		}
+
+		Key min = ks[0];
+		for (int i = 1; i < ks.length; i++) {
+			if (ks[i].compareTo(min) < 0) {
+				min = ks[i];
+			}
+		}
+		return min;
+	}
+
+	public static Key max(Key... ks) {
+		if (ks == null || ks.length == 0) {
+			return null;
+		}
+
+		Key max = ks[0];
+		for (int i = 1; i < ks.length; i++) {
+			if (ks[i].compareTo(max) > 0) {
+				max = ks[i];
+			}
+		}
+		return max;
 	}
 
 	private FilterCriterion getCriterionForFilter(Filter filter) {

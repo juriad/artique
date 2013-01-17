@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import cz.artique.client.artiqueItems.ArtiqueItemsManager;
 import cz.artique.client.service.UserServiceWrapper;
 import cz.artique.client.service.UserServiceWrapperAsync;
 
@@ -32,6 +33,7 @@ public class Main implements EntryPoint {
 				public void onSuccess(UserInfo result) {
 					userInfo = result;
 					if (userInfo.getUser() != null) {
+						setTimeouts();
 						loadArtique();
 					} else {
 						loadLogin();
@@ -51,4 +53,10 @@ public class Main implements EntryPoint {
 		loginPanel.add(signInLink);
 		RootPanel.get().add(loginPanel);
 	}
+
+	private void setTimeouts() {
+		// TODO i pro ostatní managery
+		ArtiqueItemsManager.MANAGER.setTimeout(2000);
+	}
+
 }

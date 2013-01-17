@@ -1,6 +1,6 @@
 package cz.artique.server.meta.label;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-01-16 14:17:56")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-01-17 00:11:13")
 /** */
 public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.label.ListFilter> {
 
@@ -9,6 +9,9 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, com.google.appengine.api.datastore.Key> filter = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, com.google.appengine.api.datastore.Key>(this, "filter", "filter", com.google.appengine.api.datastore.Key.class);
+
+    /** */
+    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.label.ListFilter> hierarchy = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.label.ListFilter>(this, "hierarchy", "hierarchy");
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
@@ -47,6 +50,7 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         cz.artique.shared.model.label.ListFilter model = new cz.artique.shared.model.label.ListFilter();
         model.setEndTo((java.util.Date) entity.getProperty("endTo"));
         model.setFilter((com.google.appengine.api.datastore.Key) entity.getProperty("filter"));
+        model.setHierarchy((java.lang.String) entity.getProperty("hierarchy"));
         model.setKey(entity.getKey());
         model.setName((java.lang.String) entity.getProperty("name"));
         model.setOrder(stringToEnum(cz.artique.shared.model.label.FilterOrder.class, (java.lang.String) entity.getProperty("order")));
@@ -67,6 +71,7 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         }
         entity.setProperty("endTo", m.getEndTo());
         entity.setProperty("filter", m.getFilter());
+        entity.setProperty("hierarchy", m.getHierarchy());
         entity.setProperty("name", m.getName());
         entity.setProperty("order", enumToString(m.getOrder()));
         entity.setProperty("read", m.getRead());
@@ -146,6 +151,10 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
             writer.setNextPropertyName("filterObject");
             encoder0.encode(writer, m.getFilterObject());
         }
+        if(m.getHierarchy() != null){
+            writer.setNextPropertyName("hierarchy");
+            encoder0.encode(writer, m.getHierarchy());
+        }
         if(m.getKey() != null){
             writer.setNextPropertyName("key");
             encoder0.encode(writer, m.getKey());
@@ -184,6 +193,8 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         m.setFilter(decoder0.decode(reader, m.getFilter()));
         reader = rootReader.newObjectReader("filterObject");
         m.setFilterObject(decoder0.decode(reader, m.getFilterObject(), cz.artique.shared.model.label.Filter.class));
+        reader = rootReader.newObjectReader("hierarchy");
+        m.setHierarchy(decoder0.decode(reader, m.getHierarchy()));
         reader = rootReader.newObjectReader("key");
         m.setKey(decoder0.decode(reader, m.getKey()));
         reader = rootReader.newObjectReader("name");
