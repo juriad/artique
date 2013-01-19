@@ -11,6 +11,8 @@ import cz.artique.shared.utils.HasName;
 public interface LabelsManager<E extends HasName & HasKey<K>, K>
 		extends Manager {
 	List<E> getLabels();
+	
+	List<E> getUserDefinedLabels();
 
 	E getLabelByName(String name);
 

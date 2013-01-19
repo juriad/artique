@@ -6,26 +6,30 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.client.service.ClientSourceService;
+import cz.artique.client.AbstractManager;
 import cz.artique.client.service.ClientSourceServiceAsync;
 import cz.artique.client.sources.SourcesManager;
 import cz.artique.shared.model.source.UserSource;
 
-public enum ArtiqueSourcesManager implements SourcesManager<UserSource, Key> {
-	MANAGER;
+public class ArtiqueSourcesManager
+		extends AbstractManager<ClientSourceServiceAsync>
+		implements SourcesManager<UserSource, Key> {
+	public static final ArtiqueSourcesManager MANAGER =
+		new ArtiqueSourcesManager();
+
+	private ArtiqueSourcesManager() {
+		super(ClientSourceServiceAsync.class);
+		refresh(null);
+	}
 
 	private Map<Key, UserSource> sourcesKeys = new HashMap<Key, UserSource>();
 	private Map<String, UserSource> sourcesNames =
 		new HashMap<String, UserSource>();
 
-	private ClientSourceServiceAsync css = GWT
-		.create(ClientSourceService.class);
-
 	public void refresh(final AsyncCallback<Void> ping) {
-		css.getUserSources(new AsyncCallback<List<UserSource>>() {
+		service.getUserSources(new AsyncCallback<List<UserSource>>() {
 
 			public void onFailure(Throwable caught) {
 				if (ping != null) {
@@ -48,6 +52,7 @@ public enum ArtiqueSourcesManager implements SourcesManager<UserSource, Key> {
 				if (ping != null) {
 					ping.onSuccess(null);
 				}
+				setReady();
 			}
 		});
 	}
@@ -62,16 +67,6 @@ public enum ArtiqueSourcesManager implements SourcesManager<UserSource, Key> {
 
 	public UserSource getSourceByKey(Key key) {
 		return sourcesKeys.get(key);
-	}
-
-	public void setTimeout(int timeout) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public int getTimeout() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 }

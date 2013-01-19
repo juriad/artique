@@ -56,8 +56,6 @@ public class Test1 extends Composite {
 
 	int itemsCount = -1;
 
-	private UserInfo userInfo;
-
 	private static Resources resources;
 
 	static {
@@ -65,16 +63,16 @@ public class Test1 extends Composite {
 		resources.css().ensureInjected();
 	}
 
-	public Test1(UserInfo userInfo) {
-		this.userInfo = userInfo;
+	public Test1() {
 		items = new ArtiqueList(UserItemRow.factory);
 		initWidget(uiBinder.createAndBindUi(this));
 		ListingSettings settings = new ListingSettings(null, 20, 5, 20000);
 		final ArtiqueListProvider provider =
 			new ArtiqueListProvider(settings, items);
 
-		userName.setText(userInfo.getUser().getNickname());
-		logout.setHref(userInfo.getLogoutUrl());
+		userName.setText(ArtiqueWorld
+			.WORLD.getUser().getNickname());
+		logout.setHref(ArtiqueWorld.WORLD.getUserInfo().getLogoutUrl());
 
 		css.getUserSources(new GetSourcesCallback());
 	}
@@ -89,7 +87,7 @@ public class Test1 extends Composite {
 				UserSource us = new UserSource();
 				us.setName(name.getText());
 				us.setSource(result.getKey());
-				us.setUser(userInfo.getUser());
+				us.setUser(ArtiqueWorld.WORLD.getUser());
 				us.setWatching(true);
 
 				css.addUserSource(us, new AddXMLSourceCallback());

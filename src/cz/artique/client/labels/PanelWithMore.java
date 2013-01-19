@@ -50,46 +50,38 @@ public class PanelWithMore<E extends ComparableWidget<E>> extends Composite {
 		});
 		panel.add(moreButton);
 		tail = new FlowPanel();
+		tail.setVisible(false);
 		panel.add(tail);
 	}
 
-	public void initialFill(List<E> orderedList) {
-		list = new ArrayList<E>(orderedList);
-		head.clear();
-		tail.clear();
-		moreButton.setVisible(false);
-
-		for (int i = 0; i < list.size(); i++) {
-			if (i < maxSize) {
-				head.add(list.get(i));
-			} else {
-				tail.add(list.get(i));
-			}
-		}
-	}
-
 	public void add(E w) {
-		boolean added = false;
-		for (int i = 0; i < list.size(); i++) {
-			if (w.compareTo(list.get(i)) >= 0) {
-				continue;
-			}
-			list.add(i, w);
-			added = true;
-
-			if (i < maxSize) {
-				head.insert(w, i);
-				if (getSize() > maxSize) {
-					tail.insert(list.get(maxSize - 1), 0);
-				}
-			} else {
-				tail.insert(w, i - maxSize);
+		int index = 0;
+		for (; index < list.size(); index++) {
+			if (w.compareTo(list.get(index)) <= 0) {
+				break;
 			}
 		}
 
-		if (!added) {
-			list.add(w);
-			tail.add(w);
+		if (index < maxSize) {
+			// insert to head
+			if (index < getSize()) {
+				head.insert(w, index);
+			} else {
+				head.add(w);
+			}
+
+			list.add(index, w);
+			if (getSize() > maxSize) {
+				tail.insert(list.get(maxSize), 0);
+			}
+		} else {
+			// insert to tail
+			if (index < getSize()) {
+				tail.insert(w, index - maxSize);
+			} else {
+				tail.add(w);
+			}
+			list.add(index, w);
 		}
 
 		if (getSize() > maxSize) {
@@ -105,6 +97,7 @@ public class PanelWithMore<E extends ComparableWidget<E>> extends Composite {
 		if (index < 0) {
 			return;
 		}
+		list.remove(index);
 
 		if (index >= maxSize) {
 			tail.remove(index - maxSize);
@@ -114,6 +107,12 @@ public class PanelWithMore<E extends ComparableWidget<E>> extends Composite {
 				head.add(list.get(maxSize - 1));
 			}
 		}
+
+		if (getSize() <= maxSize) {
+			moreButton.setVisible(false);
+			expanded = false;
+			tail.setVisible(false);
+		}
 	}
 
 	public boolean isShowMoreButton() {
@@ -122,8 +121,10 @@ public class PanelWithMore<E extends ComparableWidget<E>> extends Composite {
 
 	public void setShowMoreButton(boolean showMoreButton) {
 		this.showMoreButton = showMoreButton;
-		if (moreButton.isVisible()) {
+
+		if (getSize() > maxSize) {
 			moreButton.setVisible(showMoreButton);
+			moreButton.setText(expanded ? showLessSign : showMoreSign);
 		}
 
 		if (!expanded) {
@@ -151,7 +152,7 @@ public class PanelWithMore<E extends ComparableWidget<E>> extends Composite {
 		}
 		extraWidget = w;
 	}
-	
+
 	public List<E> getAll() {
 		return list;
 	}

@@ -3,7 +3,7 @@ package cz.artique.client.artiqueLabels;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 import cz.artique.client.labels.LabelWidget;
 import cz.artique.client.labels.LabelWidgetFactory;
@@ -11,7 +11,7 @@ import cz.artique.client.labels.RemoveEvent;
 import cz.artique.client.labels.RemoveHandler;
 import cz.artique.shared.model.label.Label;
 
-public class ArtiqueLabelWidget extends ComplexPanel
+public class ArtiqueLabelWidget extends FlowPanel
 		implements LabelWidget<Label>, HasGeneralClickHandlers {
 
 	public static final ArtiqueLabelWidgetFactory factory =

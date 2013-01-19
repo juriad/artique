@@ -12,7 +12,6 @@ import org.slim3.datastore.ModelQuery;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
-import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.api.users.User;
 
 import cz.artique.server.meta.item.ItemMeta;
@@ -317,12 +316,10 @@ public class ItemService {
 
 	public void updateUserItem(UserItem item) {
 		UserItemMeta meta = UserItemMeta.get();
-		Transaction transaction = Datastore.beginTransaction();
-		UserItem userItem = Datastore.get(transaction, meta, item.getKey());
+		UserItem userItem = Datastore.get(meta, item.getKey());
 		userItem.setLabels(item.getLabels());
 		userItem.setRead(item.isRead());
 		userItem.setLastChanged(new Date());
-		Datastore.put(transaction, userItem);
-		transaction.commit();
+		Datastore.put(userItem);
 	}
 }

@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import cz.artique.client.artiqueItems.ArtiqueItemsManager;
 import cz.artique.client.service.UserServiceWrapper;
 import cz.artique.client.service.UserServiceWrapperAsync;
 
@@ -19,7 +18,6 @@ public class Main implements EntryPoint {
 	private Label loginLabel = new Label(
 		"Please sign in to your Google Account to access the application.");
 	private Anchor signInLink = new Anchor("Sign In");
-	private UserInfo userInfo = null;
 
 	public void onModuleLoad() {
 		UserServiceWrapperAsync userService =
@@ -31,9 +29,8 @@ public class Main implements EntryPoint {
 				public void onFailure(Throwable error) {}
 
 				public void onSuccess(UserInfo result) {
-					userInfo = result;
-					if (userInfo.getUser() != null) {
-						setTimeouts();
+					ArtiqueWorld.WORLD.setUserInfo(result);
+					if (result.getUser() != null) {
 						loadArtique();
 					} else {
 						loadLogin();
@@ -43,20 +40,16 @@ public class Main implements EntryPoint {
 	}
 
 	protected void loadArtique() {
-		Test1 t = new Test1(userInfo);
+
+		Test1 t = new Test1();
 		RootLayoutPanel.get().add(t);
 	}
 
 	private void loadLogin() {
-		signInLink.setHref(userInfo.getLoginUrl());
+		signInLink.setHref(ArtiqueWorld.WORLD.getUserInfo().getLoginUrl());
 		loginPanel.add(loginLabel);
 		loginPanel.add(signInLink);
 		RootPanel.get().add(loginPanel);
-	}
-
-	private void setTimeouts() {
-		// TODO i pro ostatní managery
-		ArtiqueItemsManager.MANAGER.setTimeout(2000);
 	}
 
 }

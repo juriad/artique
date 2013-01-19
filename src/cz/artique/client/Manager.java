@@ -3,9 +3,13 @@ package cz.artique.client;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface Manager {
-	public void refresh(AsyncCallback<Void> ping);
+	void refresh(AsyncCallback<Void> ping);
 
-	public void setTimeout(int timeout);
+	void setTimeout(int timeout);
 
-	public int getTimeout();
+	int getTimeout();
+
+	void ready(AsyncCallback<Void> ping);
+
+	boolean isReady();
 }

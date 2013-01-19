@@ -42,8 +42,6 @@ public class AbstractListDataProvider
 
 	private final FilterOrder order;
 
-	private final Object lock = new Object();
-
 	public AbstractListDataProvider(final ListingSettings settings,
 			InfiniteList<UserItem> list) {
 		super();
@@ -67,34 +65,39 @@ public class AbstractListDataProvider
 			}
 		};
 		periodicTimer.scheduleRepeating(settings.getInterval());
-		fetch(settings.getInitSize());
+		onStart();
+	}
+
+	protected void onStart() {
+	}
+
+	protected boolean isReady() {
+		return true;
 	}
 
 	public boolean fetch(int count) {
 		GWT.log("fetching: " + count);
 		if (count < 0) {
-			count = settings.getStep();
+			count = getSettings().getStep();
 		}
 		// check simultanous requests
-		synchronized (lock) {
-			if (lastFetchProbeDate != null) {
-				if (lastFetchProbeDate.getTime() + manager.getTimeout() > new Date()
-					.getTime()) {
-					// last request may still be running
-					if (count > lastFetchProbeCount) {
-						count -= lastFetchProbeCount;
-						if (wantCount != null) {
-							if (wantCount < count) {
-								wantCount = count;
-							}
-						} else {
+		if (lastFetchProbeDate != null) {
+			if (lastFetchProbeDate.getTime() + manager.getTimeout() > new Date()
+				.getTime() || !isReady()) {
+				// last request may still be running or not ready yet
+				if (count > lastFetchProbeCount) {
+					count -= lastFetchProbeCount;
+					if (wantCount != null) {
+						if (wantCount < count) {
 							wantCount = count;
 						}
+					} else {
+						wantCount = count;
 					}
-					return false;
-				} else {
-					lastFetchProbeDate = null;
 				}
+				return false;
+			} else {
+				lastFetchProbeDate = null;
 			}
 		}
 
@@ -107,23 +110,20 @@ public class AbstractListDataProvider
 			wantCount = 0;
 		}
 
-		GWT.log("do fetch " + count);
-
 		// ok, we can make the request
 		doFetch(count);
 		return true;
 	}
 
 	protected void doFetch(int count) {
-		synchronized (lock) {
-			if (lastFetchProbeDate != null) {
-				return;
-			}
-			lastFetchProbeDate = new Date();
+		GWT.log("do fetch " + count);
+		if (lastFetchProbeDate != null) {
+			return;
 		}
+		lastFetchProbeDate = new Date();
 		lastFetchProbeCount = count;
 		ListingUpdateRequest request =
-			new ListingUpdateRequest(settings.getListFilter(), first, last,
+			new ListingUpdateRequest(getSettings().getListFilter(), first, last,
 				lastFetch, count);
 		manager.getItems(request, new AsyncCallback<ListingUpdate<UserItem>>() {
 
@@ -132,16 +132,12 @@ public class AbstractListDataProvider
 				if (!endReached) {
 					endReached = result.isEndReached();
 				}
-				synchronized (lock) {
-					lastFetchProbeDate = null;
-				}
+				lastFetchProbeDate = null;
 				applyFetchedData(result);
 			}
 
 			public void onFailure(Throwable caught) {
-				synchronized (lock) {
-					lastFetchProbeDate = null;
-				}
+				lastFetchProbeDate = null;
 				// do nothing, will try later
 			}
 		});
@@ -189,5 +185,9 @@ public class AbstractListDataProvider
 
 	public InfiniteList<UserItem> getList() {
 		return list;
+	}
+
+	public ListingSettings getSettings() {
+		return settings;
 	}
 }

@@ -11,6 +11,7 @@ import cz.artique.client.labels.LabelWidget;
 import cz.artique.client.labels.LabelsBar;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Label;
+import cz.artique.shared.model.label.LabelType;
 
 public class ArtiqueLabelsBar extends LabelsBar<Label, Key> {
 
@@ -19,6 +20,13 @@ public class ArtiqueLabelsBar extends LabelsBar<Label, Key> {
 	public ArtiqueLabelsBar(UserItem item, int maxSize) {
 		super(ArtiqueLabelsManager.MANAGER, ArtiqueLabelWidget.factory, maxSize);
 		this.item = item;
+
+		for (Key key : item.getLabels()) {
+			Label label = manager.getLabelByKey(key);
+			if (LabelType.USER_DEFINED.equals(label.getLabelType())) {
+				addLabel(label);
+			}
+		}
 	}
 
 	@Override
@@ -73,15 +81,15 @@ public class ArtiqueLabelsBar extends LabelsBar<Label, Key> {
 		this.item = userItem;
 		List<Label> newList = manager.getSortedList(userItem.getLabels());
 		List<Label> oldList = manager.getSortedList(userItem.getLabels());
-		
+
 		List<Label> newListCopy = new ArrayList<Label>(newList);
 		newListCopy.removeAll(oldList);
-		for(Label l: newListCopy) {
+		for (Label l : newListCopy) {
 			addLabel(l);
 		}
-		
+
 		oldList.removeAll(newList);
-		for(Label l: oldList) {
+		for (Label l : oldList) {
 			removeLabel(l);
 		}
 	}

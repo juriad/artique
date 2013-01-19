@@ -5,7 +5,6 @@ import java.util.List;
 import org.slim3.datastore.Datastore;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.api.users.User;
 
 import cz.artique.server.meta.label.FilterMeta;
@@ -27,16 +26,14 @@ public class LabelService {
 	}
 
 	public Label creatIfNotExist(Label label) {
-		Transaction tx = Datastore.beginTransaction();
 		Key key = ServerUtils.genKey(label);
 		LabelMeta meta = LabelMeta.get();
-		Label theLabel = Datastore.getOrNull(tx, meta, key);
+		Label theLabel = Datastore.getOrNull(meta, key);
 		if (theLabel == null) {
 			label.setKey(key);
-			Datastore.put(tx, label);
+			Datastore.put(label);
 			theLabel = label;
 		}
-		tx.commit();
 		return theLabel;
 	}
 
@@ -54,7 +51,7 @@ public class LabelService {
 		}
 		return filters;
 	}
-	
+
 	public Filter createFilter(Filter filter) {
 		List<Key> subKeys = Datastore.put(filter.getFilterObjects());
 		filter.setFilters(subKeys);
@@ -62,11 +59,11 @@ public class LabelService {
 		filter.setKey(key);
 		return filter;
 	}
-	
+
 	public void updateFilter(Filter filter) {
 		Datastore.put(filter);
 	}
-	
+
 	public Filter getFilterByKey(Key key) {
 		FilterMeta meta = FilterMeta.get();
 		return Datastore.getOrNull(meta, key);

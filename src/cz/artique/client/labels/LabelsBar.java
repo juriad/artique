@@ -1,7 +1,9 @@
 package cz.artique.client.labels;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -35,7 +37,10 @@ public abstract class LabelsBar<E extends HasName & HasKey<K>, K>
 			LabelWidgetFactory<E> factory, int maxSize) {
 		this.manager = manager;
 		this.factory = factory;
+		selectedLabels = new ArrayList<E>();
 		panel = new PanelWithMore<LabelWidget<E>>(maxSize);
+		initWidget(panel);
+		
 		addLabel = new Label(addLabelSign);
 		panel.setExtraWidget(addLabel);
 		addLabel.addClickHandler(new ClickHandler() {
@@ -44,7 +49,7 @@ public abstract class LabelsBar<E extends HasName & HasKey<K>, K>
 
 			public void onClick(ClickEvent event) {
 				MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
-				allLabels = manager.getLabels();
+				allLabels = manager.getUserDefinedLabels();
 				allLabels.removeAll(getSelectedLabels());
 				for (E e : allLabels) {
 					oracle.add(e.getName());
@@ -87,6 +92,7 @@ public abstract class LabelsBar<E extends HasName & HasKey<K>, K>
 			}
 
 			public void save(String value) {
+				GWT.log("save " + value);
 				boolean added = false;
 				for (E e : allLabels) {
 					if (e.getName().equals(value)) {
@@ -105,6 +111,7 @@ public abstract class LabelsBar<E extends HasName & HasKey<K>, K>
 			}
 
 			public void cancel() {
+				GWT.log("cancel");
 				panel.setExtraWidget(addLabel);
 				panel.setShowMoreButton(true);
 			}

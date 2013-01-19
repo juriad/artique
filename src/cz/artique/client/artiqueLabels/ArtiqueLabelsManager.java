@@ -8,26 +8,36 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import cz.artique.client.AbstractManager;
 import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.labels.LabelsManager;
 import cz.artique.client.service.ClientLabelService;
 import cz.artique.client.service.ClientLabelServiceAsync;
 import cz.artique.shared.model.label.Label;
+import cz.artique.shared.model.label.LabelType;
 
-public enum ArtiqueLabelsManager implements LabelsManager<Label, Key> {
-	MANAGER;
+public class ArtiqueLabelsManager
+		extends AbstractManager<ClientLabelServiceAsync>
+		implements LabelsManager<Label, Key> {
+	public static final ArtiqueLabelsManager MANAGER =
+		new ArtiqueLabelsManager();
+
+	private ArtiqueLabelsManager() {
+		super(ClientLabelService.class);
+		refresh(null);
+	}
 
 	private Map<Key, Label> labelsKeys = new HashMap<Key, Label>();
 	private Map<String, Label> labelsNames = new HashMap<String, Label>();
+	private List<Label> allLabels = new ArrayList<Label>();
+	private List<Label> userDefinedLabels = new ArrayList<Label>();
 
-	private ClientLabelServiceAsync cls = GWT.create(ClientLabelService.class);
 	private static Comparator<Label> comparator = null;
 
 	public void refresh(final AsyncCallback<Void> ping) {
-		cls.getAllLabels(new AsyncCallback<List<Label>>() {
+		service.getAllLabels(new AsyncCallback<List<Label>>() {
 
 			public void onFailure(Throwable caught) {
 				if (ping != null) {
@@ -39,22 +49,33 @@ public enum ArtiqueLabelsManager implements LabelsManager<Label, Key> {
 				Map<Key, Label> newLabelsKeys = new HashMap<Key, Label>();
 				Map<String, Label> newLabelsNames =
 					new HashMap<String, Label>();
+				List<Label> newUserDefinedLabels = new ArrayList<Label>();
 				for (Label l : result) {
 					newLabelsKeys.put(l.getKey(), l);
 					newLabelsNames.put(l.getName(), l);
+					if (LabelType.USER_DEFINED.equals(l.getLabelType())) {
+						newUserDefinedLabels.add(l);
+					}
 				}
 				labelsKeys = newLabelsKeys;
 				labelsNames = newLabelsNames;
+				userDefinedLabels = newUserDefinedLabels;
+				allLabels = result;
 
 				if (ping != null) {
 					ping.onSuccess(null);
 				}
+				setReady();
 			}
 		});
 	}
 
 	public List<Label> getLabels() {
-		return new ArrayList<Label>(labelsKeys.values());
+		return allLabels;
+	}
+
+	public List<Label> getUserDefinedLabels() {
+		return userDefinedLabels;
 	}
 
 	public Label getLabelByName(String name) {
@@ -63,7 +84,7 @@ public enum ArtiqueLabelsManager implements LabelsManager<Label, Key> {
 
 	public void createNewLabel(String name, final AsyncCallback<Label> ping) {
 		Label label = new Label(ArtiqueWorld.WORLD.getUser(), name);
-		cls.addLabel(label, new AsyncCallback<Label>() {
+		service.addLabel(label, new AsyncCallback<Label>() {
 
 			public void onFailure(Throwable caught) {
 				if (ping != null) {
@@ -73,6 +94,10 @@ public enum ArtiqueLabelsManager implements LabelsManager<Label, Key> {
 
 			public void onSuccess(Label result) {
 				if (!labelsKeys.containsKey(result.getKey())) {
+					allLabels.add(result);
+					if (LabelType.USER_DEFINED.equals(result.getLabelType())) {
+						userDefinedLabels.add(result);
+					}
 					labelsKeys.put(result.getKey(), result);
 					labelsNames.put(result.getName(), result);
 				}
@@ -113,16 +138,6 @@ public enum ArtiqueLabelsManager implements LabelsManager<Label, Key> {
 			};
 		}
 		return comparator;
-	}
-
-	public void setTimeout(int timeout) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public int getTimeout() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 }

@@ -4,8 +4,10 @@ import com.google.appengine.api.datastore.Key;
 import com.google.code.gwteyecandy.Tooltip;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 
+import cz.artique.client.artiqueLabels.ArtiqueLabelsBar;
 import cz.artique.client.listing.AbstractRowWidget;
 import cz.artique.client.listing.RowWidget;
 import cz.artique.client.listing.RowWidgetFactory;
@@ -24,14 +26,22 @@ public class UserItemRow extends AbstractRowWidget<UserItem, Key> {
 
 	}
 
+	private ArtiqueLabelsBar labels;
+	private FlowPanel header;
+
 	private Label title;
 	private Label content;
 
 	public UserItemRow(UserItem data) {
 		super(data);
 
+		header = new FlowPanel();
+		labels = new ArtiqueLabelsBar(data, 3);
+		header.add(labels);
+
 		title = new Label(getData(false).getItemObject().getTitle());
-		setHeader(title);
+		header.add(title);
+		setHeader(header);
 
 		title.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -39,7 +49,8 @@ public class UserItemRow extends AbstractRowWidget<UserItem, Key> {
 			}
 		});
 
-		content = new Label(getData(false).getItemObject().getContent().getValue());
+		content =
+			new Label(getData(false).getItemObject().getContent().getValue());
 		setContent(content);
 
 		Tooltip tt = new Tooltip();
@@ -63,6 +74,7 @@ public class UserItemRow extends AbstractRowWidget<UserItem, Key> {
 
 	@Override
 	protected void newDataSet() {
-		// TODO nothing yet
+		UserItem newDate = consumeNewData();
+		labels.setNewData(newDate);
 	}
 }
