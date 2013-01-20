@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import cz.artique.client.AbstractManager;
+import cz.artique.client.service.ClientSourceService;
 import cz.artique.client.service.ClientSourceServiceAsync;
 import cz.artique.client.sources.SourcesManager;
 import cz.artique.shared.model.source.UserSource;
@@ -20,7 +22,9 @@ public class ArtiqueSourcesManager
 		new ArtiqueSourcesManager();
 
 	private ArtiqueSourcesManager() {
-		super(ClientSourceServiceAsync.class);
+		super();
+		setService(GWT
+			.<ClientSourceServiceAsync> create(ClientSourceService.class));
 		refresh(null);
 	}
 

@@ -1,4 +1,4 @@
-package cz.artique.shared.list;
+package cz.artique.shared.items;
 
 import java.io.Serializable;
 import java.util.Date;

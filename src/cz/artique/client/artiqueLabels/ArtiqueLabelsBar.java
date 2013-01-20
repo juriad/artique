@@ -31,32 +31,15 @@ public class ArtiqueLabelsBar extends LabelsBar<Label, Key> {
 
 	@Override
 	protected void labelAdded(final Label label) {
-		ArtiqueItemsManager.MANAGER.labelAdded(getItem(), label,
-			new AsyncCallback<Void>() {
-
-				public void onSuccess(Void result) {
-					addLabel(label);
-				}
-
-				public void onFailure(Throwable caught) {
-					// TODO Auto-generated method stub
-				}
-			});
+		ArtiqueItemsManager.MANAGER.labelAdded(getItem(), label, null);
+		addLabel(label);
 	}
 
 	@Override
 	protected void labelRemoved(final LabelWidget<Label> labelWidget) {
 		ArtiqueItemsManager.MANAGER.labelRemoved(getItem(),
-			labelWidget.getLabel(), new AsyncCallback<Void>() {
-
-				public void onSuccess(Void result) {
-					removeLabel(labelWidget);
-				}
-
-				public void onFailure(Throwable caught) {
-					// TODO Auto-generated method stub
-				}
-			});
+			labelWidget.getLabel(), null);
+		removeLabel(labelWidget);
 	}
 
 	@Override

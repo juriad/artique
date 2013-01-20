@@ -11,8 +11,8 @@ import cz.artique.client.artiqueItems.ArtiqueItemsManager;
 import cz.artique.client.listing.InfiniteList;
 import cz.artique.client.listing.InfiniteListDataProvider;
 import cz.artique.client.listing.ListingSettings;
-import cz.artique.shared.list.ListingUpdate;
-import cz.artique.shared.list.ListingUpdateRequest;
+import cz.artique.shared.items.ListingUpdate;
+import cz.artique.shared.items.ListingUpdateRequest;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.FilterOrder;
 
@@ -38,9 +38,11 @@ public class AbstractListDataProvider
 
 	private final InfiniteList<UserItem> list;
 
-	private final ArtiqueItemsManager manager;
+	protected final ArtiqueItemsManager manager;
 
 	private final FilterOrder order;
+
+	protected boolean canceled = false;
 
 	public AbstractListDataProvider(final ListingSettings settings,
 			InfiniteList<UserItem> list) {
@@ -68,14 +70,16 @@ public class AbstractListDataProvider
 		onStart();
 	}
 
-	protected void onStart() {
-	}
+	protected void onStart() {}
 
 	protected boolean isReady() {
 		return true;
 	}
 
 	public boolean fetch(int count) {
+		if (canceled) {
+			return false;
+		}
 		GWT.log("fetching: " + count);
 		if (count < 0) {
 			count = getSettings().getStep();
@@ -123,8 +127,8 @@ public class AbstractListDataProvider
 		lastFetchProbeDate = new Date();
 		lastFetchProbeCount = count;
 		ListingUpdateRequest request =
-			new ListingUpdateRequest(getSettings().getListFilter(), first, last,
-				lastFetch, count);
+			new ListingUpdateRequest(getSettings().getListFilter(), first,
+				last, lastFetch, count);
 		manager.getItems(request, new AsyncCallback<ListingUpdate<UserItem>>() {
 
 			public void onSuccess(ListingUpdate<UserItem> result) {
@@ -133,6 +137,7 @@ public class AbstractListDataProvider
 					endReached = result.isEndReached();
 				}
 				lastFetchProbeDate = null;
+
 				applyFetchedData(result);
 			}
 
@@ -144,9 +149,14 @@ public class AbstractListDataProvider
 	}
 
 	protected void applyFetchedData(ListingUpdate<UserItem> result) {
-		for (UserItem modified : result.getModified()) {
-			getList().setValue(modified);
+		if (canceled) {
+			return;
 		}
+		/*
+		 * for (UserItem modified : result.getModified()) {
+		 * getList().setValue(modified);
+		 * }
+		 */
 
 		if (FilterOrder.ASCENDING.equals(order)) {
 			// no head
@@ -189,5 +199,10 @@ public class AbstractListDataProvider
 
 	public ListingSettings getSettings() {
 		return settings;
+	}
+
+	public void destroy() {
+		this.canceled = true;
+		periodicTimer.cancel();
 	}
 }

@@ -1,17 +1,11 @@
-<!-- Indices written at Sat, 19 Jan 2013 20:02:24 CET -->
+<!-- Indices written at Sun, 20 Jan 2013 17:33:22 CET -->
 
 <datastore-indexes>
 
-    <!-- Used 5 times in query history -->
+    <!-- Used 20 times in query history -->
     <datastore-index kind="UserItem" ancestor="false" source="auto">
         <property name="user" direction="asc"/>
         <property name="__key__" direction="desc"/>
-    </datastore-index>
-
-    <!-- Used 4 times in query history -->
-    <datastore-index kind="UserItem" ancestor="false" source="auto">
-        <property name="user" direction="asc"/>
-        <property name="lastChanged" direction="asc"/>
     </datastore-index>
 
 </datastore-indexes>

@@ -9,4 +9,6 @@ public interface InfiniteListDataProvider<E> {
 	boolean fetch(int count);
 	
 	Date getLastFetch();
+	
+	void destroy();
 }

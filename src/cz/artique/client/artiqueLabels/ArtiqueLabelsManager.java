@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import cz.artique.client.AbstractManager;
@@ -25,7 +26,9 @@ public class ArtiqueLabelsManager
 		new ArtiqueLabelsManager();
 
 	private ArtiqueLabelsManager() {
-		super(ClientLabelService.class);
+		super();
+		setService(GWT
+			.<ClientLabelServiceAsync> create(ClientLabelService.class));
 		refresh(null);
 	}
 

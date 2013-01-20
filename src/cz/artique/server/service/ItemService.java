@@ -2,12 +2,14 @@ package cz.artique.server.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.slim3.datastore.CompositeCriterion;
 import org.slim3.datastore.Datastore;
 import org.slim3.datastore.FilterCriterion;
-import org.slim3.datastore.InMemorySortCriterion;
 import org.slim3.datastore.ModelQuery;
 
 import com.google.appengine.api.datastore.Key;
@@ -16,8 +18,9 @@ import com.google.appengine.api.users.User;
 
 import cz.artique.server.meta.item.ItemMeta;
 import cz.artique.server.meta.item.UserItemMeta;
-import cz.artique.shared.list.ListingUpdate;
-import cz.artique.shared.list.ListingUpdateRequest;
+import cz.artique.shared.items.ChangeSet;
+import cz.artique.shared.items.ListingUpdate;
+import cz.artique.shared.items.ListingUpdateRequest;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.item.UserItem;
@@ -146,7 +149,7 @@ public class ItemService {
 				endReached = false;
 			}
 		}
-
+/*
 		List<UserItem> modified;
 		if (firstHave.compareTo(lastHave) <= 0) {
 			ModelQuery<UserItem> modifiedQuery =
@@ -168,8 +171,8 @@ public class ItemService {
 		} else {
 			modified = new ArrayList<UserItem>();
 		}
-
-		return new ListingUpdate<UserItem>(head, modified, tail, date,
+*/
+		return new ListingUpdate<UserItem>(head,/* modified,*/ tail, date,
 			endReached);
 	}
 
@@ -314,12 +317,28 @@ public class ItemService {
 		return ui;
 	}
 
-	public void updateUserItem(UserItem item) {
+	public Map<Key, UserItem> updateItems(List<Key> itemKeys,
+			Map<Key, ChangeSet> changeSets, User user) {
 		UserItemMeta meta = UserItemMeta.get();
-		UserItem userItem = Datastore.get(meta, item.getKey());
-		userItem.setLabels(item.getLabels());
-		userItem.setRead(item.isRead());
-		userItem.setLastChanged(new Date());
-		Datastore.put(userItem);
+		List<UserItem> userItems = Datastore.get(meta, itemKeys);
+		Map<Key, UserItem> result = new HashMap<Key, UserItem>();
+		for (UserItem userItem : userItems) {
+			if (!userItem.getUser().equals(user)) {
+				// error
+				continue;
+			}
+			ChangeSet change = changeSets.get(userItem.getKey());
+			Set<Key> labelsToAdd = change.getLabelsAdded();
+			userItem.getLabels().addAll(labelsToAdd);
+			Set<Key> labelsToRemove = change.getLabelsRemoved();
+			userItem.getLabels().removeAll(labelsToRemove);
+			if (change.getReadState() != null) {
+				userItem.setRead(change.getReadState());
+			}
+			userItem.setLastChanged(new Date());
+			result.put(userItem.getKey(), userItem);
+		}
+		Datastore.put(userItems);
+		return result;
 	}
 }

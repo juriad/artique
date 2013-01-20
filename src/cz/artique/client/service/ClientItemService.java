@@ -1,10 +1,14 @@
 package cz.artique.client.service;
 
+import java.util.Map;
+
+import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-import cz.artique.shared.list.ListingUpdate;
-import cz.artique.shared.list.ListingUpdateRequest;
+import cz.artique.shared.items.ChangeSet;
+import cz.artique.shared.items.ListingUpdate;
+import cz.artique.shared.items.ListingUpdateRequest;
 import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.item.UserItem;
 
@@ -14,5 +18,5 @@ public interface ClientItemService extends RemoteService {
 
 	UserItem addItem(ManualItem item);
 
-	void updateUserItem(UserItem item);
+	Map<Key, UserItem> updateItems(Map<Key, ChangeSet> changeSets);
 }

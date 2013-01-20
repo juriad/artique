@@ -1,13 +1,18 @@
 package cz.artique.server.service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.artique.client.service.ClientItemService;
-import cz.artique.shared.list.ListingUpdate;
-import cz.artique.shared.list.ListingUpdateRequest;
+import cz.artique.shared.items.ChangeSet;
+import cz.artique.shared.items.ListingUpdate;
+import cz.artique.shared.items.ListingUpdateRequest;
 import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.item.UserItem;
@@ -43,14 +48,23 @@ public class ClientItemServiceImpl implements ClientItemService {
 		return is.addManualItem(item);
 	}
 
-	public void updateUserItem(UserItem item)
-			throws NullPointerException, SecurityBreachException {
-		if (item == null) {
-			throw new NullPointerException();
+	public Map<Key, UserItem> updateItems(Map<Key, ChangeSet> changeSets) {
+		List<Key> itemKeys = new ArrayList<Key>();
+		for (Key itemKey : changeSets.keySet()) {
+			ChangeSet change = changeSets.get(itemKey);
+			if (change.isEmpty()) {
+				// empty
+				continue;
+			}
+			if (!change.getUserItem().equals(itemKey)) {
+				// invalid
+				continue;
+			}
+			itemKeys.add(itemKey);
 		}
-		Sanitizer.checkUser("user", item.getUser());
 
 		ItemService is = new ItemService();
-		is.updateUserItem(item);
+		User user = UserServiceFactory.getUserService().getCurrentUser();
+		return is.updateItems(itemKeys, changeSets, user);
 	}
 }

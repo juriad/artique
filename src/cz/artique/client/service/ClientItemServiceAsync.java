@@ -1,9 +1,13 @@
 package cz.artique.client.service;
 
+import java.util.Map;
+
+import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.shared.list.ListingUpdate;
-import cz.artique.shared.list.ListingUpdateRequest;
+import cz.artique.shared.items.ChangeSet;
+import cz.artique.shared.items.ListingUpdate;
+import cz.artique.shared.items.ListingUpdateRequest;
 import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.item.UserItem;
 
@@ -14,6 +18,7 @@ public interface ClientItemServiceAsync {
 
 	void addItem(ManualItem item, AsyncCallback<UserItem> callback);
 
-	void updateUserItem(UserItem item, AsyncCallback<Void> callback);
+	void updateItems(Map<Key, ChangeSet> changeSets,
+			AsyncCallback<Map<Key, UserItem>> callback);
 
 }
