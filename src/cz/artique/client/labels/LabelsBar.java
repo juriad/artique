@@ -11,10 +11,15 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.SuggestBox.DefaultSuggestionDisplay;
+import com.google.gwt.user.client.ui.SuggestBox.SuggestionDisplay;
+import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 
 import cz.artique.shared.utils.HasKey;
 import cz.artique.shared.utils.HasName;
@@ -40,14 +45,17 @@ public abstract class LabelsBar<E extends HasName & HasKey<K>, K>
 		selectedLabels = new ArrayList<E>();
 		panel = new PanelWithMore<LabelWidget<E>>(maxSize);
 		initWidget(panel);
-		
+
 		addLabel = new Label(addLabelSign);
 		panel.setExtraWidget(addLabel);
 		addLabel.addClickHandler(new ClickHandler() {
 
 			private List<E> allLabels;
 
+			private SuggestBox box;
+
 			public void onClick(ClickEvent event) {
+				complete = false;
 				MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
 				allLabels = manager.getUserDefinedLabels();
 				allLabels.removeAll(getSelectedLabels());
@@ -55,12 +63,21 @@ public abstract class LabelsBar<E extends HasName & HasKey<K>, K>
 					oracle.add(e.getName());
 				}
 
-				final SuggestBox box = new SuggestBox(oracle);
+				box = new SuggestBox(oracle);
+				box.setAutoSelectEnabled(false);
 				panel.setExtraWidget(box);
 				panel.setShowMoreButton(false);
+
 				box.getValueBox().addBlurHandler(new BlurHandler() {
 
 					public void onBlur(BlurEvent event) {
+						DefaultSuggestionDisplay suggestionDisplay =
+							(DefaultSuggestionDisplay) box
+								.getSuggestionDisplay();
+						boolean suggestionListShowing =
+							suggestionDisplay.isSuggestionListShowing();
+						GWT.log("showing: " + suggestionListShowing);
+
 						String value = box.getValue().trim();
 						if (!value.isEmpty()) {
 							save(value);
@@ -88,10 +105,21 @@ public abstract class LabelsBar<E extends HasName & HasKey<K>, K>
 						}
 					}
 				});
+
+				box.addSelectionHandler(new SelectionHandler<Suggestion>() {
+					public void onSelection(SelectionEvent<Suggestion> event) {
+						GWT.log("selection: " + event.getSelectedItem());
+						save(event.getSelectedItem().getReplacementString());
+					}
+				});
 				box.setFocus(true);
 			}
 
+			private boolean complete = false;
+
 			public void save(String value) {
+				if (!begin())
+					return;
 				GWT.log("save " + value);
 				boolean added = false;
 				for (E e : allLabels) {
@@ -106,15 +134,29 @@ public abstract class LabelsBar<E extends HasName & HasKey<K>, K>
 				if (!added) {
 					newLabelAdded(value);
 				}
+				end();
+			}
+
+			public void cancel() {
+				if (!begin())
+					return;
+				GWT.log("cancel");
+				end();
+			}
+
+			private boolean begin() {
+				if (complete)
+					return false;
+				complete = true;
+				return true;
+			}
+
+			private void end() {
+				box.getValueBox().setFocus(false);
 				panel.setExtraWidget(addLabel);
 				panel.setShowMoreButton(true);
 			}
 
-			public void cancel() {
-				GWT.log("cancel");
-				panel.setExtraWidget(addLabel);
-				panel.setShowMoreButton(true);
-			}
 		});
 	}
 
