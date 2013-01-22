@@ -11,7 +11,7 @@ import cz.artique.server.service.ConfigService;
 import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.PageChangeItem;
 import cz.artique.shared.model.source.PageChangeSource;
-import cz.artique.shared.model.user.ConfigOption;
+import cz.artique.shared.model.user.ConfigKey;
 
 public class PageChangeCrawler {
 
@@ -62,10 +62,16 @@ public class PageChangeCrawler {
 
 	protected String generateDiff(String oldContent, String newContent) {
 		DiffMatchPatch dmp = new DiffMatchPatch();
-		ConfigService cs = new ConfigService();
 		dmp.Diff_EditCost =
-			(short) cs.getLongValue(ConfigOption.DIFF_EDIT_COST);
-		dmp.Diff_Timeout = (float) cs.getDoubleValue(ConfigOption.DIFF_TIMEOUT);
+			ConfigService.CONFIG_SERVICE
+				.getConfig(ConfigKey.DIFF_EDIT_COST)
+				.<Long> get()
+				.shortValue();
+		dmp.Diff_Timeout =
+			ConfigService.CONFIG_SERVICE
+				.getConfig(ConfigKey.DIFF_TIMEOUT)
+				.<Double> get()
+				.floatValue();
 
 		LinkedList<Diff> diffs = dmp.diff_main(oldContent, newContent);
 		if (diffs.size() == 0) {

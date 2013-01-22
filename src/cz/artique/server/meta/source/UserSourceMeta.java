@@ -1,6 +1,6 @@
 package cz.artique.server.meta.source;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-01-21 10:47:02")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-01-22 22:02:21")
 /** */
 public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.source.UserSource> {
 
@@ -12,6 +12,9 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.UserSource, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.UserSource, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
+
+    /** */
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.UserSource, com.google.appengine.api.datastore.Key> label = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.UserSource, com.google.appengine.api.datastore.Key>(this, "label", "label", com.google.appengine.api.datastore.Key.class);
 
     /** */
     public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.source.UserSource> name = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.source.UserSource>(this, "name", "name");
@@ -48,6 +51,7 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         model.setDefaultLabels(toList(com.google.appengine.api.datastore.Key.class, entity.getProperty("defaultLabels")));
         model.setHierarchy((java.lang.String) entity.getProperty("hierarchy"));
         model.setKey(entity.getKey());
+        model.setLabel((com.google.appengine.api.datastore.Key) entity.getProperty("label"));
         model.setName((java.lang.String) entity.getProperty("name"));
         model.setSource((com.google.appengine.api.datastore.Key) entity.getProperty("source"));
         model.setUser((com.google.appengine.api.users.User) entity.getProperty("user"));
@@ -67,6 +71,7 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         }
         entity.setProperty("defaultLabels", m.getDefaultLabels());
         entity.setProperty("hierarchy", m.getHierarchy());
+        entity.setProperty("label", m.getLabel());
         entity.setProperty("name", m.getName());
         entity.setProperty("source", m.getSource());
         entity.setProperty("user", m.getUser());
@@ -150,6 +155,10 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
             writer.setNextPropertyName("key");
             encoder0.encode(writer, m.getKey());
         }
+        if(m.getLabel() != null){
+            writer.setNextPropertyName("label");
+            encoder0.encode(writer, m.getLabel());
+        }
         if(m.getName() != null){
             writer.setNextPropertyName("name");
             encoder0.encode(writer, m.getName());
@@ -201,6 +210,8 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         m.setHierarchy(decoder0.decode(reader, m.getHierarchy()));
         reader = rootReader.newObjectReader("key");
         m.setKey(decoder0.decode(reader, m.getKey()));
+        reader = rootReader.newObjectReader("label");
+        m.setLabel(decoder0.decode(reader, m.getLabel()));
         reader = rootReader.newObjectReader("name");
         m.setName(decoder0.decode(reader, m.getName()));
         reader = rootReader.newObjectReader("source");

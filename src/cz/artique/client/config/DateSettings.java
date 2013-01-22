@@ -1,4 +1,4 @@
-package cz.artique.client.settings;
+package cz.artique.client.config;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.TimeZone;

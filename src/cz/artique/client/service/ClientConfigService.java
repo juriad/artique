@@ -5,9 +5,12 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-import cz.artique.shared.model.user.ClientConfig;
+import cz.artique.shared.model.user.ClientConfigValue;
 
 @RemoteServiceRelativePath("service.s3gwt")
 public interface ClientConfigService extends RemoteService {
-	List<ClientConfig> getClientConfigs();
+	List<ClientConfigValue<?>> getClientConfigs();
+
+	List<ClientConfigValue<?>> setClientConfigs(
+			List<ClientConfigValue<?>> configs);
 }

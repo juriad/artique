@@ -15,7 +15,7 @@ import org.slim3.datastore.Datastore;
 
 import cz.artique.server.meta.source.SourceMeta;
 import cz.artique.shared.model.source.Source;
-import cz.artique.shared.model.user.ConfigOption;
+import cz.artique.shared.model.user.ConfigKey;
 
 public class CronCheckSourcesServlet extends HttpServlet {
 
@@ -57,8 +57,9 @@ public class CronCheckSourcesServlet extends HttpServlet {
 		Map<String, String[]> parameterMap = req.getParameterMap();
 
 		int maxErrors =
-			(int) new ConfigService()
-				.getLongValue(ConfigOption.MAX_ERROR_SEQUENCE);
+			ConfigService.CONFIG_SERVICE
+				.getConfig(ConfigKey.MAX_ERROR_SEQUENCE)
+				.get();
 		List<Source> sourcesList;
 		if (parameterMap.containsKey("normal")) {
 			sourcesList =

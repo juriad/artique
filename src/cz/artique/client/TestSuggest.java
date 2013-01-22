@@ -114,6 +114,8 @@ public class TestSuggest extends Composite {
 			}
 		}, new LabelWidgetFactory<L>() {
 
+			private boolean readOnly;
+
 			public LabelWidget<L> createWidget(final L l) {
 				return new LabelWidget<L>() {
 
@@ -165,6 +167,14 @@ public class TestSuggest extends Composite {
 						return l;
 					}
 				};
+			}
+
+			public void setReadOnly(boolean readOnly) {
+				this.readOnly = readOnly;
+			}
+
+			public boolean isReadOnly() {
+				return readOnly;
 			}
 		}, new SuggesionLabelFactory<L>() {
 

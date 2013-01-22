@@ -3,6 +3,7 @@ package cz.artique.server.service;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Link;
 import com.google.appengine.api.datastore.Text;
 import com.google.appengine.api.users.User;
@@ -10,6 +11,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.artique.server.utils.ServerUtils;
 import cz.artique.shared.utils.GenKey;
+import cz.artique.shared.utils.HasKey;
 import cz.artique.shared.utils.PropertyEmptyException;
 import cz.artique.shared.utils.PropertyTooLongException;
 import cz.artique.shared.utils.PropertyValueException;
@@ -104,7 +106,7 @@ public class Sanitizer {
 		return text;
 	}
 
-	public static void checkPreserveKey(GenKey gen)
+	public static <T extends GenKey & HasKey<Key>> void checkPreserveKey(T gen)
 			throws SecurityBreachException {
 		if (!ServerUtils.genKey(gen).equals(gen.getKey())) {
 			throw new SecurityBreachException("Update may not change key");

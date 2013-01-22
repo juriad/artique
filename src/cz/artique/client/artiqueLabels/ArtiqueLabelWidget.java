@@ -19,8 +19,19 @@ public class ArtiqueLabelWidget extends FlowPanel
 
 	public static class ArtiqueLabelWidgetFactory
 			implements LabelWidgetFactory<Label> {
+
+		private boolean readOnly = false;
+
 		public ArtiqueLabelWidget createWidget(Label l) {
-			return new ArtiqueLabelWidget(l, false);
+			return new ArtiqueLabelWidget(l, readOnly);
+		}
+
+		public void setReadOnly(boolean readOnly) {
+			this.readOnly = readOnly;
+		}
+
+		public boolean isReadOnly() {
+			return readOnly;
 		}
 	}
 

@@ -1,11 +1,8 @@
 package cz.artique.server.meta.user;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-01-22 15:41:57")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-01-22 18:25:47")
 /** */
 public final class ClientConfigMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.user.ClientConfig> {
-
-    /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.ClientConfig, com.google.appengine.api.users.User> user = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.ClientConfig, com.google.appengine.api.users.User>(this, "user", "user", com.google.appengine.api.users.User.class);
 
     /** */
     public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.user.ClientConfig> configKey = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.user.ClientConfig>(this, "configKey", "configKey");
@@ -23,6 +20,9 @@ public final class ClientConfigMeta extends org.slim3.datastore.ModelMeta<cz.art
     public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.user.ClientConfig> stringValue = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.user.ClientConfig>(this, "stringValue", "stringValue");
 
     /** */
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.ClientConfig, com.google.appengine.api.users.User> user = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.ClientConfig, com.google.appengine.api.users.User>(this, "user", "user", com.google.appengine.api.users.User.class);
+
+    /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.ClientConfig, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.ClientConfig, java.lang.Long>(this, "version", "version", java.lang.Long.class);
 
     private static final ClientConfigMeta slim3_singleton = new ClientConfigMeta();
@@ -36,18 +36,18 @@ public final class ClientConfigMeta extends org.slim3.datastore.ModelMeta<cz.art
 
     /** */
     public ClientConfigMeta() {
-        super("Config", cz.artique.shared.model.user.ClientConfig.class, java.util.Arrays.asList("cz.artique.shared.model.user.ClientConfig"));
+        super("ClientConfig", cz.artique.shared.model.user.ClientConfig.class);
     }
 
     @Override
     public cz.artique.shared.model.user.ClientConfig entityToModel(com.google.appengine.api.datastore.Entity entity) {
         cz.artique.shared.model.user.ClientConfig model = new cz.artique.shared.model.user.ClientConfig();
-        model.setUser((com.google.appengine.api.users.User) entity.getProperty("user"));
         model.setConfigKey((java.lang.String) entity.getProperty("configKey"));
         model.setDoubleValue(doubleToPrimitiveDouble((java.lang.Double) entity.getProperty("doubleValue")));
         model.setKey(entity.getKey());
         model.setLongValue(longToPrimitiveLong((java.lang.Long) entity.getProperty("longValue")));
         model.setStringValue((java.lang.String) entity.getProperty("stringValue"));
+        model.setUser((com.google.appengine.api.users.User) entity.getProperty("user"));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
         return model;
     }
@@ -61,14 +61,13 @@ public final class ClientConfigMeta extends org.slim3.datastore.ModelMeta<cz.art
         } else {
             entity = new com.google.appengine.api.datastore.Entity(kind);
         }
-        entity.setProperty("user", m.getUser());
         entity.setProperty("configKey", m.getConfigKey());
         entity.setProperty("doubleValue", m.getDoubleValue());
         entity.setProperty("longValue", m.getLongValue());
         entity.setProperty("stringValue", m.getStringValue());
+        entity.setProperty("user", m.getUser());
         entity.setProperty("version", m.getVersion());
         entity.setProperty("slim3.schemaVersion", 1);
-        entity.setProperty("slim3.classHierarchyList", classHierarchyList);
         return entity;
     }
 
@@ -130,10 +129,6 @@ public final class ClientConfigMeta extends org.slim3.datastore.ModelMeta<cz.art
         cz.artique.shared.model.user.ClientConfig m = (cz.artique.shared.model.user.ClientConfig) model;
         writer.beginObject();
         org.slim3.datastore.json.Default encoder0 = new org.slim3.datastore.json.Default();
-        if(m.getUser() != null){
-            writer.setNextPropertyName("user");
-            encoder0.encode(writer, m.getUser());
-        }
         if(m.getConfigKey() != null){
             writer.setNextPropertyName("configKey");
             encoder0.encode(writer, m.getConfigKey());
@@ -150,6 +145,10 @@ public final class ClientConfigMeta extends org.slim3.datastore.ModelMeta<cz.art
             writer.setNextPropertyName("stringValue");
             encoder0.encode(writer, m.getStringValue());
         }
+        if(m.getUser() != null){
+            writer.setNextPropertyName("user");
+            encoder0.encode(writer, m.getUser());
+        }
         if(m.getVersion() != null){
             writer.setNextPropertyName("version");
             encoder0.encode(writer, m.getVersion());
@@ -162,8 +161,6 @@ public final class ClientConfigMeta extends org.slim3.datastore.ModelMeta<cz.art
         cz.artique.shared.model.user.ClientConfig m = new cz.artique.shared.model.user.ClientConfig();
         org.slim3.datastore.json.JsonReader reader = null;
         org.slim3.datastore.json.Default decoder0 = new org.slim3.datastore.json.Default();
-        reader = rootReader.newObjectReader("user");
-        m.setUser(decoder0.decode(reader, m.getUser()));
         reader = rootReader.newObjectReader("configKey");
         m.setConfigKey(decoder0.decode(reader, m.getConfigKey()));
         reader = rootReader.newObjectReader("doubleValue");
@@ -174,6 +171,8 @@ public final class ClientConfigMeta extends org.slim3.datastore.ModelMeta<cz.art
         m.setLongValue(decoder0.decode(reader, m.getLongValue()));
         reader = rootReader.newObjectReader("stringValue");
         m.setStringValue(decoder0.decode(reader, m.getStringValue()));
+        reader = rootReader.newObjectReader("user");
+        m.setUser(decoder0.decode(reader, m.getUser()));
         reader = rootReader.newObjectReader("version");
         m.setVersion(decoder0.decode(reader, m.getVersion()));
         return m;

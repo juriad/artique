@@ -2,16 +2,16 @@ package cz.artique.shared.model.user;
 
 import java.io.Serializable;
 
-import com.google.appengine.api.datastore.Key;
-
-import cz.artique.shared.utils.GenKey;
-import cz.artique.shared.utils.SharedUtils;
-
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 
+import com.google.appengine.api.datastore.Key;
+
+import cz.artique.shared.utils.GenKey;
+import cz.artique.shared.utils.HasKey;
+
 @Model(schemaVersion = 1)
-public class Config implements Serializable, GenKey, DefaultValue {
+public class Config implements Serializable, GenKey, HasKey<Key> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -140,7 +140,6 @@ public class Config implements Serializable, GenKey, DefaultValue {
 	}
 
 	public String getKeyName() {
-		String prefix = "CONFIG";
-		return SharedUtils.combineStringParts(prefix, getConfigKey());
+		return getConfigKey();
 	}
 }

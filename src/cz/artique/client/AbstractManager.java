@@ -12,12 +12,9 @@ public abstract class AbstractManager<E> implements Manager {
 
 	private int timeout;
 
-	protected AbstractManager() {
-		timeout = 1000;
-	}
-	
-	protected void setService(E service) {
+	protected AbstractManager(E service) {
 		this.service = service;
+		timeout = 1000;
 	}
 
 	public void setTimeout(int timeout) {

@@ -13,6 +13,8 @@ import cz.artique.client.AbstractManager;
 import cz.artique.client.service.ClientSourceService;
 import cz.artique.client.service.ClientSourceServiceAsync;
 import cz.artique.client.sources.SourcesManager;
+import cz.artique.shared.model.label.Label;
+import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.source.UserSource;
 
 public class ArtiqueSourcesManager
@@ -22,15 +24,14 @@ public class ArtiqueSourcesManager
 		new ArtiqueSourcesManager();
 
 	private ArtiqueSourcesManager() {
-		super();
-		setService(GWT
-			.<ClientSourceServiceAsync> create(ClientSourceService.class));
+		super(GWT.<ClientSourceServiceAsync> create(ClientSourceService.class));
 		refresh(null);
 	}
 
 	private Map<Key, UserSource> sourcesKeys = new HashMap<Key, UserSource>();
 	private Map<String, UserSource> sourcesNames =
 		new HashMap<String, UserSource>();
+	private Map<Key, UserSource> sourcesLabels = new HashMap<Key, UserSource>();
 
 	public void refresh(final AsyncCallback<Void> ping) {
 		service.getUserSources(new AsyncCallback<List<UserSource>>() {
@@ -46,12 +47,16 @@ public class ArtiqueSourcesManager
 					new HashMap<Key, UserSource>();
 				Map<String, UserSource> newSourcesNames =
 					new HashMap<String, UserSource>();
+				Map<Key, UserSource> newSourcesLabels =
+					new HashMap<Key, UserSource>();
 				for (UserSource us : result) {
 					newSourcesKeys.put(us.getKey(), us);
 					newSourcesNames.put(us.getName(), us);
+					newSourcesKeys.put(us.getLabel(), us);
 				}
 				sourcesKeys = newSourcesKeys;
 				sourcesNames = newSourcesNames;
+				sourcesLabels = newSourcesLabels;
 
 				if (ping != null) {
 					ping.onSuccess(null);
@@ -71,6 +76,13 @@ public class ArtiqueSourcesManager
 
 	public UserSource getSourceByKey(Key key) {
 		return sourcesKeys.get(key);
+	}
+
+	public UserSource getByLabel(Label label) {
+		if (!LabelType.USER_SOURCE.equals(label.getLabelType())) {
+			return null;
+		}
+		return sourcesLabels.get(label.getKey());
 	}
 
 }

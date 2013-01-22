@@ -25,8 +25,7 @@ public class ArtiqueLabelsManager
 		new ArtiqueLabelsManager();
 
 	private ArtiqueLabelsManager() {
-		super();
-		setService(GWT
+		super(GWT
 			.<ClientLabelServiceAsync> create(ClientLabelService.class));
 		refresh(null);
 	}

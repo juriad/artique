@@ -33,8 +33,7 @@ public class ArtiqueItemsManager
 	private final Timer timer;
 
 	private ArtiqueItemsManager() {
-		super();
-		setService(GWT.<ClientItemServiceAsync> create(ClientItemService.class));
+		super(GWT.<ClientItemServiceAsync> create(ClientItemService.class));
 		changeSets = new HashMap<Key, ChangeSet>();
 		pings = new HashMap<Key, AsyncCallback<UserItem>>();
 

@@ -45,18 +45,22 @@ public class ArtiqueLabelsBar extends LabelsBar<Label, Key> {
 
 	@Override
 	protected void newLabelAdded(final String name) {
-		// FIXME uz muze existovat
-		// kontrolovat format stitku
-		manager.createNewLabel(name, new AsyncCallback<Label>() {
 
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-			}
+		Label labelByName = ArtiqueLabelsManager.MANAGER.getLabelByName(name);
+		if (labelByName != null) {
+			labelAdded(labelByName);
+		} else {
+			manager.createNewLabel(name, new AsyncCallback<Label>() {
 
-			public void onSuccess(Label result) {
-				labelAdded(result);
-			}
-		});
+				public void onFailure(Throwable caught) {
+					// TODO Auto-generated method stub
+				}
+
+				public void onSuccess(Label result) {
+					labelAdded(result);
+				}
+			});
+		}
 	}
 
 	public UserItem getItem() {

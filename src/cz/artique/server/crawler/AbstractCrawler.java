@@ -86,6 +86,13 @@ public abstract class AbstractCrawler<E extends Source> implements Crawler<E> {
 		Datastore.put(userItems);
 	}
 
+	/**
+	 * modifies UserSource, must be discarded afterwards
+	 * 
+	 * @param us
+	 * @param item
+	 * @return
+	 */
 	protected UserItem createUserItem(UserSource us, Item item) {
 		UserItem ui = new UserItem();
 		ui.setAdded(item.getAdded());
@@ -93,7 +100,9 @@ public abstract class AbstractCrawler<E extends Source> implements Crawler<E> {
 		ui.setRead(false);
 		ui.setUser(us.getUser());
 		ui.setUserSource(us.getKey());
-		ui.setLabels(us.getDefaultLabels());
+		List<Key> labelsToAsign = us.getDefaultLabels();
+		labelsToAsign.add(us.getLabel());
+		ui.setLabels(labelsToAsign);
 		return ui;
 	}
 

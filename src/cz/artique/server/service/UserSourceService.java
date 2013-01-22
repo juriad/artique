@@ -32,9 +32,9 @@ public class UserSourceService {
 		UserSource theUserSource =
 			Datastore.getOrNull(tx, UserSourceMeta.get(), key);
 		if (theUserSource == null) {
-			List<Key> defaultLabels = new ArrayList<Key>();
+			Key labelKey;
 			{
-				Key labelKey = Datastore.allocateId(LabelMeta.get());
+				labelKey = Datastore.allocateId(LabelMeta.get());
 				String labelName =
 					userSource.getName() + "$"
 						+ KeyFactory.keyToString(labelKey);
@@ -42,11 +42,10 @@ public class UserSourceService {
 				l.setLabelType(LabelType.USER_SOURCE);
 				l.setKey(ServerUtils.genKey(l));
 				Datastore.put(l);
-
-				userSource.setKey(key);
-				defaultLabels.add(l.getKey());
 			}
-			userSource.setDefaultLabels(defaultLabels);
+			userSource.setKey(key);
+			userSource.setLabel(labelKey);
+			userSource.setDefaultLabels(new ArrayList<Key>());
 			updateUsage(userSource, tx);
 			Datastore.put(tx, userSource);
 			theUserSource = userSource;

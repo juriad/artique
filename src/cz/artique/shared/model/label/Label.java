@@ -9,11 +9,14 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
 import cz.artique.shared.utils.GenKey;
+import cz.artique.shared.utils.HasKey;
 import cz.artique.shared.utils.HasName;
 import cz.artique.shared.utils.SharedUtils;
 
 @Model(schemaVersion = 1)
-public class Label implements Serializable, GenKey, HasName, Comparable<Label> {
+public class Label
+		implements Serializable, GenKey, HasName, HasKey<Key>,
+		Comparable<Label> {
 
 	private static final long serialVersionUID = 1L;
 

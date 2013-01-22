@@ -12,11 +12,13 @@ import com.google.appengine.api.users.User;
 
 import cz.artique.shared.utils.GenKey;
 import cz.artique.shared.utils.HasHierarchy;
+import cz.artique.shared.utils.HasKey;
 import cz.artique.shared.utils.HasName;
 import cz.artique.shared.utils.SharedUtils;
 
 @Model(schemaVersion = 1)
-public class UserSource implements Serializable, GenKey, HasName, HasHierarchy {
+public class UserSource
+		implements Serializable, GenKey, HasName, HasKey<Key>, HasHierarchy {
 
 	private static final long serialVersionUID = 1L;
 
@@ -52,6 +54,8 @@ public class UserSource implements Serializable, GenKey, HasName, HasHierarchy {
 	private boolean watching;
 
 	private List<Key> defaultLabels;
+
+	private Key label;
 
 	public UserSource() {}
 
@@ -193,5 +197,13 @@ public class UserSource implements Serializable, GenKey, HasName, HasHierarchy {
 
 	public void setDefaultLabels(List<Key> defaultLabels) {
 		this.defaultLabels = defaultLabels;
+	}
+
+	public Key getLabel() {
+		return label;
+	}
+
+	public void setLabel(Key label) {
+		this.label = label;
 	}
 }
