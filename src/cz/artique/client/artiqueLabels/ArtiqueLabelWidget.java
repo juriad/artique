@@ -72,7 +72,6 @@ public class ArtiqueLabelWidget extends FlowPanel
 	}
 
 	public int compareTo(LabelWidget<Label> o) {
-		return ArtiqueLabelsManager.getComparator().compare(getLabel(),
-			o.getLabel());
+		return getLabel().compareTo(o.getLabel());
 	}
 }

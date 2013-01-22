@@ -9,6 +9,8 @@ import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
@@ -21,19 +23,19 @@ import com.google.gwt.user.client.ui.TextBox;
 
 import cz.artique.client.artiqueLabels.GeneralClickEvent;
 import cz.artique.client.artiqueLabels.GeneralClickHandler;
-import cz.artique.client.labels.LabelsManager;
 import cz.artique.shared.utils.HasKey;
 import cz.artique.shared.utils.HasName;
 
 public class LabelSuggestion<E extends HasName & Comparable<E> & HasKey<?>>
-		extends Composite implements HasSelectionHandlers<SelectionResult<E>> {
+		extends Composite implements HasSelectionHandlers<SuggestionResult<E>> {
 
 	private final TextBox textBox;
 	private final SuggestionPopup<E> popup;
 	private List<E> labels;
 
-	public LabelSuggestion(LabelsManager<E, ?> manager, List<E> labels,
-			SuggesionLabelFactory<E> factory) {
+	private boolean complete = false;
+
+	public LabelSuggestion(List<E> labels, SuggesionLabelFactory<E> factory) {
 		this.labels = labels;
 		Collections.sort(this.labels);
 
@@ -46,6 +48,21 @@ public class LabelSuggestion<E extends HasName & Comparable<E> & HasKey<?>>
 		// TODO settings maxItems in poput: 20
 		popup = new SuggestionPopup<E>(factory, 20);
 		panel.add(popup);
+		
+		textBox.addBlurHandler(new BlurHandler() {
+
+			public void onBlur(BlurEvent event) {
+				if (complete) {
+					return;
+				}
+				if (popup.isVisible() && popup.isMouseOver()) {
+					// clicked on a suggestion
+					// wait for GeneralClickEvent
+				} else {
+					saveNewValue();
+				}
+			}
+		});
 
 		textBox.addKeyDownHandler(new KeyDownHandler() {
 			public void onKeyDown(KeyDownEvent event) {
@@ -61,13 +78,24 @@ public class LabelSuggestion<E extends HasName & Comparable<E> & HasKey<?>>
 					break;
 				case KeyCodes.KEY_ESCAPE:
 					cancel();
+					event.preventDefault();
+					event.stopPropagation();
 					break;
 				case KeyCodes.KEY_TAB:
-					tab();
+					tab(event);
 					break;
-				default:
+				}
+			}
+		});
+
+		textBox.addKeyUpHandler(new KeyUpHandler() {
+
+			private String oldText = null;
+
+			public void onKeyUp(KeyUpEvent event) {
+				if (oldText == null || !oldText.equals(textBox.getText())) {
+					oldText = textBox.getText();
 					textChanged();
-					break;
 				}
 			}
 		});
@@ -75,20 +103,11 @@ public class LabelSuggestion<E extends HasName & Comparable<E> & HasKey<?>>
 		textBox.addMouseOverHandler(new MouseOverHandler() {
 
 			public void onMouseOver(MouseOverEvent event) {
+				if (complete) {
+					return;
+				}
 				if (popup.isVisible()) {
 					popup.setFocused(-1);
-				}
-			}
-		});
-
-		textBox.addBlurHandler(new BlurHandler() {
-
-			public void onBlur(BlurEvent event) {
-				if (popup.isVisible() && popup.isMouseOver()) {
-					// clicked on asuggestion
-					// wait for GeneralClickEvent
-				} else {
-					saveNewValue();
 				}
 			}
 		});
@@ -96,6 +115,9 @@ public class LabelSuggestion<E extends HasName & Comparable<E> & HasKey<?>>
 		popup.addGeneralClickHandler(new GeneralClickHandler() {
 
 			public void onClick(GeneralClickEvent e) {
+				if (complete) {
+					return;
+				}
 				if (popup.isVisible() && popup.getSelectedValue() != null) {
 					saveExistingValue();
 				}
@@ -112,18 +134,21 @@ public class LabelSuggestion<E extends HasName & Comparable<E> & HasKey<?>>
 	}
 
 	protected void saveNewValue() {
+		complete();
+
 		if (textBox.getValue().trim().isEmpty()) {
-			SelectionEvent.fire(this, new SelectionResult<E>());
+			SelectionEvent.fire(this, new SuggestionResult<E>());
 		} else {
-			SelectionEvent.fire(this, new SelectionResult<E>(textBox
+			SelectionEvent.fire(this, new SuggestionResult<E>(textBox
 				.getValue()
 				.trim()));
 		}
 	}
 
 	protected void saveExistingValue() {
+		complete();
 		SelectionEvent.fire(this,
-			new SelectionResult<E>(popup.getSelectedValue()));
+			new SuggestionResult<E>(popup.getSelectedValue()));
 	}
 
 	protected void textChanged() {
@@ -141,18 +166,20 @@ public class LabelSuggestion<E extends HasName & Comparable<E> & HasKey<?>>
 		}
 	}
 
-	protected void tab() {
+	protected void tab(KeyDownEvent event) {
 		if (popup.isVisible()) {
 			if (popup.getSelectedValue() != null) {
 				textBox.setText(popup.getSelectedValue().getName());
 				textChanged();
+				event.preventDefault();
+				event.stopPropagation();
 			}
 		}
 	}
 
 	protected void cancel() {
-		popup.setVisible(false);
-		SelectionEvent.fire(this, new SelectionResult<E>());
+		complete();
+		SelectionEvent.fire(this, new SuggestionResult<E>());
 	}
 
 	protected void keyDown() {
@@ -168,6 +195,7 @@ public class LabelSuggestion<E extends HasName & Comparable<E> & HasKey<?>>
 	}
 
 	private List<E> findByPrefix(String prefix) {
+		prefix = prefix.trim().toLowerCase();
 		List<E> l = new ArrayList<E>();
 		for (E e : labels) {
 			if (e.getName().toLowerCase().startsWith(prefix)) {
@@ -178,7 +206,17 @@ public class LabelSuggestion<E extends HasName & Comparable<E> & HasKey<?>>
 	}
 
 	public HandlerRegistration addSelectionHandler(
-			SelectionHandler<SelectionResult<E>> handler) {
+			SelectionHandler<SuggestionResult<E>> handler) {
 		return addHandler(handler, SelectionEvent.getType());
+	}
+
+	public void focus() {
+		textBox.setFocus(true);
+	}
+
+	private void complete() {
+		complete = true;
+		popup.setVisible(false);
+		textBox.setFocus(false);
 	}
 }

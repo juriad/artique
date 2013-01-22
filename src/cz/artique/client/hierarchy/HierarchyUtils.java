@@ -1,5 +1,7 @@
 package cz.artique.client.hierarchy;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +14,7 @@ public class HierarchyUtils {
 
 	private HierarchyUtils() {}
 
-	public <E extends HasName & HasHierarchy> Hierarchy<E> buildHierarchy(
+	public static <E extends HasName & HasHierarchy> Hierarchy<E> buildHierarchy(
 			List<E> list) {
 		class H {
 			@Override
@@ -66,5 +68,21 @@ public class HierarchyUtils {
 			parent.addChild(leaf);
 		}
 		return root;
+	}
+
+	public static <E extends HasName & HasHierarchy> void sortHierarchy(
+			Hierarchy<E> root) {
+		if (root != null && !root.getChildren().isEmpty()) {
+			Collections.sort(root.getChildren(),
+				new Comparator<Hierarchy<E>>() {
+
+					public int compare(Hierarchy<E> o1, Hierarchy<E> o2) {
+						return o1.getName().compareToIgnoreCase(o2.getName());
+					}
+				});
+			for (Hierarchy<E> child : root.getChildren()) {
+				sortHierarchy(child);
+			}
+		}
 	}
 }

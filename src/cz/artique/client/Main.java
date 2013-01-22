@@ -20,9 +20,8 @@ public class Main implements EntryPoint {
 	private Anchor signInLink = new Anchor("Sign In");
 
 	public void onModuleLoad() {
-		/*UserServiceWrapperAsync userService =
+		UserServiceWrapperAsync userService =
 			GWT.create(UserServiceWrapper.class);
-		System.out.println("start");
 
 		userService.login(GWT.getHostPageBaseURL(),
 			new AsyncCallback<UserInfo>() {
@@ -36,12 +35,10 @@ public class Main implements EntryPoint {
 						loadLogin();
 					}
 				}
-			});*/
-		RootPanel.get().add(new TestSuggest());
+			});
 	}
 
 	protected void loadArtique() {
-
 		Test1 t = new Test1();
 		RootLayoutPanel.get().add(t);
 	}

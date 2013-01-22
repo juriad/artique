@@ -4,27 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
-import com.google.gwt.user.client.ui.SuggestBox;
-import com.google.gwt.user.client.ui.SuggestBox.DefaultSuggestionDisplay;
-import com.google.gwt.user.client.ui.SuggestBox.SuggestionDisplay;
-import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 
+import cz.artique.client.labels.suggestion.LabelSuggestion;
+import cz.artique.client.labels.suggestion.SuggesionLabelFactory;
+import cz.artique.client.labels.suggestion.SuggestionResult;
 import cz.artique.shared.utils.HasKey;
 import cz.artique.shared.utils.HasName;
 
-public abstract class LabelsBar<E extends HasName & HasKey<K>, K>
+public abstract class LabelsBar<E extends HasName & HasKey<K> & Comparable<E>, K>
 		extends Composite implements RemoveHandler {
 	private static final String addLabelSign = "+";
 
@@ -39,7 +32,8 @@ public abstract class LabelsBar<E extends HasName & HasKey<K>, K>
 	private LabelWidgetFactory<E> factory;
 
 	public LabelsBar(final LabelsManager<E, K> manager,
-			LabelWidgetFactory<E> factory, int maxSize) {
+			LabelWidgetFactory<E> factory,
+			final SuggesionLabelFactory<E> factory2, int maxSize) {
 		this.manager = manager;
 		this.factory = factory;
 		selectedLabels = new ArrayList<E>();
@@ -52,107 +46,39 @@ public abstract class LabelsBar<E extends HasName & HasKey<K>, K>
 
 			private List<E> allLabels;
 
-			private SuggestBox box;
+			private LabelSuggestion<E> box;
 
 			public void onClick(ClickEvent event) {
-				complete = false;
-				MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
 				allLabels = manager.getUserDefinedLabels();
 				allLabels.removeAll(getSelectedLabels());
-				for (E e : allLabels) {
-					oracle.add(e.getName());
-				}
 
-				box = new SuggestBox(oracle);
-				box.setAutoSelectEnabled(false);
+				box = new LabelSuggestion<E>(allLabels, factory2);
 				panel.setExtraWidget(box);
 				panel.setShowMoreButton(false);
 
-				box.getValueBox().addBlurHandler(new BlurHandler() {
+				box
+					.addSelectionHandler(new SelectionHandler<SuggestionResult<E>>() {
 
-					public void onBlur(BlurEvent event) {
-						DefaultSuggestionDisplay suggestionDisplay =
-							(DefaultSuggestionDisplay) box
-								.getSuggestionDisplay();
-						boolean suggestionListShowing =
-							suggestionDisplay.isSuggestionListShowing();
-						GWT.log("showing: " + suggestionListShowing);
-
-						String value = box.getValue().trim();
-						if (!value.isEmpty()) {
-							save(value);
-						} else {
-							cancel();
-						}
-					}
-				});
-				box.addKeyDownHandler(new KeyDownHandler() {
-
-					public void onKeyDown(KeyDownEvent event) {
-						switch (event.getNativeKeyCode()) {
-						case KeyCodes.KEY_ENTER:
-						case KeyCodes.KEY_TAB:
-							String value = box.getValue().trim();
-							if (!value.isEmpty()) {
-								save(value);
-							} else {
-								cancel();
+						public void onSelection(
+								SelectionEvent<SuggestionResult<E>> event) {
+							GWT.log("on selection");
+							SuggestionResult<E> selectedItem =
+								event.getSelectedItem();
+							if (selectedItem.isHasValue()) {
+								if (selectedItem.isExisting()) {
+									labelAdded(selectedItem.getExistingValue());
+								} else {
+									newLabelAdded(selectedItem.getNewValue());
+								}
 							}
-							break;
-						case KeyCodes.KEY_ESCAPE:
-							cancel();
-							break;
+							end();
 						}
-					}
-				});
 
-				box.addSelectionHandler(new SelectionHandler<Suggestion>() {
-					public void onSelection(SelectionEvent<Suggestion> event) {
-						GWT.log("selection: " + event.getSelectedItem());
-						save(event.getSelectedItem().getReplacementString());
-					}
-				});
-				box.setFocus(true);
-			}
-
-			private boolean complete = false;
-
-			public void save(String value) {
-				if (!begin())
-					return;
-				GWT.log("save " + value);
-				boolean added = false;
-				for (E e : allLabels) {
-					if (e.getName().equals(value)) {
-						if (!getSelectedLabels().contains(e)) {
-							labelAdded(e);
-						}
-						added = true;
-						break;
-					}
-				}
-				if (!added) {
-					newLabelAdded(value);
-				}
-				end();
-			}
-
-			public void cancel() {
-				if (!begin())
-					return;
-				GWT.log("cancel");
-				end();
-			}
-
-			private boolean begin() {
-				if (complete)
-					return false;
-				complete = true;
-				return true;
+					});
+				box.focus();
 			}
 
 			private void end() {
-				box.getValueBox().setFocus(false);
 				panel.setExtraWidget(addLabel);
 				panel.setShowMoreButton(true);
 			}

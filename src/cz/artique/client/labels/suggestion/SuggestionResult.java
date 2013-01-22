@@ -1,26 +1,26 @@
 package cz.artique.client.labels.suggestion;
 
-public class SelectionResult<E> {
+public class SuggestionResult<E> {
 	private final E existingValue;
 	private final String newValue;
 	private final boolean existing;
 	private final boolean hasValue;
 
-	public SelectionResult(E existingValue) {
+	public SuggestionResult(E existingValue) {
 		this.existingValue = existingValue;
 		existing = true;
 		newValue = null;
 		hasValue = true;
 	}
 
-	public SelectionResult(String newValue) {
+	public SuggestionResult(String newValue) {
 		existingValue = null;
 		existing = false;
 		this.newValue = newValue;
 		hasValue = true;
 	}
 
-	public SelectionResult() {
+	public SuggestionResult() {
 		existingValue = null;
 		existing = false;
 		newValue = null;

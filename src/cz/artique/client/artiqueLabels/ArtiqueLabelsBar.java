@@ -18,7 +18,8 @@ public class ArtiqueLabelsBar extends LabelsBar<Label, Key> {
 	private UserItem item;
 
 	public ArtiqueLabelsBar(UserItem item, int maxSize) {
-		super(ArtiqueLabelsManager.MANAGER, ArtiqueLabelWidget.factory, maxSize);
+		super(ArtiqueLabelsManager.MANAGER, ArtiqueLabelWidget.factory,
+			new ArtiqueLabelSuggestionFactory(), maxSize);
 		this.item = item;
 
 		for (Key key : item.getLabels()) {
@@ -44,6 +45,8 @@ public class ArtiqueLabelsBar extends LabelsBar<Label, Key> {
 
 	@Override
 	protected void newLabelAdded(final String name) {
+		// FIXME uz muze existovat
+		// kontrolovat format stitku
 		manager.createNewLabel(name, new AsyncCallback<Label>() {
 
 			public void onFailure(Throwable caught) {

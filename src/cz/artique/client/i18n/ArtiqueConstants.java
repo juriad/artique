@@ -11,4 +11,10 @@ public interface ArtiqueConstants extends Constants {
 	
 	@DefaultStringValue("Unknown source")
 	String missingUserSource();
+	
+	@DefaultStringValue("Operator AND")
+	String operatorAnd();
+	
+	@DefaultStringValue("Operator OR")
+	String operatorOr();
 }

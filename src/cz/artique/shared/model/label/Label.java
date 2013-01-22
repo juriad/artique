@@ -13,7 +13,7 @@ import cz.artique.shared.utils.HasName;
 import cz.artique.shared.utils.SharedUtils;
 
 @Model(schemaVersion = 1)
-public class Label implements Serializable, GenKey, HasName {
+public class Label implements Serializable, GenKey, HasName, Comparable<Label> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -186,5 +186,13 @@ public class Label implements Serializable, GenKey, HasName {
 
 	public void setPriority(int priority) {
 		this.priority = priority;
+	}
+
+	public int compareTo(Label o) {
+		int res = ((Integer) this.getPriority()).compareTo(o.getPriority());
+		if (res == 0) {
+			res = this.getName().compareToIgnoreCase(o.getName());
+		}
+		return res;
 	}
 }

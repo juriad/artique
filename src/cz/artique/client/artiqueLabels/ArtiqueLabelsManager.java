@@ -2,7 +2,6 @@ package cz.artique.client.artiqueLabels;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,8 +35,6 @@ public class ArtiqueLabelsManager
 	private Map<String, Label> labelsNames = new HashMap<String, Label>();
 	private List<Label> allLabels = new ArrayList<Label>();
 	private List<Label> userDefinedLabels = new ArrayList<Label>();
-
-	private static Comparator<Label> comparator = null;
 
 	public void refresh(final AsyncCallback<Void> ping) {
 		service.getAllLabels(new AsyncCallback<List<Label>>() {
@@ -122,25 +119,8 @@ public class ArtiqueLabelsManager
 			labels.add(getLabelByKey(key));
 		}
 
-		Collections.sort(labels, getComparator());
+		Collections.sort(labels);
 		return labels;
-	}
-
-	public static Comparator<Label> getComparator() {
-		if (comparator == null) {
-			comparator = new Comparator<Label>() {
-				public int compare(Label o1, Label o2) {
-					int res =
-						((Integer) o1.getPriority())
-							.compareTo(o2.getPriority());
-					if (res == 0) {
-						res = o1.getName().compareToIgnoreCase(o2.getName());
-					}
-					return res;
-				}
-			};
-		}
-		return comparator;
 	}
 
 }

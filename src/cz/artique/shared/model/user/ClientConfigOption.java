@@ -6,7 +6,7 @@ import com.google.appengine.api.users.User;
 import cz.artique.shared.utils.GenKey;
 import cz.artique.shared.utils.SharedUtils;
 
-public enum UserConfigOption implements DefaultValue, GenKey {
+public enum ClientConfigOption implements DefaultValue, GenKey {
 	;
 
 	private final String configKey;
@@ -15,7 +15,7 @@ public enum UserConfigOption implements DefaultValue, GenKey {
 	private transient User user;
 	private transient Key key;
 
-	private UserConfigOption(String configKey, DefaultValue def) {
+	private ClientConfigOption(String configKey, DefaultValue def) {
 		this.configKey = configKey;
 		this.def = def;
 	}
@@ -45,7 +45,7 @@ public enum UserConfigOption implements DefaultValue, GenKey {
 	}
 
 	public String getKeyName() {
-		String prefix = "USER-CONFIG";
+		String prefix = "CLIENT-CONFIG";
 		String userId = user.getUserId();
 		return SharedUtils.combineStringParts(prefix, userId, getConfigKey());
 	}

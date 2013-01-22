@@ -1,47 +1,47 @@
 package cz.artique.server.meta.user;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-01-21 10:47:02")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-01-22 15:41:57")
 /** */
-public final class UserConfigMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.user.UserConfig> {
+public final class ClientConfigMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.user.ClientConfig> {
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.UserConfig, com.google.appengine.api.users.User> user = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.UserConfig, com.google.appengine.api.users.User>(this, "user", "user", com.google.appengine.api.users.User.class);
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.ClientConfig, com.google.appengine.api.users.User> user = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.ClientConfig, com.google.appengine.api.users.User>(this, "user", "user", com.google.appengine.api.users.User.class);
 
     /** */
-    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.user.UserConfig> configKey = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.user.UserConfig>(this, "configKey", "configKey");
+    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.user.ClientConfig> configKey = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.user.ClientConfig>(this, "configKey", "configKey");
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.UserConfig, java.lang.Double> doubleValue = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.UserConfig, java.lang.Double>(this, "doubleValue", "doubleValue", double.class);
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.ClientConfig, java.lang.Double> doubleValue = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.ClientConfig, java.lang.Double>(this, "doubleValue", "doubleValue", double.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.UserConfig, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.UserConfig, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.ClientConfig, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.ClientConfig, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.UserConfig, java.lang.Long> longValue = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.UserConfig, java.lang.Long>(this, "longValue", "longValue", long.class);
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.ClientConfig, java.lang.Long> longValue = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.ClientConfig, java.lang.Long>(this, "longValue", "longValue", long.class);
 
     /** */
-    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.user.UserConfig> stringValue = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.user.UserConfig>(this, "stringValue", "stringValue");
+    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.user.ClientConfig> stringValue = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.user.ClientConfig>(this, "stringValue", "stringValue");
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.UserConfig, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.UserConfig, java.lang.Long>(this, "version", "version", java.lang.Long.class);
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.ClientConfig, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.ClientConfig, java.lang.Long>(this, "version", "version", java.lang.Long.class);
 
-    private static final UserConfigMeta slim3_singleton = new UserConfigMeta();
+    private static final ClientConfigMeta slim3_singleton = new ClientConfigMeta();
 
     /**
      * @return the singleton
      */
-    public static UserConfigMeta get() {
+    public static ClientConfigMeta get() {
        return slim3_singleton;
     }
 
     /** */
-    public UserConfigMeta() {
-        super("Config", cz.artique.shared.model.user.UserConfig.class, java.util.Arrays.asList("cz.artique.shared.model.user.UserConfig"));
+    public ClientConfigMeta() {
+        super("Config", cz.artique.shared.model.user.ClientConfig.class, java.util.Arrays.asList("cz.artique.shared.model.user.ClientConfig"));
     }
 
     @Override
-    public cz.artique.shared.model.user.UserConfig entityToModel(com.google.appengine.api.datastore.Entity entity) {
-        cz.artique.shared.model.user.UserConfig model = new cz.artique.shared.model.user.UserConfig();
+    public cz.artique.shared.model.user.ClientConfig entityToModel(com.google.appengine.api.datastore.Entity entity) {
+        cz.artique.shared.model.user.ClientConfig model = new cz.artique.shared.model.user.ClientConfig();
         model.setUser((com.google.appengine.api.users.User) entity.getProperty("user"));
         model.setConfigKey((java.lang.String) entity.getProperty("configKey"));
         model.setDoubleValue(doubleToPrimitiveDouble((java.lang.Double) entity.getProperty("doubleValue")));
@@ -54,7 +54,7 @@ public final class UserConfigMeta extends org.slim3.datastore.ModelMeta<cz.artiq
 
     @Override
     public com.google.appengine.api.datastore.Entity modelToEntity(java.lang.Object model) {
-        cz.artique.shared.model.user.UserConfig m = (cz.artique.shared.model.user.UserConfig) model;
+        cz.artique.shared.model.user.ClientConfig m = (cz.artique.shared.model.user.ClientConfig) model;
         com.google.appengine.api.datastore.Entity entity = null;
         if (m.getKey() != null) {
             entity = new com.google.appengine.api.datastore.Entity(m.getKey());
@@ -74,20 +74,20 @@ public final class UserConfigMeta extends org.slim3.datastore.ModelMeta<cz.artiq
 
     @Override
     protected com.google.appengine.api.datastore.Key getKey(Object model) {
-        cz.artique.shared.model.user.UserConfig m = (cz.artique.shared.model.user.UserConfig) model;
+        cz.artique.shared.model.user.ClientConfig m = (cz.artique.shared.model.user.ClientConfig) model;
         return m.getKey();
     }
 
     @Override
     protected void setKey(Object model, com.google.appengine.api.datastore.Key key) {
         validateKey(key);
-        cz.artique.shared.model.user.UserConfig m = (cz.artique.shared.model.user.UserConfig) model;
+        cz.artique.shared.model.user.ClientConfig m = (cz.artique.shared.model.user.ClientConfig) model;
         m.setKey(key);
     }
 
     @Override
     protected long getVersion(Object model) {
-        cz.artique.shared.model.user.UserConfig m = (cz.artique.shared.model.user.UserConfig) model;
+        cz.artique.shared.model.user.ClientConfig m = (cz.artique.shared.model.user.ClientConfig) model;
         return m.getVersion() != null ? m.getVersion().longValue() : 0L;
     }
 
@@ -97,7 +97,7 @@ public final class UserConfigMeta extends org.slim3.datastore.ModelMeta<cz.artiq
 
     @Override
     protected void incrementVersion(Object model) {
-        cz.artique.shared.model.user.UserConfig m = (cz.artique.shared.model.user.UserConfig) model;
+        cz.artique.shared.model.user.ClientConfig m = (cz.artique.shared.model.user.ClientConfig) model;
         long version = m.getVersion() != null ? m.getVersion().longValue() : 0L;
         m.setVersion(Long.valueOf(version + 1L));
     }
@@ -127,7 +127,7 @@ public final class UserConfigMeta extends org.slim3.datastore.ModelMeta<cz.artiq
 
     @Override
     protected void modelToJson(org.slim3.datastore.json.JsonWriter writer, java.lang.Object model, int maxDepth, int currentDepth) {
-        cz.artique.shared.model.user.UserConfig m = (cz.artique.shared.model.user.UserConfig) model;
+        cz.artique.shared.model.user.ClientConfig m = (cz.artique.shared.model.user.ClientConfig) model;
         writer.beginObject();
         org.slim3.datastore.json.Default encoder0 = new org.slim3.datastore.json.Default();
         if(m.getUser() != null){
@@ -158,8 +158,8 @@ public final class UserConfigMeta extends org.slim3.datastore.ModelMeta<cz.artiq
     }
 
     @Override
-    protected cz.artique.shared.model.user.UserConfig jsonToModel(org.slim3.datastore.json.JsonRootReader rootReader, int maxDepth, int currentDepth) {
-        cz.artique.shared.model.user.UserConfig m = new cz.artique.shared.model.user.UserConfig();
+    protected cz.artique.shared.model.user.ClientConfig jsonToModel(org.slim3.datastore.json.JsonRootReader rootReader, int maxDepth, int currentDepth) {
+        cz.artique.shared.model.user.ClientConfig m = new cz.artique.shared.model.user.ClientConfig();
         org.slim3.datastore.json.JsonReader reader = null;
         org.slim3.datastore.json.Default decoder0 = new org.slim3.datastore.json.Default();
         reader = rootReader.newObjectReader("user");

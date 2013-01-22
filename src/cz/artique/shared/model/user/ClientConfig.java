@@ -12,16 +12,16 @@ import cz.artique.shared.utils.GenKey;
 import cz.artique.shared.utils.SharedUtils;
 
 @Model(schemaVersion = 1)
-public class UserConfig extends Config
+public class ClientConfig extends Config
 		implements Serializable, GenKey, DefaultValue {
 
 	private static final long serialVersionUID = 1L;
 
 	private User user;
 
-	public UserConfig() {}
+	public ClientConfig() {}
 
-	public UserConfig(String configKey, User user) {
+	public ClientConfig(String configKey, User user) {
 		super(configKey);
 		this.user = user;
 	}
@@ -39,7 +39,7 @@ public class UserConfig extends Config
 	}
 
 	public String getKeyName() {
-		String prefix = "USER-CONFIG";
+		String prefix = "CLIENT-CONFIG";
 		String userId = getUser().getUserId();
 		return SharedUtils.combineStringParts(prefix, userId, getConfigKey());
 	}

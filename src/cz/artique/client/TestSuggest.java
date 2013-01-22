@@ -9,9 +9,11 @@ import java.util.Map;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.text.shared.AbstractRenderer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ValueLabel;
 import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.labels.LabelWidget;
@@ -20,6 +22,7 @@ import cz.artique.client.labels.LabelsBar;
 import cz.artique.client.labels.LabelsManager;
 import cz.artique.client.labels.RemoveEvent;
 import cz.artique.client.labels.RemoveHandler;
+import cz.artique.client.labels.suggestion.SuggesionLabelFactory;
 import cz.artique.shared.utils.HasKey;
 import cz.artique.shared.utils.HasName;
 
@@ -117,11 +120,21 @@ public class TestSuggest extends Composite {
 					private Label la = new Label(l.getName());
 
 					{
+						final LabelWidget<L> that = this;
 						la.addClickHandler(new ClickHandler() {
 
 							public void onClick(ClickEvent event) {
 								if (rh != null) {
-									rh.onRemove(new RemoveEvent());
+									RemoveEvent removeEvent =
+										new RemoveEvent() {
+											{
+												setSource(that); // funguje
+												// setSource(LabelWidget.this);
+												// zakomentované nefunguje:
+												// No enclosing instance of the type LabelWidget<E> is accessible in scope
+											}
+										};
+									rh.onRemove(removeEvent);
 								}
 							}
 						});
@@ -152,6 +165,16 @@ public class TestSuggest extends Composite {
 						return l;
 					}
 				};
+			}
+		}, new SuggesionLabelFactory<L>() {
+
+			public ValueLabel<L> createLabel() {
+				return new ValueLabel<L>(new AbstractRenderer<L>() {
+
+					public String render(L object) {
+						return object.getName();
+					}
+				});
 			}
 		}, 3) {
 

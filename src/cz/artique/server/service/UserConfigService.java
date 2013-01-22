@@ -5,11 +5,11 @@ import org.slim3.datastore.Datastore;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
-import cz.artique.server.meta.user.UserConfigMeta;
+import cz.artique.server.meta.user.ClientConfigMeta;
 import cz.artique.server.utils.ServerUtils;
 import cz.artique.shared.model.user.DefaultValue;
-import cz.artique.shared.model.user.UserConfig;
-import cz.artique.shared.model.user.UserConfigOption;
+import cz.artique.shared.model.user.ClientConfig;
+import cz.artique.shared.model.user.ClientConfigOption;
 
 public class UserConfigService {
 
@@ -19,44 +19,44 @@ public class UserConfigService {
 		this.user = user;
 	}
 
-	public long getLongValue(UserConfigOption option) {
+	public long getLongValue(ClientConfigOption option) {
 		return getUserConfig(option).getLongValue();
 	}
 
-	public void setLongValue(UserConfigOption option, long value) {
-		UserConfig c = new UserConfig(option.getConfigKey(), user);
+	public void setLongValue(ClientConfigOption option, long value) {
+		ClientConfig c = new ClientConfig(option.getConfigKey(), user);
 		c.setLongValue(value);
 		c.setKey(ServerUtils.genKey(c));
 		Datastore.put(c);
 	}
 
-	public double getDoubleValue(UserConfigOption option) {
+	public double getDoubleValue(ClientConfigOption option) {
 		return getUserConfig(option).getDoubleValue();
 	}
 
-	public void setDoubleValue(UserConfigOption option, double value) {
-		UserConfig c = new UserConfig(option.getConfigKey(), user);
+	public void setDoubleValue(ClientConfigOption option, double value) {
+		ClientConfig c = new ClientConfig(option.getConfigKey(), user);
 		c.setDoubleValue(value);
 		c.setKey(ServerUtils.genKey(c));
 		Datastore.put(c);
 	}
 
-	public String getStringValue(UserConfigOption option) {
+	public String getStringValue(ClientConfigOption option) {
 		return getUserConfig(option).getStringValue();
 	}
 
-	public void setStringValue(UserConfigOption option, String value) {
-		UserConfig c = new UserConfig(option.getConfigKey(), user);
+	public void setStringValue(ClientConfigOption option, String value) {
+		ClientConfig c = new ClientConfig(option.getConfigKey(), user);
 		c.setStringValue(value);
 		c.setKey(ServerUtils.genKey(c));
 		Datastore.put(c);
 	}
 
-	private DefaultValue getUserConfig(UserConfigOption option) {
-		UserConfigMeta meta = UserConfigMeta.get();
+	private DefaultValue getUserConfig(ClientConfigOption option) {
+		ClientConfigMeta meta = ClientConfigMeta.get();
 		option.setUser(user);
 		Key key = ServerUtils.genKey(option);
-		UserConfig config = Datastore.getOrNull(meta, key);
+		ClientConfig config = Datastore.getOrNull(meta, key);
 		if (config == null) {
 			return option.getDefaultValue();
 		}
