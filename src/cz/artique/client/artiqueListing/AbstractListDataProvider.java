@@ -54,7 +54,7 @@ public class AbstractListDataProvider
 		if (settings.getListFilter() != null) {
 			order = settings.getListFilter().getOrder();
 		} else {
-			order = FilterOrder.DESCENDING;
+			order = FilterOrder.getDefault();
 		}
 
 		this.list = list;

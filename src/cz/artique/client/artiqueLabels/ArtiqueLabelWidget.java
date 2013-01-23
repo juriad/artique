@@ -20,29 +20,21 @@ public class ArtiqueLabelWidget extends FlowPanel
 	public static class ArtiqueLabelWidgetFactory
 			implements LabelWidgetFactory<Label> {
 
-		private boolean readOnly = false;
-
 		public ArtiqueLabelWidget createWidget(Label l) {
-			return new ArtiqueLabelWidget(l, readOnly);
+			return new ArtiqueLabelWidget(l);
 		}
 
-		public void setReadOnly(boolean readOnly) {
-			this.readOnly = readOnly;
-		}
-
-		public boolean isReadOnly() {
-			return readOnly;
-		}
 	}
 
 	private final static String removeSign = "x";
 
 	private final Label label;
-	private final boolean readOnly;
+	private boolean enabled = true;
 
-	public ArtiqueLabelWidget(Label label, boolean readOnly) {
+	private final com.google.gwt.user.client.ui.Label removeButton;
+
+	public ArtiqueLabelWidget(Label label) {
 		this.label = label;
-		this.readOnly = readOnly;
 		com.google.gwt.user.client.ui.Label nameLabel =
 			new com.google.gwt.user.client.ui.Label(label.getName());
 		add(nameLabel);
@@ -52,17 +44,14 @@ public class ArtiqueLabelWidget extends FlowPanel
 			}
 		});
 
-		if (!isReadOnly()) {
-			com.google.gwt.user.client.ui.Label remove =
-				new com.google.gwt.user.client.ui.Label(removeSign);
-			add(remove);
-			remove.addClickHandler(new ClickHandler() {
+		removeButton = new com.google.gwt.user.client.ui.Label(removeSign);
+		add(removeButton);
+		removeButton.addClickHandler(new ClickHandler() {
 
-				public void onClick(ClickEvent event) {
-					fireEvent(new RemoveEvent());
-				}
-			});
-		}
+			public void onClick(ClickEvent event) {
+				fireEvent(new RemoveEvent());
+			}
+		});
 	}
 
 	public HandlerRegistration addRemoveHandler(RemoveHandler handler) {
@@ -73,10 +62,6 @@ public class ArtiqueLabelWidget extends FlowPanel
 		return label;
 	}
 
-	public boolean isReadOnly() {
-		return readOnly;
-	}
-
 	public HandlerRegistration addGeneralClickHandler(
 			GeneralClickHandler handler) {
 		return addHandler(handler, GeneralClickEvent.getType());
@@ -84,5 +69,20 @@ public class ArtiqueLabelWidget extends FlowPanel
 
 	public int compareTo(LabelWidget<Label> o) {
 		return getLabel().compareTo(o.getLabel());
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	/**
+	 * Affects only removeButton. GeneralClicks are generated normally
+	 * 
+	 * @see com.google.gwt.user.client.ui.HasEnabled#setEnabled(boolean)
+	 */
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+
+		removeButton.setVisible(enabled);
 	}
 }

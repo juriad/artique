@@ -1,4 +1,4 @@
-package cz.artique.client.filter;
+package cz.artique.client.artiqueFilter;
 
 import java.util.List;
 
@@ -8,6 +8,7 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.labels.LabelWidget;
@@ -20,7 +21,8 @@ import cz.artique.client.labels.suggestion.SuggestionResult;
 import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.Label;
 
-public abstract class AbstractQueryFilter extends Composite {
+public abstract class AbstractQueryFilter extends Composite
+		implements HasEnabled {
 
 	class LabelRemoveHandler implements RemoveHandler {
 
@@ -30,10 +32,8 @@ public abstract class AbstractQueryFilter extends Composite {
 
 			int widgetIndex = panel.getWidgetIndex(source);
 			if (widgetIndex >= 0) {
-				if (!isReadOnly()) {
-					// add button
-					panel.remove(widgetIndex + 1);
-				}
+				// add button
+				panel.remove(widgetIndex + 1);
 				panel.remove(widgetIndex);
 				labels.remove(source.getLabel());
 			}
@@ -68,12 +68,10 @@ public abstract class AbstractQueryFilter extends Composite {
 								factory.createWidget(added);
 							labelWidget.addRemoveHandler(removeHandler);
 							panel.insert(labelWidget, widgetIndex);
-							if (!isReadOnly()) {
-								com.google.gwt.user.client.ui.Label addButton =
-									newAddButton();
-								addButton.addClickHandler(addHandler);
-								panel.insert(addButton, widgetIndex + 1);
-							}
+							com.google.gwt.user.client.ui.Label addButton =
+								newAddButton();
+							addButton.addClickHandler(addHandler);
+							panel.insert(addButton, widgetIndex + 1);
 						} else {
 							// TODO vynadat uzivateli
 						}
@@ -93,19 +91,16 @@ public abstract class AbstractQueryFilter extends Composite {
 
 	private SuggesionLabelFactory<Label> factory2;
 
-	private final boolean readOnly;
+	private boolean enabled = true;
 
 	private final LabelRemoveHandler removeHandler = new LabelRemoveHandler();
 
 	private final AddClickHandler addHandler = new AddClickHandler();
 
 	public AbstractQueryFilter(LabelWidgetFactory<Label> factory,
-			SuggesionLabelFactory<Label> factory2, Filter filter,
-			boolean readOnly) {
+			SuggesionLabelFactory<Label> factory2, Filter filter) {
 		this.factory = factory;
-		factory.setReadOnly(readOnly);
 		this.factory2 = factory2;
-		this.readOnly = readOnly;
 		panel = new FlowPanel();
 		initWidget(panel);
 
@@ -115,7 +110,7 @@ public abstract class AbstractQueryFilter extends Composite {
 	}
 
 	private void fillPanel(List<Label> labels2) {
-		if (!isReadOnly()) {
+		{
 			com.google.gwt.user.client.ui.Label addButton = newAddButton();
 			addButton.addClickHandler(addHandler);
 			panel.add(addButton);
@@ -124,11 +119,9 @@ public abstract class AbstractQueryFilter extends Composite {
 			LabelWidget<Label> labelWidget = factory.createWidget(l);
 			labelWidget.addRemoveHandler(removeHandler);
 			panel.add(labelWidget);
-			if (!isReadOnly()) {
-				com.google.gwt.user.client.ui.Label addButton = newAddButton();
-				addButton.addClickHandler(addHandler);
-				panel.add(addButton);
-			}
+			com.google.gwt.user.client.ui.Label addButton = newAddButton();
+			addButton.addClickHandler(addHandler);
+			panel.add(addButton);
 		}
 	}
 
@@ -140,8 +133,31 @@ public abstract class AbstractQueryFilter extends Composite {
 
 	protected abstract Label getAddedLabel(SuggestionResult<Label> selectedItem);
 
-	public boolean isReadOnly() {
-		return readOnly;
+	protected List<Label> getLabels() {
+		return labels;
 	}
 
+	public abstract Filter getFilter();
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		if (enabled == this.enabled) {
+			return;
+		}
+		this.enabled = enabled;
+
+		for (int i = 0; i < panel.getWidgetCount(); i++) {
+			Widget widget = panel.getWidget(i);
+			if (widget instanceof com.google.gwt.user.client.ui.Label) {
+				widget.setVisible(enabled);
+			} else if (widget instanceof LabelWidget) {
+				@SuppressWarnings("unchecked")
+				LabelWidget<Label> labelWidget = ((LabelWidget<Label>) widget);
+				labelWidget.setEnabled(enabled);
+			}
+		}
+	}
 }

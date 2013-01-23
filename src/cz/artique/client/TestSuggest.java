@@ -114,8 +114,6 @@ public class TestSuggest extends Composite {
 			}
 		}, new LabelWidgetFactory<L>() {
 
-			private boolean readOnly;
-
 			public LabelWidget<L> createWidget(final L l) {
 				return new LabelWidget<L>() {
 
@@ -126,6 +124,9 @@ public class TestSuggest extends Composite {
 						la.addClickHandler(new ClickHandler() {
 
 							public void onClick(ClickEvent event) {
+								if (!enabled) {
+									return;
+								}
 								if (rh != null) {
 									RemoveEvent removeEvent =
 										new RemoveEvent() {
@@ -133,7 +134,9 @@ public class TestSuggest extends Composite {
 												setSource(that); // funguje
 												// setSource(LabelWidget.this);
 												// zakomentované nefunguje:
-												// No enclosing instance of the type LabelWidget<E> is accessible in scope
+												// No enclosing instance of the
+												// type LabelWidget<E> is
+												// accessible in scope
 											}
 										};
 									rh.onRemove(removeEvent);
@@ -143,6 +146,7 @@ public class TestSuggest extends Composite {
 					}
 
 					private RemoveHandler rh = null;
+					private boolean enabled = true;
 
 					public HandlerRegistration addRemoveHandler(
 							RemoveHandler handler) {
@@ -166,15 +170,15 @@ public class TestSuggest extends Composite {
 					public L getLabel() {
 						return l;
 					}
+
+					public boolean isEnabled() {
+						return enabled;
+					}
+
+					public void setEnabled(boolean enabled) {
+						this.enabled = enabled;
+					}
 				};
-			}
-
-			public void setReadOnly(boolean readOnly) {
-				this.readOnly = readOnly;
-			}
-
-			public boolean isReadOnly() {
-				return readOnly;
 			}
 		}, new SuggesionLabelFactory<L>() {
 
