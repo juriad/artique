@@ -7,10 +7,9 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
 import cz.artique.client.ArtiqueWorld;
+import cz.artique.client.artiqueLabels.ArtiqueLabelSuggestionFactory;
 import cz.artique.client.artiqueLabels.ArtiqueLabelWidget;
 import cz.artique.client.artiqueLabels.ArtiqueLabelsManager;
-import cz.artique.client.labels.LabelWidgetFactory;
-import cz.artique.client.labels.suggestion.SuggesionLabelFactory;
 import cz.artique.client.labels.suggestion.SuggestionResult;
 import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.FilterType;
@@ -19,9 +18,8 @@ import cz.artique.shared.model.label.LabelType;
 
 public class ArtiqueQueryFilter extends AbstractQueryFilter {
 
-	public ArtiqueQueryFilter(LabelWidgetFactory<Label> factory,
-			SuggesionLabelFactory<Label> factory2, Filter filter) {
-		super(ArtiqueLabelWidget.factory, factory2, filter);
+	public ArtiqueQueryFilter() {
+		super(ArtiqueLabelWidget.factory, ArtiqueLabelSuggestionFactory.factory);
 	}
 
 	private static final Label AND;
@@ -87,10 +85,13 @@ public class ArtiqueQueryFilter extends AbstractQueryFilter {
 	private List<Label> labelsToSuggest = null;
 
 	@Override
-	protected List<Label> getLabelsToSuggest() {
-		if (labelsToSuggest == null) {
+	protected List<Label> getLabelsToSuggest(boolean reuse) {
+		if (labelsToSuggest == null || !reuse) {
 			// XXX asi by chtelo filtrovat
+			labelsToSuggest = new ArrayList<Label>();
 			labelsToSuggest.addAll(ArtiqueLabelsManager.MANAGER.getLabels());
+			labelsToSuggest.add(AND);
+			labelsToSuggest.add(OR);
 		}
 		return labelsToSuggest;
 	}

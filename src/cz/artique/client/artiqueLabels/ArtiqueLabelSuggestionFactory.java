@@ -11,6 +11,9 @@ import cz.artique.shared.model.label.Label;
 public class ArtiqueLabelSuggestionFactory
 		implements SuggesionLabelFactory<Label> {
 
+	public static final ArtiqueLabelSuggestionFactory factory =
+		new ArtiqueLabelSuggestionFactory();
+
 	public ValueLabel<Label> createLabel() {
 		// TODO rozsirit
 		return new ValueLabel<Label>(new AbstractRenderer<Label>() {

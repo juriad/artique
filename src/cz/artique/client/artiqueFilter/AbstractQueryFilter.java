@@ -50,7 +50,7 @@ public abstract class AbstractQueryFilter extends Composite
 			}
 
 			final LabelSuggestion<Label> labelSuggestion =
-				new LabelSuggestion<Label>(getLabelsToSuggest(), factory2);
+				new LabelSuggestion<Label>(getLabelsToSuggest(true), factory2);
 			source.setVisible(false);
 			panel.insert(labelSuggestion, widgetIndex);
 			labelSuggestion
@@ -98,18 +98,24 @@ public abstract class AbstractQueryFilter extends Composite
 	private final AddClickHandler addHandler = new AddClickHandler();
 
 	public AbstractQueryFilter(LabelWidgetFactory<Label> factory,
-			SuggesionLabelFactory<Label> factory2, Filter filter) {
+			SuggesionLabelFactory<Label> factory2) {
 		this.factory = factory;
 		this.factory2 = factory2;
 		panel = new FlowPanel();
 		initWidget(panel);
+	}
+
+	public void setFilter(Filter filter) {
+		if (filter == null) {
+			filter = new Filter();
+		}
 
 		labels = getLabelsFromFilter(filter);
-
 		fillPanel(labels);
 	}
 
 	private void fillPanel(List<Label> labels2) {
+		panel.clear();
 		{
 			com.google.gwt.user.client.ui.Label addButton = newAddButton();
 			addButton.addClickHandler(addHandler);
@@ -129,7 +135,7 @@ public abstract class AbstractQueryFilter extends Composite
 
 	protected abstract com.google.gwt.user.client.ui.Label newAddButton();
 
-	protected abstract List<Label> getLabelsToSuggest();
+	protected abstract List<Label> getLabelsToSuggest(boolean reuse);
 
 	protected abstract Label getAddedLabel(SuggestionResult<Label> selectedItem);
 
