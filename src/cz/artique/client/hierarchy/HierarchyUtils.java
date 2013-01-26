@@ -1,10 +1,6 @@
 package cz.artique.client.hierarchy;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import cz.artique.shared.utils.HasHierarchy;
 import cz.artique.shared.utils.HasName;
@@ -16,73 +12,107 @@ public class HierarchyUtils {
 
 	public static <E extends HasName & HasHierarchy> Hierarchy<E> buildHierarchy(
 			List<E> list) {
-		class H {
-			@Override
-			public int hashCode() {
-				final int prime = 31;
-				int result = 1;
-				result = prime * result + childName.hashCode();
-				result = prime * result + parent.hashCode();
-				return result;
-			}
-
-			@Override
-			public boolean equals(Object obj) {
-				H other = (H) obj;
-				if (!childName.equals(other.childName))
-					return false;
-				if (parent == null) {
-					if (other.parent != null)
-						return false;
-				} else if (!parent.equals(other.parent))
-					return false;
-				return true;
-			}
-
-			Hierarchy<E> parent;
-			String childName;
-
-			H(String childName, Hierarchy<E> parent) {
-				this.childName = childName;
-				this.parent = parent;
-			}
-		}
-		Map<H, InnerNode<E>> hs = new HashMap<H, InnerNode<E>>();
-		InnerNode<E> root = new InnerNode<E>("", null);
-		hs.put(new H(root.getName(), null), root);
-
+		Hierarchy<E> root = createRootNode();
 		for (E e : list) {
-			String[] parts = e.getHierarchy().split(splitSign);
-			InnerNode<E> parent = root;
-			for (int i = 1; i < parts.length - 1; i++) {
-				String part = parts[i];
-				InnerNode<E> parent2 = hs.get(new H(part, parent));
-				if (parent2 == null) {
-					parent2 = new InnerNode<E>(part, parent);
-					hs.put(new H(part, parent), parent2);
-					parent.addChild(parent2);
-				}
-				parent = parent2;
-			}
-			LeafNode<E> leaf = new LeafNode<E>(e, parent);
-			parent.addChild(leaf);
+			add(root, e);
 		}
 		return root;
 	}
 
-	public static <E extends HasName & HasHierarchy> void sortHierarchy(
-			Hierarchy<E> root) {
-		if (root != null && !root.getChildren().isEmpty()) {
-			Collections.sort(root.getChildren(),
-				new Comparator<Hierarchy<E>>() {
+	public static <E extends HasName & HasHierarchy> Hierarchy<E> createRootNode() {
+		return new InnerNode<E>("", null);
+	}
 
-					public int compare(Hierarchy<E> o1, Hierarchy<E> o2) {
-						return o1.getName().compareToIgnoreCase(o2.getName());
+	public static <E extends HasName & HasHierarchy> boolean add(
+			Hierarchy<E> root, E e) {
+		if (!(root instanceof InnerNode)) {
+			return false;
+		}
+		String[] parts = e.getHierarchy().split(splitSign);
+		InnerNode<E> parent = (InnerNode<E>) root;
+		for (String part : parts) {
+			if (part.isEmpty()) {
+				continue; // this should happen only for the first part,
+				// which is root
+			}
+			InnerNode<E> foundChild = null;
+			for (Hierarchy<E> child : parent.getChildren()) {
+				if (child.getName().equals(part)) {
+					if (child instanceof InnerNode) {
+						foundChild = (InnerNode<E>) child;
+					} else {
+						return false;
 					}
-				});
-			for (Hierarchy<E> child : root.getChildren()) {
-				sortHierarchy(child);
+				}
+			}
+			if (foundChild != null) {
+				parent = foundChild;
+			} else {
+				foundChild = new InnerNode<E>(part, parent);
+				parent.addChild(foundChild);
+				parent = foundChild;
 			}
 		}
+
+		LeafNode<E> leaf = new LeafNode<E>(e, parent);
+		parent.addChild(leaf);
+
+		return true;
 	}
+
+	public static <E extends HasName & HasHierarchy> Hierarchy<E> findInTree(
+			Hierarchy<E> root, E e) {
+		if (!(root instanceof InnerNode)) {
+			return null;
+		}
+		String[] parts = e.getHierarchy().split(splitSign);
+		InnerNode<E> parent = (InnerNode<E>) root;
+		for (String part : parts) {
+			if (part.isEmpty()) {
+				continue; // this should happen only for the first part,
+				// which is root
+			}
+			InnerNode<E> foundChild = null;
+			for (Hierarchy<E> child : parent.getChildren()) {
+				if (child.getName().equals(part)) {
+					if (child instanceof InnerNode) {
+						foundChild = (InnerNode<E>) child;
+					} else {
+						return null;
+					}
+				}
+			}
+			if (foundChild != null) {
+				parent = foundChild;
+			} else {
+				return null;
+			}
+		}
+
+		// parent is right here
+		for (Hierarchy<E> child : parent.getChildren()) {
+			if (child instanceof LeafNode) {
+				if (((LeafNode<E>) child).getItem().equals(e)) {
+					return child;
+				}
+			}
+		}
+		return null;
+	}
+
+	public static <E extends HasName & HasHierarchy> boolean remove(
+			Hierarchy<E> root, E e) {
+		Hierarchy<E> inTree = findInTree(root, e);
+		if (inTree == null) {
+			return false;
+		}
+
+		while (inTree.getParent() != null
+			&& inTree.getParent().getChildren().size() <= 1) {
+			((InnerNode<E>) inTree.getParent()).removeChild(inTree);
+			inTree = inTree.getParent();
+		}
+		return true;
+	}
+
 }

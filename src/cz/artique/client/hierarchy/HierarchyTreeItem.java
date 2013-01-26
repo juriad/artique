@@ -1,8 +1,7 @@
-package cz.artique.client.artiqueHierarchy;
+package cz.artique.client.hierarchy;
 
 import com.google.gwt.user.client.ui.TreeItem;
 
-import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.shared.utils.HasHierarchy;
 import cz.artique.shared.utils.HasName;
 

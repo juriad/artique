@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
+import cz.artique.client.utils.SortedList;
 import cz.artique.shared.utils.HasHierarchy;
 import cz.artique.shared.utils.HasName;
 
@@ -15,12 +16,12 @@ public class InnerNode<E extends HasName & HasHierarchy>
 
 	private final String name;
 	private final Hierarchy<E> parent;
-	private final List<Hierarchy<E>> children;
+	private final SortedList<Hierarchy<E>> children;
 
 	public InnerNode(String name, Hierarchy<E> parent) {
 		this.name = name;
 		this.parent = parent;
-		this.children = new ArrayList<Hierarchy<E>>();
+		this.children = new SortedList<Hierarchy<E>>();
 	}
 
 	public String getName() {
@@ -43,6 +44,7 @@ public class InnerNode<E extends HasName & HasHierarchy>
 		new HashMap<Hierarchy<E>, HandlerRegistration>();
 
 	public void addChild(Hierarchy<E> child) {
+
 		children.add(child);
 		HandlerRegistration registration =
 			child.addHierarchyChangeHandler(new HierarchyChangeHandler<E>() {
@@ -85,6 +87,47 @@ public class InnerNode<E extends HasName & HasHierarchy>
 				handlers.remove(handler);
 			}
 		};
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		@SuppressWarnings("unchecked")
+		InnerNode<E> other = (InnerNode<E>) obj;
+		if (!name.equals(other.name))
+			return false;
+		if (parent == null) {
+			if (other.parent != null)
+				return false;
+		} else if (!parent.equals(other.parent))
+			return false;
+		return true;
+	}
+
+	public int compareTo(Hierarchy<E> o) {
+		int result = getName().compareToIgnoreCase(o.getName());
+		return result;
+	}
+
+	public void fireChanged() {
+		for (HierarchyChangeHandler<E> handler : handlers) {
+			handler.onHierarchyChange(new HierarchyChangeEvent<E>(this,
+				HierarchyChangeType.CHANGED));
+		}
 	}
 
 }

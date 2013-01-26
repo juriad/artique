@@ -2,14 +2,18 @@ package cz.artique.client.artiqueSources;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import cz.artique.client.AbstractManager;
+import cz.artique.client.hierarchy.Hierarchy;
+import cz.artique.client.hierarchy.HierarchyUtils;
 import cz.artique.client.service.ClientSourceService;
 import cz.artique.client.service.ClientSourceServiceAsync;
 import cz.artique.client.sources.SourcesManager;
@@ -28,6 +32,7 @@ public class ArtiqueSourcesManager
 		refresh(null);
 	}
 
+	private List<UserSource> sources = new ArrayList<UserSource>();
 	private Map<Key, UserSource> sourcesKeys = new HashMap<Key, UserSource>();
 	private Map<String, UserSource> sourcesNames =
 		new HashMap<String, UserSource>();
@@ -54,6 +59,9 @@ public class ArtiqueSourcesManager
 					newSourcesNames.put(us.getName(), us);
 					newSourcesKeys.put(us.getLabel(), us);
 				}
+
+				updateHierarchy(sourcesKeys, newSourcesKeys);
+
 				sourcesKeys = newSourcesKeys;
 				sourcesNames = newSourcesNames;
 				sourcesLabels = newSourcesLabels;
@@ -63,11 +71,49 @@ public class ArtiqueSourcesManager
 				}
 				setReady();
 			}
+
+			private void updateHierarchy(Map<Key, UserSource> sourcesKeys,
+					Map<Key, UserSource> newSourcesKeys) {
+				Set<Key> keys = new HashSet<Key>();
+				keys.addAll(sourcesKeys.keySet());
+				keys.addAll(newSourcesKeys.keySet());
+
+				for (Key key : keys) {
+					UserSource inOld = sourcesKeys.get(key);
+					UserSource inNew = newSourcesKeys.get(key);
+
+					if (inOld == null && inNew != null) {
+						// added
+						HierarchyUtils.add(hierarchyRoot, inNew);
+					} else if (inOld != null && inNew == null) {
+						// removed
+						HierarchyUtils.remove(hierarchyRoot, inOld);
+					} else {
+						// exists in both
+						if (inOld.getHierarchy().equals(inNew.getHierarchy())) {
+							// hierarchy is ok
+							if(!inOld.equalsDeeply(inNew)) {
+								if(inOld.getName().equals(inNew.getName())) {
+									Hierarchy<UserSource> inTree =
+										HierarchyUtils.findInTree(hierarchyRoot, inNew);
+									inTree.fireChanged();
+								} else {
+									HierarchyUtils.remove(hierarchyRoot, inOld);
+									HierarchyUtils.add(hierarchyRoot, inNew);
+								}
+							}
+						} else {
+							HierarchyUtils.remove(hierarchyRoot, inOld);
+							HierarchyUtils.add(hierarchyRoot, inNew);
+						}
+					}
+				}
+			}
 		});
 	}
 
 	public List<UserSource> getSources() {
-		return new ArrayList<UserSource>(sourcesKeys.values());
+		return sources;
 	}
 
 	public UserSource getSourceByName(String name) {
@@ -83,6 +129,12 @@ public class ArtiqueSourcesManager
 			return null;
 		}
 		return sourcesLabels.get(label.getKey());
+	}
+
+	private Hierarchy<UserSource> hierarchyRoot;
+
+	public Hierarchy<UserSource> getSourcesHierarchy() {
+		return hierarchyRoot;
 	}
 
 }

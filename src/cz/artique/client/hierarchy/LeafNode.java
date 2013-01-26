@@ -38,6 +38,35 @@ public class LeafNode<E extends HasName & HasHierarchy> implements Hierarchy<E> 
 	private final List<HierarchyChangeHandler<E>> handlers =
 		new ArrayList<HierarchyChangeHandler<E>>();
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((item == null) ? 0 : item.hashCode());
+		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		@SuppressWarnings("unchecked")
+		LeafNode<E> other = (LeafNode<E>) obj;
+		if (!item.equals(other.item))
+			return false;
+		if (parent == null) {
+			if (other.parent != null)
+				return false;
+		} else if (!parent.equals(other.parent))
+			return false;
+		return true;
+	}
+
 	public HandlerRegistration addHierarchyChangeHandler(
 			final HierarchyChangeHandler<E> handler) {
 		handlers.add(handler);
@@ -47,6 +76,18 @@ public class LeafNode<E extends HasName & HasHierarchy> implements Hierarchy<E> 
 				handlers.remove(handler);
 			}
 		};
+	}
+
+	public int compareTo(Hierarchy<E> o) {
+		int result = getName().compareToIgnoreCase(o.getName());
+		return result;
+	}
+
+	public void fireChanged() {
+		for (HierarchyChangeHandler<E> handler : handlers) {
+			handler.onHierarchyChange(new HierarchyChangeEvent<E>(this,
+				HierarchyChangeType.CHANGED));
+		}
 	}
 
 }

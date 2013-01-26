@@ -8,6 +8,8 @@ import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyChangeEvent;
 import cz.artique.client.hierarchy.HierarchyChangeHandler;
 import cz.artique.client.hierarchy.HierarchyChangeType;
+import cz.artique.client.hierarchy.HierarchyTreeItem;
+import cz.artique.client.hierarchy.HierarchyTreeItemFactory;
 import cz.artique.shared.utils.HasHierarchy;
 import cz.artique.shared.utils.HasName;
 

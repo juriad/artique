@@ -206,4 +206,13 @@ public class UserSource
 	public void setLabel(Key label) {
 		this.label = label;
 	}
+
+	public boolean equalsDeeply(UserSource o) {
+		return this.equals(o) && getUser().equals(o.getUser())
+			&& getDefaultLabels().equals(o.getDefaultLabels())
+			&& getHierarchy().equals(o.getHierarchy())
+			&& getLabel().equals(o.getLabel())
+			&& getName().equals(o.getLabel())
+			&& getSource().equals(o.getSource());
+	}
 }
