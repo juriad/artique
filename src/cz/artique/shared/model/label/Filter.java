@@ -9,8 +9,11 @@ import org.slim3.datastore.Model;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
+import cz.artique.shared.utils.HasDeepEquals;
+import cz.artique.shared.utils.SharedUtils;
+
 @Model(schemaVersion = 1)
-public class Filter implements Serializable {
+public class Filter implements Serializable, HasDeepEquals<Filter> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -146,5 +149,12 @@ public class Filter implements Serializable {
 
 	public void setType(FilterType type) {
 		this.type = type;
+	}
+
+	public boolean equalsDeeply(Filter e) {
+		return SharedUtils.eq(getLabels(), e.getLabels())
+			&& SharedUtils.eq(getType(), e.getType())
+			&& SharedUtils.eq(getUser(), e.getUser())
+			&& SharedUtils.deepEq(getFilterObjects(), e.getFilterObjects());
 	}
 }

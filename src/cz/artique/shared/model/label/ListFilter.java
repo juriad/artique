@@ -5,16 +5,19 @@ import java.util.Date;
 
 import com.google.appengine.api.datastore.Key;
 
+import cz.artique.shared.utils.HasDeepEquals;
 import cz.artique.shared.utils.HasHierarchy;
 import cz.artique.shared.utils.HasKey;
 import cz.artique.shared.utils.HasName;
+import cz.artique.shared.utils.SharedUtils;
 
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 
 @Model(schemaVersion = 1)
 public class ListFilter
-		implements Serializable, HasKey<Key>, HasName, HasHierarchy {
+		implements Serializable, HasKey<Key>, HasName, HasHierarchy,
+		HasDeepEquals<ListFilter> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -171,5 +174,15 @@ public class ListFilter
 
 	public void setHierarchy(String hierarchy) {
 		this.hierarchy = hierarchy;
+	}
+
+	public boolean equalsDeeply(ListFilter e) {
+		return SharedUtils.eq(getRead(), e.getRead())
+			&& SharedUtils.eq(getEndTo(), e.getEndTo())
+			&& SharedUtils.eq(getHierarchy(), e.getHierarchy())
+			&& SharedUtils.eq(getName(), e.getOrder())
+			&& SharedUtils.eq(getOrder(), e.getOrder())
+			&& SharedUtils.eq(getStartFrom(), e.getStartFrom())
+			&& SharedUtils.deepEq(getFilterObject(), e.getFilterObject());
 	}
 }

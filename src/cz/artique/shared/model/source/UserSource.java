@@ -11,6 +11,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.users.User;
 
 import cz.artique.shared.utils.GenKey;
+import cz.artique.shared.utils.HasDeepEquals;
 import cz.artique.shared.utils.HasHierarchy;
 import cz.artique.shared.utils.HasKey;
 import cz.artique.shared.utils.HasName;
@@ -18,7 +19,8 @@ import cz.artique.shared.utils.SharedUtils;
 
 @Model(schemaVersion = 1)
 public class UserSource
-		implements Serializable, GenKey, HasName, HasKey<Key>, HasHierarchy {
+		implements Serializable, GenKey, HasName, HasKey<Key>, HasHierarchy,
+		HasDeepEquals<UserSource> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -208,11 +210,11 @@ public class UserSource
 	}
 
 	public boolean equalsDeeply(UserSource o) {
-		return this.equals(o) && getUser().equals(o.getUser())
-			&& getDefaultLabels().equals(o.getDefaultLabels())
-			&& getHierarchy().equals(o.getHierarchy())
-			&& getLabel().equals(o.getLabel())
-			&& getName().equals(o.getLabel())
-			&& getSource().equals(o.getSource());
+		return this.equals(o) && SharedUtils.eq(getUser(), o.getUser())
+			&& SharedUtils.eq(getDefaultLabels(), o.getDefaultLabels())
+			&& SharedUtils.eq(getHierarchy(), o.getHierarchy())
+			&& SharedUtils.eq(getLabel(), o.getLabel())
+			&& SharedUtils.eq(getName(), o.getLabel())
+			&& SharedUtils.eq(getSource(), o.getSource());
 	}
 }

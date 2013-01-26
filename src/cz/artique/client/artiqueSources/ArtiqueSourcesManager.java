@@ -23,7 +23,7 @@ import cz.artique.shared.model.source.UserSource;
 
 public class ArtiqueSourcesManager
 		extends AbstractManager<ClientSourceServiceAsync>
-		implements SourcesManager<UserSource, Key> {
+		implements SourcesManager<UserSource, Key>, ProvidesHierarchy<UserSource> {
 	public static final ArtiqueSourcesManager MANAGER =
 		new ArtiqueSourcesManager();
 
@@ -92,10 +92,11 @@ public class ArtiqueSourcesManager
 						// exists in both
 						if (inOld.getHierarchy().equals(inNew.getHierarchy())) {
 							// hierarchy is ok
-							if(!inOld.equalsDeeply(inNew)) {
-								if(inOld.getName().equals(inNew.getName())) {
+							if (!inOld.equalsDeeply(inNew)) {
+								if (inOld.getName().equals(inNew.getName())) {
 									Hierarchy<UserSource> inTree =
-										HierarchyUtils.findInTree(hierarchyRoot, inNew);
+										HierarchyUtils.findInTree(
+											hierarchyRoot, inNew);
 									inTree.fireChanged();
 								} else {
 									HierarchyUtils.remove(hierarchyRoot, inOld);
@@ -131,9 +132,10 @@ public class ArtiqueSourcesManager
 		return sourcesLabels.get(label.getKey());
 	}
 
-	private Hierarchy<UserSource> hierarchyRoot;
+	private Hierarchy<UserSource> hierarchyRoot = HierarchyUtils
+		.createRootNode();
 
-	public Hierarchy<UserSource> getSourcesHierarchy() {
+	public Hierarchy<UserSource> getHierarchyRoot() {
 		return hierarchyRoot;
 	}
 
