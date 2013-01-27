@@ -13,4 +13,6 @@
 	<entry-point class="cz.artique.client.Main"/>
 	<source path="client"/>
 	<source path="shared"/>
+	
+	<set-configuration-property name="CssResource.style" value="pretty"/>
 </module>

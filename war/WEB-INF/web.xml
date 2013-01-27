@@ -77,6 +77,13 @@
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 
+	<servlet>
+		<servlet-name>Updater</servlet-name>
+		<servlet-class>cz.artique.server.service.Updater
+		</servlet-class>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+
 	<servlet-mapping>
 		<servlet-name>GlobalTransactionServlet</servlet-name>
 		<url-pattern>/slim3/gtx</url-pattern>
@@ -100,6 +107,12 @@
 	<servlet-mapping>
 		<servlet-name>UserService</servlet-name>
 		<url-pattern>/main/userService</url-pattern>
+	</servlet-mapping>
+
+	<!-- TODO odstranit v produkci -->
+	<servlet-mapping>
+		<servlet-name>Updater</servlet-name>
+		<url-pattern>/main/updater</url-pattern>
 	</servlet-mapping>
 
 	<!-- <security-constraint> <web-resource-collection> <url-pattern>*.jsp</url-pattern> 

@@ -1,7 +1,5 @@
 package cz.artique.client;
 
-import java.util.List;
-
 import com.google.appengine.api.datastore.Link;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -9,21 +7,19 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
+import cz.artique.client.artiqueHierarchy.ArtiqueSourcesTree;
 import cz.artique.client.artiqueListing.ArtiqueList;
 import cz.artique.client.artiqueListing.ArtiqueListProvider;
 import cz.artique.client.artiqueListing.UserItemRow;
 import cz.artique.client.listing.ListingSettings;
 import cz.artique.client.service.ClientSourceService;
 import cz.artique.client.service.ClientSourceServiceAsync;
-import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.model.source.XMLSource;
 
 public class Test1 extends Composite {
@@ -39,20 +35,22 @@ public class Test1 extends Composite {
 	@UiField(provided = true)
 	ArtiqueList items;
 
-	@UiField
-	FlexTable sources;
-
-	@UiField
-	TextBox name;
-
-	@UiField
-	TextBox url;
+	/*
+	 * @UiField
+	 * TextBox name;
+	 * 
+	 * @UiField
+	 * TextBox url;
+	 */
 
 	@UiField
 	Label userName;
 
 	@UiField
 	Anchor logout;
+
+	@UiField
+	ArtiqueSourcesTree sources;
 
 	int itemsCount = -1;
 
@@ -70,59 +68,43 @@ public class Test1 extends Composite {
 		final ArtiqueListProvider provider =
 			new ArtiqueListProvider(settings, items);
 
-		userName.setText(ArtiqueWorld
-			.WORLD.getUser().getNickname());
+		userName.setText(ArtiqueWorld.WORLD.getUser().getNickname());
 		logout.setHref(ArtiqueWorld.WORLD.getUserInfo().getLogoutUrl());
-
-		css.getUserSources(new GetSourcesCallback());
 	}
 
-	@UiHandler("add")
-	void handleClick(ClickEvent e) {
-		XMLSource source = new XMLSource(new Link(url.getText()));
-
-		css.addSource(source, new AsyncCallback<XMLSource>() {
-
-			public void onSuccess(XMLSource result) {
-				UserSource us = new UserSource();
-				us.setName(name.getText());
-				us.setSource(result.getKey());
-				us.setUser(ArtiqueWorld.WORLD.getUser());
-				us.setWatching(true);
-
-				css.addUserSource(us, new AddXMLSourceCallback());
-			}
-
-			public void onFailure(Throwable caught) {}
-		});
-	}
-
-	class AddXMLSourceCallback implements AsyncCallback<UserSource> {
-
-		public void onFailure(Throwable caught) {
-			sources.clear();
-			sources.setHTML(0, 0, "Error");
-		}
-
-		public void onSuccess(UserSource result) {
-			css.getUserSources(new GetSourcesCallback());
-		}
-	}
-
-	class GetSourcesCallback implements AsyncCallback<List<UserSource>> {
-
-		public void onFailure(Throwable caught) {
-			sources.clear();
-			sources.setHTML(0, 0, "Error");
-		}
-
-		public void onSuccess(List<UserSource> result) {
-			sources.clear();
-			for (int i = 0; i < result.size(); i++) {
-				UserSource us = result.get(i);
-				sources.setHTML(i, 0, us.getName());
-				sources.setHTML(i, 1, us.getHierarchy());
-			}
-		}
-	}
+	/*
+	 * @UiHandler("add")
+	 * void handleClick(ClickEvent e) {
+	 * XMLSource source = new XMLSource(new Link(url.getText()));
+	 * 
+	 * /*
+	 * css.addSource(source, new AsyncCallback<XMLSource>() {
+	 * 
+	 * public void onSuccess(XMLSource result) {
+	 * UserSource us = new UserSource();
+	 * us.setName(name.getText());
+	 * us.setSource(result.getKey());
+	 * us.setUser(ArtiqueWorld.WORLD.getUser());
+	 * us.setWatching(true);
+	 * 
+	 * css.addUserSource(us, new AddXMLSourceCallback());
+	 * }
+	 * 
+	 * public void onFailure(Throwable caught) {}
+	 * });
+	 */
+//	}
+	/*
+	 * class AddXMLSourceCallback implements AsyncCallback<UserSource> {
+	 * 
+	 * public void onFailure(Throwable caught) {
+	 * sources.clear();
+	 * sources.setHTML(0, 0, "Error");
+	 * }
+	 * 
+	 * public void onSuccess(UserSource result) {
+	 * css.getUserSources(new GetSourcesCallback());
+	 * }
+	 * }
+	 */
 }

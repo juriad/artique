@@ -25,6 +25,7 @@ public class HierarchyUtils {
 
 	public static <E extends HasName & HasHierarchy> boolean add(
 			Hierarchy<E> root, E e) {
+		System.out.println("add: "+e);
 		if (!(root instanceof InnerNode)) {
 			return false;
 		}

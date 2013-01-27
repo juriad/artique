@@ -6,65 +6,50 @@
 	<ui:with field='res' type='cz.artique.client.i18n.ArtiqueConstants' />
 
 	<g:SplitLayoutPanel>
-		<g:west size="100">
-			<g:VerticalPanel>
-				<g:FlowPanel>
-					<g:Label ui:field="userName" />
-					<g:Anchor ui:field="logout">Logout</g:Anchor>
-				</g:FlowPanel>
-				<g:StackPanel>
-					<g:stack>
-						<g:header>
-							<ui:text from='{res.sources}' />
-						</g:header>
-						<ah:ArtiqueSourcesTree ui:filed="sources" />
-					</g:stack>
-					<g:stack>
-						<g:header>
-							<ui:text from='{res.filters}' />
-						</g:header>
-						<ah:ArtiqueFiltersTree ui:filed="filters" />
-					</g:stack>
-					<g:stack>
-						<g:header>
-							<ui:text from='{res.history}' />
-						</g:header>
-						<ah:ArtiqueHistoryTree ui:filed="history" />
-					</g:stack>
-				</g:StackPanel>
+		<g:west size="120">
+			<g:DockLayoutPanel unit="EM">
+				<g:north size="5">
+					<g:Label>TADY BUDE OVLADANI</g:Label>
+				</g:north>
+				<g:center>
+					<g:StackLayoutPanel unit="EM">
+						<g:stack>
+							<g:header size="3">
+								<ui:text from='{res.sources}' />
+							</g:header>
+							<ah:ArtiqueSourcesTree ui:field="sources" />
+						</g:stack>
+						<g:stack>
+							<g:header size="3">
+								<ui:text from='{res.filters}' />
+							</g:header>
+							<g:Label text="filters"></g:Label>
+							<!-- <ah:ArtiqueFiltersTree ui:filed="filters" /> -->
+						</g:stack>
+						<g:stack>
+							<g:header size="3">
+								<ui:text from='{res.history}' />
+							</g:header>
+							<g:Label text="history"></g:Label>
+							<!-- <ah:ArtiqueHistoryTree ui:filed="history" /> -->
+						</g:stack>
+					</g:StackLayoutPanel>
+				</g:center>
+				<g:south size="3">
+					<g:FlowPanel>
+						<g:Label ui:field="userName" />
+						<g:Anchor ui:field="logout">Logout</g:Anchor>
+					</g:FlowPanel>
+				</g:south>
 
-
-				<g:ScrollPanel width="557px">
-					<g:VerticalPanel width="303px" height="100%">
-						<g:FlexTable ui:field="sources" />
-						<g:FormPanel>
-							<g:Grid width="100%" height="100%">
-								<g:row>
-									<g:customCell>
-										<g:Label text="Name" />
-									</g:customCell>
-									<g:customCell>
-										<g:TextBox ui:field="name" />
-									</g:customCell>
-								</g:row>
-								<g:row>
-									<g:customCell>
-										<g:Label text="URL" />
-									</g:customCell>
-									<g:customCell>
-										<g:TextBox ui:field="url" />
-									</g:customCell>
-								</g:row>
-								<g:row>
-									<g:customCell>
-										<g:Button ui:field="add">Add Source</g:Button>
-									</g:customCell>
-								</g:row>
-							</g:Grid>
-						</g:FormPanel>
-					</g:VerticalPanel>
-				</g:ScrollPanel>
-			</g:VerticalPanel>
+				<!-- <g:VerticalPanel width="303px" height="100%"> <g:FormPanel> <g:Grid 
+					width="100%" height="100%"> <g:row> <g:customCell> <g:Label text="Name" /> 
+					</g:customCell> <g:customCell> <g:TextBox ui:field="name" /> </g:customCell> 
+					</g:row> <g:row> <g:customCell> <g:Label text="URL" /> </g:customCell> <g:customCell> 
+					<g:TextBox ui:field="url" /> </g:customCell> </g:row> <g:row> <g:customCell> 
+					<g:Button ui:field="add">Add Source</g:Button> </g:customCell> </g:row> </g:Grid> 
+					</g:FormPanel> </g:VerticalPanel> -->
+			</g:DockLayoutPanel>
 		</g:west>
 		<g:center>
 			<al:ArtiqueList ui:field="items" />

@@ -10,7 +10,7 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.InlineLabel;
 
 import cz.artique.client.labels.suggestion.LabelSuggestion;
 import cz.artique.client.labels.suggestion.SuggesionLabelFactory;
@@ -33,7 +33,7 @@ public abstract class LabelsBar<E extends HasName & HasKey<K> & Comparable<E>, K
 
 	}
 
-	private Label addLabel;
+	private InlineLabel addLabel;
 
 	private List<E> selectedLabels;
 
@@ -56,7 +56,10 @@ public abstract class LabelsBar<E extends HasName & HasKey<K> & Comparable<E>, K
 		panel = new PanelWithMore<LabelWidget<E>>(maxSize);
 		initWidget(panel);
 
-		addLabel = new Label(addLabelSign);
+		setStylePrimaryName("labels-bar");
+
+		addLabel = new InlineLabel(addLabelSign);
+		addLabel.setStylePrimaryName("labels-bar-add-button");
 		panel.setExtraWidget(addLabel);
 		addLabel.addClickHandler(new ClickHandler() {
 
@@ -69,6 +72,7 @@ public abstract class LabelsBar<E extends HasName & HasKey<K> & Comparable<E>, K
 				allLabels.removeAll(getSelectedLabels());
 
 				box = new LabelSuggestion<E>(allLabels, factory2);
+				box.setStylePrimaryName("labels-bar-suggest-box");
 				panel.setExtraWidget(box);
 				panel.setShowMoreButton(false);
 

@@ -58,7 +58,7 @@ public class InnerNode<E extends HasName & HasHierarchy>
 		registrations.put(child, registration);
 
 		HierarchyChangeEvent<E> event =
-			new HierarchyChangeEvent<E>(child, HierarchyChangeType.REMOVED);
+			new HierarchyChangeEvent<E>(child, HierarchyChangeType.ADDED);
 		for (HierarchyChangeHandler<E> handler : handlers) {
 			handler.onHierarchyChange(event);
 		}

@@ -7,8 +7,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
+
+import cz.artique.client.utils.InlineFlowPanel;
 
 public class PanelWithMore<E extends ComparableWidget<E>> extends Composite {
 	private static final String showLessSign = "«";
@@ -20,9 +22,9 @@ public class PanelWithMore<E extends ComparableWidget<E>> extends Composite {
 
 	private List<E> list;
 
-	private FlowPanel head;
-	private FlowPanel tail;
-	private Label moreButton;
+	private InlineFlowPanel head;
+	private InlineFlowPanel tail;
+	private InlineLabel moreButton;
 	private FlowPanel panel;
 	private Widget extraWidget;
 
@@ -31,10 +33,12 @@ public class PanelWithMore<E extends ComparableWidget<E>> extends Composite {
 		list = new ArrayList<E>();
 		panel = new FlowPanel();
 		initWidget(panel);
+		setStylePrimaryName("panel-with-more");
 
-		head = new FlowPanel();
+		head = new InlineFlowPanel();
+		head.setStylePrimaryName("panel-with-more-head");
 		panel.add(head);
-		moreButton = new Label(showMoreSign);
+		moreButton = new InlineLabel(showMoreSign);
 		moreButton.setVisible(false);
 		moreButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -48,8 +52,10 @@ public class PanelWithMore<E extends ComparableWidget<E>> extends Composite {
 				expanded = !expanded;
 			}
 		});
+		moreButton.setStylePrimaryName("panel-with-more-button");
 		panel.add(moreButton);
-		tail = new FlowPanel();
+		tail = new InlineFlowPanel();
+		head.setStylePrimaryName("panel-with-more-tail");
 		tail.setVisible(false);
 		panel.add(tail);
 	}

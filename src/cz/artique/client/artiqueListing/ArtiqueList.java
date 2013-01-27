@@ -4,8 +4,9 @@ import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 
@@ -17,8 +18,7 @@ import cz.artique.client.listing.ScrollEndHandler;
 import cz.artique.client.listing.WidgetList;
 import cz.artique.shared.model.item.UserItem;
 
-public class ArtiqueList extends WidgetList<UserItem, Key>
-		implements RequiresResize {
+public class ArtiqueList extends WidgetList<UserItem, Key> {
 
 	public class SelectionHandler implements Handler {
 		public void onSelectionChange(SelectionChangeEvent event) {
@@ -59,6 +59,12 @@ public class ArtiqueList extends WidgetList<UserItem, Key>
 
 		scrollPanel.setWidth("100%");
 		scrollPanel.setHeight(Window.getClientHeight() + "px");
+		Window.addResizeHandler(new ResizeHandler() {
+
+			public void onResize(ResizeEvent event) {
+				scrollPanel.setHeight(event.getHeight() + "px");
+			}
+		});
 
 		scrollPanel.addScrollHandler(new ScrollHandler() {
 			public void onScroll(ScrollEvent event) {
@@ -102,10 +108,5 @@ public class ArtiqueList extends WidgetList<UserItem, Key>
 		if (scrollPanel.getMaximumVerticalScrollPosition() <= 0) {
 			getProvider().fetch(-1);
 		}
-	}
-
-	public void onResize() {
-		int height = Window.getClientHeight();
-		scrollPanel.setHeight(height + "px");
 	}
 }

@@ -1,4 +1,3 @@
-@external row, row-expanded, row-content, row-header;
 .row {
 	border: 1px solid blue;
 	padding: 1em 0;
@@ -13,4 +12,38 @@
 
 .row-expanded .row-header {
 	font-weight: bold;
+}
+
+.labels-bar-add-button {
+	display: none;
+}
+
+.labels-bar:hover .labels-bar-add-button {
+	display: inherit;
+}
+
+.label,.labels-bar-add-button,.panel-with-more-button,.labels-bar-suggest-box
+	{
+	margin: 0px 0.5em;
+}
+
+.label-remove-button {
+	font-size: x-small;
+	vertical-align: top;
+	color: grey;
+	font-weight: bold;
+}
+
+.label-remove-button:hover {
+	color: red;
+}
+
+.labels-bar,.labels-bar-suggest-box {
+	display: inline;
+}
+
+.labels-bar {
+	float: left;
+	width: 15em;
+	overflow: hidden;
 }

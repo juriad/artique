@@ -23,7 +23,8 @@ import cz.artique.shared.model.source.UserSource;
 
 public class ArtiqueSourcesManager
 		extends AbstractManager<ClientSourceServiceAsync>
-		implements SourcesManager<UserSource, Key>, ProvidesHierarchy<UserSource> {
+		implements SourcesManager<UserSource, Key>,
+		ProvidesHierarchy<UserSource> {
 	public static final ArtiqueSourcesManager MANAGER =
 		new ArtiqueSourcesManager();
 
@@ -57,7 +58,7 @@ public class ArtiqueSourcesManager
 				for (UserSource us : result) {
 					newSourcesKeys.put(us.getKey(), us);
 					newSourcesNames.put(us.getName(), us);
-					newSourcesKeys.put(us.getLabel(), us);
+					newSourcesLabels.put(us.getLabel(), us);
 				}
 
 				updateHierarchy(sourcesKeys, newSourcesKeys);
@@ -71,46 +72,49 @@ public class ArtiqueSourcesManager
 				}
 				setReady();
 			}
+		});
+	}
 
-			private void updateHierarchy(Map<Key, UserSource> sourcesKeys,
-					Map<Key, UserSource> newSourcesKeys) {
-				Set<Key> keys = new HashSet<Key>();
-				keys.addAll(sourcesKeys.keySet());
-				keys.addAll(newSourcesKeys.keySet());
+	private void updateHierarchy(Map<Key, UserSource> sourcesKeys,
+			Map<Key, UserSource> newSourcesKeys) {
+		Set<Key> keys = new HashSet<Key>();
+		keys.addAll(sourcesKeys.keySet());
+		keys.addAll(newSourcesKeys.keySet());
 
-				for (Key key : keys) {
-					UserSource inOld = sourcesKeys.get(key);
-					UserSource inNew = newSourcesKeys.get(key);
+		for (Key key : keys) {
+			UserSource inOld = sourcesKeys.get(key);
+			UserSource inNew = newSourcesKeys.get(key);
+			System.out.println("update hierarchy:");
+			System.out.println(key);
+			System.out.println(inOld);
+			System.out.println(inNew);
 
-					if (inOld == null && inNew != null) {
-						// added
-						HierarchyUtils.add(hierarchyRoot, inNew);
-					} else if (inOld != null && inNew == null) {
-						// removed
-						HierarchyUtils.remove(hierarchyRoot, inOld);
-					} else {
-						// exists in both
-						if (inOld.getHierarchy().equals(inNew.getHierarchy())) {
-							// hierarchy is ok
-							if (!inOld.equalsDeeply(inNew)) {
-								if (inOld.getName().equals(inNew.getName())) {
-									Hierarchy<UserSource> inTree =
-										HierarchyUtils.findInTree(
-											hierarchyRoot, inNew);
-									inTree.fireChanged();
-								} else {
-									HierarchyUtils.remove(hierarchyRoot, inOld);
-									HierarchyUtils.add(hierarchyRoot, inNew);
-								}
-							}
+			if (inOld == null && inNew != null) {
+				// added
+				HierarchyUtils.add(hierarchyRoot, inNew);
+			} else if (inOld != null && inNew == null) {
+				// removed
+				HierarchyUtils.remove(hierarchyRoot, inOld);
+			} else {
+				// exists in both
+				if (inOld.getHierarchy().equals(inNew.getHierarchy())) {
+					// hierarchy is ok
+					if (!inOld.equalsDeeply(inNew)) {
+						if (inOld.getName().equals(inNew.getName())) {
+							Hierarchy<UserSource> inTree =
+								HierarchyUtils.findInTree(hierarchyRoot, inNew);
+							inTree.fireChanged();
 						} else {
 							HierarchyUtils.remove(hierarchyRoot, inOld);
 							HierarchyUtils.add(hierarchyRoot, inNew);
 						}
 					}
+				} else {
+					HierarchyUtils.remove(hierarchyRoot, inOld);
+					HierarchyUtils.add(hierarchyRoot, inNew);
 				}
 			}
-		});
+		}
 	}
 
 	public List<UserSource> getSources() {
