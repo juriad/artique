@@ -1,11 +1,11 @@
 package cz.artique.client.artiqueHierarchy;
 
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Tree;
 
-import cz.artique.client.Manager;
 import cz.artique.client.artiqueSources.ProvidesHierarchy;
 import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyChangeEvent;
@@ -13,6 +13,7 @@ import cz.artique.client.hierarchy.HierarchyChangeHandler;
 import cz.artique.client.hierarchy.HierarchyChangeType;
 import cz.artique.client.hierarchy.HierarchyTreeItem;
 import cz.artique.client.hierarchy.HierarchyTreeItemFactory;
+import cz.artique.client.manager.Manager;
 import cz.artique.shared.utils.HasHierarchy;
 import cz.artique.shared.utils.HasName;
 

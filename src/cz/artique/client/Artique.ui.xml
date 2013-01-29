@@ -52,7 +52,7 @@
 			</g:DockLayoutPanel>
 		</g:west>
 		<g:center>
-			<al:ArtiqueList ui:field="items" />
+			<al:ArtiqueList ui:field="list" />
 		</g:center>
 	</g:SplitLayoutPanel>
 </ui:UiBinder>

@@ -33,6 +33,7 @@ public class Label
 
 	/**
 	 * Name of this label
+	 * Name must not contail spaces or $.
 	 */
 	private String name;
 

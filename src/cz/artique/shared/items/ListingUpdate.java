@@ -8,7 +8,6 @@ public class ListingUpdate<E> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private List<E> head;
-//	private List<E> modified;
 	private List<E> tail;
 	private Date fetched;
 	private boolean endReached;
@@ -16,10 +15,9 @@ public class ListingUpdate<E> implements Serializable {
 	public ListingUpdate() {
 	}
 
-	public ListingUpdate(List<E> head,/* List<E> modified,*/ List<E> tail,
+	public ListingUpdate(List<E> head, List<E> tail,
 			Date fetched, boolean endReached) {
 		this.setHead(head);
-//		this.setModified(modified);
 		this.setTail(tail);
 		this.setFetched(fetched);
 		this.setEndReached(endReached);
@@ -28,10 +26,6 @@ public class ListingUpdate<E> implements Serializable {
 	public List<E> getHead() {
 		return head;
 	}
-
-/*	public List<E> getModified() {
-		return modified;
-	}*/
 
 	public List<E> getTail() {
 		return tail;
@@ -48,10 +42,6 @@ public class ListingUpdate<E> implements Serializable {
 	public void setHead(List<E> head) {
 		this.head = head;
 	}
-
-/*	public void setModified(List<E> modified) {
-		this.modified = modified;
-	}*/
 
 	public void setTail(List<E> tail) {
 		this.tail = tail;

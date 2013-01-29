@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.shared.model.user.ClientConfigValue;
+import cz.artique.shared.model.config.ClientConfigValue;
 
 public interface ClientConfigServiceAsync {
 

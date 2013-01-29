@@ -12,11 +12,11 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.artique.client.service.ClientConfigService;
-import cz.artique.server.meta.user.ClientConfigMeta;
+import cz.artique.server.meta.config.ClientConfigMeta;
 import cz.artique.server.utils.ServerUtils;
-import cz.artique.shared.model.user.ClientConfig;
-import cz.artique.shared.model.user.ClientConfigKey;
-import cz.artique.shared.model.user.ClientConfigValue;
+import cz.artique.shared.model.config.ClientConfig;
+import cz.artique.shared.model.config.ClientConfigKey;
+import cz.artique.shared.model.config.ClientConfigValue;
 
 public class ClientConfigServiceImpl implements ClientConfigService {
 
@@ -70,11 +70,11 @@ public class ClientConfigServiceImpl implements ClientConfigService {
 					? null
 					: config.getDoubleValue());
 			break;
-		case LONG:
+		case INT:
 			value =
-				new ClientConfigValue<Long>(configKey, config == null
+				new ClientConfigValue<Integer>(configKey, config == null
 					? null
-					: config.getLongValue());
+					: config.getIntValue());
 			break;
 		case STRING:
 			value =
@@ -149,8 +149,8 @@ public class ClientConfigServiceImpl implements ClientConfigService {
 		case DOUBLE:
 			config.setDoubleValue(value.<Double> get());
 			break;
-		case LONG:
-			config.setLongValue(value.<Long> get());
+		case INT:
+			config.setIntValue(value.<Integer> get());
 			break;
 		case STRING:
 			config.setStringValue(value.<String> get());

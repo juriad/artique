@@ -1,14 +1,67 @@
 package cz.artique.client;
 
-import com.google.appengine.api.users.User;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
-import cz.artique.shared.model.label.ListFilter;
+
+import com.google.appengine.api.users.User;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import cz.artique.client.artiqueListing.ArtiqueList;
+import cz.artique.client.config.ArtiqueConfigManager;
+import cz.artique.client.manager.AbstractManager;
+import cz.artique.client.manager.Managers;
+import cz.artique.shared.model.config.ClientConfigKey;
 
 public enum ArtiqueWorld {
 	WORLD;
 
+	private ArtiqueWorld() {
+		for (final Managers m : Managers.values()) {
+			m.get().ready(new AsyncCallback<Void>() {
+				public void onSuccess(Void result) {
+					ready.add(m);
+					Iterator<WaitRequest> iter = waiting.iterator();
+					while (iter.hasNext()) {
+						WaitRequest r = iter.next();
+						r.managers.remove(m);
+						if (r.managers.isEmpty()) {
+							iter.remove();
+							r.ping.onSuccess(null);
+						}
+					}
+				}
+
+				public void onFailure(Throwable caught) {
+					// TODO failed manager
+				}
+			});
+		}
+		waitForManager(Arrays.asList(Managers.CONFIG_MANAGER),
+			new AsyncCallback<Void>() {
+
+				public void onFailure(Throwable caught) {
+					// ignore
+				}
+
+				public void onSuccess(Void result) {
+					for (Managers m : Managers.values()) {
+						if (m.get() instanceof AbstractManager) {
+							((AbstractManager<?>) m.get())
+								.setTimeout(ArtiqueConfigManager.MANAGER
+									.getConfig(ClientConfigKey.SERVICE_TIMEOUT)
+									.<Integer> get());
+						}
+					}
+				}
+			});
+	}
+
 	private UserInfo userInfo;
-	private ListFilter currentListFilter;
+	private ArtiqueList list;
 
 	public UserInfo getUserInfo() {
 		return userInfo;
@@ -22,11 +75,33 @@ public enum ArtiqueWorld {
 		return getUserInfo().getUser();
 	}
 
-	public void setCurrentListFilter(ListFilter current) {
-		currentListFilter = current;
+	public ArtiqueList getList() {
+		return list;
 	}
 
-	public ListFilter getCurrentListFilter() {
-		return currentListFilter;
+	public void setList(ArtiqueList list) {
+		this.list = list;
+	}
+
+	private class WaitRequest {
+		List<Managers> managers;
+		AsyncCallback<Void> ping;
+
+		public WaitRequest(List<Managers> managers, AsyncCallback<Void> ping) {
+			this.managers = managers;
+			this.ping = ping;
+		}
+	}
+
+	private List<Managers> ready = new ArrayList<Managers>();
+	private List<WaitRequest> waiting = new LinkedList<WaitRequest>();
+
+	public void waitForManager(List<Managers> managers, AsyncCallback<Void> ping) {
+		managers.removeAll(ready);
+		if (managers.isEmpty()) {
+			ping.onSuccess(null);
+		} else {
+			waiting.add(new WaitRequest(managers, ping));
+		}
 	}
 }

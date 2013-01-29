@@ -11,7 +11,6 @@ import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
-import cz.artique.server.meta.label.LabelMeta;
 import cz.artique.server.meta.source.ManualSourceMeta;
 import cz.artique.server.meta.source.SourceMeta;
 import cz.artique.server.meta.source.UserSourceMeta;
@@ -26,6 +25,12 @@ public class UserSourceService {
 
 	public UserSourceService() {}
 
+	/**
+	 * requires source object
+	 * 
+	 * @param userSource
+	 * @return
+	 */
 	public UserSource creatIfNotExist(UserSource userSource) {
 		Transaction tx = Datastore.beginTransaction();
 		Key key = ServerUtils.genKey(userSource);
@@ -34,13 +39,12 @@ public class UserSourceService {
 		if (theUserSource == null) {
 			Key labelKey;
 			{
-				labelKey = Datastore.allocateId(LabelMeta.get());
 				String labelName =
-					userSource.getName() + "$"
-						+ KeyFactory.keyToString(labelKey);
+					KeyFactory.keyToString(userSource.getSource());
 				final Label l = new Label(userSource.getUser(), labelName);
 				l.setLabelType(LabelType.USER_SOURCE);
-				l.setKey(ServerUtils.genKey(l));
+				labelKey = ServerUtils.genKey(l);
+				l.setKey(labelKey);
 				Datastore.put(l);
 			}
 			userSource.setKey(key);

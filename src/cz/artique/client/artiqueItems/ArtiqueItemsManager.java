@@ -5,15 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.client.AbstractManager;
 import cz.artique.client.artiqueLabels.ArtiqueLabelsManager;
 import cz.artique.client.items.ItemsManager;
+import cz.artique.client.manager.AbstractManager;
 import cz.artique.client.service.ClientItemService;
 import cz.artique.client.service.ClientItemServiceAsync;
 import cz.artique.shared.items.ChangeSet;

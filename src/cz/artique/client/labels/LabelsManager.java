@@ -2,9 +2,10 @@ package cz.artique.client.labels;
 
 import java.util.List;
 
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.client.Manager;
+import cz.artique.client.manager.Manager;
 import cz.artique.shared.utils.HasKey;
 import cz.artique.shared.utils.HasName;
 

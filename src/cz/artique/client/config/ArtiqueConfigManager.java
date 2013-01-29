@@ -4,22 +4,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.client.AbstractManager;
+import cz.artique.client.manager.AbstractManager;
+import cz.artique.client.service.ClientConfigService;
 import cz.artique.client.service.ClientConfigServiceAsync;
-import cz.artique.shared.model.user.ClientConfigKey;
-import cz.artique.shared.model.user.ClientConfigValue;
+import cz.artique.shared.model.config.ClientConfigKey;
+import cz.artique.shared.model.config.ClientConfigValue;
 
 public class ArtiqueConfigManager
 		extends AbstractManager<ClientConfigServiceAsync>
 		implements ConfigManager {
+	
+	public static final ArtiqueConfigManager MANAGER = new ArtiqueConfigManager();
 
 	private Map<ClientConfigKey, ClientConfigValue<?>> configs =
 		new HashMap<ClientConfigKey, ClientConfigValue<?>>();
 
-	protected ArtiqueConfigManager(ClientConfigServiceAsync service) {
-		super(service);
+	protected ArtiqueConfigManager() {
+		super(GWT.<ClientConfigServiceAsync> create(ClientConfigService.class));
 		refresh(null);
 	}
 

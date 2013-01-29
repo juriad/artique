@@ -1,4 +1,4 @@
-package cz.artique.shared.model.user;
+package cz.artique.shared.model.config;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
@@ -7,7 +7,11 @@ import cz.artique.shared.utils.GenKey;
 import cz.artique.shared.utils.SharedUtils;
 
 public enum ClientConfigKey implements GenKey {
-	KEY1("key1.key1.1", ConfigType.STRING, "hopsa hejsa");
+	SERVICE_TIMEOUT("service.timeout", ConfigType.INT, 2000),
+	LIST_INIT_SIZE("list.init_size", ConfigType.INT, 30),
+	LIST_FETCH_STEP("list.fetch_step", ConfigType.INT, 20),
+	LIST_FETCH_INTERVAL("list.fetch_interval", ConfigType.INT, 5000),
+	HISTORY_MAX_ITEMS("history.max_items", ConfigType.INT, 30);
 
 	private final ConfigType type;
 	private final String key;
@@ -36,10 +40,9 @@ public enum ClientConfigKey implements GenKey {
 	public Key getKeyParent() {
 		return null;
 	}
-	
+
 	public String getKeyName() {
-		return SharedUtils.combineStringParts(getUser().getUserId(),
-			getKey());
+		return SharedUtils.combineStringParts(getUser().getUserId(), getKey());
 	}
 
 	public User getUser() {

@@ -1,4 +1,4 @@
-package cz.artique.shared.model.user;
+package cz.artique.shared.model.config;
 
 import java.io.Serializable;
 
@@ -25,7 +25,7 @@ public class ClientConfig implements Serializable, GenKey, HasKey<Key> {
 
 	private String configKey;
 
-	private long longValue;
+	private int intValue;
 
 	private double doubleValue;
 
@@ -116,12 +116,12 @@ public class ClientConfig implements Serializable, GenKey, HasKey<Key> {
 		this.configKey = configKey;
 	}
 
-	public long getLongValue() {
-		return longValue;
+	public int getIntValue() {
+		return intValue;
 	}
 
-	public void setLongValue(long longValue) {
-		this.longValue = longValue;
+	public void setIntValue(int intValue) {
+		this.intValue = intValue;
 	}
 
 	public double getDoubleValue() {

@@ -9,11 +9,11 @@ import org.slim3.datastore.Datastore;
 
 import com.google.appengine.api.datastore.Key;
 
-import cz.artique.server.meta.user.ConfigMeta;
+import cz.artique.server.meta.config.ConfigMeta;
 import cz.artique.server.utils.ServerUtils;
-import cz.artique.shared.model.user.Config;
-import cz.artique.shared.model.user.ConfigKey;
-import cz.artique.shared.model.user.ConfigValue;
+import cz.artique.shared.model.config.Config;
+import cz.artique.shared.model.config.ConfigKey;
+import cz.artique.shared.model.config.ConfigValue;
 
 public enum ConfigService {
 	CONFIG_SERVICE;
@@ -62,11 +62,11 @@ public enum ConfigService {
 					? null
 					: config.getDoubleValue());
 			break;
-		case LONG:
+		case INT:
 			value =
-				new ConfigValue<Long>(configKey, config == null
+				new ConfigValue<Integer>(configKey, config == null
 					? null
-					: config.getLongValue());
+					: config.getIntValue());
 			break;
 		case STRING:
 			value =
@@ -140,8 +140,8 @@ public enum ConfigService {
 		case DOUBLE:
 			config.setDoubleValue(value.<Double> get());
 			break;
-		case LONG:
-			config.setLongValue(value.<Long> get());
+		case INT:
+			config.setIntValue(value.<Integer> get());
 			break;
 		case STRING:
 			config.setStringValue(value.<String> get());

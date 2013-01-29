@@ -6,13 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.client.AbstractManager;
 import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.labels.LabelsManager;
+import cz.artique.client.manager.AbstractManager;
 import cz.artique.client.service.ClientLabelService;
 import cz.artique.client.service.ClientLabelServiceAsync;
 import cz.artique.shared.model.label.Label;
@@ -25,8 +26,7 @@ public class ArtiqueLabelsManager
 		new ArtiqueLabelsManager();
 
 	private ArtiqueLabelsManager() {
-		super(GWT
-			.<ClientLabelServiceAsync> create(ClientLabelService.class));
+		super(GWT.<ClientLabelServiceAsync> create(ClientLabelService.class));
 		refresh(null);
 	}
 
@@ -51,8 +51,8 @@ public class ArtiqueLabelsManager
 				List<Label> newUserDefinedLabels = new ArrayList<Label>();
 				for (Label l : result) {
 					newLabelsKeys.put(l.getKey(), l);
-					newLabelsNames.put(l.getName(), l);
 					if (LabelType.USER_DEFINED.equals(l.getLabelType())) {
+						newLabelsNames.put(l.getName(), l);
 						newUserDefinedLabels.add(l);
 					}
 				}
@@ -78,7 +78,8 @@ public class ArtiqueLabelsManager
 	}
 
 	public Label getLabelByName(String name) {
-		return labelsNames.get(name);
+		Label l = labelsNames.get(name);
+		return l;
 	}
 
 	public void createNewLabel(String name, final AsyncCallback<Label> ping) {
@@ -96,9 +97,9 @@ public class ArtiqueLabelsManager
 					allLabels.add(result);
 					if (LabelType.USER_DEFINED.equals(result.getLabelType())) {
 						userDefinedLabels.add(result);
+						labelsNames.put(result.getName(), result);
 					}
 					labelsKeys.put(result.getKey(), result);
-					labelsNames.put(result.getName(), result);
 				}
 
 				if (ping != null) {
@@ -110,6 +111,18 @@ public class ArtiqueLabelsManager
 
 	public Label getLabelByKey(Key key) {
 		return labelsKeys.get(key);
+	}
+
+	public Label getLabelByNameAndType(String name, LabelType type) {
+		if (LabelType.USER_DEFINED.equals(type)) {
+			return getLabelByName(name);
+		}
+		for (Label l : allLabels) {
+			if (l.getName().equals(name) && l.getLabelType().equals(type)) {
+				return l;
+			}
+		}
+		return null;
 	}
 
 	public List<Label> getSortedList(List<Key> keys) {

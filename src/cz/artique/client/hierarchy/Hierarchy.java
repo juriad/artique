@@ -14,4 +14,6 @@ public interface Hierarchy<E extends HasHierarchy & HasName>
 	Hierarchy<E> getParent();
 
 	void fireChanged();
+	
+	void getAll(List<E> list);
 }

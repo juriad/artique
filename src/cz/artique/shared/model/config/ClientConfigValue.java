@@ -1,14 +1,13 @@
-package cz.artique.shared.model.user;
+package cz.artique.shared.model.config;
 
-public class ConfigValue<E> {
+public class ClientConfigValue<E> {
 	private E value;
-	private ConfigKey key;
+	private ClientConfigKey key;
 	private E originalValue;
 
-	public ConfigValue(ConfigKey key, E value) {
+	public ClientConfigValue(ClientConfigKey key, E value) {
 		this.setKey(key);
 		this.value = value;
-		this.originalValue = value;
 	}
 
 	public E getValue() {
@@ -40,11 +39,11 @@ public class ConfigValue<E> {
 		this.originalValue = originalValue;
 	}
 
-	public ConfigKey getKey() {
+	public ClientConfigKey getKey() {
 		return key;
 	}
 
-	public void setKey(ConfigKey key) {
+	public void setKey(ClientConfigKey key) {
 		this.key = key;
 	}
 }

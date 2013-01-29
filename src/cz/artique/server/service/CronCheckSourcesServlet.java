@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slim3.datastore.Datastore;
 
 import cz.artique.server.meta.source.SourceMeta;
+import cz.artique.shared.model.config.ConfigKey;
 import cz.artique.shared.model.source.Source;
-import cz.artique.shared.model.user.ConfigKey;
 
 public class CronCheckSourcesServlet extends HttpServlet {
 

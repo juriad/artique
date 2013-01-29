@@ -17,9 +17,12 @@ public class UserSourceTreeItemFactory
 
 		HierarchyTreeItem<UserSource> item =
 			new HierarchyTreeItem<UserSource>(hierarchy);
+		
+		// FIXME predelat
+		
 		if (hierarchy instanceof LeafNode) {
 			LeafNode<UserSource> leaf = (LeafNode<UserSource>) hierarchy;
-			UserSourceWidget w = new UserSourceWidget(leaf.getItem());
+			UserSourceWidget w = new UserSourceWidget(leaf);
 			item.setWidget(w);
 		} else if (hierarchy.getParent() == null) {
 			item.setText(HierarchyUtils.splitSign);

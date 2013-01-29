@@ -8,10 +8,10 @@ import com.google.appengine.api.datastore.Text;
 
 import cz.artique.server.crawler.DiffMatchPatch.Diff;
 import cz.artique.server.service.ConfigService;
+import cz.artique.shared.model.config.ConfigKey;
 import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.PageChangeItem;
 import cz.artique.shared.model.source.PageChangeSource;
-import cz.artique.shared.model.user.ConfigKey;
 
 public class PageChangeCrawler {
 

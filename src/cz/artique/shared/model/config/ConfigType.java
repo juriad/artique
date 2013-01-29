@@ -1,7 +1,7 @@
-package cz.artique.shared.model.user;
+package cz.artique.shared.model.config;
 
 public enum ConfigType {
 	STRING,
-	LONG,
+	INT,
 	DOUBLE;
 }

@@ -1,8 +1,9 @@
 package cz.artique.client.items;
 
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.client.Manager;
+import cz.artique.client.manager.Manager;
 import cz.artique.shared.items.ListingUpdate;
 import cz.artique.shared.items.ListingUpdateRequest;
 

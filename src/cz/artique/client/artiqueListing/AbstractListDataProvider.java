@@ -8,13 +8,15 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import cz.artique.client.artiqueItems.ArtiqueItemsManager;
+import cz.artique.client.config.ArtiqueConfigManager;
 import cz.artique.client.listing.InfiniteList;
 import cz.artique.client.listing.InfiniteListDataProvider;
-import cz.artique.client.listing.ListingSettings;
 import cz.artique.shared.items.ListingUpdate;
 import cz.artique.shared.items.ListingUpdateRequest;
+import cz.artique.shared.model.config.ClientConfigKey;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.FilterOrder;
+import cz.artique.shared.model.label.ListFilter;
 
 public class AbstractListDataProvider
 		implements InfiniteListDataProvider<UserItem> {
@@ -27,8 +29,6 @@ public class AbstractListDataProvider
 	private Date lastFetchProbeDate;
 
 	private int lastFetchProbeCount;
-
-	private final ListingSettings settings;
 
 	private final Timer periodicTimer;
 
@@ -44,15 +44,17 @@ public class AbstractListDataProvider
 
 	protected boolean canceled = false;
 
-	public AbstractListDataProvider(final ListingSettings settings,
+	private final ListFilter listFilter;
+
+	public AbstractListDataProvider(ListFilter listFilter,
 			InfiniteList<UserItem> list) {
 		super();
-		this.settings = settings;
+		this.listFilter = listFilter;
 		this.lastFetch = new Date(0);
 		this.lastFetchProbeDate = new Date(0);
 		this.manager = ArtiqueItemsManager.MANAGER;
-		if (settings.getListFilter() != null) {
-			order = settings.getListFilter().getOrder();
+		if (listFilter != null) {
+			order = listFilter.getOrder();
 		} else {
 			order = FilterOrder.getDefault();
 		}
@@ -66,7 +68,8 @@ public class AbstractListDataProvider
 				fetch(0);
 			}
 		};
-		periodicTimer.scheduleRepeating(settings.getInterval());
+		periodicTimer.scheduleRepeating(ArtiqueConfigManager.MANAGER.getConfig(
+			ClientConfigKey.LIST_FETCH_INTERVAL).<Integer> get());
 		onStart();
 	}
 
@@ -82,7 +85,9 @@ public class AbstractListDataProvider
 		}
 		GWT.log("fetching: " + count);
 		if (count < 0) {
-			count = getSettings().getStep();
+			count =
+				ArtiqueConfigManager.MANAGER.getConfig(
+					ClientConfigKey.LIST_FETCH_STEP).<Integer> get();
 		}
 		// check simultanous requests
 		if (lastFetchProbeDate != null) {
@@ -127,8 +132,7 @@ public class AbstractListDataProvider
 		lastFetchProbeDate = new Date();
 		lastFetchProbeCount = count;
 		ListingUpdateRequest request =
-			new ListingUpdateRequest(getSettings().getListFilter(), first,
-				last, lastFetch, count);
+			new ListingUpdateRequest(listFilter, first, last, lastFetch, count);
 		manager.getItems(request, new AsyncCallback<ListingUpdate<UserItem>>() {
 
 			public void onSuccess(ListingUpdate<UserItem> result) {
@@ -152,11 +156,6 @@ public class AbstractListDataProvider
 		if (canceled) {
 			return;
 		}
-		/*
-		 * for (UserItem modified : result.getModified()) {
-		 * getList().setValue(modified);
-		 * }
-		 */
 
 		if (FilterOrder.ASCENDING.equals(order)) {
 			// no head
@@ -195,10 +194,6 @@ public class AbstractListDataProvider
 
 	public InfiniteList<UserItem> getList() {
 		return list;
-	}
-
-	public ListingSettings getSettings() {
-		return settings;
 	}
 
 	public void destroy() {

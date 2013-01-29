@@ -90,4 +90,8 @@ public class LeafNode<E extends HasName & HasHierarchy> implements Hierarchy<E> 
 		}
 	}
 
+	public void getAll(List<E> list) {
+		list.add(item);
+	}
+
 }

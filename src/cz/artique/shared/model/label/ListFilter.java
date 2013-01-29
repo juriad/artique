@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.users.User;
 
 import cz.artique.shared.utils.HasDeepEquals;
 import cz.artique.shared.utils.HasHierarchy;
@@ -43,6 +44,8 @@ public class ListFilter
 	private Date endTo;
 
 	private String hierarchy;
+
+	private User user;
 
 	/**
 	 * Returns the key.
@@ -177,12 +180,21 @@ public class ListFilter
 	}
 
 	public boolean equalsDeeply(ListFilter e) {
-		return SharedUtils.eq(getRead(), e.getRead())
+		return SharedUtils.eq(getUser(), e.getUser())
+			&& SharedUtils.eq(getRead(), e.getRead())
 			&& SharedUtils.eq(getEndTo(), e.getEndTo())
 			&& SharedUtils.eq(getHierarchy(), e.getHierarchy())
 			&& SharedUtils.eq(getName(), e.getOrder())
 			&& SharedUtils.eq(getOrder(), e.getOrder())
 			&& SharedUtils.eq(getStartFrom(), e.getStartFrom())
 			&& SharedUtils.deepEq(getFilterObject(), e.getFilterObject());
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 }

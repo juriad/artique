@@ -2,7 +2,8 @@ package cz.artique.client.sources;
 
 import java.util.List;
 
-import cz.artique.client.Manager;
+
+import cz.artique.client.manager.Manager;
 import cz.artique.shared.utils.HasKey;
 import cz.artique.shared.utils.HasName;
 

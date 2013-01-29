@@ -1,4 +1,4 @@
-package cz.artique.shared.model.user;
+package cz.artique.shared.model.config;
 
 import com.google.appengine.api.datastore.Key;
 
@@ -6,8 +6,8 @@ import cz.artique.shared.utils.GenKey;
 import cz.artique.shared.utils.SharedUtils;
 
 public enum ConfigKey implements GenKey {
-	MAX_ERROR_SEQUENCE("check.normal.max-error-sequence", ConfigType.LONG, 5),
-	DIFF_EDIT_COST("crawler.diff.edit-cost", ConfigType.LONG, 10),
+	MAX_ERROR_SEQUENCE("check.normal.max-error-sequence", ConfigType.INT, 5),
+	DIFF_EDIT_COST("crawler.diff.edit-cost", ConfigType.INT, 10),
 	DIFF_TIMEOUT("crawler.diff.timeout", ConfigType.DOUBLE, 0.1);
 
 	private final ConfigType type;

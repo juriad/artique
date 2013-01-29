@@ -1,4 +1,4 @@
-package cz.artique.client;
+package cz.artique.client.manager;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 

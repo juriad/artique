@@ -6,19 +6,21 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import cz.artique.client.artiqueItems.ModifiedEvent;
 import cz.artique.client.artiqueItems.ModifiedHandler;
 import cz.artique.client.artiqueLabels.ArtiqueLabelsManager;
+import cz.artique.client.config.ArtiqueConfigManager;
 import cz.artique.client.listing.InfiniteList;
-import cz.artique.client.listing.ListingSettings;
 import cz.artique.shared.items.ListingUpdate;
+import cz.artique.shared.model.config.ClientConfigKey;
 import cz.artique.shared.model.item.UserItem;
+import cz.artique.shared.model.label.ListFilter;
 
 public class ArtiqueListProvider extends AbstractListDataProvider
 		implements ModifiedHandler {
 
 	private HandlerRegistration addGeneralClickHandler;
 
-	public ArtiqueListProvider(ListingSettings settings,
+	public ArtiqueListProvider(ListFilter listFilter,
 			InfiniteList<UserItem> list) {
-		super(settings, list);
+		super(listFilter, list);
 		addGeneralClickHandler = manager.addGeneralClickHandler(this);
 	}
 
@@ -40,7 +42,8 @@ public class ArtiqueListProvider extends AbstractListDataProvider
 		ArtiqueLabelsManager.MANAGER.ready(new AsyncCallback<Void>() {
 
 			public void onSuccess(Void result) {
-				fetch(getSettings().getInitSize());
+				fetch(ArtiqueConfigManager.MANAGER.getConfig(
+					ClientConfigKey.LIST_INIT_SIZE).<Integer> get());
 			}
 
 			public void onFailure(Throwable caught) {

@@ -1,4 +1,4 @@
-package cz.artique.client;
+package cz.artique.client.manager;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -130,4 +130,10 @@ public class InnerNode<E extends HasName & HasHierarchy>
 		}
 	}
 
+	public void getAll(List<E> list) {
+		for (Hierarchy<E> child : getChildren()) {
+			child.getAll(list);
+		}
+	}
+
 }

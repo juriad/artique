@@ -1,6 +1,6 @@
 package cz.artique.server.meta.label;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-01-26 19:17:33")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-01-28 21:52:10")
 /** */
 public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.label.ListFilter> {
 
@@ -27,6 +27,9 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, java.util.Date> startFrom = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, java.util.Date>(this, "startFrom", "startFrom", java.util.Date.class);
+
+    /** */
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, com.google.appengine.api.users.User> user = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, com.google.appengine.api.users.User>(this, "user", "user", com.google.appengine.api.users.User.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, java.lang.Long>(this, "version", "version", java.lang.Long.class);
@@ -56,6 +59,7 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         model.setOrder(stringToEnum(cz.artique.shared.model.label.FilterOrder.class, (java.lang.String) entity.getProperty("order")));
         model.setRead((java.lang.Boolean) entity.getProperty("read"));
         model.setStartFrom((java.util.Date) entity.getProperty("startFrom"));
+        model.setUser((com.google.appengine.api.users.User) entity.getProperty("user"));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
         return model;
     }
@@ -76,6 +80,7 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         entity.setProperty("order", enumToString(m.getOrder()));
         entity.setProperty("read", m.getRead());
         entity.setProperty("startFrom", m.getStartFrom());
+        entity.setProperty("user", m.getUser());
         entity.setProperty("version", m.getVersion());
         entity.setProperty("slim3.schemaVersion", 1);
         return entity;
@@ -175,6 +180,10 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
             writer.setNextPropertyName("startFrom");
             encoder0.encode(writer, m.getStartFrom());
         }
+        if(m.getUser() != null){
+            writer.setNextPropertyName("user");
+            encoder0.encode(writer, m.getUser());
+        }
         if(m.getVersion() != null){
             writer.setNextPropertyName("version");
             encoder0.encode(writer, m.getVersion());
@@ -205,6 +214,8 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         m.setRead(decoder0.decode(reader, m.getRead()));
         reader = rootReader.newObjectReader("startFrom");
         m.setStartFrom(decoder0.decode(reader, m.getStartFrom()));
+        reader = rootReader.newObjectReader("user");
+        m.setUser(decoder0.decode(reader, m.getUser()));
         reader = rootReader.newObjectReader("version");
         m.setVersion(decoder0.decode(reader, m.getVersion()));
         return m;
