@@ -48,7 +48,7 @@ public class LabelSuggestion<E extends HasName & Comparable<E> & HasKey<?>>
 		// TODO settings maxItems in poput: 20
 		popup = new SuggestionPopup<E>(factory, 20);
 		panel.add(popup);
-		
+
 		textBox.addBlurHandler(new BlurHandler() {
 
 			public void onBlur(BlurEvent event) {

@@ -3,14 +3,18 @@ package cz.artique.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.artiqueHierarchy.ArtiqueSourcesTree;
+import cz.artique.client.artiqueHistory.HistoryHandler;
 import cz.artique.client.artiqueListing.ArtiqueList;
 import cz.artique.client.artiqueListing.UserItemRow;
+import cz.artique.client.manager.Managers;
 
 public class Artique extends Composite {
 
@@ -41,8 +45,23 @@ public class Artique extends Composite {
 		list = new ArtiqueList(UserItemRow.factory);
 		initWidget(uiBinder.createAndBindUi(this));
 		ArtiqueWorld.WORLD.setList(list);
-		
+		initHistory();
+
 		userName.setText(ArtiqueWorld.WORLD.getUser().getNickname());
 		logout.setHref(ArtiqueWorld.WORLD.getUserInfo().getLogoutUrl());
+	}
+
+	private void initHistory() {
+		History.addValueChangeHandler(new HistoryHandler());
+		ArtiqueWorld.WORLD.waitForManager(new AsyncCallback<Void>() {
+
+			public void onSuccess(Void result) {
+				History.fireCurrentHistoryState();
+			}
+
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+			}
+		}, Managers.CONFIG_MANAGER, Managers.LABELS_MANAGER);
 	}
 }

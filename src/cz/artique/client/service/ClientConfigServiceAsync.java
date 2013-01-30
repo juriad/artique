@@ -8,9 +8,9 @@ import cz.artique.shared.model.config.ClientConfigValue;
 
 public interface ClientConfigServiceAsync {
 
-	void getClientConfigs(AsyncCallback<List<ClientConfigValue<?>>> callback);
+	void getClientConfigs(AsyncCallback<List<ClientConfigValue>> callback);
 
-	void setClientConfigs(List<ClientConfigValue<?>> configs,
-			AsyncCallback<List<ClientConfigValue<?>>> callback);
+	void setClientConfigs(List<ClientConfigValue> configs,
+			AsyncCallback<List<ClientConfigValue>> callback);
 
 }

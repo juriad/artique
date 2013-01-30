@@ -1,11 +1,9 @@
 package cz.artique.client;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 
 import com.google.appengine.api.users.User;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -40,24 +38,23 @@ public enum ArtiqueWorld {
 				}
 			});
 		}
-		waitForManager(Arrays.asList(Managers.CONFIG_MANAGER),
-			new AsyncCallback<Void>() {
+		waitForManager(new AsyncCallback<Void>() {
 
-				public void onFailure(Throwable caught) {
-					// ignore
-				}
+			public void onFailure(Throwable caught) {
+				// ignore
+			}
 
-				public void onSuccess(Void result) {
-					for (Managers m : Managers.values()) {
-						if (m.get() instanceof AbstractManager) {
-							((AbstractManager<?>) m.get())
-								.setTimeout(ArtiqueConfigManager.MANAGER
-									.getConfig(ClientConfigKey.SERVICE_TIMEOUT)
-									.<Integer> get());
-						}
+			public void onSuccess(Void result) {
+				for (Managers m : Managers.values()) {
+					if (m.get() instanceof AbstractManager) {
+						((AbstractManager<?>) m.get()).setTimeout(ArtiqueConfigManager.MANAGER
+							.getConfig(ClientConfigKey.SERVICE_TIMEOUT)
+							.get()
+							.getI());
 					}
 				}
-			});
+			}
+		}, Managers.CONFIG_MANAGER);
 	}
 
 	private UserInfo userInfo;
@@ -96,12 +93,19 @@ public enum ArtiqueWorld {
 	private List<Managers> ready = new ArrayList<Managers>();
 	private List<WaitRequest> waiting = new LinkedList<WaitRequest>();
 
-	public void waitForManager(List<Managers> managers, AsyncCallback<Void> ping) {
-		managers.removeAll(ready);
-		if (managers.isEmpty()) {
+	public void waitForManager(AsyncCallback<Void> ping, Managers... managers) {
+		List<Managers> managersList = new ArrayList<Managers>();
+		if (managers != null) {
+			for (Managers m : managers) {
+				managersList.add(m);
+			}
+		}
+
+		managersList.removeAll(ready);
+		if (managersList.isEmpty()) {
 			ping.onSuccess(null);
 		} else {
-			waiting.add(new WaitRequest(managers, ping));
+			waiting.add(new WaitRequest(managersList, ping));
 		}
 	}
 }

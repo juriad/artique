@@ -42,8 +42,10 @@ public class ArtiqueListProvider extends AbstractListDataProvider
 		ArtiqueLabelsManager.MANAGER.ready(new AsyncCallback<Void>() {
 
 			public void onSuccess(Void result) {
-				fetch(ArtiqueConfigManager.MANAGER.getConfig(
-					ClientConfigKey.LIST_INIT_SIZE).<Integer> get());
+				fetch(ArtiqueConfigManager.MANAGER
+					.getConfig(ClientConfigKey.LIST_INIT_SIZE)
+					.get()
+					.getI());
 			}
 
 			public void onFailure(Throwable caught) {

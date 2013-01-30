@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -17,11 +16,12 @@ import cz.artique.shared.model.config.ClientConfigValue;
 public class ArtiqueConfigManager
 		extends AbstractManager<ClientConfigServiceAsync>
 		implements ConfigManager {
-	
-	public static final ArtiqueConfigManager MANAGER = new ArtiqueConfigManager();
 
-	private Map<ClientConfigKey, ClientConfigValue<?>> configs =
-		new HashMap<ClientConfigKey, ClientConfigValue<?>>();
+	public static final ArtiqueConfigManager MANAGER =
+		new ArtiqueConfigManager();
+
+	private Map<ClientConfigKey, ClientConfigValue> configs =
+		new HashMap<ClientConfigKey, ClientConfigValue>();
 
 	protected ArtiqueConfigManager() {
 		super(GWT.<ClientConfigServiceAsync> create(ClientConfigService.class));
@@ -29,38 +29,36 @@ public class ArtiqueConfigManager
 	}
 
 	public void refresh(final AsyncCallback<Void> ping) {
-		service
-			.getClientConfigs(new AsyncCallback<List<ClientConfigValue<?>>>() {
+		service.getClientConfigs(new AsyncCallback<List<ClientConfigValue>>() {
 
-				public void onFailure(Throwable caught) {
-					if (ping != null) {
-						ping.onFailure(null);
-					}
+			public void onFailure(Throwable caught) {
+				if (ping != null) {
+					ping.onFailure(null);
 				}
+			}
 
-				public void onSuccess(List<ClientConfigValue<?>> result) {
-					configs =
-						new HashMap<ClientConfigKey, ClientConfigValue<?>>();
-					for (ClientConfigValue<?> value : result) {
-						configs.put(value.getKey(), value);
-					}
-					if (ping != null) {
-						ping.onSuccess(null);
-					}
-					setReady();
+			public void onSuccess(List<ClientConfigValue> result) {
+				configs = new HashMap<ClientConfigKey, ClientConfigValue>();
+				for (ClientConfigValue value : result) {
+					configs.put(value.getKey(), value);
 				}
-			});
+				if (ping != null) {
+					ping.onSuccess(null);
+				}
+				setReady();
+			}
+		});
 
 	}
 
-	public ClientConfigValue<?> getConfig(ClientConfigKey key) {
+	public ClientConfigValue getConfig(ClientConfigKey key) {
 		return configs.get(key);
 	}
 
-	public void updateConfigValues(List<ClientConfigValue<?>> config,
+	public void updateConfigValues(List<ClientConfigValue> config,
 			final AsyncCallback<Void> ping) {
 		service.setClientConfigs(config,
-			new AsyncCallback<List<ClientConfigValue<?>>>() {
+			new AsyncCallback<List<ClientConfigValue>>() {
 
 				public void onFailure(Throwable caught) {
 					if (ping != null) {
@@ -68,8 +66,8 @@ public class ArtiqueConfigManager
 					}
 				}
 
-				public void onSuccess(List<ClientConfigValue<?>> result) {
-					for (ClientConfigValue<?> value : result) {
+				public void onSuccess(List<ClientConfigValue> result) {
+					for (ClientConfigValue value : result) {
 						configs.put(value.getKey(), value);
 					}
 					if (ping != null) {

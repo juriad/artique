@@ -31,7 +31,7 @@ public class UserSourceWidget extends Composite {
 		final ListFilter listFilter =
 			ArtiqueHistory.HISTORY.getBaseListFilter();
 		listFilter.setFilterObject(constructFilter());
-		String serialized = HistoryUtils.serializeListFilter(listFilter);
+		final String serialized = HistoryUtils.serializeListFilter(listFilter);
 		Anchor source = new Anchor(hierarchy.getName(), "#" + serialized);
 		initWidget(source);
 		source.addClickHandler(new ClickHandler() {
@@ -40,7 +40,8 @@ public class UserSourceWidget extends Composite {
 			public void onClick(ClickEvent event) {
 				if (impl.handleAsClick(Event.as(event.getNativeEvent()))) {
 
-					ArtiqueHistory.HISTORY.addListFilter(listFilter);
+					ArtiqueHistory.HISTORY
+						.addListFilter(listFilter, serialized);
 
 					event.preventDefault();
 				}

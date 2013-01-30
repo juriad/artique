@@ -1,6 +1,5 @@
 package cz.artique.client.items;
 
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import cz.artique.client.manager.Manager;

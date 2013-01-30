@@ -2,7 +2,6 @@ package cz.artique.client.labels;
 
 import java.util.List;
 
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import cz.artique.client.manager.Manager;
@@ -12,7 +11,7 @@ import cz.artique.shared.utils.HasName;
 public interface LabelsManager<E extends HasName & HasKey<K>, K>
 		extends Manager {
 	List<E> getLabels();
-	
+
 	List<E> getUserDefinedLabels();
 
 	E getLabelByName(String name);

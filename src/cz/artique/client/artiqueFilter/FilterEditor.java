@@ -30,7 +30,7 @@ public class FilterEditor extends Composite implements HasEnabled {
 
 	@UiField
 	FilterOrderPicker orderPicker;
-	
+
 	private boolean enabled = true;
 
 	public FilterEditor(ListFilter listFilter) {
@@ -43,7 +43,7 @@ public class FilterEditor extends Composite implements HasEnabled {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
-		
+
 		// FIXME tady dokončit
 	}
 

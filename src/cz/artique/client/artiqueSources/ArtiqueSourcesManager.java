@@ -7,14 +7,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyUtils;
+import cz.artique.client.hierarchy.ProvidesHierarchy;
 import cz.artique.client.manager.AbstractManager;
+import cz.artique.client.manager.Managers;
 import cz.artique.client.service.ClientSourceService;
 import cz.artique.client.service.ClientSourceServiceAsync;
 import cz.artique.client.sources.SourcesManager;
@@ -71,7 +73,16 @@ public class ArtiqueSourcesManager
 				if (ping != null) {
 					ping.onSuccess(null);
 				}
-				setReady();
+
+				ArtiqueWorld.WORLD.waitForManager(new AsyncCallback<Void>() {
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub
+					}
+
+					public void onSuccess(Void result) {
+						setReady();
+					}
+				}, Managers.LABELS_MANAGER);
 			}
 		});
 	}
@@ -85,10 +96,6 @@ public class ArtiqueSourcesManager
 		for (Key key : keys) {
 			UserSource inOld = sourcesKeys.get(key);
 			UserSource inNew = newSourcesKeys.get(key);
-			System.out.println("update hierarchy:");
-			System.out.println(key);
-			System.out.println(inOld);
-			System.out.println(inNew);
 
 			if (inOld == null && inNew != null) {
 				// added

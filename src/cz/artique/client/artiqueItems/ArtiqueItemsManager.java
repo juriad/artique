@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -45,7 +44,7 @@ public class ArtiqueItemsManager
 				refresh(null);
 			}
 		};
-		
+
 		// TODO timer settings: 3 seconds
 		timer.scheduleRepeating(Math.max(getTimeout(), 3000));
 	}

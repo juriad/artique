@@ -149,30 +149,30 @@ public class ItemService {
 				endReached = false;
 			}
 		}
-/*
-		List<UserItem> modified;
-		if (firstHave.compareTo(lastHave) <= 0) {
-			ModelQuery<UserItem> modifiedQuery =
-				getBaseQuery(listFilter, fc, user);
-			modifiedQuery =
-				modifiedQuery.filter(meta.lastChanged
-					.greaterThanOrEqual(request.getLastFetch()));
-			modifiedQuery =
-				modifiedQuery.filterInMemory(
-					meta.key.greaterThanOrEqual(firstHave)).filterInMemory(
-					meta.key.lessThanOrEqual(lastHave));
-			InMemorySortCriterion sortCriterion;
-			if (FilterOrder.ASCENDING.equals(listFilter.getOrder())) {
-				sortCriterion = meta.key.asc;
-			} else {
-				sortCriterion = meta.key.desc;
-			}
-			modified = modifiedQuery.sortInMemory(sortCriterion).asList();
-		} else {
-			modified = new ArrayList<UserItem>();
-		}
-*/
-		return new ListingUpdate<UserItem>(head,/* modified,*/ tail, date,
+		/*
+		 * List<UserItem> modified;
+		 * if (firstHave.compareTo(lastHave) <= 0) {
+		 * ModelQuery<UserItem> modifiedQuery =
+		 * getBaseQuery(listFilter, fc, user);
+		 * modifiedQuery =
+		 * modifiedQuery.filter(meta.lastChanged
+		 * .greaterThanOrEqual(request.getLastFetch()));
+		 * modifiedQuery =
+		 * modifiedQuery.filterInMemory(
+		 * meta.key.greaterThanOrEqual(firstHave)).filterInMemory(
+		 * meta.key.lessThanOrEqual(lastHave));
+		 * InMemorySortCriterion sortCriterion;
+		 * if (FilterOrder.ASCENDING.equals(listFilter.getOrder())) {
+		 * sortCriterion = meta.key.asc;
+		 * } else {
+		 * sortCriterion = meta.key.desc;
+		 * }
+		 * modified = modifiedQuery.sortInMemory(sortCriterion).asList();
+		 * } else {
+		 * modified = new ArrayList<UserItem>();
+		 * }
+		 */
+		return new ListingUpdate<UserItem>(head,/* modified, */tail, date,
 			endReached);
 	}
 
@@ -258,21 +258,26 @@ public class ItemService {
 		}
 		UserItemMeta meta = UserItemMeta.get();
 		List<FilterCriterion> ors = new ArrayList<FilterCriterion>();
-		for (Key label : filter.getLabels()) {
-			ors.add(meta.labels.equal(label));
-		}
-		for (Filter sub : filter.getFilterObjects()) {
-			List<FilterCriterion> ands = new ArrayList<FilterCriterion>();
-			for (Key label : sub.getLabels()) {
-				ands.add(meta.labels.equal(label));
+		if (filter.getLabels() != null) {
+			for (Key label : filter.getLabels()) {
+				ors.add(meta.labels.equal(label));
 			}
-			if (ands.size() > 1) {
-				FilterCriterion and =
-					new CompositeCriterion(meta, CompositeFilterOperator.AND,
-						ands.toArray(new FilterCriterion[ands.size()]));
-				ors.add(and);
-			} else {
-				ors.addAll(ands);
+		}
+		if (filter.getFilterObjects() != null) {
+			for (Filter sub : filter.getFilterObjects()) {
+				List<FilterCriterion> ands = new ArrayList<FilterCriterion>();
+				for (Key label : sub.getLabels()) {
+					ands.add(meta.labels.equal(label));
+				}
+				if (ands.size() > 1) {
+					FilterCriterion and =
+						new CompositeCriterion(meta,
+							CompositeFilterOperator.AND,
+							ands.toArray(new FilterCriterion[ands.size()]));
+					ors.add(and);
+				} else {
+					ors.addAll(ands);
+				}
 			}
 		}
 

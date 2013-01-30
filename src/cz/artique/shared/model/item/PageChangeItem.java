@@ -25,7 +25,7 @@ public class PageChangeItem extends Item implements Serializable {
 	 * Diff was created against page of this date
 	 */
 	private Date comparedTo;
-	
+
 	public PageChangeItem() {}
 
 	public PageChangeItem(Source source) {

@@ -56,7 +56,7 @@ public abstract class Source implements Serializable, GenKey {
 
 	@Attribute(persistent = false)
 	private Source parentObject;
-	
+
 	private Date lastCheck;
 
 	public Source() {}

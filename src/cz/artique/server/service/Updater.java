@@ -11,12 +11,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slim3.datastore.Datastore;
 
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
+
 import cz.artique.server.meta.source.UserSourceMeta;
+import cz.artique.server.utils.ServerUtils;
+import cz.artique.shared.model.label.Label;
+import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.source.UserSource;
 
 public class Updater extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -34,15 +40,18 @@ public class Updater extends HttpServlet {
 		UserSourceMeta meta = UserSourceMeta.get();
 		List<UserSource> list = Datastore.query(meta).asList();
 		for (UserSource us : list) {
-			/*if (us.getName().equals("novinky") || us.getName().equals("idnes")) {
-				us.setHierarchy("/noviny");
-			} else {
-				us.setHierarchy("/");
-			}*/
-			if(us.getName()==null || us.getName().isEmpty()) {
-				us.setName("manual");
-				Datastore.put(us);
+			Key labelKey;
+			{
+				String labelName =
+					KeyFactory.keyToString(us.getSource());
+				final Label l = new Label(us.getUser(), labelName);
+				l.setLabelType(LabelType.USER_SOURCE);
+				labelKey = ServerUtils.genKey(l);
+				l.setKey(labelKey);
+				Datastore.put(l);
 			}
+			us.setLabel(labelKey);
+			Datastore.put(us);
 		}
 		PrintWriter out = resp.getWriter();
 		out.println("OK");

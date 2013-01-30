@@ -11,12 +11,11 @@ public class ListingUpdate<E> implements Serializable {
 	private List<E> tail;
 	private Date fetched;
 	private boolean endReached;
-	
-	public ListingUpdate() {
-	}
 
-	public ListingUpdate(List<E> head, List<E> tail,
-			Date fetched, boolean endReached) {
+	public ListingUpdate() {}
+
+	public ListingUpdate(List<E> head, List<E> tail, Date fetched,
+			boolean endReached) {
 		this.setHead(head);
 		this.setTail(tail);
 		this.setFetched(fetched);

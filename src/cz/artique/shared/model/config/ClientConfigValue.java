@@ -1,42 +1,23 @@
 package cz.artique.shared.model.config;
 
-public class ClientConfigValue<E> {
-	private E value;
+import java.io.Serializable;
+
+public class ClientConfigValue implements Serializable {
+	private static final long serialVersionUID = 1L;
+	private Value value;
 	private ClientConfigKey key;
-	private E originalValue;
+	private Value originalValue;
 
-	public ClientConfigValue(ClientConfigKey key, E value) {
+	public ClientConfigValue() {}
+
+	public ClientConfigValue(ClientConfigKey key, Value value) {
 		this.setKey(key);
-		this.value = value;
+		this.setValue(value);
+		this.setOriginalValue(value);
 	}
 
-	public E getValue() {
-		return value;
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T> T get() {
-		if (value != null) {
-			return (T) value;
-		} else {
-			return getDefaultValue();
-		}
-	}
-
-	public <T> T getDefaultValue() {
+	public Value getDefaultValue() {
 		return getKey().getDefaultValue();
-	}
-
-	public void setValue(E value) {
-		this.value = value;
-	}
-
-	public E getOriginalValue() {
-		return originalValue;
-	}
-
-	public void setOriginalValue(E originalValue) {
-		this.originalValue = originalValue;
 	}
 
 	public ClientConfigKey getKey() {
@@ -45,5 +26,25 @@ public class ClientConfigValue<E> {
 
 	public void setKey(ClientConfigKey key) {
 		this.key = key;
+	}
+
+	public Value get() {
+		return value == null ? getDefaultValue() : getValue();
+	}
+
+	public Value getValue() {
+		return value;
+	}
+
+	public void setValue(Value value) {
+		this.value = value;
+	}
+
+	public Value getOriginalValue() {
+		return originalValue;
+	}
+
+	public void setOriginalValue(Value originalValue) {
+		this.originalValue = originalValue;
 	}
 }

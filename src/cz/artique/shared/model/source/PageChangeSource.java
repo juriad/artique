@@ -20,9 +20,9 @@ public class PageChangeSource extends HTMLSource
 
 	private static final long serialVersionUID = 1L;
 	private Key region;
-	
+
 	private Text content;
-	
+
 	private Date lastChange;
 
 	@Attribute(persistent = false)

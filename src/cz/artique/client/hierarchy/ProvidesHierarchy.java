@@ -1,6 +1,5 @@
-package cz.artique.client.artiqueSources;
+package cz.artique.client.hierarchy;
 
-import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.shared.utils.HasHierarchy;
 import cz.artique.shared.utils.HasName;
 

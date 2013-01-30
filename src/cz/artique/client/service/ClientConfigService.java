@@ -9,8 +9,7 @@ import cz.artique.shared.model.config.ClientConfigValue;
 
 @RemoteServiceRelativePath("service.s3gwt")
 public interface ClientConfigService extends RemoteService {
-	List<ClientConfigValue<?>> getClientConfigs();
+	List<ClientConfigValue> getClientConfigs();
 
-	List<ClientConfigValue<?>> setClientConfigs(
-			List<ClientConfigValue<?>> configs);
+	List<ClientConfigValue> setClientConfigs(List<ClientConfigValue> configs);
 }

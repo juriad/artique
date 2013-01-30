@@ -68,8 +68,10 @@ public class AbstractListDataProvider
 				fetch(0);
 			}
 		};
-		periodicTimer.scheduleRepeating(ArtiqueConfigManager.MANAGER.getConfig(
-			ClientConfigKey.LIST_FETCH_INTERVAL).<Integer> get());
+		periodicTimer.scheduleRepeating(ArtiqueConfigManager.MANAGER
+			.getConfig(ClientConfigKey.LIST_FETCH_INTERVAL)
+			.get()
+			.getI());
 		onStart();
 	}
 
@@ -86,8 +88,10 @@ public class AbstractListDataProvider
 		GWT.log("fetching: " + count);
 		if (count < 0) {
 			count =
-				ArtiqueConfigManager.MANAGER.getConfig(
-					ClientConfigKey.LIST_FETCH_STEP).<Integer> get();
+				ArtiqueConfigManager.MANAGER
+					.getConfig(ClientConfigKey.LIST_FETCH_STEP)
+					.get()
+					.getI();
 		}
 		// check simultanous requests
 		if (lastFetchProbeDate != null) {

@@ -1,40 +1,35 @@
 package cz.artique.shared.model.config;
 
+import java.io.Serializable;
+
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
 import cz.artique.shared.utils.GenKey;
 import cz.artique.shared.utils.SharedUtils;
 
-public enum ClientConfigKey implements GenKey {
-	SERVICE_TIMEOUT("service.timeout", ConfigType.INT, 2000),
-	LIST_INIT_SIZE("list.init_size", ConfigType.INT, 30),
-	LIST_FETCH_STEP("list.fetch_step", ConfigType.INT, 20),
-	LIST_FETCH_INTERVAL("list.fetch_interval", ConfigType.INT, 5000),
-	HISTORY_MAX_ITEMS("history.max_items", ConfigType.INT, 30);
+public enum ClientConfigKey implements GenKey, Serializable {
+	SERVICE_TIMEOUT("service.timeout", new Value(2000)),
+	LIST_INIT_SIZE("list.init_size", new Value(30)),
+	LIST_FETCH_STEP("list.fetch_step", new Value(20)),
+	LIST_FETCH_INTERVAL("list.fetch_interval", new Value(5000)),
+	HISTORY_MAX_ITEMS("history.max_items", new Value(100));
 
-	private final ConfigType type;
 	private final String key;
-	private final Object defaultValue;
+	private final Value defaultValue;
 	private transient User user;
 
-	private ClientConfigKey(String key, ConfigType type, Object defaultValue) {
+	private ClientConfigKey(String key, Value defaultValue) {
 		this.key = key;
-		this.type = type;
 		this.defaultValue = defaultValue;
-	}
-
-	public ConfigType getType() {
-		return type;
 	}
 
 	public String getKey() {
 		return key;
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T> T getDefaultValue() {
-		return (T) defaultValue;
+	public Value getDefaultValue() {
+		return defaultValue;
 	}
 
 	public Key getKeyParent() {
@@ -51,5 +46,9 @@ public enum ClientConfigKey implements GenKey {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public ConfigType getType() {
+		return defaultValue.getType();
 	}
 }
