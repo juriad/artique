@@ -19,7 +19,7 @@
 }
 
 .labels-bar:hover .labels-bar-add-button {
-	display: inherit;
+	display: inline-block;
 }
 
 .label,.labels-bar-add-button,.panel-with-more-button,.labels-bar-suggest-box
@@ -45,5 +45,6 @@
 .labels-bar {
 	float: left;
 	width: 15em;
+	min-height: 1ex;
 	overflow: hidden;
 }
