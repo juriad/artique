@@ -14,34 +14,56 @@ import com.google.gwt.user.client.ui.impl.HyperlinkImpl;
 
 import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.artiqueHistory.ArtiqueHistory;
-import cz.artique.client.artiqueHistory.HistoryUtils;
+import cz.artique.client.artiqueHistory.CachingHistoryUtils;
 import cz.artique.client.hierarchy.Hierarchy;
+import cz.artique.client.hierarchy.HierarchyTreeWidget;
+import cz.artique.client.hierarchy.HierarchyTreeWidgetFactory;
 import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.FilterType;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.source.UserSource;
 
-public class UserSourceWidget extends Composite {
+public class UserSourceWidget extends Composite
+		implements HierarchyTreeWidget<UserSource> {
+
+	public static class UserSourceWidgetFactory
+			implements HierarchyTreeWidgetFactory<UserSource> {
+
+		public static final HierarchyTreeWidgetFactory<UserSource> FACTORY =
+			new UserSourceWidgetFactory();
+
+		public HierarchyTreeWidget<UserSource> createWidget(
+				Hierarchy<UserSource> hierarchy) {
+			return new UserSourceWidget(hierarchy);
+		}
+	}
 
 	private final Hierarchy<UserSource> hierarchy;
+
+	private final Anchor anchor;
+
+	private Filter filter;
+
+	private String serialized;
 
 	public UserSourceWidget(Hierarchy<UserSource> hierarchy) {
 		this.hierarchy = hierarchy;
 
-		final ListFilter listFilter =
-			ArtiqueHistory.HISTORY.getBaseListFilter();
-		listFilter.setFilterObject(constructFilter());
-		final String serialized = HistoryUtils.serializeListFilter(listFilter);
-		Anchor source = new Anchor(hierarchy.getName(), "#" + serialized);
-		initWidget(source);
-		source.addClickHandler(new ClickHandler() {
+		anchor = new Anchor(hierarchy.getName());
+		initWidget(anchor);
+		filter = constructFilter();
+		refresh();
+
+		anchor.addClickHandler(new ClickHandler() {
 			final HyperlinkImpl impl = GWT.create(HyperlinkImpl.class);
 
 			public void onClick(ClickEvent event) {
 				if (impl.handleAsClick(Event.as(event.getNativeEvent()))) {
-
-					ArtiqueHistory.HISTORY
-						.addListFilter(listFilter, serialized);
+					ListFilter baseListFilter =
+						ArtiqueHistory.HISTORY.getBaseListFilter();
+					baseListFilter.setFilterObject(filter);
+					ArtiqueHistory.HISTORY.addListFilter(baseListFilter,
+						serialized);
 
 					event.preventDefault();
 				}
@@ -71,6 +93,11 @@ public class UserSourceWidget extends Composite {
 			labels.add(us.getLabel());
 		}
 		return labels;
+	}
+
+	public void refresh() {
+		serialized = CachingHistoryUtils.UTILS.serializeListFilter(filter);
+		anchor.setHref("#" + serialized);
 	}
 
 }

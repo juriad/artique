@@ -11,10 +11,15 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.artiqueHierarchy.ArtiqueSourcesTree;
+import cz.artique.client.artiqueHistory.ArtiqueHistory;
+import cz.artique.client.artiqueHistory.ArtiqueHistoryHandler;
+import cz.artique.client.artiqueHistory.HistoryEvent;
 import cz.artique.client.artiqueHistory.HistoryHandler;
 import cz.artique.client.artiqueListing.ArtiqueList;
+import cz.artique.client.artiqueListing.ArtiqueListProvider;
 import cz.artique.client.artiqueListing.UserItemRow;
 import cz.artique.client.manager.Managers;
+import cz.artique.shared.model.label.ListFilter;
 
 public class Artique extends Composite {
 
@@ -52,7 +57,23 @@ public class Artique extends Composite {
 	}
 
 	private void initHistory() {
-		History.addValueChangeHandler(new HistoryHandler());
+		// change list provider when history changes
+		ArtiqueHistory.HISTORY.addHistoryHandler(new HistoryHandler() {
+			public void onHistoryChanged(HistoryEvent e) {
+				ListFilter listFilter =
+					ArtiqueHistory.HISTORY.getLastListFilter();
+				if (listFilter != null) {
+					new ArtiqueListProvider(listFilter, list);
+				} else {
+					// TODO log error
+				}
+			}
+		});
+
+		// observe GWT history
+		History.addValueChangeHandler(new ArtiqueHistoryHandler());
+
+		// fire initial history when managers are ready
 		ArtiqueWorld.WORLD.waitForManager(new AsyncCallback<Void>() {
 
 			public void onSuccess(Void result) {

@@ -1,6 +1,6 @@
 package cz.artique.server.meta.source;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-02-12 09:42:56")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-02-20 15:33:17")
 /** */
 public final class XMLSourceMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.source.XMLSource> {
 

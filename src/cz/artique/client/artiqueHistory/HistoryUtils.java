@@ -17,53 +17,77 @@ import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.label.ListFilter;
 
 public class HistoryUtils {
-	public HistoryUtils() {}
+	public static final HistoryUtils UTILS = new HistoryUtils();
 
-	public static String serializeListFilter(ListFilter listFilter) {
+	protected HistoryUtils() {}
+
+	public String serializeListFilter(String serializedBaseListFilter,
+			String serializedFilter) {
+		StringBuilder sb = new StringBuilder();
+		if (serializedBaseListFilter != null) {
+			sb.append(serializedBaseListFilter);
+		}
+
+		if (sb.length() > 0) {
+			sb.append("&");
+		}
+		sb.append("filter=");
+		sb.append(serializedFilter);
+		return sb.toString();
+
+	}
+
+	public String serializeBaseListFilter(ListFilter listFilter) {
 		if (listFilter == null) {
 			return "";
 		}
+
 		StringBuilder sb = new StringBuilder();
-		if (listFilter.getRead() != null) {
-			if (sb.length() > 0) {
-				sb.append("&");
+		if (listFilter != null) {
+			if (listFilter.getRead() != null) {
+				if (sb.length() > 0) {
+					sb.append("&");
+				}
+				sb.append("read=");
+				sb.append(listFilter.getRead() ? "true" : "false");
 			}
-			sb.append("read=");
-			sb.append(listFilter.getRead() ? "true" : "false");
+
+			if (listFilter.getStartFrom() != null) {
+				if (sb.length() > 0) {
+					sb.append("&");
+				}
+				sb.append("startFrom=");
+				sb.append(listFilter.getStartFrom().getTime());
+			}
+			if (listFilter.getEndTo() != null) {
+				if (sb.length() > 0) {
+					sb.append("&");
+				}
+				sb.append("endTo=");
+				sb.append(listFilter.getEndTo().getTime());
+			}
+			if (listFilter.getOrder() != null) {
+				if (sb.length() > 0) {
+					sb.append("&");
+				}
+				sb.append("order=");
+				sb.append(listFilter.getOrder().name());
+			}
 		}
 
-		if (listFilter.getStartFrom() != null) {
-			if (sb.length() > 0) {
-				sb.append("&");
-			}
-			sb.append("startFrom=");
-			sb.append(listFilter.getStartFrom().getTime());
-		}
-		if (listFilter.getEndTo() != null) {
-			if (sb.length() > 0) {
-				sb.append("&");
-			}
-			sb.append("endTo=");
-			sb.append(listFilter.getEndTo().getTime());
-		}
-		if (listFilter.getOrder() != null) {
-			if (sb.length() > 0) {
-				sb.append("&");
-			}
-			sb.append("order=");
-			sb.append(listFilter.getOrder().name());
-		}
-		if (listFilter.getFilterObject() != null) {
-			if (sb.length() > 0) {
-				sb.append("&");
-			}
-			sb.append("filter=");
-			sb.append(serializeFilter(listFilter.getFilterObject()));
-		}
 		return sb.toString();
 	}
 
-	public static ListFilter deserializeListFilter(String token) {
+	public String serializeListFilter(ListFilter listFilter) {
+		if (listFilter == null) {
+			return "";
+		}
+		String serializedFilter = serializeFilter(listFilter.getFilterObject());
+		String serializedBaseListFilter = serializeBaseListFilter(listFilter);
+		return serializeListFilter(serializedBaseListFilter, serializedFilter);
+	}
+
+	public ListFilter deserializeListFilter(String token) {
 		token = token.trim();
 		ListFilter lf = new ListFilter();
 		lf.setUser(ArtiqueWorld.WORLD.getUser());
@@ -124,7 +148,7 @@ public class HistoryUtils {
 		return lf;
 	}
 
-	private static String consumeParameter(String s) {
+	protected String consumeParameter(String s) {
 		int index = s.indexOf("&");
 		if (index >= 0) {
 			s = s.substring(index + 1);
@@ -134,7 +158,7 @@ public class HistoryUtils {
 		return s;
 	}
 
-	private static String serializeLabel(Label l) {
+	protected String serializeLabel(Label l) {
 		switch (l.getLabelType()) {
 		case SYSTEM:
 			return "lsys$" + l.getName();
@@ -154,7 +178,7 @@ public class HistoryUtils {
 	 * @param labelNames
 	 * @return
 	 */
-	private static List<Label> deserializeLabels(final List<String> labelNames) {
+	protected List<Label> deserializeLabels(final List<String> labelNames) {
 		if (!ArtiqueLabelsManager.MANAGER.isReady()) {
 			return null;
 		}
@@ -191,7 +215,7 @@ public class HistoryUtils {
 	 * @param filter
 	 * @return
 	 */
-	private static String serializeFilter(Filter filter) {
+	public String serializeFilter(Filter filter) {
 		if (!ArtiqueLabelsManager.MANAGER.isReady()) {
 			return null;
 		}
@@ -241,7 +265,7 @@ public class HistoryUtils {
 	 * @param string
 	 * @return
 	 */
-	private static Filter deserializeFilter(String string) {
+	protected Filter deserializeFilter(String string) {
 		if (!ArtiqueLabelsManager.MANAGER.isReady()) {
 			return null;
 		}

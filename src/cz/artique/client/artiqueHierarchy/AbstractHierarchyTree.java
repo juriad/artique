@@ -4,13 +4,14 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Tree;
+import com.google.gwt.user.client.ui.TreeItem;
 
 import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyChangeEvent;
 import cz.artique.client.hierarchy.HierarchyChangeHandler;
 import cz.artique.client.hierarchy.HierarchyChangeType;
-import cz.artique.client.hierarchy.HierarchyTreeItem;
-import cz.artique.client.hierarchy.HierarchyTreeItemFactory;
+import cz.artique.client.hierarchy.HierarchyTreeWidget;
+import cz.artique.client.hierarchy.HierarchyTreeWidgetFactory;
 import cz.artique.client.hierarchy.ProvidesHierarchy;
 import cz.artique.client.manager.Manager;
 import cz.artique.shared.utils.HasHierarchy;
@@ -20,10 +21,11 @@ public class AbstractHierarchyTree<E extends HasHierarchy & HasName, F extends P
 		extends Composite {
 	private final ScrollPanel scrollPanel;
 	private final Tree tree;
-	private final HierarchyTreeItemFactory<E> factory;
+	private final HierarchyTreeWidgetFactory<E> factory;
+	private TreeItem rootItem;
 
 	public AbstractHierarchyTree(final F manager,
-			final HierarchyTreeItemFactory<E> factory) {
+			final HierarchyTreeWidgetFactory<E> factory) {
 		this.factory = factory;
 		scrollPanel = new ScrollPanel();
 		initWidget(scrollPanel);
@@ -35,7 +37,7 @@ public class AbstractHierarchyTree<E extends HasHierarchy & HasName, F extends P
 
 			public void onSuccess(Void result) {
 				Hierarchy<E> root = manager.getHierarchyRoot();
-				final HierarchyTreeItem<E> rootItem = getItemsTree(root);
+				rootItem = createTree(root);
 				tree.addItem(rootItem);
 
 				root.addHierarchyChangeHandler(new HierarchyChangeHandler<E>() {
@@ -43,26 +45,27 @@ public class AbstractHierarchyTree<E extends HasHierarchy & HasName, F extends P
 					public void onHierarchyChange(HierarchyChangeEvent<E> event) {
 						if (HierarchyChangeType.ADDED.equals(event
 							.getChangeType())) {
-							HierarchyTreeItem<E> inTree =
+							TreeItem inTree =
 								findInTree(event.getChanged().getParent(),
 									rootItem);
 							if (inTree != null) {
-								inTree.addItem(factory.createTreeItem(event
-									.getChanged()));
+								HierarchyTreeWidget<E> w =
+									factory.createWidget(event.getChanged());
+								inTree.addItem(new TreeItem(w.asWidget()));
 							}
 						} else if (HierarchyChangeType.REMOVED.equals(event
 							.getChangeType())) {
-							HierarchyTreeItem<E> inTree =
+							TreeItem inTree =
 								findInTree(event.getChanged(), rootItem);
 							if (inTree != null) {
 								inTree.remove();
 							}
 						} else if (HierarchyChangeType.CHANGED.equals(event
 							.getChangeType())) {
-							HierarchyTreeItem<E> inTree =
+							TreeItem inTree =
 								findInTree(event.getChanged().getParent(),
 									rootItem);
-							inTree.refresh();
+							getHierarchyWidget(inTree).refresh();
 						}
 					}
 				});
@@ -74,16 +77,18 @@ public class AbstractHierarchyTree<E extends HasHierarchy & HasName, F extends P
 		});
 	}
 
-	protected HierarchyTreeItem<E> findInTree(Hierarchy<E> hierarchy,
-			HierarchyTreeItem<E> rootItem) {
-		if (rootItem.getHierarchy().equals(hierarchy)) {
+	@SuppressWarnings("unchecked")
+	protected HierarchyTreeWidget<E> getHierarchyWidget(TreeItem item) {
+		return ((HierarchyTreeWidget<E>) item);
+	}
+
+	private TreeItem findInTree(Hierarchy<E> hierarchy, TreeItem rootItem) {
+		if (getHierarchyWidget(rootItem).getHierarchy().equals(hierarchy)) {
 			return rootItem;
 		}
 		for (int i = 0; i < rootItem.getChildCount(); i++) {
-			@SuppressWarnings("unchecked")
-			HierarchyTreeItem<E> item =
-				(HierarchyTreeItem<E>) rootItem.getChild(i);
-			HierarchyTreeItem<E> findInTree = findInTree(hierarchy, item);
+			TreeItem item = rootItem.getChild(i);
+			TreeItem findInTree = findInTree(hierarchy, item);
 			if (findInTree != null) {
 				return findInTree;
 			}
@@ -91,12 +96,17 @@ public class AbstractHierarchyTree<E extends HasHierarchy & HasName, F extends P
 		return null;
 	}
 
-	private HierarchyTreeItem<E> getItemsTree(Hierarchy<E> root) {
-		HierarchyTreeItem<E> rootItem = factory.createTreeItem(root);
+	private TreeItem createTree(Hierarchy<E> root) {
+		HierarchyTreeWidget<E> w = factory.createWidget(root);
+		TreeItem rootItem = new TreeItem(w.asWidget());
 		for (Hierarchy<E> child : root.getChildren()) {
-			HierarchyTreeItem<E> childItem = getItemsTree(child);
+			TreeItem childItem = createTree(child);
 			rootItem.addItem(childItem);
 		}
+		return rootItem;
+	}
+
+	protected TreeItem getRootItem() {
 		return rootItem;
 	}
 }
