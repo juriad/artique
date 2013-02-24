@@ -15,7 +15,6 @@ public class ArtiqueSourcesTree
 
 	public ArtiqueSourcesTree() {
 		super(ArtiqueSourcesManager.MANAGER, UserSourceWidgetFactory.FACTORY);
-		observeHistoryChange();
 	}
 
 	private void observeHistoryChange() {
@@ -37,6 +36,11 @@ public class ArtiqueSourcesTree
 		for (int i = 0; i < rootItem.getChildCount(); i++) {
 			refreshAll(rootItem.getChild(i));
 		}
+	}
+
+	@Override
+	protected void initialized() {
+		observeHistoryChange();
 	}
 
 }

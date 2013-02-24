@@ -19,7 +19,7 @@ import cz.artique.shared.model.label.LabelType;
 public class ArtiqueQueryFilter extends AbstractQueryFilter {
 
 	public ArtiqueQueryFilter() {
-		super(ArtiqueLabelWidget.factory, ArtiqueLabelSuggestionFactory.factory);
+		super(ArtiqueLabelWidget.REMOVABLE_FACTORY, ArtiqueLabelSuggestionFactory.factory);
 	}
 
 	private static final Label AND;

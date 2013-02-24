@@ -11,6 +11,10 @@ public interface Hierarchy<E extends HasHierarchy & HasName>
 
 	List<Hierarchy<E>> getChildren();
 
+	List<Hierarchy<E>> getSiblings();
+	
+	int getIndex();
+
 	Hierarchy<E> getParent();
 
 	void fireChanged();

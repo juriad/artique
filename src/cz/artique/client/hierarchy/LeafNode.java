@@ -94,4 +94,17 @@ public class LeafNode<E extends HasName & HasHierarchy> implements Hierarchy<E> 
 		list.add(item);
 	}
 
+	public List<Hierarchy<E>> getSiblings() {
+		if (getParent() != null) {
+			return getParent().getChildren();
+		}
+		ArrayList<Hierarchy<E>> arrayList = new ArrayList<Hierarchy<E>>();
+		arrayList.add(this);
+		return arrayList;
+	}
+
+	public int getIndex() {
+		return getSiblings().indexOf(this);
+	}
+
 }

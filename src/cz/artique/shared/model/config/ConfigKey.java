@@ -8,7 +8,8 @@ import cz.artique.shared.utils.SharedUtils;
 public enum ConfigKey implements GenKey {
 	MAX_ERROR_SEQUENCE("check.normal.max-error-sequence", ConfigType.INT, 5),
 	DIFF_EDIT_COST("crawler.diff.edit-cost", ConfigType.INT, 10),
-	DIFF_TIMEOUT("crawler.diff.timeout", ConfigType.DOUBLE, 0.1);
+	DIFF_TIMEOUT("crawler.diff.timeout", ConfigType.DOUBLE, 0.1),
+	MANUAL_SOURCE_NAME("source.manual.name", ConfigType.STRING, "manual");
 
 	private final ConfigType type;
 	private final String key;

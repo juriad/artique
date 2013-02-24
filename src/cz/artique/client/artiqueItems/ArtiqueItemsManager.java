@@ -11,6 +11,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import cz.artique.client.artiqueHistory.ArtiqueHistory;
+import cz.artique.client.artiqueHistory.HistoryEvent;
+import cz.artique.client.artiqueHistory.HistoryHandler;
 import cz.artique.client.artiqueLabels.ArtiqueLabelsManager;
 import cz.artique.client.items.ItemsManager;
 import cz.artique.client.manager.AbstractManager;
@@ -47,6 +50,13 @@ public class ArtiqueItemsManager
 
 		// TODO timer settings: 3 seconds
 		timer.scheduleRepeating(Math.max(getTimeout(), 3000));
+		
+		ArtiqueHistory.HISTORY.addHistoryHandler(new HistoryHandler() {
+			
+			public void onHistoryChanged(HistoryEvent e) {
+				refresh(null);
+			}
+		}, 1);
 	}
 
 	private ChangeSet getChangeSet(UserItem userItem) {

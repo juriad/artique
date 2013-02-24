@@ -18,7 +18,7 @@ public class ArtiqueLabelsBar extends LabelsBar<Label, Key> {
 	private UserItem item;
 
 	public ArtiqueLabelsBar(UserItem item, int maxSize) {
-		super(ArtiqueLabelsManager.MANAGER, ArtiqueLabelWidget.factory,
+		super(ArtiqueLabelsManager.MANAGER, ArtiqueLabelWidget.REMOVABLE_FACTORY,
 			new ArtiqueLabelSuggestionFactory(), maxSize);
 		this.item = item;
 

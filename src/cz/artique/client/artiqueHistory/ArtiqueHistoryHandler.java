@@ -15,13 +15,14 @@ public class ArtiqueHistoryHandler implements ValueChangeHandler<String> {
 		if (lastHistoryItem == null) {
 			toShow = HistoryUtils.UTILS.deserializeListFilter(event.getValue());
 		} else {
-			toShow =
-				ArtiqueHistory.HISTORY
-					.getByToken(event.getValue())
-					.getListFilter();
-			if (toShow == null) {
+			HistoryItem byToken =
+				ArtiqueHistory.HISTORY.getByToken(event.getValue());
+
+			if (byToken == null) {
 				toShow =
 					HistoryUtils.UTILS.deserializeListFilter(event.getValue());
+			} else {
+				toShow = byToken.getListFilter();
 			}
 		}
 		ArtiqueHistory.HISTORY.addListFilter(toShow, event.getValue(), false);

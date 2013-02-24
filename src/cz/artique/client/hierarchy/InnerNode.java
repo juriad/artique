@@ -7,9 +7,9 @@ import java.util.Map;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
-import cz.artique.client.utils.SortedList;
 import cz.artique.shared.utils.HasHierarchy;
 import cz.artique.shared.utils.HasName;
+import cz.artique.shared.utils.SortedList;
 
 public class InnerNode<E extends HasName & HasHierarchy>
 		implements Hierarchy<E> {
@@ -44,7 +44,6 @@ public class InnerNode<E extends HasName & HasHierarchy>
 		new HashMap<Hierarchy<E>, HandlerRegistration>();
 
 	public void addChild(Hierarchy<E> child) {
-
 		children.add(child);
 		HandlerRegistration registration =
 			child.addHierarchyChangeHandler(new HierarchyChangeHandler<E>() {
@@ -134,6 +133,19 @@ public class InnerNode<E extends HasName & HasHierarchy>
 		for (Hierarchy<E> child : getChildren()) {
 			child.getAll(list);
 		}
+	}
+
+	public List<Hierarchy<E>> getSiblings() {
+		if (getParent() != null) {
+			return getParent().getChildren();
+		}
+		ArrayList<Hierarchy<E>> arrayList = new ArrayList<Hierarchy<E>>();
+		arrayList.add(this);
+		return arrayList;
+	}
+
+	public int getIndex() {
+		return getSiblings().indexOf(this);
 	}
 
 }

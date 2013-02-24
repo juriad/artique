@@ -15,6 +15,7 @@ import cz.artique.server.meta.source.ManualSourceMeta;
 import cz.artique.server.meta.source.SourceMeta;
 import cz.artique.server.meta.source.UserSourceMeta;
 import cz.artique.server.utils.ServerUtils;
+import cz.artique.shared.model.config.ConfigKey;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.source.ManualSource;
@@ -37,18 +38,9 @@ public class UserSourceService {
 		UserSource theUserSource =
 			Datastore.getOrNull(tx, UserSourceMeta.get(), key);
 		if (theUserSource == null) {
-			Key labelKey;
-			{
-				String labelName =
-					KeyFactory.keyToString(userSource.getSource());
-				final Label l = new Label(userSource.getUser(), labelName);
-				l.setLabelType(LabelType.USER_SOURCE);
-				labelKey = ServerUtils.genKey(l);
-				l.setKey(labelKey);
-				Datastore.put(l);
-			}
+			Label l = createLabelForUserSource(userSource);
 			userSource.setKey(key);
-			userSource.setLabel(labelKey);
+			userSource.setLabel(l.getKey());
 			userSource.setDefaultLabels(new ArrayList<Key>());
 			updateUsage(userSource, tx);
 			Datastore.put(tx, userSource);
@@ -56,6 +48,17 @@ public class UserSourceService {
 		}
 		tx.commit();
 		return theUserSource;
+	}
+
+	private Label createLabelForUserSource(UserSource userSource) {
+		Key labelKey;
+		String labelName = KeyFactory.keyToString(userSource.getSource());
+		final Label l = new Label(userSource.getUser(), labelName);
+		l.setLabelType(LabelType.USER_SOURCE);
+		labelKey = ServerUtils.genKey(l);
+		l.setKey(labelKey);
+		Datastore.put(l);
+		return l;
 	}
 
 	public void updateUserSource(UserSource userSource) {
@@ -123,6 +126,7 @@ public class UserSourceService {
 
 	public UserSource ensureManualSource() {
 		User user = UserServiceFactory.getUserService().getCurrentUser();
+		System.out.println(user.getUserId());
 		ManualSource ms = new ManualSource(user);
 		ManualSource manualSource =
 			Datastore.getOrNull(ManualSourceMeta.get(), ServerUtils.genKey(ms));
@@ -137,6 +141,12 @@ public class UserSourceService {
 		UserSource userSource =
 			Datastore.getOrNull(UserSourceMeta.get(), ServerUtils.genKey(us));
 		if (userSource == null) {
+			String name =
+				ConfigService.CONFIG_SERVICE.getConfig(
+					ConfigKey.MANUAL_SOURCE_NAME).<String> get();
+			Label l = createLabelForUserSource(us);
+			us.setLabel(l.getKey());
+			us.setName(name);
 			us.setKey(ServerUtils.genKey(us));
 			us.setWatching(true);
 			Datastore.put(us);

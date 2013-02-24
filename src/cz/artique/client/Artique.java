@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
+import cz.artique.client.artiqueHierarchy.ArtiqueHistoryTree;
 import cz.artique.client.artiqueHierarchy.ArtiqueSourcesTree;
 import cz.artique.client.artiqueHistory.ArtiqueHistory;
 import cz.artique.client.artiqueHistory.ArtiqueHistoryHandler;
@@ -39,6 +40,9 @@ public class Artique extends Composite {
 	@UiField
 	ArtiqueSourcesTree sources;
 
+	@UiField
+	ArtiqueHistoryTree history;
+
 	private static Resources resources;
 
 	static {
@@ -61,7 +65,7 @@ public class Artique extends Composite {
 		ArtiqueHistory.HISTORY.addHistoryHandler(new HistoryHandler() {
 			public void onHistoryChanged(HistoryEvent e) {
 				ListFilter listFilter =
-					ArtiqueHistory.HISTORY.getLastListFilter();
+					ArtiqueHistory.HISTORY.getLastHistoryItem().getListFilter();
 				if (listFilter != null) {
 					new ArtiqueListProvider(listFilter, list);
 				} else {

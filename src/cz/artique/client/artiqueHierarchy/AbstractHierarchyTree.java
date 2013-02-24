@@ -49,9 +49,11 @@ public class AbstractHierarchyTree<E extends HasHierarchy & HasName, F extends P
 								findInTree(event.getChanged().getParent(),
 									rootItem);
 							if (inTree != null) {
+								int index = event.getChanged().getIndex();
 								HierarchyTreeWidget<E> w =
 									factory.createWidget(event.getChanged());
-								inTree.addItem(new TreeItem(w.asWidget()));
+								inTree.insertItem(index,
+									new TreeItem(w.asWidget()));
 							}
 						} else if (HierarchyChangeType.REMOVED.equals(event
 							.getChangeType())) {
@@ -65,10 +67,14 @@ public class AbstractHierarchyTree<E extends HasHierarchy & HasName, F extends P
 							TreeItem inTree =
 								findInTree(event.getChanged().getParent(),
 									rootItem);
+							int index = event.getChanged().getIndex();
+							TreeItem parent = inTree.getParentItem();
+							parent.insertItem(index, inTree);
 							getHierarchyWidget(inTree).refresh();
 						}
 					}
 				});
+				initialized();
 			}
 
 			public void onFailure(Throwable caught) {
@@ -77,9 +83,11 @@ public class AbstractHierarchyTree<E extends HasHierarchy & HasName, F extends P
 		});
 	}
 
+	protected void initialized() {}
+
 	@SuppressWarnings("unchecked")
 	protected HierarchyTreeWidget<E> getHierarchyWidget(TreeItem item) {
-		return ((HierarchyTreeWidget<E>) item);
+		return ((HierarchyTreeWidget<E>) item.getWidget());
 	}
 
 	private TreeItem findInTree(Hierarchy<E> hierarchy, TreeItem rootItem) {

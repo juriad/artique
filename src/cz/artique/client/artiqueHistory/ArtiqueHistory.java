@@ -1,6 +1,5 @@
 package cz.artique.client.artiqueHistory;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,12 +11,17 @@ import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.config.ArtiqueConfigManager;
 import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyUtils;
+import cz.artique.client.hierarchy.InnerNode;
+import cz.artique.client.hierarchy.LeafNode;
 import cz.artique.client.hierarchy.ProvidesHierarchy;
 import cz.artique.client.manager.Manager;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.config.ClientConfigKey;
 import cz.artique.shared.model.label.FilterOrder;
 import cz.artique.shared.model.label.ListFilter;
+import cz.artique.shared.utils.HasHierarchy;
+import cz.artique.shared.utils.HasName;
+import cz.artique.shared.utils.SortedList;
 
 public class ArtiqueHistory
 		implements ProvidesHierarchy<HistoryItem>, HasHistoryHandlers, Manager {
@@ -39,6 +43,30 @@ public class ArtiqueHistory
 		}, Managers.CONFIG_MANAGER);
 	}
 
+	class TimedLeafNode<E extends HasName & HasHierarchy> extends LeafNode<E> {
+		private long time;
+
+		public TimedLeafNode(E item, Hierarchy<E> parent) {
+			super(item, parent);
+			setTime(System.currentTimeMillis());
+		}
+
+		public long getTime() {
+			return time;
+		}
+
+		public void setTime(long time) {
+			this.time = time;
+			fireChanged();
+		}
+
+		@Override
+		public int compareTo(Hierarchy<E> o) {
+			return -((Long) time).compareTo(((TimedLeafNode<E>) o).getTime());
+		}
+
+	}
+
 	// const, same as HISTORY_MAX_ITEMS
 	private int maxItems = 100;
 
@@ -47,10 +75,8 @@ public class ArtiqueHistory
 
 	public void addListFilter(ListFilter listFilter, String token,
 			boolean issueEvent) {
-		boolean added = false;
 		if (historyItems.isEmpty()) {
 			add(listFilter, token, issueEvent);
-			added = true;
 		} else {
 			String last = historyItems.getLast().getToken();
 			if (!last.equals(token)) {
@@ -60,7 +86,6 @@ public class ArtiqueHistory
 					HierarchyUtils.remove(hierarchyRoot, existing);
 				}
 				add(listFilter, token, issueEvent);
-				added = true;
 			}
 		}
 
@@ -71,7 +96,7 @@ public class ArtiqueHistory
 			}
 		}
 
-		if (!issueEvent && added) {
+		if (!issueEvent) {
 			fireHistoryChanged();
 		}
 	}
@@ -81,8 +106,9 @@ public class ArtiqueHistory
 	 */
 	private void fireHistoryChanged() {
 		HistoryEvent event = new HistoryEvent();
-		for (HistoryHandler hh : handlers) {
-			hh.onHistoryChanged(event);
+		for (int i = 0; i < handlers.size(); i++) {
+			PriorityHandler<HistoryHandler> hh = handlers.get(i);
+			hh.getHandler().onHistoryChanged(event);
 		}
 	}
 
@@ -91,7 +117,12 @@ public class ArtiqueHistory
 	}
 
 	private void add(ListFilter listFilter, String token, boolean issueEvent) {
-		historyItems.add(new HistoryItem(listFilter, token));
+		HistoryItem historyItem = new HistoryItem(listFilter, token);
+		historyItems.add(historyItem);
+
+		getHierarchyRoot().addChild(
+			new TimedLeafNode<HistoryItem>(historyItem, getHierarchyRoot()));
+
 		System.out.println("new item");
 		History.newItem(token, issueEvent);
 	}
@@ -109,10 +140,10 @@ public class ArtiqueHistory
 		this.maxItems = maxItems;
 	}
 
-	private final Hierarchy<HistoryItem> hierarchyRoot = HierarchyUtils
+	private final InnerNode<HistoryItem> hierarchyRoot = HierarchyUtils
 		.createRootNode();
 
-	public Hierarchy<HistoryItem> getHierarchyRoot() {
+	public InnerNode<HistoryItem> getHierarchyRoot() {
 		return hierarchyRoot;
 	}
 
@@ -135,23 +166,49 @@ public class ArtiqueHistory
 	}
 
 	public HistoryItem getByToken(String token) {
-		for (int i = historyItems.size() - 1; i >= 0; i--) {
-			HistoryItem historyItem = historyItems.get(i);
-			if (historyItem.getToken().equals(token)) {
-				return historyItem;
+		for (HistoryItem hi : historyItems) {
+			if (hi.getToken().equals(token)) {
+				return hi;
 			}
 		}
 		return null;
 	}
 
-	List<HistoryHandler> handlers = new ArrayList<HistoryHandler>();
+	private static class PriorityHandler<E>
+			implements Comparable<PriorityHandler<E>> {
+		private final E handler;
+		private final int priority;
 
-	public HandlerRegistration addHistoryHandler(final HistoryHandler handler) {
-		handlers.add(handler);
+		public PriorityHandler(E handler, int priority) {
+			this.handler = handler;
+			this.priority = priority;
+		}
+
+		public E getHandler() {
+			return handler;
+		}
+
+		public int compareTo(PriorityHandler<E> o) {
+			return -Integer.valueOf(priority).compareTo(o.priority);
+		}
+	}
+
+	List<PriorityHandler<HistoryHandler>> handlers =
+		new SortedList<PriorityHandler<HistoryHandler>>();
+
+	public HandlerRegistration addHistoryHandler(HistoryHandler handler) {
+		return addHistoryHandler(handler, 0);
+	}
+
+	public HandlerRegistration addHistoryHandler(HistoryHandler handler,
+			int priority) {
+		final PriorityHandler<HistoryHandler> priorityHandler =
+			new PriorityHandler<HistoryHandler>(handler, priority);
+		handlers.add(priorityHandler);
 		return new HandlerRegistration() {
 
 			public void removeHandler() {
-				handlers.remove(handler);
+				handlers.remove(priorityHandler);
 			}
 		};
 	}

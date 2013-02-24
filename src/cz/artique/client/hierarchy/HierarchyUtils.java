@@ -19,8 +19,8 @@ public class HierarchyUtils {
 		return root;
 	}
 
-	public static <E extends HasName & HasHierarchy> Hierarchy<E> createRootNode() {
-		return new InnerNode<E>("", null);
+	public static <E extends HasName & HasHierarchy> InnerNode<E> createRootNode() {
+		return new InnerNode<E>(splitSign, null);
 	}
 
 	public static <E extends HasName & HasHierarchy> boolean add(
@@ -107,11 +107,11 @@ public class HierarchyUtils {
 			return false;
 		}
 
-		while (inTree.getParent() != null
-			&& inTree.getParent().getChildren().size() <= 1) {
+		do {
 			((InnerNode<E>) inTree.getParent()).removeChild(inTree);
 			inTree = inTree.getParent();
-		}
+		} while (inTree.getParent() != null
+			&& inTree.getParent().getChildren().size() <= 1);
 		return true;
 	}
 

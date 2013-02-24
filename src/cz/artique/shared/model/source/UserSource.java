@@ -65,6 +65,7 @@ public class UserSource
 		setUser(user);
 		setSource(source.getKey());
 		setName(name);
+		setHierarchy("/");
 	}
 
 	@Override

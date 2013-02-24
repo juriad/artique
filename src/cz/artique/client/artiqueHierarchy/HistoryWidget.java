@@ -13,10 +13,23 @@ import cz.artique.client.artiqueHistory.ArtiqueHistory;
 import cz.artique.client.artiqueHistory.HistoryItem;
 import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyTreeWidget;
+import cz.artique.client.hierarchy.HierarchyTreeWidgetFactory;
 import cz.artique.client.hierarchy.LeafNode;
 
 public class HistoryWidget extends Composite
 		implements HierarchyTreeWidget<HistoryItem> {
+
+	public static class HistoryWidgetFactory
+			implements HierarchyTreeWidgetFactory<HistoryItem> {
+
+		public static final HierarchyTreeWidgetFactory<HistoryItem> FACTORY =
+			new HistoryWidgetFactory();
+
+		public HierarchyTreeWidget<HistoryItem> createWidget(
+				Hierarchy<HistoryItem> hierarchy) {
+			return new HistoryWidget(hierarchy);
+		}
+	}
 
 	private Hierarchy<HistoryItem> hierarchy;
 
@@ -27,7 +40,8 @@ public class HistoryWidget extends Composite
 			LeafNode<HistoryItem> leaf = (LeafNode<HistoryItem>) hierarchy;
 			final HistoryItem item = leaf.getItem();
 
-			Anchor anchor = new Anchor(hierarchy.getName());
+			Anchor anchor =
+				new Anchor(hierarchy.getName(), "#" + item.getToken());
 
 			initWidget(anchor);
 
