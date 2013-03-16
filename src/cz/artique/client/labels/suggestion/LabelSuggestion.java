@@ -19,8 +19,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
-import cz.artique.client.artiqueLabels.GeneralClickEvent;
-import cz.artique.client.artiqueLabels.GeneralClickHandler;
+import cz.artique.client.artiqueLabels.ActionEvent;
+import cz.artique.client.artiqueLabels.ActionHandler;
 import cz.artique.client.labels.LabelsManager;
 import cz.artique.shared.utils.HasDisplayName;
 import cz.artique.shared.utils.HasKey;
@@ -115,9 +115,9 @@ public class LabelSuggestion<E extends HasDisplayName & Comparable<E> & HasKey<?
 			}
 		});
 
-		popup.addGeneralClickHandler(new GeneralClickHandler() {
+		popup.addActionHandler(new ActionHandler() {
 
-			public void onClick(GeneralClickEvent e) {
+			public void onClick(ActionEvent e) {
 				if (complete) {
 					return;
 				}
@@ -149,7 +149,7 @@ public class LabelSuggestion<E extends HasDisplayName & Comparable<E> & HasKey<?
 			}
 		} else {
 			E firstAvaliable = popup.getFirstAvaliable();
-			if (popup.isVisible() && firstAvaliable != null) {
+			if (firstAvaliable != null) {
 				SelectionEvent.fire(this, new SuggestionResult<E>(
 					firstAvaliable));
 			} else {
@@ -168,11 +168,11 @@ public class LabelSuggestion<E extends HasDisplayName & Comparable<E> & HasKey<?
 		String text = textBox.getText();
 		if (text.length() > 0) {
 			List<E> prefixes = manager.fullTextSearch(text, allLabels);
+			popup.setData(prefixes);
 
 			if (prefixes.isEmpty()) {
 				popup.setVisible(false);
 			} else {
-				popup.setData(prefixes);
 				popup.setVisible(true);
 			}
 		} else {
@@ -182,12 +182,13 @@ public class LabelSuggestion<E extends HasDisplayName & Comparable<E> & HasKey<?
 
 	protected void tab(KeyDownEvent event) {
 		if (popup.isVisible()) {
-			if (popup.getSelectedValue() != null) {
-				textBox.setText(popup.getSelectedValue().getDisplayName());
-				textChanged();
-				event.preventDefault();
-				event.stopPropagation();
+			if (popup.getSelectedValue() == null) {
+				popup.setFocused(0);
 			}
+			textBox.setText(popup.getSelectedValue().getDisplayName());
+			textChanged();
+			event.preventDefault();
+			event.stopPropagation();
 		}
 	}
 

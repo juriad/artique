@@ -10,7 +10,7 @@ import com.google.appengine.api.datastore.Key;
 import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.Filter;
-import cz.artique.shared.model.label.FilterOrder;
+import cz.artique.shared.model.label.ListFilterOrder;
 import cz.artique.shared.model.label.FilterType;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
@@ -124,11 +124,11 @@ public class HistoryUtils {
 				lf.setEndTo(end);
 				token = consumeParameter(token);
 			} else if (token.startsWith("order=")) {
-				FilterOrder order = FilterOrder.getDefault();
+				ListFilterOrder order = ListFilterOrder.getDefault();
 				String[] split = token.split("[=&]", 3);
 				if (split.length >= 2) {
 					try {
-						order = FilterOrder.valueOf(split[1]);
+						order = ListFilterOrder.valueOf(split[1]);
 					} catch (Exception e) {}
 				}
 				lf.setOrder(order);

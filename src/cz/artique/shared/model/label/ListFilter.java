@@ -37,7 +37,7 @@ public class ListFilter
 
 	private String name;
 
-	private FilterOrder order;
+	private ListFilterOrder order;
 
 	private Date startFrom;
 
@@ -139,11 +139,11 @@ public class ListFilter
 		this.name = name;
 	}
 
-	public FilterOrder getOrder() {
+	public ListFilterOrder getOrder() {
 		return order;
 	}
 
-	public void setOrder(FilterOrder order) {
+	public void setOrder(ListFilterOrder order) {
 		this.order = order;
 	}
 

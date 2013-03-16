@@ -6,7 +6,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
-import com.google.gwt.user.client.ui.CaptionPanel;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -17,7 +16,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 public class OptionalValue<E extends HasValue<F> & IsWidget & HasEnabled, F>
 		extends Composite implements HasEnabled, HasValue<F> {
 
-	private final CaptionPanel captionPanel;
 	private final FlowPanel flowPanel;
 	private E e;
 	private final CheckBox checkBox;
@@ -25,11 +23,8 @@ public class OptionalValue<E extends HasValue<F> & IsWidget & HasEnabled, F>
 	private boolean enabled = true;
 
 	public OptionalValue() {
-		captionPanel = new CaptionPanel();
-		captionPanel.setCaptionText("");
-		initWidget(captionPanel);
 		flowPanel = new FlowPanel();
-		captionPanel.add(flowPanel);
+		initWidget(flowPanel);
 		checkBox = new CheckBox();
 		flowPanel.add(checkBox);
 
@@ -50,10 +45,6 @@ public class OptionalValue<E extends HasValue<F> & IsWidget & HasEnabled, F>
 
 	public void setLabel(String label) {
 		checkBox.setText(label);
-	}
-
-	public void setCaption(String caption) {
-		captionPanel.setCaptionText(caption);
 	}
 
 	public boolean isEnabled() {

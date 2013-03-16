@@ -1,0 +1,59 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:a="urn:import:cz.artique.client.artiqueListFilters"
+	xmlns:db="urn:import:com.google.gwt.user.datepicker.client">
+
+	<ui:with field='res' type='cz.artique.client.i18n.ArtiqueConstants' />
+
+	<g:Grid ui:field="grid">
+		<g:row>
+			<g:customCell>
+				<a:ArtiqueQueryFilter ui:field="filter" />
+			</g:customCell>
+		</g:row>
+		<g:row>
+			<g:cell>
+				<ui:text from='{res.startFrom}' />
+			</g:cell>
+			<g:customCell>
+				<a:OptionalValue ui:field="startFrom">
+					<a:value>
+						<db:DateBox />
+					</a:value>
+				</a:OptionalValue>
+			</g:customCell>
+		</g:row>
+		<g:row>
+			<g:cell>
+				<ui:text from='{res.endTo}' />
+			</g:cell>
+			<g:customCell>
+				<a:OptionalValue ui:field="endTo">
+					<a:value>
+						<db:DateBox />
+					</a:value>
+				</a:OptionalValue>
+			</g:customCell>
+		</g:row>
+		<g:row>
+			<g:cell>
+				<ui:text from='{res.readState}' />
+			</g:cell>
+			<g:customCell>
+				<a:OptionalValue ui:field="readPicker">
+					<a:value>
+						<a:ReadStatePicker />
+					</a:value>
+				</a:OptionalValue>
+			</g:customCell>
+		</g:row>
+		<g:row>
+			<g:cell>
+				<ui:text from='{res.sortOrder}' />
+			</g:cell>
+			<g:customCell>
+				<a:ListFilterOrderPicker ui:field="orderPicker" />
+			</g:customCell>
+		</g:row>
+	</g:Grid>
+</ui:UiBinder>

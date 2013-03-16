@@ -67,11 +67,6 @@ public class ArtiqueQueryFilter extends AbstractQueryFilter {
 	}
 
 	@Override
-	protected com.google.gwt.user.client.ui.Label newAddButton() {
-		return new com.google.gwt.user.client.ui.Label(addLabelSign);
-	}
-
-	@Override
 	protected Label getAddedLabel(SuggestionResult<Label> selectedItem) {
 		if (selectedItem.isHasValue()) {
 			if (selectedItem.isExisting()) {

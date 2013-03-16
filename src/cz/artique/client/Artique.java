@@ -17,10 +17,11 @@ import com.google.gwt.user.client.ui.Widget;
 import cz.artique.client.artiqueHierarchy.ArtiqueHistoryTree;
 import cz.artique.client.artiqueHierarchy.ArtiqueListFiltersTree;
 import cz.artique.client.artiqueHierarchy.ArtiqueSourcesTree;
+import cz.artique.client.artiqueHistory.ArtiqueHistory;
 import cz.artique.client.artiqueHistory.ArtiqueHistoryHandler;
 import cz.artique.client.artiqueHistory.HistoryEvent;
 import cz.artique.client.artiqueHistory.HistoryHandler;
-import cz.artique.client.artiqueListFilters.FilterEditor;
+import cz.artique.client.artiqueListFilters.ListFilterEditor;
 import cz.artique.client.artiqueListing.ArtiqueList;
 import cz.artique.client.artiqueListing.ArtiqueListProvider;
 import cz.artique.client.artiqueListing.UserItemRow;
@@ -57,7 +58,11 @@ public class Artique extends Composite {
 	@UiHandler("saveFilter")
 	protected void saveFilter(ClickEvent event) {
 		DialogBox dia = new DialogBox(true, true);
-		FilterEditor fe = new FilterEditor();
+		ListFilterEditor fe = new ListFilterEditor();
+		fe
+			.setValue(ArtiqueHistory.HISTORY
+				.getLastHistoryItem()
+				.getListFilter());
 		dia.add(fe);
 		dia.show();
 	}

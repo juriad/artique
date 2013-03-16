@@ -15,13 +15,13 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ValueLabel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import cz.artique.client.artiqueLabels.GeneralClickEvent;
-import cz.artique.client.artiqueLabels.GeneralClickHandler;
-import cz.artique.client.artiqueLabels.HasGeneralClickHandlers;
+import cz.artique.client.artiqueLabels.ActionEvent;
+import cz.artique.client.artiqueLabels.ActionHandler;
+import cz.artique.client.artiqueLabels.HasActionHandlers;
 import cz.artique.shared.utils.HasDisplayName;
 
 public class SuggestionPopup<E extends HasDisplayName> extends Composite
-		implements HasGeneralClickHandlers {
+		implements HasActionHandlers {
 
 	private boolean mouseOver = false;
 
@@ -71,7 +71,7 @@ public class SuggestionPopup<E extends HasDisplayName> extends Composite
 					ValueLabel<E> source = (ValueLabel<E>) event.getSource();
 					E value = source.getValue();
 					setSelectedValue(value);
-					fireEvent(new GeneralClickEvent());
+					fireEvent(new ActionEvent());
 				}
 
 			}, ClickEvent.getType());
@@ -96,9 +96,9 @@ public class SuggestionPopup<E extends HasDisplayName> extends Composite
 		return selectedValue;
 	}
 
-	public HandlerRegistration addGeneralClickHandler(
-			GeneralClickHandler handler) {
-		return addHandler(handler, GeneralClickEvent.getType());
+	public HandlerRegistration addActionHandler(
+			ActionHandler handler) {
+		return addHandler(handler, ActionEvent.getType());
 	}
 
 	public void setData(List<E> labels) {

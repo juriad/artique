@@ -21,7 +21,6 @@ import cz.artique.shared.utils.HasKey;
 
 public abstract class LabelsBar<E extends HasDisplayName & HasKey<K> & Comparable<E>, K>
 		extends Composite implements HasEnabled {
-	private static final String addLabelSign = "+";
 
 	class LabelRemoveHandler implements RemoveHandler {
 		public void onRemove(RemoveEvent e) {
@@ -58,7 +57,7 @@ public abstract class LabelsBar<E extends HasDisplayName & HasKey<K> & Comparabl
 
 		setStylePrimaryName("labels-bar");
 
-		addLabel = new InlineLabel(addLabelSign);
+		addLabel = AddLabelButtonFactory.FACTORY.createAddLabel();
 		addLabel.setStylePrimaryName("labels-bar-add-button");
 		panel.setExtraWidget(addLabel);
 		addLabel.addClickHandler(new ClickHandler() {
@@ -71,7 +70,8 @@ public abstract class LabelsBar<E extends HasDisplayName & HasKey<K> & Comparabl
 				allLabels = manager.getLabels(LabelType.USER_DEFINED);
 				allLabels.removeAll(getSelectedLabels());
 
-				box = new LabelSuggestion<E>(manager, allLabels, factory2, true);
+				box =
+					new LabelSuggestion<E>(manager, allLabels, factory2, true);
 				box.setStylePrimaryName("labels-bar-suggest-box");
 				panel.setExtraWidget(box);
 				panel.setShowMoreButton(false);

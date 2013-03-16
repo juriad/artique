@@ -16,7 +16,7 @@ import cz.artique.client.hierarchy.ProvidesHierarchy;
 import cz.artique.client.manager.Manager;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.config.ClientConfigKey;
-import cz.artique.shared.model.label.FilterOrder;
+import cz.artique.shared.model.label.ListFilterOrder;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.utils.HasHierarchy;
 import cz.artique.shared.utils.HasName;
@@ -154,7 +154,7 @@ public class ArtiqueHistory
 			lf.setOrder(last.getOrder());
 			lf.setRead(last.getRead());
 		} else {
-			lf.setOrder(FilterOrder.getDefault());
+			lf.setOrder(ListFilterOrder.getDefault());
 			lf.setRead(null);
 		}
 		return lf;

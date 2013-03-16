@@ -11,35 +11,35 @@ import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.ListFilter;
 
 public class ClickableArtiqueLabel extends ArtiqueLabelWidget {
-	
+
 	public static final ClickableArtiqueLabelFactory FACTORY =
-			new ClickableArtiqueLabelFactory(false);
+		new ClickableArtiqueLabelFactory(false);
 
-		public static final ClickableArtiqueLabelFactory REMOVABLE_FACTORY =
-			new ClickableArtiqueLabelFactory(true);
+	public static final ClickableArtiqueLabelFactory REMOVABLE_FACTORY =
+		new ClickableArtiqueLabelFactory(true);
 
-		public static class ClickableArtiqueLabelFactory
-				implements LabelWidgetFactory<Label> {
+	public static class ClickableArtiqueLabelFactory
+			implements LabelWidgetFactory<Label> {
 
-			private final boolean removable;
+		private final boolean removable;
 
-			public ClickableArtiqueLabelFactory(boolean removable) {
-				this.removable = removable;
-			}
-
-			public ArtiqueLabelWidget createWidget(Label l) {
-				return new ArtiqueLabelWidget(l, removable);
-			}
+		public ClickableArtiqueLabelFactory(boolean removable) {
+			this.removable = removable;
 		}
+
+		public ArtiqueLabelWidget createWidget(Label l) {
+			return new ClickableArtiqueLabel(l, removable);
+		}
+	}
 
 	public ClickableArtiqueLabel(final Label label, boolean removable) {
 		super(label, removable);
-		
+
 		Filter filter = CachingHistoryUtils.UTILS.getFilterForLabel(label);
 		String serialized =
 			CachingHistoryUtils.UTILS.serializeListFilter(filter);
 		nameLabel.setHref("#" + serialized);
-		
+
 		nameLabel.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (isEnabled()) {

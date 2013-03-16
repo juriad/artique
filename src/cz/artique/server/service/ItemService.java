@@ -25,7 +25,7 @@ import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Filter;
-import cz.artique.shared.model.label.FilterOrder;
+import cz.artique.shared.model.label.ListFilterOrder;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.source.UserSource;
 
@@ -78,7 +78,7 @@ public class ItemService {
 		List<UserItem> head;
 		List<UserItem> tail;
 
-		if (FilterOrder.ASCENDING.equals(listFilter.getOrder())) {
+		if (ListFilterOrder.ASCENDING.equals(listFilter.getOrder())) {
 			// head
 			head = new ArrayList<UserItem>();
 

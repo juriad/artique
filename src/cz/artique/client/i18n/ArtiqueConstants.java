@@ -1,8 +1,8 @@
 package cz.artique.client.i18n;
 
-import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.i18n.client.ConstantsWithLookup;
 
-public interface ArtiqueConstants extends Constants {
+public interface ArtiqueConstants extends ConstantsWithLookup {
 	@DefaultStringValue("No title provided")
 	String missingTitle();
 
@@ -26,4 +26,28 @@ public interface ArtiqueConstants extends Constants {
 
 	@DefaultStringValue("History")
 	String history();
+
+	@DefaultStringValue("Date from")
+	String startFrom();
+
+	@DefaultStringValue("Date to")
+	String endTo();
+
+	@DefaultStringValue("Read state")
+	String readState();
+
+	@DefaultStringValue("Order")
+	String sortOrder();
+
+	@DefaultStringValue("Ascending")
+	String listFilterOrder_ASCENDING();
+
+	@DefaultStringValue("Descending")
+	String listFilterOrder_DESCENDING();
+
+	@DefaultStringValue("Read")
+	String readState_READ();
+
+	@DefaultStringValue("Unread")
+	String readState_UNREAD();
 }

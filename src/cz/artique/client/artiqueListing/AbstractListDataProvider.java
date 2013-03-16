@@ -14,7 +14,7 @@ import cz.artique.shared.items.ListingUpdate;
 import cz.artique.shared.items.ListingUpdateRequest;
 import cz.artique.shared.model.config.ClientConfigKey;
 import cz.artique.shared.model.item.UserItem;
-import cz.artique.shared.model.label.FilterOrder;
+import cz.artique.shared.model.label.ListFilterOrder;
 import cz.artique.shared.model.label.ListFilter;
 
 public class AbstractListDataProvider
@@ -37,7 +37,7 @@ public class AbstractListDataProvider
 
 	private final InfiniteList<UserItem> list;
 
-	private final FilterOrder order;
+	private final ListFilterOrder order;
 
 	protected boolean canceled = false;
 
@@ -52,7 +52,7 @@ public class AbstractListDataProvider
 		if (listFilter != null) {
 			order = listFilter.getOrder();
 		} else {
-			order = FilterOrder.getDefault();
+			order = ListFilterOrder.getDefault();
 		}
 
 		this.list = list;
@@ -116,7 +116,7 @@ public class AbstractListDataProvider
 			wantCount = null;
 		}
 
-		if (endReached && FilterOrder.DESCENDING.equals(order)) {
+		if (endReached && ListFilterOrder.DESCENDING.equals(order)) {
 			wantCount = 0;
 		}
 
@@ -159,7 +159,7 @@ public class AbstractListDataProvider
 			return;
 		}
 
-		if (FilterOrder.ASCENDING.equals(order)) {
+		if (ListFilterOrder.ASCENDING.equals(order)) {
 			// no head
 			if (!result.getTail().isEmpty()) {
 				if (first == null) {

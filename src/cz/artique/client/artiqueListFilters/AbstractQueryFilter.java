@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 
+import cz.artique.client.labels.AddLabelButtonFactory;
 import cz.artique.client.labels.LabelWidget;
 import cz.artique.client.labels.LabelWidgetFactory;
 import cz.artique.client.labels.LabelsManager;
@@ -70,7 +71,7 @@ public abstract class AbstractQueryFilter extends Composite
 							labelWidget.addRemoveHandler(removeHandler);
 							panel.insert(labelWidget, widgetIndex);
 							com.google.gwt.user.client.ui.Label addButton =
-								newAddButton();
+								AddLabelButtonFactory.FACTORY.createAddLabel();
 							addButton.addClickHandler(addHandler);
 							panel.insert(addButton, widgetIndex);
 						} else {
@@ -83,8 +84,6 @@ public abstract class AbstractQueryFilter extends Composite
 	}
 
 	private FlowPanel panel;
-
-	protected static final String addLabelSign = "+";
 
 	private List<Label> labels;
 
@@ -123,7 +122,8 @@ public abstract class AbstractQueryFilter extends Composite
 	private void fillPanel(List<Label> labels2) {
 		panel.clear();
 		{
-			com.google.gwt.user.client.ui.Label addButton = newAddButton();
+			com.google.gwt.user.client.ui.Label addButton =
+				AddLabelButtonFactory.FACTORY.createAddLabel();
 			addButton.addClickHandler(addHandler);
 			panel.add(addButton);
 		}
@@ -131,15 +131,14 @@ public abstract class AbstractQueryFilter extends Composite
 			LabelWidget<Label> labelWidget = factory.createWidget(l);
 			labelWidget.addRemoveHandler(removeHandler);
 			panel.add(labelWidget);
-			com.google.gwt.user.client.ui.Label addButton = newAddButton();
+			com.google.gwt.user.client.ui.Label addButton =
+				AddLabelButtonFactory.FACTORY.createAddLabel();
 			addButton.addClickHandler(addHandler);
 			panel.add(addButton);
 		}
 	}
 
 	protected abstract List<Label> getLabelsFromFilter(Filter filter);
-
-	protected abstract com.google.gwt.user.client.ui.Label newAddButton();
 
 	protected abstract Label getAddedLabel(SuggestionResult<Label> selectedItem);
 
