@@ -9,13 +9,14 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
 import cz.artique.shared.utils.GenKey;
+import cz.artique.shared.utils.HasDisplayName;
 import cz.artique.shared.utils.HasKey;
 import cz.artique.shared.utils.HasName;
 import cz.artique.shared.utils.SharedUtils;
 
 @Model(schemaVersion = 1)
 public class Label
-		implements Serializable, GenKey, HasName, HasKey<Key>,
+		implements Serializable, GenKey, HasName, HasDisplayName, HasKey<Key>,
 		Comparable<Label> {
 
 	private static final long serialVersionUID = 1L;
@@ -33,9 +34,15 @@ public class Label
 
 	/**
 	 * Name of this label
-	 * Name must not contail spaces or $.
+	 * Name must not contain spaces or $.
 	 */
 	private String name;
+
+	/**
+	 * Name to display
+	 */
+	@Attribute(persistent = false)
+	private transient String displayName;
 
 	private LabelType labelType;
 
@@ -195,8 +202,16 @@ public class Label
 	public int compareTo(Label o) {
 		int res = ((Integer) this.getPriority()).compareTo(o.getPriority());
 		if (res == 0) {
-			res = this.getName().compareToIgnoreCase(o.getName());
+			res = this.getDisplayName().compareToIgnoreCase(o.getDisplayName());
 		}
 		return res;
+	}
+
+	public String getDisplayName() {
+		return displayName == null ? getName() : displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 }

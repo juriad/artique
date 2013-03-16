@@ -5,9 +5,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import cz.artique.client.artiqueItems.ModifiedEvent;
 import cz.artique.client.artiqueItems.ModifiedHandler;
-import cz.artique.client.artiqueLabels.ArtiqueLabelsManager;
-import cz.artique.client.config.ArtiqueConfigManager;
 import cz.artique.client.listing.InfiniteList;
+import cz.artique.client.manager.Managers;
 import cz.artique.shared.items.ListingUpdate;
 import cz.artique.shared.model.config.ClientConfigKey;
 import cz.artique.shared.model.item.UserItem;
@@ -21,7 +20,8 @@ public class ArtiqueListProvider extends AbstractListDataProvider
 	public ArtiqueListProvider(ListFilter listFilter,
 			InfiniteList<UserItem> list) {
 		super(listFilter, list);
-		addGeneralClickHandler = manager.addGeneralClickHandler(this);
+		addGeneralClickHandler =
+			Managers.ITEMS_MANAGER.addGeneralClickHandler(this);
 	}
 
 	@Override
@@ -35,14 +35,15 @@ public class ArtiqueListProvider extends AbstractListDataProvider
 
 	@Override
 	protected boolean isReady() {
-		return ArtiqueLabelsManager.MANAGER.isReady();
+		return Managers.LABELS_MANAGER.isReady()
+			&& Managers.CONFIG_MANAGER.isReady();
 	}
 
 	protected void onStart() {
-		ArtiqueLabelsManager.MANAGER.ready(new AsyncCallback<Void>() {
+		Managers.waitForManagers(new AsyncCallback<Void>() {
 
 			public void onSuccess(Void result) {
-				fetch(ArtiqueConfigManager.MANAGER
+				fetch(Managers.CONFIG_MANAGER
 					.getConfig(ClientConfigKey.LIST_INIT_SIZE)
 					.get()
 					.getI());
@@ -52,7 +53,7 @@ public class ArtiqueListProvider extends AbstractListDataProvider
 				// TODO Auto-generated method stub
 
 			}
-		});
+		}, Managers.LABELS_MANAGER, Managers.CONFIG_MANAGER);
 	}
 
 	@Override

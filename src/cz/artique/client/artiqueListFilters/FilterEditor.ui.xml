@@ -1,0 +1,18 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:a="urn:import:cz.artique.client.artiqueListFilters"
+	xmlns:db="urn:import:com.google.gwt.user.datepicker.client">
+	<g:VerticalPanel>
+		<a:ArtiqueQueryFilter ui:field="filter" />
+		<g:FlowPanel>
+			<a:OptionalValue ui:field="startFrom">
+				<a:value>
+					<db:DateBox />
+				</a:value>
+			</a:OptionalValue>
+			<a:OptionalDateBox ui:field="endTo" />
+		</g:FlowPanel>
+		<a:TriStatePicker ui:field="readPicker" group="read" />
+		<a:FilterOrderPicker ui:field="orderPicker" group="order" />
+	</g:VerticalPanel>
+</ui:UiBinder>

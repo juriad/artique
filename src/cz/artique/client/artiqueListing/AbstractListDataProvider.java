@@ -7,10 +7,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.client.artiqueItems.ArtiqueItemsManager;
-import cz.artique.client.config.ArtiqueConfigManager;
 import cz.artique.client.listing.InfiniteList;
 import cz.artique.client.listing.InfiniteListDataProvider;
+import cz.artique.client.manager.Managers;
 import cz.artique.shared.items.ListingUpdate;
 import cz.artique.shared.items.ListingUpdateRequest;
 import cz.artique.shared.model.config.ClientConfigKey;
@@ -38,8 +37,6 @@ public class AbstractListDataProvider
 
 	private final InfiniteList<UserItem> list;
 
-	protected final ArtiqueItemsManager manager;
-
 	private final FilterOrder order;
 
 	protected boolean canceled = false;
@@ -52,7 +49,6 @@ public class AbstractListDataProvider
 		this.listFilter = listFilter;
 		this.lastFetch = new Date(0);
 		this.lastFetchProbeDate = new Date(0);
-		this.manager = ArtiqueItemsManager.MANAGER;
 		if (listFilter != null) {
 			order = listFilter.getOrder();
 		} else {
@@ -68,7 +64,7 @@ public class AbstractListDataProvider
 				fetch(0);
 			}
 		};
-		periodicTimer.scheduleRepeating(ArtiqueConfigManager.MANAGER
+		periodicTimer.scheduleRepeating(Managers.CONFIG_MANAGER
 			.getConfig(ClientConfigKey.LIST_FETCH_INTERVAL)
 			.get()
 			.getI());
@@ -88,15 +84,16 @@ public class AbstractListDataProvider
 		GWT.log("fetching: " + count);
 		if (count < 0) {
 			count =
-				ArtiqueConfigManager.MANAGER
+				Managers.CONFIG_MANAGER
 					.getConfig(ClientConfigKey.LIST_FETCH_STEP)
 					.get()
 					.getI();
 		}
 		// check simultanous requests
 		if (lastFetchProbeDate != null) {
-			if (lastFetchProbeDate.getTime() + manager.getTimeout() > new Date()
-				.getTime() || !isReady()) {
+			if (lastFetchProbeDate.getTime()
+				+ Managers.ITEMS_MANAGER.getTimeout() > new Date().getTime()
+				|| !isReady()) {
 				// last request may still be running or not ready yet
 				if (count > lastFetchProbeCount) {
 					count -= lastFetchProbeCount;
@@ -137,23 +134,24 @@ public class AbstractListDataProvider
 		lastFetchProbeCount = count;
 		ListingUpdateRequest request =
 			new ListingUpdateRequest(listFilter, first, last, lastFetch, count);
-		manager.getItems(request, new AsyncCallback<ListingUpdate<UserItem>>() {
+		Managers.ITEMS_MANAGER.getItems(request,
+			new AsyncCallback<ListingUpdate<UserItem>>() {
 
-			public void onSuccess(ListingUpdate<UserItem> result) {
-				lastFetch = result.getFetched();
-				if (!endReached) {
-					endReached = result.isEndReached();
+				public void onSuccess(ListingUpdate<UserItem> result) {
+					lastFetch = result.getFetched();
+					if (!endReached) {
+						endReached = result.isEndReached();
+					}
+					lastFetchProbeDate = null;
+
+					applyFetchedData(result);
 				}
-				lastFetchProbeDate = null;
 
-				applyFetchedData(result);
-			}
-
-			public void onFailure(Throwable caught) {
-				lastFetchProbeDate = null;
-				// do nothing, will try later
-			}
-		});
+				public void onFailure(Throwable caught) {
+					lastFetchProbeDate = null;
+					// do nothing, will try later
+				}
+			});
 	}
 
 	protected void applyFetchedData(ListingUpdate<UserItem> result) {

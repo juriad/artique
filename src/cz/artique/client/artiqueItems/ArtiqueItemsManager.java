@@ -14,9 +14,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import cz.artique.client.artiqueHistory.ArtiqueHistory;
 import cz.artique.client.artiqueHistory.HistoryEvent;
 import cz.artique.client.artiqueHistory.HistoryHandler;
-import cz.artique.client.artiqueLabels.ArtiqueLabelsManager;
 import cz.artique.client.items.ItemsManager;
 import cz.artique.client.manager.AbstractManager;
+import cz.artique.client.manager.Managers;
 import cz.artique.client.service.ClientItemService;
 import cz.artique.client.service.ClientItemServiceAsync;
 import cz.artique.shared.items.ChangeSet;
@@ -50,9 +50,9 @@ public class ArtiqueItemsManager
 
 		// TODO timer settings: 3 seconds
 		timer.scheduleRepeating(Math.max(getTimeout(), 3000));
-		
+
 		ArtiqueHistory.HISTORY.addHistoryHandler(new HistoryHandler() {
-			
+
 			public void onHistoryChanged(HistoryEvent e) {
 				refresh(null);
 			}
@@ -201,7 +201,7 @@ public class ArtiqueItemsManager
 
 	public void getItems(final ListingUpdateRequest request,
 			final AsyncCallback<ListingUpdate<UserItem>> ping) {
-		ArtiqueLabelsManager.MANAGER.ready(new AsyncCallback<Void>() {
+		Managers.LABELS_MANAGER.ready(new AsyncCallback<Void>() {
 
 			public void onFailure(Throwable caught) {
 				// TODO Auto-generated method stub

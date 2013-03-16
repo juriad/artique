@@ -6,9 +6,9 @@ import java.util.List;
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.client.artiqueItems.ArtiqueItemsManager;
 import cz.artique.client.labels.LabelWidget;
 import cz.artique.client.labels.LabelsBar;
+import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
@@ -18,7 +18,8 @@ public class ArtiqueLabelsBar extends LabelsBar<Label, Key> {
 	private UserItem item;
 
 	public ArtiqueLabelsBar(UserItem item, int maxSize) {
-		super(ArtiqueLabelsManager.MANAGER, ArtiqueLabelWidget.REMOVABLE_FACTORY,
+		super(Managers.LABELS_MANAGER,
+			ClickableArtiqueLabel.REMOVABLE_FACTORY,
 			new ArtiqueLabelSuggestionFactory(), maxSize);
 		this.item = item;
 
@@ -32,21 +33,21 @@ public class ArtiqueLabelsBar extends LabelsBar<Label, Key> {
 
 	@Override
 	protected void labelAdded(final Label label) {
-		ArtiqueItemsManager.MANAGER.labelAdded(getItem(), label, null);
+		Managers.ITEMS_MANAGER.labelAdded(getItem(), label, null);
 		addLabel(label);
 	}
 
 	@Override
 	protected void labelRemoved(final LabelWidget<Label> labelWidget) {
-		ArtiqueItemsManager.MANAGER.labelRemoved(getItem(),
-			labelWidget.getLabel(), null);
+		Managers.ITEMS_MANAGER.labelRemoved(getItem(), labelWidget.getLabel(),
+			null);
 		removeLabel(labelWidget);
 	}
 
 	@Override
 	protected void newLabelAdded(final String name) {
 
-		Label labelByName = ArtiqueLabelsManager.MANAGER.getLabelByName(name);
+		Label labelByName = Managers.LABELS_MANAGER.getLabelByName(name);
 		if (labelByName != null) {
 			labelAdded(labelByName);
 		} else {

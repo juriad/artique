@@ -8,13 +8,14 @@ import cz.artique.client.artiqueHistory.HistoryEvent;
 import cz.artique.client.artiqueHistory.HistoryHandler;
 import cz.artique.client.artiqueSources.ArtiqueSourcesManager;
 import cz.artique.client.hierarchy.HierarchyTreeWidget;
+import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.source.UserSource;
 
 public class ArtiqueSourcesTree
 		extends AbstractHierarchyTree<UserSource, ArtiqueSourcesManager> {
 
 	public ArtiqueSourcesTree() {
-		super(ArtiqueSourcesManager.MANAGER, UserSourceWidgetFactory.FACTORY);
+		super(Managers.SOURCES_MANAGER, UserSourceWidgetFactory.FACTORY);
 	}
 
 	private void observeHistoryChange() {

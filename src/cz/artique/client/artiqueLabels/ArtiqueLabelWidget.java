@@ -8,16 +8,12 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.InlineLabel;
 
-import cz.artique.client.artiqueHistory.ArtiqueHistory;
-import cz.artique.client.artiqueHistory.CachingHistoryUtils;
 import cz.artique.client.labels.LabelWidget;
 import cz.artique.client.labels.LabelWidgetFactory;
 import cz.artique.client.labels.RemoveEvent;
 import cz.artique.client.labels.RemoveHandler;
 import cz.artique.client.utils.InlineFlowPanel;
-import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.Label;
-import cz.artique.shared.model.label.ListFilter;
 
 public class ArtiqueLabelWidget extends Composite
 		implements LabelWidget<Label>, HasEnabled {
@@ -52,35 +48,20 @@ public class ArtiqueLabelWidget extends Composite
 
 	private final boolean removable;
 
+	protected final Anchor nameLabel;
+
+	private final LabelRenderer renderer = new LabelRenderer(false);
+
 	public ArtiqueLabelWidget(final Label label, boolean removable) {
 		this.label = label;
 		this.removable = removable;
 		panel = new InlineFlowPanel();
 		initWidget(panel);
 		setStylePrimaryName("label");
-		Filter filter = CachingHistoryUtils.UTILS.getFilterForLabel(label);
-		String serialized =
-			CachingHistoryUtils.UTILS.serializeListFilter(filter);
-		Anchor nameLabel = new Anchor(label.getName(), "#" + serialized);
 
+		nameLabel = new Anchor(renderer.render(label));
 		panel.add(nameLabel);
 		nameLabel.setStylePrimaryName("label-name");
-		nameLabel.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				if (isEnabled()) {
-					Filter filter =
-						CachingHistoryUtils.UTILS.getFilterForLabel(label);
-					ListFilter listFilter =
-						ArtiqueHistory.HISTORY.getBaseListFilter();
-					listFilter.setFilterObject(filter);
-					String serialized =
-						CachingHistoryUtils.UTILS.serializeListFilter(filter);
-					ArtiqueHistory.HISTORY
-						.addListFilter(listFilter, serialized);
-				}
-				event.preventDefault();
-			}
-		});
 
 		if (isRemovable()) {
 			removeButton = new InlineLabel(removeSign);

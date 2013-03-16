@@ -1,13 +1,18 @@
-package cz.artique.client.artiqueFilter;
+package cz.artique.client.artiqueListFilters;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RadioButton;
 
-public class TriStatePicker extends Composite implements HasEnabled {
+public class TriStatePicker extends Composite
+		implements HasEnabled, HasValue<Boolean> {
 
 	private final FlowPanel panel;
 	private final RadioButton nullOption;
@@ -24,6 +29,7 @@ public class TriStatePicker extends Composite implements HasEnabled {
 
 		label = new Label();
 		nullOption = new RadioButton(group);
+		nullOption.setText("null");
 		nullOption.setValue(true);
 		panel.add(nullOption);
 		trueOption = new RadioButton(group);
@@ -47,13 +53,7 @@ public class TriStatePicker extends Composite implements HasEnabled {
 	}
 
 	public void setValue(Boolean value) {
-		if (value == null) {
-			nullOption.setValue(true);
-		} else if (value) {
-			trueOption.setValue(true);
-		} else {
-			falseOption.setValue(true);
-		}
+		setValue(value, true);
 	}
 
 	public Boolean getValue() {
@@ -76,6 +76,25 @@ public class TriStatePicker extends Composite implements HasEnabled {
 		nullOption.setEnabled(enabled);
 		trueOption.setEnabled(enabled);
 		falseOption.setEnabled(enabled);
+	}
+
+	public HandlerRegistration addValueChangeHandler(
+			ValueChangeHandler<Boolean> handler) {
+		return addHandler(handler, ValueChangeEvent.getType());
+	}
+
+	public void setValue(Boolean value, boolean fireEvents) {
+		if (value == null) {
+			nullOption.setValue(true);
+		} else if (value) {
+			trueOption.setValue(true);
+		} else {
+			falseOption.setValue(true);
+		}
+
+		if (fireEvents) {
+			ValueChangeEvent.fire(this, getValue());
+		}
 	}
 
 }

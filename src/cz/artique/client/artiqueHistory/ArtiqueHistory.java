@@ -8,7 +8,6 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import cz.artique.client.ArtiqueWorld;
-import cz.artique.client.config.ArtiqueConfigManager;
 import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyUtils;
 import cz.artique.client.hierarchy.InnerNode;
@@ -28,10 +27,10 @@ public class ArtiqueHistory
 	public static final ArtiqueHistory HISTORY = new ArtiqueHistory();
 
 	private ArtiqueHistory() {
-		ArtiqueWorld.WORLD.waitForManager(new AsyncCallback<Void>() {
+		Managers.waitForManagers(new AsyncCallback<Void>() {
 
 			public void onSuccess(Void result) {
-				setMaxItems(ArtiqueConfigManager.MANAGER
+				setMaxItems(Managers.CONFIG_MANAGER
 					.getConfig(ClientConfigKey.HISTORY_MAX_ITEMS)
 					.get()
 					.getI());

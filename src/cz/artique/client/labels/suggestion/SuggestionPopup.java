@@ -18,9 +18,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import cz.artique.client.artiqueLabels.GeneralClickEvent;
 import cz.artique.client.artiqueLabels.GeneralClickHandler;
 import cz.artique.client.artiqueLabels.HasGeneralClickHandlers;
-import cz.artique.shared.utils.HasName;
+import cz.artique.shared.utils.HasDisplayName;
 
-public class SuggestionPopup<E extends HasName> extends Composite
+public class SuggestionPopup<E extends HasDisplayName> extends Composite
 		implements HasGeneralClickHandlers {
 
 	private boolean mouseOver = false;
@@ -119,6 +119,16 @@ public class SuggestionPopup<E extends HasName> extends Composite
 
 		focused = -1;
 		selectedValue = null;
+	}
+
+	public E getFirstAvaliable() {
+		if (valueLabels.size() > 0) {
+			ValueLabel<E> valueLabel = valueLabels.get(0);
+			if (valueLabel.isVisible()) {
+				return valueLabel.getValue();
+			}
+		}
+		return null;
 	}
 
 	public int getMaxItems() {

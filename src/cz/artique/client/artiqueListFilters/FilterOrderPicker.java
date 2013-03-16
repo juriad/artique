@@ -1,4 +1,4 @@
-package cz.artique.client.artiqueFilter;
+package cz.artique.client.artiqueListFilters;
 
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.ui.Composite;

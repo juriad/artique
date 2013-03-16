@@ -5,20 +5,22 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import cz.artique.client.manager.Manager;
+import cz.artique.shared.model.label.LabelType;
+import cz.artique.shared.utils.HasDisplayName;
 import cz.artique.shared.utils.HasKey;
-import cz.artique.shared.utils.HasName;
 
-public interface LabelsManager<E extends HasName & HasKey<K>, K>
+public interface LabelsManager<E extends HasDisplayName & HasKey<K>, K>
 		extends Manager {
-	List<E> getLabels();
-
-	List<E> getUserDefinedLabels();
-
-	E getLabelByName(String name);
+	List<E> getLabels(LabelType filterType);
 
 	E getLabelByKey(K key);
 
 	void createNewLabel(String name, AsyncCallback<E> ping);
 
 	List<E> getSortedList(List<K> keys);
+
+	List<E> fullTextSearch(String text, List<E> allLabels);
+
+	E getLabelByName(String name);
+
 }

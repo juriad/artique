@@ -1,4 +1,7 @@
-package cz.artique.client.artiqueFilter;
+package cz.artique.client.artiqueListFilters;
+
+import static cz.artique.client.artiqueLabels.ArtiqueLabelsManager.AND;
+import static cz.artique.client.artiqueLabels.ArtiqueLabelsManager.OR;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,30 +12,17 @@ import com.google.appengine.api.users.User;
 import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.artiqueLabels.ArtiqueLabelSuggestionFactory;
 import cz.artique.client.artiqueLabels.ArtiqueLabelWidget;
-import cz.artique.client.artiqueLabels.ArtiqueLabelsManager;
 import cz.artique.client.labels.suggestion.SuggestionResult;
+import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.FilterType;
 import cz.artique.shared.model.label.Label;
-import cz.artique.shared.model.label.LabelType;
 
 public class ArtiqueQueryFilter extends AbstractQueryFilter {
 
 	public ArtiqueQueryFilter() {
-		super(ArtiqueLabelWidget.REMOVABLE_FACTORY, ArtiqueLabelSuggestionFactory.factory);
-	}
-
-	private static final Label AND;
-	private static final Label OR;
-
-	static {
-		AND = new Label();
-		AND.setName("AND");
-		AND.setLabelType(LabelType.SYSTEM);
-
-		OR = new Label();
-		OR.setName("OR");
-		OR.setLabelType(LabelType.SYSTEM);
+		super(Managers.LABELS_MANAGER, ArtiqueLabelWidget.REMOVABLE_FACTORY,
+			ArtiqueLabelSuggestionFactory.factory);
 	}
 
 	@Override
@@ -45,7 +35,7 @@ public class ArtiqueQueryFilter extends AbstractQueryFilter {
 				if (sub.getLabels() != null && !sub.getLabels().isEmpty()) {
 					for (Key key : sub.getLabels()) {
 						Label labelByKey =
-							ArtiqueLabelsManager.MANAGER.getLabelByKey(key);
+							Managers.LABELS_MANAGER.getLabelByKey(key);
 						if (labelByKey != null) {
 							if (!subLabels.isEmpty()) {
 								subLabels.add(AND);
@@ -64,8 +54,7 @@ public class ArtiqueQueryFilter extends AbstractQueryFilter {
 		}
 		if (filter.getLabels() != null && !filter.getLabels().isEmpty()) {
 			for (Key key : filter.getLabels()) {
-				Label labelByKey =
-					ArtiqueLabelsManager.MANAGER.getLabelByKey(key);
+				Label labelByKey = Managers.LABELS_MANAGER.getLabelByKey(key);
 				if (labelByKey != null) {
 					if (!labels.isEmpty()) {
 						labels.add(OR);
@@ -82,34 +71,11 @@ public class ArtiqueQueryFilter extends AbstractQueryFilter {
 		return new com.google.gwt.user.client.ui.Label(addLabelSign);
 	}
 
-	private List<Label> labelsToSuggest = null;
-
-	@Override
-	protected List<Label> getLabelsToSuggest(boolean reuse) {
-		if (labelsToSuggest == null || !reuse) {
-			// XXX asi by chtelo filtrovat
-			labelsToSuggest = new ArrayList<Label>();
-			labelsToSuggest.addAll(ArtiqueLabelsManager.MANAGER.getLabels());
-			labelsToSuggest.add(AND);
-			labelsToSuggest.add(OR);
-		}
-		return labelsToSuggest;
-	}
-
 	@Override
 	protected Label getAddedLabel(SuggestionResult<Label> selectedItem) {
 		if (selectedItem.isHasValue()) {
 			if (selectedItem.isExisting()) {
 				return selectedItem.getExistingValue();
-			} else {
-				String value = selectedItem.getNewValue();
-				if (value.equalsIgnoreCase("AND")) {
-					return AND;
-				} else if (value.equalsIgnoreCase("OR")) {
-					return OR;
-				}
-				return ArtiqueLabelsManager.MANAGER.getLabelByName(selectedItem
-					.getNewValue());
 			}
 		}
 		// ignore non existing

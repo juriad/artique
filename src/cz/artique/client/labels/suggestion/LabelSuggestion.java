@@ -1,7 +1,5 @@
 package cz.artique.client.labels.suggestion;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -23,21 +21,26 @@ import com.google.gwt.user.client.ui.TextBox;
 
 import cz.artique.client.artiqueLabels.GeneralClickEvent;
 import cz.artique.client.artiqueLabels.GeneralClickHandler;
+import cz.artique.client.labels.LabelsManager;
+import cz.artique.shared.utils.HasDisplayName;
 import cz.artique.shared.utils.HasKey;
-import cz.artique.shared.utils.HasName;
 
-public class LabelSuggestion<E extends HasName & Comparable<E> & HasKey<?>>
+public class LabelSuggestion<E extends HasDisplayName & Comparable<E> & HasKey<?>>
 		extends Composite implements HasSelectionHandlers<SuggestionResult<E>> {
 
 	private final TextBox textBox;
 	private final SuggestionPopup<E> popup;
-	private List<E> labels;
 
 	private boolean complete = false;
+	private boolean allowNewValue;
+	private LabelsManager<E, ?> manager;
+	private List<E> allLabels;
 
-	public LabelSuggestion(List<E> labels, SuggesionLabelFactory<E> factory) {
-		this.labels = labels;
-		Collections.sort(this.labels);
+	public LabelSuggestion(LabelsManager<E, ?> manager, List<E> allLabels,
+			SuggesionLabelFactory<E> factory, boolean allowNewValue) {
+		this.manager = manager;
+		this.allLabels = allLabels;
+		this.allowNewValue = allowNewValue;
 
 		FlowPanel panel = new FlowPanel();
 		initWidget(panel);
@@ -136,12 +139,22 @@ public class LabelSuggestion<E extends HasName & Comparable<E> & HasKey<?>>
 	protected void saveNewValue() {
 		complete();
 
-		if (textBox.getValue().trim().isEmpty()) {
-			SelectionEvent.fire(this, new SuggestionResult<E>());
+		if (allowNewValue) {
+			if (textBox.getValue().trim().isEmpty()) {
+				SelectionEvent.fire(this, new SuggestionResult<E>());
+			} else {
+				SelectionEvent.fire(this, new SuggestionResult<E>(textBox
+					.getValue()
+					.trim()));
+			}
 		} else {
-			SelectionEvent.fire(this, new SuggestionResult<E>(textBox
-				.getValue()
-				.trim()));
+			E firstAvaliable = popup.getFirstAvaliable();
+			if (popup.isVisible() && firstAvaliable != null) {
+				SelectionEvent.fire(this, new SuggestionResult<E>(
+					firstAvaliable));
+			} else {
+				SelectionEvent.fire(this, new SuggestionResult<E>());
+			}
 		}
 	}
 
@@ -154,7 +167,8 @@ public class LabelSuggestion<E extends HasName & Comparable<E> & HasKey<?>>
 	protected void textChanged() {
 		String text = textBox.getText();
 		if (text.length() > 0) {
-			List<E> prefixes = findByPrefix(text);
+			List<E> prefixes = manager.fullTextSearch(text, allLabels);
+
 			if (prefixes.isEmpty()) {
 				popup.setVisible(false);
 			} else {
@@ -169,7 +183,7 @@ public class LabelSuggestion<E extends HasName & Comparable<E> & HasKey<?>>
 	protected void tab(KeyDownEvent event) {
 		if (popup.isVisible()) {
 			if (popup.getSelectedValue() != null) {
-				textBox.setText(popup.getSelectedValue().getName());
+				textBox.setText(popup.getSelectedValue().getDisplayName());
 				textChanged();
 				event.preventDefault();
 				event.stopPropagation();
@@ -194,17 +208,6 @@ public class LabelSuggestion<E extends HasName & Comparable<E> & HasKey<?>>
 		}
 	}
 
-	private List<E> findByPrefix(String prefix) {
-		prefix = prefix.trim().toLowerCase();
-		List<E> l = new ArrayList<E>();
-		for (E e : labels) {
-			if (e.getName().toLowerCase().startsWith(prefix)) {
-				l.add(e);
-			}
-		}
-		return l;
-	}
-
 	public HandlerRegistration addSelectionHandler(
 			SelectionHandler<SuggestionResult<E>> handler) {
 		return addHandler(handler, SelectionEvent.getType());
@@ -215,6 +218,9 @@ public class LabelSuggestion<E extends HasName & Comparable<E> & HasKey<?>>
 	}
 
 	private void complete() {
+		if (complete) {
+			return;
+		}
 		complete = true;
 		popup.setVisible(false);
 		textBox.setFocus(false);

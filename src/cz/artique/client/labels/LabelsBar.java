@@ -15,10 +15,11 @@ import com.google.gwt.user.client.ui.InlineLabel;
 import cz.artique.client.labels.suggestion.LabelSuggestion;
 import cz.artique.client.labels.suggestion.SuggesionLabelFactory;
 import cz.artique.client.labels.suggestion.SuggestionResult;
+import cz.artique.shared.model.label.LabelType;
+import cz.artique.shared.utils.HasDisplayName;
 import cz.artique.shared.utils.HasKey;
-import cz.artique.shared.utils.HasName;
 
-public abstract class LabelsBar<E extends HasName & HasKey<K> & Comparable<E>, K>
+public abstract class LabelsBar<E extends HasDisplayName & HasKey<K> & Comparable<E>, K>
 		extends Composite implements HasEnabled {
 	private static final String addLabelSign = "+";
 
@@ -30,7 +31,6 @@ public abstract class LabelsBar<E extends HasName & HasKey<K> & Comparable<E>, K
 				labelRemoved(toBeRemoved);
 			}
 		}
-
 	}
 
 	private InlineLabel addLabel;
@@ -68,10 +68,10 @@ public abstract class LabelsBar<E extends HasName & HasKey<K> & Comparable<E>, K
 			private LabelSuggestion<E> box;
 
 			public void onClick(ClickEvent event) {
-				allLabels = manager.getUserDefinedLabels();
+				allLabels = manager.getLabels(LabelType.USER_DEFINED);
 				allLabels.removeAll(getSelectedLabels());
 
-				box = new LabelSuggestion<E>(allLabels, factory2);
+				box = new LabelSuggestion<E>(manager, allLabels, factory2, true);
 				box.setStylePrimaryName("labels-bar-suggest-box");
 				panel.setExtraWidget(box);
 				panel.setShowMoreButton(false);

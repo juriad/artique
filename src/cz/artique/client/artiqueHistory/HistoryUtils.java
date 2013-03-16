@@ -8,7 +8,7 @@ import java.util.List;
 import com.google.appengine.api.datastore.Key;
 
 import cz.artique.client.ArtiqueWorld;
-import cz.artique.client.artiqueLabels.ArtiqueLabelsManager;
+import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.FilterOrder;
 import cz.artique.shared.model.label.FilterType;
@@ -179,7 +179,7 @@ public class HistoryUtils {
 	 * @return
 	 */
 	protected List<Label> deserializeLabels(final List<String> labelNames) {
-		if (!ArtiqueLabelsManager.MANAGER.isReady()) {
+		if (!Managers.LABELS_MANAGER.isReady()) {
 			return null;
 		}
 
@@ -201,8 +201,7 @@ public class HistoryUtils {
 			// l...$
 			labelName = labelName.substring(5);
 			Label label =
-				ArtiqueLabelsManager.MANAGER.getLabelByNameAndType(labelName,
-					type);
+					Managers.LABELS_MANAGER.getLabelByName(labelName);
 			labels.add(label);
 		}
 
@@ -216,7 +215,7 @@ public class HistoryUtils {
 	 * @return
 	 */
 	public String serializeFilter(Filter filter) {
-		if (!ArtiqueLabelsManager.MANAGER.isReady()) {
+		if (!Managers.LABELS_MANAGER.isReady()) {
 			return null;
 		}
 
@@ -242,7 +241,7 @@ public class HistoryUtils {
 		if (filter.getLabels() != null && !filter.getLabels().isEmpty()) {
 			for (int i = 0; i < filter.getLabels().size(); i++) {
 				Key key = filter.getLabels().get(i);
-				Label label = ArtiqueLabelsManager.MANAGER.getLabelByKey(key);
+				Label label = Managers.LABELS_MANAGER.getLabelByKey(key);
 				String l = serializeLabel(label);
 
 				if (sb.length() > 0) {
@@ -266,7 +265,7 @@ public class HistoryUtils {
 	 * @return
 	 */
 	protected Filter deserializeFilter(String string) {
-		if (!ArtiqueLabelsManager.MANAGER.isReady()) {
+		if (!Managers.LABELS_MANAGER.isReady()) {
 			return null;
 		}
 

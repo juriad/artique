@@ -1,4 +1,4 @@
-package cz.artique.client.artiqueFilter;
+package cz.artique.client.artiqueListFilters;
 
 import java.util.List;
 
@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.labels.LabelWidget;
 import cz.artique.client.labels.LabelWidgetFactory;
+import cz.artique.client.labels.LabelsManager;
 import cz.artique.client.labels.RemoveEvent;
 import cz.artique.client.labels.RemoveHandler;
 import cz.artique.client.labels.suggestion.LabelSuggestion;
@@ -41,7 +42,6 @@ public abstract class AbstractQueryFilter extends Composite
 	}
 
 	class AddClickHandler implements ClickHandler {
-
 		public void onClick(ClickEvent event) {
 			final Widget source = (Widget) event.getSource();
 			final int widgetIndex = panel.getWidgetIndex(source);
@@ -50,7 +50,8 @@ public abstract class AbstractQueryFilter extends Composite
 			}
 
 			final LabelSuggestion<Label> labelSuggestion =
-				new LabelSuggestion<Label>(getLabelsToSuggest(true), factory2);
+				new LabelSuggestion<Label>(manager, manager.getLabels(null),
+					factory2, false);
 			source.setVisible(false);
 			panel.insert(labelSuggestion, widgetIndex);
 			labelSuggestion
@@ -71,7 +72,7 @@ public abstract class AbstractQueryFilter extends Composite
 							com.google.gwt.user.client.ui.Label addButton =
 								newAddButton();
 							addButton.addClickHandler(addHandler);
-							panel.insert(addButton, widgetIndex + 1);
+							panel.insert(addButton, widgetIndex);
 						} else {
 							// TODO vynadat uzivateli
 						}
@@ -97,12 +98,17 @@ public abstract class AbstractQueryFilter extends Composite
 
 	private final AddClickHandler addHandler = new AddClickHandler();
 
-	public AbstractQueryFilter(LabelWidgetFactory<Label> factory,
+	protected final LabelsManager<Label, ?> manager;
+
+	public AbstractQueryFilter(LabelsManager<Label, ?> manager,
+			LabelWidgetFactory<Label> factory,
 			SuggesionLabelFactory<Label> factory2) {
+		this.manager = manager;
 		this.factory = factory;
 		this.factory2 = factory2;
 		panel = new FlowPanel();
 		initWidget(panel);
+		setFilter(new Filter());
 	}
 
 	public void setFilter(Filter filter) {
@@ -135,8 +141,6 @@ public abstract class AbstractQueryFilter extends Composite
 
 	protected abstract com.google.gwt.user.client.ui.Label newAddButton();
 
-	protected abstract List<Label> getLabelsToSuggest(boolean reuse);
-
 	protected abstract Label getAddedLabel(SuggestionResult<Label> selectedItem);
 
 	protected List<Label> getLabels() {
@@ -150,20 +154,6 @@ public abstract class AbstractQueryFilter extends Composite
 	}
 
 	public void setEnabled(boolean enabled) {
-		if (enabled == this.enabled) {
-			return;
-		}
 		this.enabled = enabled;
-
-		for (int i = 0; i < panel.getWidgetCount(); i++) {
-			Widget widget = panel.getWidget(i);
-			if (widget instanceof com.google.gwt.user.client.ui.Label) {
-				widget.setVisible(enabled);
-			} else if (widget instanceof LabelWidget) {
-				@SuppressWarnings("unchecked")
-				LabelWidget<Label> labelWidget = ((LabelWidget<Label>) widget);
-				labelWidget.setEnabled(enabled);
-			}
-		}
 	}
 }

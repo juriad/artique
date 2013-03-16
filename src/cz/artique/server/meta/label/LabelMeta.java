@@ -1,6 +1,6 @@
 package cz.artique.server.meta.label;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-02-20 15:33:18")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-03-16 10:28:00")
 /** */
 public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.label.Label> {
 
@@ -143,6 +143,10 @@ public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
             writer.setNextPropertyName("backupLevel");
             encoder0.encode(writer, m.getBackupLevel());
         }
+        if(m.getDisplayName() != null){
+            writer.setNextPropertyName("displayName");
+            encoder0.encode(writer, m.getDisplayName());
+        }
         if(m.getKey() != null){
             writer.setNextPropertyName("key");
             encoder0.encode(writer, m.getKey());
@@ -177,6 +181,8 @@ public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
         m.setAppearance(decoder0.decode(reader, m.getAppearance(), cz.artique.shared.model.label.LabelAppearance.class));
         reader = rootReader.newObjectReader("backupLevel");
         m.setBackupLevel(decoder0.decode(reader, m.getBackupLevel(), cz.artique.shared.model.label.BackupLevel.class));
+        reader = rootReader.newObjectReader("displayName");
+        m.setDisplayName(decoder0.decode(reader, m.getDisplayName()));
         reader = rootReader.newObjectReader("key");
         m.setKey(decoder0.decode(reader, m.getKey()));
         reader = rootReader.newObjectReader("labelType");
