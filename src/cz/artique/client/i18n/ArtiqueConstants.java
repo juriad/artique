@@ -50,4 +50,25 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("Unread")
 	String readState_UNREAD();
+
+	@DefaultStringValue("Filter editor")
+	String listFilterEditor();
+
+	@DefaultStringValue("New")
+	String newButton();
+
+	@DefaultStringValue("Wipe")
+	String wipeButton();
+
+	@DefaultStringValue("Clone")
+	String cloneButton();
+
+	@DefaultStringValue("Save")
+	String saveButton();
+
+	@DefaultStringValue("Delete")
+	String deleteButton();
+
+	@DefaultStringValue("Cancel")
+	String cancelButton();
 }

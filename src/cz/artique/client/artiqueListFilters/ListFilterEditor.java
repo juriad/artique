@@ -2,6 +2,7 @@ package cz.artique.client.artiqueListFilters;
 
 import java.util.Date;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -17,6 +18,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 
+import cz.artique.client.ArtiqueWorld;
 import cz.artique.shared.model.label.ListFilter;
 
 public class ListFilterEditor extends Composite
@@ -46,6 +48,9 @@ public class ListFilterEditor extends Composite
 	@UiField
 	ListFilterOrderPicker orderPicker;
 
+	private Key listFilterKey;
+	private Key filterKey;
+
 	private boolean enabled = true;
 
 	public ListFilterEditor() {
@@ -73,8 +78,19 @@ public class ListFilterEditor extends Composite
 	}
 
 	public ListFilter getValue() {
-		// TODO Auto-generated method stub
-		return null;
+		ListFilter lf = new ListFilter();
+		lf.setFilterObject(filter.getFilter());
+		lf.setStartFrom(startFrom.getValue());
+		lf.setEndTo(endTo.getValue());
+		lf.setRead(readPicker.getValue() == null ? null : readPicker
+			.getValue()
+			.isState());
+		lf.setOrder(orderPicker.getValue());
+
+		lf.setUser(ArtiqueWorld.WORLD.getUser());
+		lf.setKey(getListFilterKey());
+		lf.setFilter(getFilterKey());
+		return lf;
 	}
 
 	public void setValue(ListFilter value) {
@@ -85,10 +101,29 @@ public class ListFilterEditor extends Composite
 		Boolean read = value.getRead();
 		readPicker.setValue(ReadState.get(read));
 		orderPicker.setValue(value.getOrder());
+
+		setListFilterKey(value.getKey());
+		setFilterKey(value.getFilter());
 	}
 
 	public void setValue(ListFilter value, boolean fireEvents) {
 		setValue(value);
+	}
+
+	public Key getListFilterKey() {
+		return listFilterKey;
+	}
+
+	public void setListFilterKey(Key listFilterKey) {
+		this.listFilterKey = listFilterKey;
+	}
+
+	public Key getFilterKey() {
+		return filterKey;
+	}
+
+	public void setFilterKey(Key filterKey) {
+		this.filterKey = filterKey;
 	}
 
 }

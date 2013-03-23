@@ -56,6 +56,8 @@ public class ArtiqueLabelsManager
 		systemLabels.add(AND);
 		systemLabels.add(OR);
 	}
+	
+	// TODO change display name if source is updated
 
 	public void refresh(final AsyncCallback<Void> ping) {
 		service.getAllLabels(new AsyncCallback<List<Label>>() {

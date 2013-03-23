@@ -1,0 +1,31 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:a="urn:import:cz.artique.client.artiqueListFilters"
+	xmlns:db="urn:import:com.google.gwt.user.datepicker.client">
+
+	<ui:with field='res' type='cz.artique.client.i18n.ArtiqueConstants' />
+
+	<g:DialogBox ui:field="dialog">
+		<g:caption>
+			<ui:text from='{res.listFilterEditor}' />
+		</g:caption>
+		<g:VerticalPanel>
+			<a:ListFilterEditor ui:field="editor" />
+			<g:HorizontalPanel horizontalAlignment="ALIGN_RIGHT">
+				<g:Button ui:field="newButton" /> <!-- new or wipe -->
+				<g:Button ui:field="cloneButton">
+					<ui:text from='{res.cloneButton}' />
+				</g:Button>
+				<g:Button ui:field="saveButton">
+					<ui:text from='{res.saveButton}' />
+				</g:Button>
+				<g:Button ui:field="deleteButton">
+					<ui:text from='{res.deleteButton}' />
+				</g:Button>
+				<g:Button ui:field="cancelButton">
+					<ui:text from='{res.cancelButton}' />
+				</g:Button>
+			</g:HorizontalPanel>
+		</g:VerticalPanel>
+	</g:DialogBox>
+</ui:UiBinder>

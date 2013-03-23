@@ -54,9 +54,12 @@ public class Artique extends Composite {
 
 	@UiField
 	Button saveFilter;
+	
+	
 
 	@UiHandler("saveFilter")
 	protected void saveFilter(ClickEvent event) {
+		// FIXME saveFilter shows dialog
 		DialogBox dia = new DialogBox(true, true);
 		ListFilterEditor fe = new ListFilterEditor();
 		fe
