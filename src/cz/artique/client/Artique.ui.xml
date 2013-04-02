@@ -1,52 +1,65 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:al="urn:import:cz.artique.client.artiqueListing"
-	xmlns:ah="urn:import:cz.artique.client.artiqueHierarchy">
+	xmlns:ah="urn:import:cz.artique.client.artiqueHierarchy" xmlns:am="urn:import:cz.artique.client.messages">
 
 	<ui:with field='res' type='cz.artique.client.i18n.ArtiqueConstants' />
 
-	<g:SplitLayoutPanel>
-		<g:west size="120">
-			<g:DockLayoutPanel unit="EM">
-				<g:north size="5">
-					<g:FlowPanel>
-						<g:Label text="TADY BUDE LOGO S NASTAVENÍM"></g:Label>
-						<g:Label ui:field="userName" />
-						<g:Anchor ui:field="logout">Logout</g:Anchor>
-					</g:FlowPanel>
-				</g:north>
+	<g:LayoutPanel>
+		<g:layer>
+			<g:SplitLayoutPanel>
+				<g:west size="120">
+					<g:DockLayoutPanel unit="EM">
+						<g:north size="5">
+							<g:FlowPanel>
+								<g:Label text="TADY BUDE LOGO S NASTAVENÍM"></g:Label>
+								<g:Label ui:field="userName" />
+								<g:Anchor ui:field="logout">Logout</g:Anchor>
+							</g:FlowPanel>
+						</g:north>
+						<g:center>
+							<g:StackLayoutPanel unit="EM">
+								<g:stack>
+									<g:header size="3">
+										<ui:text from='{res.sources}' />
+									</g:header>
+									<ah:ArtiqueSourcesTree ui:field="sources" />
+								</g:stack>
+								<g:stack>
+									<g:header size="3">
+										<ui:text from='{res.filters}' />
+									</g:header>
+									<g:VerticalPanel>
+										<g:FlowPanel>
+											<g:Button ui:field="saveFilter" text="save" />
+											<!-- TODO create filter, change filter -->
+										</g:FlowPanel>
+										<ah:ArtiqueListFiltersTree ui:field="filters" />
+									</g:VerticalPanel>
+								</g:stack>
+								<g:stack>
+									<g:header size="3">
+										<ui:text from='{res.history}' />
+									</g:header>
+									<ah:ArtiqueHistoryTree ui:field="history" />
+								</g:stack>
+								<g:stack>
+									<g:header size="3">
+										<ui:text from='{res.messages}' />
+									</g:header>
+									<ah:ArtiqueMessagesTree ui:field="messages" />
+								</g:stack>
+							</g:StackLayoutPanel>
+						</g:center>
+					</g:DockLayoutPanel>
+				</g:west>
 				<g:center>
-					<g:StackLayoutPanel unit="EM">
-						<g:stack>
-							<g:header size="3">
-								<ui:text from='{res.sources}' />
-							</g:header>
-							<ah:ArtiqueSourcesTree ui:field="sources" />
-						</g:stack>
-						<g:stack>
-							<g:header size="3">
-								<ui:text from='{res.filters}' />
-							</g:header>
-							<g:VerticalPanel>
-								<g:FlowPanel>
-									<g:Button ui:field="saveFilter" text="save" />
-									<!-- TODO create filter, change filter -->
-								</g:FlowPanel>
-								<ah:ArtiqueListFiltersTree ui:field="filters" />
-							</g:VerticalPanel>
-						</g:stack>
-						<g:stack>
-							<g:header size="3">
-								<ui:text from='{res.history}' />
-							</g:header>
-							<ah:ArtiqueHistoryTree ui:field="history" />
-						</g:stack>
-					</g:StackLayoutPanel>
+					<al:ArtiqueList ui:field="list" />
 				</g:center>
-			</g:DockLayoutPanel>
-		</g:west>
-		<g:center>
-			<al:ArtiqueList ui:field="list" />
-		</g:center>
-	</g:SplitLayoutPanel>
+			</g:SplitLayoutPanel>
+		</g:layer>
+		<g:layer left="33%" right="33%" top="0px" height="10em">
+			<am:ArtiqueMessenger ui:field="messenger" />
+		</g:layer>
+	</g:LayoutPanel>
 </ui:UiBinder>

@@ -8,18 +8,15 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import cz.artique.client.ArtiqueWorld;
-import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyUtils;
 import cz.artique.client.hierarchy.InnerNode;
-import cz.artique.client.hierarchy.LeafNode;
 import cz.artique.client.hierarchy.ProvidesHierarchy;
+import cz.artique.client.hierarchy.TimedLeafNode;
 import cz.artique.client.manager.Manager;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.config.ClientConfigKey;
-import cz.artique.shared.model.label.ListFilterOrder;
 import cz.artique.shared.model.label.ListFilter;
-import cz.artique.shared.utils.HasHierarchy;
-import cz.artique.shared.utils.HasName;
+import cz.artique.shared.model.label.ListFilterOrder;
 import cz.artique.shared.utils.SortedList;
 
 public class ArtiqueHistory
@@ -40,30 +37,6 @@ public class ArtiqueHistory
 				// ignore
 			}
 		}, Managers.CONFIG_MANAGER);
-	}
-
-	class TimedLeafNode<E extends HasName & HasHierarchy> extends LeafNode<E> {
-		private long time;
-
-		public TimedLeafNode(E item, Hierarchy<E> parent) {
-			super(item, parent);
-			setTime(System.currentTimeMillis());
-		}
-
-		public long getTime() {
-			return time;
-		}
-
-		public void setTime(long time) {
-			this.time = time;
-			fireChanged();
-		}
-
-		@Override
-		public int compareTo(Hierarchy<E> o) {
-			return -((Long) time).compareTo(((TimedLeafNode<E>) o).getTime());
-		}
-
 	}
 
 	// const, same as HISTORY_MAX_ITEMS

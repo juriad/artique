@@ -6,6 +6,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
@@ -26,6 +27,9 @@ import cz.artique.client.artiqueListing.ArtiqueList;
 import cz.artique.client.artiqueListing.ArtiqueListProvider;
 import cz.artique.client.artiqueListing.UserItemRow;
 import cz.artique.client.manager.Managers;
+import cz.artique.client.messages.ArtiqueMessenger;
+import cz.artique.client.messages.Message;
+import cz.artique.client.messages.MessageType;
 import cz.artique.shared.model.label.ListFilter;
 
 public class Artique extends Composite {
@@ -54,8 +58,9 @@ public class Artique extends Composite {
 
 	@UiField
 	Button saveFilter;
-	
-	
+
+	@UiField
+	ArtiqueMessenger messenger;
 
 	@UiHandler("saveFilter")
 	protected void saveFilter(ClickEvent event) {
@@ -85,6 +90,16 @@ public class Artique extends Composite {
 
 		userName.setText(ArtiqueWorld.WORLD.getUser().getNickname());
 		logout.setHref(ArtiqueWorld.WORLD.getUserInfo().getLogoutUrl());
+
+		new Timer() {
+			int i = 0;
+
+			@Override
+			public void run() {
+				Managers.MESSAGES_MANAGER.addMessage(new Message(
+					MessageType.INFO, "zprava " + (i++)));
+			}
+		}.scheduleRepeating((int) (Math.random() * 10000));
 	}
 
 	private void initHistory() {

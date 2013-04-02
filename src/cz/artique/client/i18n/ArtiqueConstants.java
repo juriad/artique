@@ -27,6 +27,9 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 	@DefaultStringValue("History")
 	String history();
 
+	@DefaultStringValue("Messages")
+	String messages();
+
 	@DefaultStringValue("Date from")
 	String startFrom();
 

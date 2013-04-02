@@ -13,11 +13,12 @@ import cz.artique.client.artiqueLabels.ArtiqueLabelsManager;
 import cz.artique.client.artiqueListFilters.ArtiqueListFiltersManager;
 import cz.artique.client.artiqueSources.ArtiqueSourcesManager;
 import cz.artique.client.config.ArtiqueConfigManager;
+import cz.artique.client.messages.MessagesManager;
 import cz.artique.shared.model.config.ClientConfigKey;
 
 public class Managers {
 	private Managers() {}
-	
+
 	// must be before all managers
 	private static List<Manager> ready = new ArrayList<Manager>();
 	private static List<WaitRequest> waiting = new LinkedList<WaitRequest>();
@@ -33,6 +34,8 @@ public class Managers {
 	public static final ArtiqueListFiltersManager LIST_FILTERS_MANAGER =
 		ArtiqueListFiltersManager.MANAGER;
 	public static final ArtiqueHistory HISTORY_MANAGER = ArtiqueHistory.HISTORY;
+	public static final MessagesManager MESSAGES_MANAGER =
+		MessagesManager.MESSENGER;
 
 	public static final Manager[] MANAGERS = new Manager[] {
 		CONFIG_MANAGER,
@@ -40,7 +43,8 @@ public class Managers {
 		LABELS_MANAGER,
 		SOURCES_MANAGER,
 		LIST_FILTERS_MANAGER,
-		HISTORY_MANAGER };
+		HISTORY_MANAGER,
+		MESSAGES_MANAGER };
 
 	static {
 		for (final Manager m : MANAGERS) {
