@@ -6,30 +6,25 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.artiqueHierarchy.ArtiqueHistoryTree;
 import cz.artique.client.artiqueHierarchy.ArtiqueListFiltersTree;
 import cz.artique.client.artiqueHierarchy.ArtiqueSourcesTree;
-import cz.artique.client.artiqueHistory.ArtiqueHistory;
 import cz.artique.client.artiqueHistory.ArtiqueHistoryHandler;
 import cz.artique.client.artiqueHistory.HistoryEvent;
 import cz.artique.client.artiqueHistory.HistoryHandler;
-import cz.artique.client.artiqueListFilters.ListFilterEditor;
+import cz.artique.client.artiqueListFilters.ListFilterDialog;
 import cz.artique.client.artiqueListing.ArtiqueList;
 import cz.artique.client.artiqueListing.ArtiqueListProvider;
 import cz.artique.client.artiqueListing.UserItemRow;
 import cz.artique.client.manager.Managers;
 import cz.artique.client.messages.ArtiqueMessenger;
-import cz.artique.client.messages.Message;
-import cz.artique.client.messages.MessageType;
 import cz.artique.shared.model.label.ListFilter;
 
 public class Artique extends Composite {
@@ -64,18 +59,12 @@ public class Artique extends Composite {
 
 	@UiHandler("saveFilter")
 	protected void saveFilter(ClickEvent event) {
-		// FIXME saveFilter shows dialog
-		DialogBox dia = new DialogBox(true, true);
-		ListFilterEditor fe = new ListFilterEditor();
-		fe
-			.setValue(ArtiqueHistory.HISTORY
-				.getLastHistoryItem()
-				.getListFilter());
-		dia.add(fe);
-		dia.show();
+		listFilterDialog.showDialog();
 	}
 
 	private static Resources resources;
+
+	private final ListFilterDialog listFilterDialog;
 
 	static {
 		resources = GWT.create(Resources.class);
@@ -86,20 +75,13 @@ public class Artique extends Composite {
 		list = new ArtiqueList(UserItemRow.factory);
 		initWidget(uiBinder.createAndBindUi(this));
 		ArtiqueWorld.WORLD.setList(list);
+		
+		listFilterDialog = new ListFilterDialog();
+		
 		initHistory();
 
 		userName.setText(ArtiqueWorld.WORLD.getUser().getNickname());
 		logout.setHref(ArtiqueWorld.WORLD.getUserInfo().getLogoutUrl());
-
-		new Timer() {
-			int i = 0;
-
-			@Override
-			public void run() {
-				Managers.MESSAGES_MANAGER.addMessage(new Message(
-					MessageType.INFO, "zprava " + (i++)));
-			}
-		}.scheduleRepeating((int) (Math.random() * 10000));
 	}
 
 	private void initHistory() {

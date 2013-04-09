@@ -56,7 +56,7 @@ public class ArtiqueLabelsManager
 		systemLabels.add(AND);
 		systemLabels.add(OR);
 	}
-	
+
 	// TODO change display name if source is updated
 
 	public void refresh(final AsyncCallback<Void> ping) {
@@ -90,7 +90,8 @@ public class ArtiqueLabelsManager
 
 						for (Label l : list) {
 							newLabelsKeys.put(l.getKey(), l);
-							newLabelNames.put(l.getName(), l);
+							newLabelNames.put(
+								nameWithType(l.getLabelType(), l.getName()), l);
 
 							switch (l.getLabelType()) {
 							case USER_DEFINED:
@@ -110,6 +111,7 @@ public class ArtiqueLabelsManager
 						labelsKeys = newLabelsKeys;
 						userDefinedLabels = newUserDefinedLabels;
 						userSourceLabels = newUserSourceLabels;
+						labelNames = newLabelNames;
 
 						if (ping != null) {
 							ping.onSuccess(null);
@@ -135,7 +137,9 @@ public class ArtiqueLabelsManager
 				if (!labelsKeys.containsKey(result.getKey())) {
 					userDefinedLabels.add(result);
 					userDefinedLabels.add(result);
-					labelNames.put(result.getName(), result);
+					labelNames.put(
+						nameWithType(result.getLabelType(), result.getName()),
+						result);
 					labelsKeys.put(result.getKey(), result);
 				}
 
@@ -208,8 +212,12 @@ public class ArtiqueLabelsManager
 		return sorted;
 	}
 
-	public Label getLabelByName(String name) {
-		Label label = labelNames.get(name);
+	private String nameWithType(LabelType type, String name) {
+		return type.getType() + "$" + name;
+	}
+
+	public Label getLabelByName(LabelType type, String name) {
+		Label label = labelNames.get(nameWithType(type, name));
 		return label;
 	}
 

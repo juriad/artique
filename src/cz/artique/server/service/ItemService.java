@@ -149,31 +149,7 @@ public class ItemService {
 				endReached = false;
 			}
 		}
-		/*
-		 * List<UserItem> modified;
-		 * if (firstHave.compareTo(lastHave) <= 0) {
-		 * ModelQuery<UserItem> modifiedQuery =
-		 * getBaseQuery(listFilter, fc, user);
-		 * modifiedQuery =
-		 * modifiedQuery.filter(meta.lastChanged
-		 * .greaterThanOrEqual(request.getLastFetch()));
-		 * modifiedQuery =
-		 * modifiedQuery.filterInMemory(
-		 * meta.key.greaterThanOrEqual(firstHave)).filterInMemory(
-		 * meta.key.lessThanOrEqual(lastHave));
-		 * InMemorySortCriterion sortCriterion;
-		 * if (FilterOrder.ASCENDING.equals(listFilter.getOrder())) {
-		 * sortCriterion = meta.key.asc;
-		 * } else {
-		 * sortCriterion = meta.key.desc;
-		 * }
-		 * modified = modifiedQuery.sortInMemory(sortCriterion).asList();
-		 * } else {
-		 * modified = new ArrayList<UserItem>();
-		 * }
-		 */
-		return new ListingUpdate<UserItem>(head,/* modified, */tail, date,
-			endReached);
+		return new ListingUpdate<UserItem>(head, tail, date, endReached);
 	}
 
 	private ModelQuery<UserItem> getBaseQuery(ListFilter listFilter,

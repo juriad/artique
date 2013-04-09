@@ -201,7 +201,7 @@ public class HistoryUtils {
 			// l...$
 			labelName = labelName.substring(5);
 			Label label =
-					Managers.LABELS_MANAGER.getLabelByName(labelName);
+				Managers.LABELS_MANAGER.getLabelByName(type, labelName);
 			labels.add(label);
 		}
 
@@ -232,8 +232,8 @@ public class HistoryUtils {
 						serializeFilter(filter.getFilterObjects().get(i));
 					if (sb.length() > 0) {
 						sb.append(" OR ");
-						sb.append(subFilter);
 					}
+					sb.append(subFilter);
 				}
 			}
 		}

@@ -74,4 +74,13 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("Cancel")
 	String cancelButton();
+
+	@DefaultStringValue("Name")
+	String name();
+
+	@DefaultStringValue("Hierarchy")
+	String hierarchy();
+
+	@DefaultStringValue("Export name")
+	String exported();
 }

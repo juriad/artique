@@ -10,12 +10,17 @@ import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import cz.artique.client.artiqueHistory.HistoryUtils;
 import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyUtils;
 import cz.artique.client.hierarchy.ProvidesHierarchy;
+import cz.artique.client.i18n.ArtiqueI18n;
+import cz.artique.client.i18n.ArtiqueMessages;
 import cz.artique.client.listFilters.ListFiltersManager;
 import cz.artique.client.manager.AbstractManager;
 import cz.artique.client.manager.Managers;
+import cz.artique.client.messages.Message;
+import cz.artique.client.messages.MessageType;
 import cz.artique.client.service.ClientListFilterService;
 import cz.artique.client.service.ClientListFilterServiceAsync;
 import cz.artique.shared.model.label.ListFilter;
@@ -117,11 +122,20 @@ public class ArtiqueListFiltersManager
 		return hierarchyRoot;
 	}
 
-	public void addListFilter(ListFilter listFilter,
+	public ListFilter getListFilterByKey(Key key) {
+		return listFilterByKey.get(key);
+	}
+
+	// FIXME poradne otestovat prejmenovani a tak
+	public void addListFilter(final ListFilter listFilter,
 			final AsyncCallback<ListFilter> ping) {
 		service.addListFilter(listFilter, new AsyncCallback<ListFilter>() {
 
 			public void onFailure(Throwable caught) {
+				ArtiqueMessages messages = ArtiqueI18n.I18N.getMessages();
+				Managers.MESSAGES_MANAGER.addMessage(new Message(
+					MessageType.ERROR, messages
+						.listFilterCreatedError(listFilter.getName())));
 				if (ping != null) {
 					ping.onFailure(caught);
 				}
@@ -130,6 +144,12 @@ public class ArtiqueListFiltersManager
 			public void onSuccess(ListFilter result) {
 				listFilterByKey.put(result.getKey(), result);
 				HierarchyUtils.add(getHierarchyRoot(), result);
+				ArtiqueMessages messages = ArtiqueI18n.I18N.getMessages();
+				Managers.MESSAGES_MANAGER.addMessage(new Message(
+					MessageType.INFO, messages.listFilterCreated(result
+						.getName())));
+				String token = HistoryUtils.UTILS.serializeListFilter(result);
+				Managers.HISTORY_MANAGER.addListFilter(result, token);
 				if (ping != null) {
 					ping.onSuccess(result);
 				}
@@ -137,19 +157,31 @@ public class ArtiqueListFiltersManager
 		});
 	}
 
-	public void deleteListFilter(final ListFilter listFilter,
+	public void deleteListFilter(ListFilter listFilter,
 			final AsyncCallback<Void> ping) {
-		service.deleteListFilter(listFilter, new AsyncCallback<Void>() {
+		final ListFilter lf = getListFilterByKey(listFilter.getKey());
+		if (lf == null) {
+			return;
+		}
+
+		service.deleteListFilter(lf, new AsyncCallback<Void>() {
 
 			public void onFailure(Throwable caught) {
+				ArtiqueMessages messages = ArtiqueI18n.I18N.getMessages();
+				Managers.MESSAGES_MANAGER.addMessage(new Message(
+					MessageType.ERROR, messages.listFilterDeletedError(lf
+						.getName())));
 				if (ping != null) {
 					ping.onFailure(caught);
 				}
 			}
 
 			public void onSuccess(Void result) {
-				listFilterByKey.remove(listFilter.getKey());
-				HierarchyUtils.remove(getHierarchyRoot(), listFilter);
+				listFilterByKey.remove(lf.getKey());
+				HierarchyUtils.remove(getHierarchyRoot(), lf);
+				ArtiqueMessages messages = ArtiqueI18n.I18N.getMessages();
+				Managers.MESSAGES_MANAGER.addMessage(new Message(
+					MessageType.INFO, messages.listFilterDeleted(lf.getName())));
 				if (ping != null) {
 					ping.onSuccess(null);
 				}
@@ -157,11 +189,15 @@ public class ArtiqueListFiltersManager
 		});
 	}
 
-	public void updateListFilter(ListFilter listFilter,
+	public void updateListFilter(final ListFilter listFilter,
 			final AsyncCallback<ListFilter> ping) {
 		service.updateListFilter(listFilter, new AsyncCallback<ListFilter>() {
 
 			public void onFailure(Throwable caught) {
+				ArtiqueMessages messages = ArtiqueI18n.I18N.getMessages();
+				Managers.MESSAGES_MANAGER.addMessage(new Message(
+					MessageType.ERROR, messages
+						.listFilterUpdatedError(listFilter.getName())));
 				if (ping != null) {
 					ping.onFailure(caught);
 				}
@@ -172,6 +208,15 @@ public class ArtiqueListFiltersManager
 					listFilterByKey.get(result.getKey()));
 				HierarchyUtils.add(hierarchyRoot, result);
 				listFilterByKey.put(result.getKey(), result);
+				ArtiqueMessages messages = ArtiqueI18n.I18N.getMessages();
+				Managers.MESSAGES_MANAGER.addMessage(new Message(
+					MessageType.INFO, messages.listFilterUpdated(result
+						.getName())));
+				String token = HistoryUtils.UTILS.serializeListFilter(result);
+				Managers.HISTORY_MANAGER.addListFilter(result, token);
+				if (ping != null) {
+					ping.onSuccess(null);
+				}
 			}
 		});
 	}

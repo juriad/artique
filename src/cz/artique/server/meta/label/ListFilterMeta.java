@@ -1,11 +1,14 @@
 package cz.artique.server.meta.label;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-04-02 14:49:00")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-04-06 12:21:38")
 /** */
 public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.label.ListFilter> {
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, java.util.Date> endTo = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, java.util.Date>(this, "endTo", "endTo", java.util.Date.class);
+    public final org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.label.ListFilter, java.util.Date> endTo = new org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.label.ListFilter, java.util.Date>(this, "endTo", "endTo", java.util.Date.class);
+
+    /** */
+    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.label.ListFilter> exportAlias = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.label.ListFilter>(this, "exportAlias", "exportAlias");
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, com.google.appengine.api.datastore.Key> filter = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, com.google.appengine.api.datastore.Key>(this, "filter", "filter", com.google.appengine.api.datastore.Key.class);
@@ -20,13 +23,13 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
     public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.label.ListFilter> name = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.label.ListFilter>(this, "name", "name");
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, cz.artique.shared.model.label.ListFilterOrder> order = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, cz.artique.shared.model.label.ListFilterOrder>(this, "order", "order", cz.artique.shared.model.label.ListFilterOrder.class);
+    public final org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.label.ListFilter, cz.artique.shared.model.label.ListFilterOrder> order = new org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.label.ListFilter, cz.artique.shared.model.label.ListFilterOrder>(this, "order", "order", cz.artique.shared.model.label.ListFilterOrder.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, java.lang.Boolean> read = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, java.lang.Boolean>(this, "read", "read", java.lang.Boolean.class);
+    public final org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.label.ListFilter, java.lang.Boolean> read = new org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.label.ListFilter, java.lang.Boolean>(this, "read", "read", java.lang.Boolean.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, java.util.Date> startFrom = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, java.util.Date>(this, "startFrom", "startFrom", java.util.Date.class);
+    public final org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.label.ListFilter, java.util.Date> startFrom = new org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.label.ListFilter, java.util.Date>(this, "startFrom", "startFrom", java.util.Date.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, com.google.appengine.api.users.User> user = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, com.google.appengine.api.users.User>(this, "user", "user", com.google.appengine.api.users.User.class);
@@ -52,6 +55,7 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
     public cz.artique.shared.model.label.ListFilter entityToModel(com.google.appengine.api.datastore.Entity entity) {
         cz.artique.shared.model.label.ListFilter model = new cz.artique.shared.model.label.ListFilter();
         model.setEndTo((java.util.Date) entity.getProperty("endTo"));
+        model.setExportAlias((java.lang.String) entity.getProperty("exportAlias"));
         model.setFilter((com.google.appengine.api.datastore.Key) entity.getProperty("filter"));
         model.setHierarchy((java.lang.String) entity.getProperty("hierarchy"));
         model.setKey(entity.getKey());
@@ -73,13 +77,14 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         } else {
             entity = new com.google.appengine.api.datastore.Entity(kind);
         }
-        entity.setProperty("endTo", m.getEndTo());
+        entity.setUnindexedProperty("endTo", m.getEndTo());
+        entity.setProperty("exportAlias", m.getExportAlias());
         entity.setProperty("filter", m.getFilter());
         entity.setProperty("hierarchy", m.getHierarchy());
         entity.setProperty("name", m.getName());
-        entity.setProperty("order", enumToString(m.getOrder()));
-        entity.setProperty("read", m.getRead());
-        entity.setProperty("startFrom", m.getStartFrom());
+        entity.setUnindexedProperty("order", enumToString(m.getOrder()));
+        entity.setUnindexedProperty("read", m.getRead());
+        entity.setUnindexedProperty("startFrom", m.getStartFrom());
         entity.setProperty("user", m.getUser());
         entity.setProperty("version", m.getVersion());
         entity.setProperty("slim3.schemaVersion", 1);
@@ -148,6 +153,10 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
             writer.setNextPropertyName("endTo");
             encoder0.encode(writer, m.getEndTo());
         }
+        if(m.getExportAlias() != null){
+            writer.setNextPropertyName("exportAlias");
+            encoder0.encode(writer, m.getExportAlias());
+        }
         if(m.getFilter() != null){
             writer.setNextPropertyName("filter");
             encoder0.encode(writer, m.getFilter());
@@ -198,6 +207,8 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         org.slim3.datastore.json.Default decoder0 = new org.slim3.datastore.json.Default();
         reader = rootReader.newObjectReader("endTo");
         m.setEndTo(decoder0.decode(reader, m.getEndTo()));
+        reader = rootReader.newObjectReader("exportAlias");
+        m.setExportAlias(decoder0.decode(reader, m.getExportAlias()));
         reader = rootReader.newObjectReader("filter");
         m.setFilter(decoder0.decode(reader, m.getFilter()));
         reader = rootReader.newObjectReader("filterObject");

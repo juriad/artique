@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 
@@ -32,6 +33,15 @@ public class ListFilterEditor extends Composite
 
 	@UiField
 	Grid grid;
+
+	@UiField
+	TextBox name;
+
+	@UiField
+	TextBox hierarchy;
+
+	@UiField
+	OptionalValue<TextBox, String> exported;
 
 	@UiField
 	ArtiqueQueryFilter filter;
@@ -55,8 +65,8 @@ public class ListFilterEditor extends Composite
 
 	public ListFilterEditor() {
 		initWidget(uiBinder.createAndBindUi(this));
-		Element element = grid.getCellFormatter().getElement(0, 0);
-		DOM.setElementAttribute(element, "colspan", "3");
+		Element element = grid.getCellFormatter().getElement(3, 0);
+		DOM.setElementAttribute(element, "colspan", "2");
 	}
 
 	public boolean isEnabled() {
@@ -65,6 +75,9 @@ public class ListFilterEditor extends Composite
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+		name.setEnabled(enabled);
+		hierarchy.setEnabled(enabled);
+		exported.setEnabled(enabled);
 		filter.setEnabled(enabled);
 		startFrom.setEnabled(enabled);
 		endTo.setEnabled(enabled);
@@ -79,6 +92,21 @@ public class ListFilterEditor extends Composite
 
 	public ListFilter getValue() {
 		ListFilter lf = new ListFilter();
+		String _name = name.getValue().trim();
+		if (_name.equals(""))
+			_name = null;
+		lf.setName(_name);
+		String _hierarchy = hierarchy.getValue().trim();
+		if (!_hierarchy.startsWith("/"))
+			_hierarchy = "/" + _hierarchy;
+		lf.setHierarchy(_hierarchy);
+		String _exported = exported.getValue();
+		if (_exported != null)
+			_exported.trim();
+		if (_exported != null && _exported.equals(""))
+			_exported = null;
+		lf.setExportAlias(_exported);
+
 		lf.setFilterObject(filter.getFilter());
 		lf.setStartFrom(startFrom.getValue());
 		lf.setEndTo(endTo.getValue());
@@ -88,12 +116,16 @@ public class ListFilterEditor extends Composite
 		lf.setOrder(orderPicker.getValue());
 
 		lf.setUser(ArtiqueWorld.WORLD.getUser());
-		lf.setKey(getListFilterKey());
-		lf.setFilter(getFilterKey());
+		lf.setKey(listFilterKey);
+		lf.setFilter(filterKey);
 		return lf;
 	}
 
 	public void setValue(ListFilter value) {
+		name.setValue(value.getName());
+		hierarchy.setValue(value.getHierarchy());
+		exported.setValue(value.getExportAlias());
+
 		filter.setFilter(value.getFilterObject());
 		startFrom.setValue(value.getStartFrom());
 		endTo.setValue(value.getEndTo());
@@ -102,28 +134,12 @@ public class ListFilterEditor extends Composite
 		readPicker.setValue(ReadState.get(read));
 		orderPicker.setValue(value.getOrder());
 
-		setListFilterKey(value.getKey());
-		setFilterKey(value.getFilter());
+		listFilterKey = value.getKey();
+		filterKey = value.getFilter();
 	}
 
 	public void setValue(ListFilter value, boolean fireEvents) {
 		setValue(value);
-	}
-
-	public Key getListFilterKey() {
-		return listFilterKey;
-	}
-
-	public void setListFilterKey(Key listFilterKey) {
-		this.listFilterKey = listFilterKey;
-	}
-
-	public Key getFilterKey() {
-		return filterKey;
-	}
-
-	public void setFilterKey(Key filterKey) {
-		this.filterKey = filterKey;
 	}
 
 }

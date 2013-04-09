@@ -21,6 +21,6 @@ public interface LabelsManager<E extends HasDisplayName & HasKey<K>, K>
 
 	List<E> fullTextSearch(String text, List<E> allLabels);
 
-	E getLabelByName(String name);
+	E getLabelByName(LabelType type, String name);
 
 }

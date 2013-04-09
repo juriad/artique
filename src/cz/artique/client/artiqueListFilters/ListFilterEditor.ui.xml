@@ -7,6 +7,34 @@
 
 	<g:Grid ui:field="grid">
 		<g:row>
+			<g:cell>
+				<ui:text from='{res.name}' />
+			</g:cell>
+			<g:customCell>
+				<g:TextBox ui:field="name" />
+			</g:customCell>
+		</g:row>
+		<g:row>
+			<g:cell>
+				<ui:text from='{res.hierarchy}' />
+			</g:cell>
+			<g:customCell>
+				<g:TextBox ui:field="hierarchy" />
+			</g:customCell>
+		</g:row>
+		<g:row>
+			<g:cell>
+				<ui:text from='{res.exported}' />
+			</g:cell>
+			<g:customCell>
+				<a:OptionalValue ui:field="exported">
+					<a:value>
+						<g:TextBox />
+					</a:value>
+				</a:OptionalValue>
+			</g:customCell>
+		</g:row>
+		<g:row>
 			<g:customCell>
 				<a:ArtiqueQueryFilter ui:field="filter" />
 			</g:customCell>

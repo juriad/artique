@@ -114,7 +114,8 @@ public class ListFilterService {
 	}
 
 	public void deleteListFilter(ListFilter listFilter) {
-		deleteFilter(listFilter.getFilterObject());
+		Filter f = getFilter(listFilter.getFilter());
+		deleteFilter(f);
 		Datastore.delete(listFilter.getKey());
 	}
 }

@@ -3,7 +3,6 @@ package cz.artique.client.artiqueListing;
 import java.util.Date;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -14,8 +13,8 @@ import cz.artique.shared.items.ListingUpdate;
 import cz.artique.shared.items.ListingUpdateRequest;
 import cz.artique.shared.model.config.ClientConfigKey;
 import cz.artique.shared.model.item.UserItem;
-import cz.artique.shared.model.label.ListFilterOrder;
 import cz.artique.shared.model.label.ListFilter;
+import cz.artique.shared.model.label.ListFilterOrder;
 
 public class AbstractListDataProvider
 		implements InfiniteListDataProvider<UserItem> {
@@ -81,7 +80,6 @@ public class AbstractListDataProvider
 		if (canceled) {
 			return false;
 		}
-		GWT.log("fetching: " + count);
 		if (count < 0) {
 			count =
 				Managers.CONFIG_MANAGER
@@ -126,7 +124,6 @@ public class AbstractListDataProvider
 	}
 
 	protected void doFetch(int count) {
-		GWT.log("do fetch " + count);
 		if (lastFetchProbeDate != null) {
 			return;
 		}

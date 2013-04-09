@@ -9,6 +9,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
 import cz.artique.shared.utils.GenKey;
+import cz.artique.shared.utils.HasDeepEquals;
 import cz.artique.shared.utils.HasDisplayName;
 import cz.artique.shared.utils.HasKey;
 import cz.artique.shared.utils.HasName;
@@ -17,7 +18,7 @@ import cz.artique.shared.utils.SharedUtils;
 @Model(schemaVersion = 1)
 public class Label
 		implements Serializable, GenKey, HasName, HasDisplayName, HasKey<Key>,
-		Comparable<Label> {
+		Comparable<Label>, HasDeepEquals<Label> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -87,6 +88,10 @@ public class Label
 		if (key == null) {
 			if (other.key != null) {
 				return false;
+			} else {
+				if(!equalsDeeply(other)) {
+					return false;
+				}
 			}
 		} else if (!key.equals(other.key)) {
 			return false;
@@ -213,5 +218,9 @@ public class Label
 
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
+	}
+
+	public boolean equalsDeeply(Label e) {
+		return getName().equals(e.getName()) && getUser().equals(e.getUser());
 	}
 }

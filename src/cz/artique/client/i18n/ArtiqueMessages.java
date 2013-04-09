@@ -1,12 +1,26 @@
 package cz.artique.client.i18n;
 
 import com.google.gwt.i18n.client.Messages;
-import com.google.gwt.safehtml.shared.SafeHtml;
 
 public interface ArtiqueMessages extends Messages {
-	@DefaultMessage("Added: <span class='abbr'>{0}</span> (<span class='full'>{1}</span>)")
-	SafeHtml getDateAdded(String abbrev, String full);
+	@DefaultMessage("Filter {0} has been created.")
+	String listFilterCreated(String name);
 
-	@DefaultMessage("Published: <span class='abbr'>{0}</span> (<span class='full'>{1}</span>)")
-	SafeHtml getDatePublished(String abbrev, String full);
+	@DefaultMessage("Filter {0} has been updated.")
+	String listFilterUpdated(String name);
+
+	@DefaultMessage("Filter {0} has been deleted.")
+	String listFilterDeleted(String name);
+
+	@DefaultMessage("Failed to create filter {0}.")
+	String listFilterCreatedError(String name);
+
+	@DefaultMessage("Filter to update filter {0}.")
+	String listFilterUpdatedError(String name);
+
+	@DefaultMessage("Failed to delete filter {0}.")
+	String listFilterDeletedError(String name);
+
+	@DefaultMessage("{0} must be specified.")
+	String errorEmptyField(String field);
 }

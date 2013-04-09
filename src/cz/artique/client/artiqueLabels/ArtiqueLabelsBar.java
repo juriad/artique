@@ -18,8 +18,7 @@ public class ArtiqueLabelsBar extends LabelsBar<Label, Key> {
 	private UserItem item;
 
 	public ArtiqueLabelsBar(UserItem item, int maxSize) {
-		super(Managers.LABELS_MANAGER,
-			ClickableArtiqueLabel.REMOVABLE_FACTORY,
+		super(Managers.LABELS_MANAGER, ClickableArtiqueLabel.REMOVABLE_FACTORY,
 			new ArtiqueLabelSuggestionFactory(), maxSize);
 		this.item = item;
 
@@ -47,7 +46,9 @@ public class ArtiqueLabelsBar extends LabelsBar<Label, Key> {
 	@Override
 	protected void newLabelAdded(final String name) {
 
-		Label labelByName = Managers.LABELS_MANAGER.getLabelByName(name);
+		Label labelByName =
+			Managers.LABELS_MANAGER
+				.getLabelByName(LabelType.USER_DEFINED, name);
 		if (labelByName != null) {
 			labelAdded(labelByName);
 		} else {

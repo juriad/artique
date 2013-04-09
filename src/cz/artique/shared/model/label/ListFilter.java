@@ -33,19 +33,25 @@ public class ListFilter
 	@Attribute(persistent = false)
 	private Filter filterObject;
 
+	@Attribute(unindexed = true)
 	private Boolean read;
 
 	private String name;
 
+	@Attribute(unindexed = true)
 	private ListFilterOrder order;
 
+	@Attribute(unindexed = true)
 	private Date startFrom;
 
+	@Attribute(unindexed = true)
 	private Date endTo;
 
 	private String hierarchy;
 
 	private User user;
+
+	private String exportAlias;
 
 	/**
 	 * Returns the key.
@@ -187,6 +193,7 @@ public class ListFilter
 			&& SharedUtils.eq(getName(), e.getOrder())
 			&& SharedUtils.eq(getOrder(), e.getOrder())
 			&& SharedUtils.eq(getStartFrom(), e.getStartFrom())
+			&& SharedUtils.eq(getExportAlias(), e.getExportAlias())
 			&& SharedUtils.deepEq(getFilterObject(), e.getFilterObject());
 	}
 
@@ -196,5 +203,13 @@ public class ListFilter
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public String getExportAlias() {
+		return exportAlias;
+	}
+
+	public void setExportAlias(String exportAlias) {
+		this.exportAlias = exportAlias;
 	}
 }

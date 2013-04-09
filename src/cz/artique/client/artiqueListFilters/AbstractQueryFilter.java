@@ -74,6 +74,8 @@ public abstract class AbstractQueryFilter extends Composite
 								AddLabelButtonFactory.FACTORY.createAddLabel();
 							addButton.addClickHandler(addHandler);
 							panel.insert(addButton, widgetIndex);
+
+							labels.add(widgetIndex / 2, added);
 						} else {
 							// TODO vynadat uzivateli
 						}

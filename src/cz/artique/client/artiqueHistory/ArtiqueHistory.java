@@ -50,15 +50,15 @@ public class ArtiqueHistory
 		if (historyItems.isEmpty()) {
 			add(listFilter, token, issueEvent);
 		} else {
-			String last = historyItems.getLast().getToken();
-			if (!last.equals(token)) {
-				HistoryItem existing = getByToken(token);
-				if (existing != null) {
-					historyItems.remove(existing);
-					HierarchyUtils.remove(hierarchyRoot, existing);
-				}
-				add(listFilter, token, issueEvent);
+			// String last = historyItems.getLast().getToken();
+			// if (!last.equals(token)) {
+			HistoryItem existing = getByToken(token);
+			if (existing != null) {
+				historyItems.remove(existing);
+				HierarchyUtils.remove(hierarchyRoot, existing);
 			}
+			add(listFilter, token, issueEvent);
+			// }
 		}
 
 		while (historyItems.size() > getMaxItems()) {
@@ -95,7 +95,6 @@ public class ArtiqueHistory
 		getHierarchyRoot().addChild(
 			new TimedLeafNode<HistoryItem>(historyItem, getHierarchyRoot()));
 
-		System.out.println("new item");
 		History.newItem(token, issueEvent);
 	}
 
