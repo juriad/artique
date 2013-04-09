@@ -51,7 +51,7 @@ public class ClickableArtiqueLabel extends ArtiqueLabelWidget {
 					String serialized =
 						CachingHistoryUtils.UTILS.serializeListFilter(filter);
 					ArtiqueHistory.HISTORY
-						.addListFilter(listFilter, serialized);
+						.setListFilter(listFilter, serialized);
 				}
 				event.preventDefault();
 			}

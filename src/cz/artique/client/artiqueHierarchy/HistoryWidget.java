@@ -51,7 +51,7 @@ public class HistoryWidget extends Composite
 				public void onClick(ClickEvent event) {
 					if (impl.handleAsClick(Event.as(event.getNativeEvent()))) {
 
-						ArtiqueHistory.HISTORY.addListFilter(
+						ArtiqueHistory.HISTORY.setListFilter(
 							item.getListFilter(), item.getToken());
 
 						event.preventDefault();

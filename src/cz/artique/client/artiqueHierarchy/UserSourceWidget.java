@@ -62,7 +62,7 @@ public class UserSourceWidget extends Composite
 					ListFilter baseListFilter =
 						ArtiqueHistory.HISTORY.getBaseListFilter();
 					baseListFilter.setFilterObject(filter);
-					ArtiqueHistory.HISTORY.addListFilter(baseListFilter,
+					ArtiqueHistory.HISTORY.setListFilter(baseListFilter,
 						serialized);
 
 					event.preventDefault();

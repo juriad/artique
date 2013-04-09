@@ -29,13 +29,7 @@
 									<g:header size="3">
 										<ui:text from='{res.filters}' />
 									</g:header>
-									<g:VerticalPanel>
-										<g:FlowPanel>
-											<g:Button ui:field="saveFilter" text="save" />
-											<!-- TODO create filter, change filter -->
-										</g:FlowPanel>
-										<ah:ArtiqueListFiltersTree ui:field="filters" />
-									</g:VerticalPanel>
+									<ah:ArtiqueListFiltersTree ui:field="filters" />
 								</g:stack>
 								<g:stack>
 									<g:header size="3">

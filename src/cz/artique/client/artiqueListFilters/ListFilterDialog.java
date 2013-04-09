@@ -8,7 +8,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 
-import cz.artique.client.artiqueHistory.ArtiqueHistory;
 import cz.artique.client.i18n.ArtiqueConstants;
 import cz.artique.client.i18n.ArtiqueI18n;
 import cz.artique.client.i18n.ArtiqueMessages;
@@ -24,6 +23,8 @@ public class ListFilterDialog {
 
 	interface ListFilterDialogUiBinder
 			extends UiBinder<DialogBox, ListFilterDialog> {}
+
+	public static final ListFilterDialog DIALOG = new ListFilterDialog();
 
 	@UiField
 	DialogBox dialog;
@@ -53,7 +54,7 @@ public class ListFilterDialog {
 	@UiHandler("newButton")
 	protected void newButtonClicked(ClickEvent event) {
 		editor.setValue(new ListFilter());
-		setNewButtonText();
+		setNewButtonText(false);
 	}
 
 	@UiHandler("cloneButton")
@@ -63,7 +64,7 @@ public class ListFilterDialog {
 		value.setKey(null);
 		value.setExportAlias(null);
 		editor.setValue(value);
-		setNewButtonText();
+		setNewButtonText(false);
 	}
 
 	@UiHandler("saveButton")
@@ -98,17 +99,15 @@ public class ListFilterDialog {
 		dialog.hide();
 	}
 
-	public void showDialog() {
-		editor.setValue(ArtiqueHistory.HISTORY
-			.getLastHistoryItem()
-			.getListFilter());
-		setNewButtonText();
+	public void showDialog(ListFilter value) {
+		editor.setValue(value);
+		setNewButtonText(value.getKey() != null);
 		dialog.show();
 	}
 
-	public void setNewButtonText() {
+	public void setNewButtonText(boolean justEditing) {
 		ArtiqueConstants constants = ArtiqueI18n.I18N.getConstants();
-		if (editor.getValue().getKey() != null) {
+		if (justEditing) {
 			newButton.setText(constants.newButton());
 			cloneButton.setEnabled(true);
 			deleteButton.setEnabled(true);

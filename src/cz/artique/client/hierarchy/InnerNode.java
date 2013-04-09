@@ -148,4 +148,9 @@ public class InnerNode<E extends HasName & HasHierarchy>
 		return getSiblings().indexOf(this);
 	}
 
+	public String getHierarchy() {
+		return getParent() != null ? getParent().getHierarchy() + getName()
+			+ "/" : "/";
+	}
+
 }

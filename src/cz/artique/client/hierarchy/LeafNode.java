@@ -107,4 +107,8 @@ public class LeafNode<E extends HasName & HasHierarchy> implements Hierarchy<E> 
 		return getSiblings().indexOf(this);
 	}
 
+	public String getHierarchy() {
+		return getItem().getHierarchy();
+	}
+
 }

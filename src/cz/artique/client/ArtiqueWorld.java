@@ -9,6 +9,7 @@ public enum ArtiqueWorld {
 
 	private UserInfo userInfo;
 	private ArtiqueList list;
+	private Resources resources;
 
 	public UserInfo getUserInfo() {
 		return userInfo;
@@ -28,6 +29,14 @@ public enum ArtiqueWorld {
 
 	public void setList(ArtiqueList list) {
 		this.list = list;
+	}
+
+	public void setResources(Resources resources) {
+		this.resources = resources;
+	}
+
+	public Resources getResources() {
+		return resources;
 	}
 
 }

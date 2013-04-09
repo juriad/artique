@@ -1,14 +1,11 @@
 package cz.artique.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -16,10 +13,8 @@ import com.google.gwt.user.client.ui.Widget;
 import cz.artique.client.artiqueHierarchy.ArtiqueHistoryTree;
 import cz.artique.client.artiqueHierarchy.ArtiqueListFiltersTree;
 import cz.artique.client.artiqueHierarchy.ArtiqueSourcesTree;
-import cz.artique.client.artiqueHistory.ArtiqueHistoryHandler;
 import cz.artique.client.artiqueHistory.HistoryEvent;
 import cz.artique.client.artiqueHistory.HistoryHandler;
-import cz.artique.client.artiqueListFilters.ListFilterDialog;
 import cz.artique.client.artiqueListing.ArtiqueList;
 import cz.artique.client.artiqueListing.ArtiqueListProvider;
 import cz.artique.client.artiqueListing.UserItemRow;
@@ -52,32 +47,21 @@ public class Artique extends Composite {
 	ArtiqueListFiltersTree filters;
 
 	@UiField
-	Button saveFilter;
-
-	@UiField
 	ArtiqueMessenger messenger;
 
-	@UiHandler("saveFilter")
-	protected void saveFilter(ClickEvent event) {
-		listFilterDialog.showDialog();
-	}
-
 	private static Resources resources;
-
-	private final ListFilterDialog listFilterDialog;
 
 	static {
 		resources = GWT.create(Resources.class);
 		resources.css().ensureInjected();
+		ArtiqueWorld.WORLD.setResources(resources);
 	}
 
 	public Artique() {
 		list = new ArtiqueList(UserItemRow.factory);
 		initWidget(uiBinder.createAndBindUi(this));
 		ArtiqueWorld.WORLD.setList(list);
-		
-		listFilterDialog = new ListFilterDialog();
-		
+
 		initHistory();
 
 		userName.setText(ArtiqueWorld.WORLD.getUser().getNickname());
@@ -99,9 +83,6 @@ public class Artique extends Composite {
 				}
 			}
 		});
-
-		// observe GWT history
-		History.addValueChangeHandler(new ArtiqueHistoryHandler());
 
 		// fire initial history when managers are ready
 		Managers.waitForManagers(new AsyncCallback<Void>() {

@@ -1,8 +1,12 @@
 package cz.artique.client.artiqueHistory;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -21,9 +25,29 @@ import cz.artique.shared.utils.SortedList;
 
 public class ArtiqueHistory
 		implements ProvidesHierarchy<HistoryItem>, HasHistoryHandlers, Manager {
+
+	public class ArtiqueHistoryHandler implements ValueChangeHandler<String> {
+
+		public void onValueChange(ValueChangeEvent<String> event) {
+			String token = event.getValue();
+			HistoryItem historyItem = getByToken(token);
+			if (historyItem == null) {
+				ListFilter deserialized =
+					HistoryUtils.UTILS.deserializeListFilter(event.getValue());
+				historyItem = new HistoryItem(deserialized, token);
+			}
+
+			addHistoryItem(historyItem);
+			CachingHistoryUtils.UTILS.setBaseListFilter();
+		}
+	}
+
 	public static final ArtiqueHistory HISTORY = new ArtiqueHistory();
 
 	private ArtiqueHistory() {
+		// observe GWT history
+		History.addValueChangeHandler(new ArtiqueHistoryHandler());
+
 		Managers.waitForManagers(new AsyncCallback<Void>() {
 
 			public void onSuccess(Void result) {
@@ -45,21 +69,30 @@ public class ArtiqueHistory
 	private final LinkedList<HistoryItem> historyItems =
 		new LinkedList<HistoryItem>();
 
-	public void addListFilter(ListFilter listFilter, String token,
-			boolean issueEvent) {
-		if (historyItems.isEmpty()) {
-			add(listFilter, token, issueEvent);
+	private Map<String, HistoryItem> tokenMap =
+		new HashMap<String, HistoryItem>();
+
+	public void setListFilter(ListFilter listFilter, String token) {
+		tokenMap.put(token, new HistoryItem(listFilter, token));
+		if (getLastHistoryItem() != null
+			&& getLastHistoryItem().getToken().equals(token)) {
+			// same token, but updated listfilter
+			History.fireCurrentHistoryState();
 		} else {
-			// String last = historyItems.getLast().getToken();
-			// if (!last.equals(token)) {
-			HistoryItem existing = getByToken(token);
-			if (existing != null) {
-				historyItems.remove(existing);
-				HierarchyUtils.remove(hierarchyRoot, existing);
-			}
-			add(listFilter, token, issueEvent);
-			// }
+			// tokens are not same
+			History.newItem(token);
 		}
+	}
+
+	protected void addHistoryItem(HistoryItem historyItem) {
+		if (historyItems.contains(historyItem)) {
+			historyItems.remove(historyItem);
+			HierarchyUtils.remove(hierarchyRoot, historyItem);
+		}
+
+		historyItems.add(historyItem);
+		getHierarchyRoot().addChild(
+			new TimedLeafNode<HistoryItem>(historyItem, getHierarchyRoot()));
 
 		while (historyItems.size() > getMaxItems()) {
 			HistoryItem first = historyItems.removeFirst();
@@ -68,9 +101,7 @@ public class ArtiqueHistory
 			}
 		}
 
-		if (!issueEvent) {
-			fireHistoryChanged();
-		}
+		fireHistoryChanged();
 	}
 
 	/**
@@ -82,20 +113,6 @@ public class ArtiqueHistory
 			PriorityHandler<HistoryHandler> hh = handlers.get(i);
 			hh.getHandler().onHistoryChanged(event);
 		}
-	}
-
-	public void addListFilter(ListFilter listFilter, String token) {
-		addListFilter(listFilter, token, true);
-	}
-
-	private void add(ListFilter listFilter, String token, boolean issueEvent) {
-		HistoryItem historyItem = new HistoryItem(listFilter, token);
-		historyItems.add(historyItem);
-
-		getHierarchyRoot().addChild(
-			new TimedLeafNode<HistoryItem>(historyItem, getHierarchyRoot()));
-
-		History.newItem(token, issueEvent);
 	}
 
 	public int getMaxItems() {
@@ -137,12 +154,7 @@ public class ArtiqueHistory
 	}
 
 	public HistoryItem getByToken(String token) {
-		for (HistoryItem hi : historyItems) {
-			if (hi.getToken().equals(token)) {
-				return hi;
-			}
-		}
-		return null;
+		return tokenMap.get(token);
 	}
 
 	private static class PriorityHandler<E>

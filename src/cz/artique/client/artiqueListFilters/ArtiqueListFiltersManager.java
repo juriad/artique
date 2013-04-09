@@ -149,7 +149,7 @@ public class ArtiqueListFiltersManager
 					MessageType.INFO, messages.listFilterCreated(result
 						.getName())));
 				String token = HistoryUtils.UTILS.serializeListFilter(result);
-				Managers.HISTORY_MANAGER.addListFilter(result, token);
+				Managers.HISTORY_MANAGER.setListFilter(result, token);
 				if (ping != null) {
 					ping.onSuccess(result);
 				}
@@ -213,7 +213,7 @@ public class ArtiqueListFiltersManager
 					MessageType.INFO, messages.listFilterUpdated(result
 						.getName())));
 				String token = HistoryUtils.UTILS.serializeListFilter(result);
-				Managers.HISTORY_MANAGER.addListFilter(result, token);
+				Managers.HISTORY_MANAGER.setListFilter(result, token);
 				if (ping != null) {
 					ping.onSuccess(null);
 				}
