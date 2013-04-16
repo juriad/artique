@@ -126,7 +126,6 @@ public class UserSourceService {
 
 	public UserSource ensureManualSource() {
 		User user = UserServiceFactory.getUserService().getCurrentUser();
-		System.out.println(user.getUserId());
 		ManualSource ms = new ManualSource(user);
 		ManualSource manualSource =
 			Datastore.getOrNull(ManualSourceMeta.get(), ServerUtils.genKey(ms));

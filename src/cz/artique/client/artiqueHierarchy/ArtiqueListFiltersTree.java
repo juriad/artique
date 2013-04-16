@@ -23,6 +23,7 @@ public class ArtiqueListFiltersTree
 	@Override
 	protected void initialized() {
 		observeHistoryChange();
+		expand(2);
 	}
 
 	private void observeHistoryChange() {
@@ -32,21 +33,25 @@ public class ArtiqueListFiltersTree
 					ArtiqueHistory.HISTORY.getLastHistoryItem();
 				if (historyItem != null) {
 					ListFilter listFilter = historyItem.getListFilter();
-					if (listFilter.getName() != null) {
+					if (listFilter.getKey() != null) {
 						Hierarchy<ListFilter> hierarchy =
 							HierarchyUtils.findInTree(getRoot(), listFilter);
-						TreeItem inTree = findInTree(hierarchy, getRootItem());
-						if (inTree != null) {
-							getTree().setSelectedItem(inTree);
-						} else {
-							getTree().setSelectedItem(null);
+						if (hierarchy == null) {
+							TreeItem inTree =
+								findInTree(hierarchy, getRootItem());
+							if (inTree != null) {
+								getTree().setSelectedItem(inTree);
+							}
 						}
-					} else {
-						getTree().setSelectedItem(null);
 					}
 				}
+				getTree().setSelectedItem(getAdhocTreeItem());
 			}
 		});
 	}
-
+	
+	private TreeItem getAdhocTreeItem() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

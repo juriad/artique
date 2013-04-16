@@ -20,4 +20,6 @@ public interface Resources extends ClientBundle {
 	@Source("icons/document-save-as.png")
 	ImageResource saveCurrent();
 
+	@Source("icons/edit-clear.png")
+	ImageResource clear();
 }

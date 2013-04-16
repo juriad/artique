@@ -212,4 +212,17 @@ public class ListFilter
 	public void setExportAlias(String exportAlias) {
 		this.exportAlias = exportAlias;
 	}
+
+	public ListFilter clone() {
+		ListFilter clone = new ListFilter();
+		clone.setEndTo(endTo);
+		clone.setFilterObject(filterObject);
+		clone.setHierarchy(hierarchy);
+		clone.setName(name);
+		clone.setOrder(order);
+		clone.setRead(read);
+		clone.setStartFrom(startFrom);
+		clone.setUser(user);
+		return clone;
+	}
 }

@@ -128,4 +128,15 @@ public class AbstractHierarchyTree<E extends HasHierarchy & HasName, F extends P
 	protected Hierarchy<E> getRoot() {
 		return root;
 	}
+
+	protected void expand(int levels) {
+		expand(getRootItem(), levels);
+	}
+
+	private void expand(TreeItem item, int levels) {
+		item.setState(true);
+		for (int i = 0; i < item.getChildCount(); i++) {
+			expand(item.getChild(i), levels - 1);
+		}
+	}
 }

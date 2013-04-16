@@ -12,20 +12,18 @@
 		</g:caption>
 		<g:VerticalPanel>
 			<a:ListFilterEditor ui:field="editor" />
-			<g:HorizontalPanel horizontalAlignment="ALIGN_RIGHT">
-				<g:Button ui:field="newButton" /> <!-- new or wipe -->
-				<g:Button ui:field="cloneButton">
-					<ui:text from='{res.cloneButton}' />
-				</g:Button>
-				<g:Button ui:field="saveButton">
-					<ui:text from='{res.saveButton}' />
-				</g:Button>
-				<g:Button ui:field="deleteButton">
-					<ui:text from='{res.deleteButton}' />
-				</g:Button>
-				<g:Button ui:field="cancelButton">
-					<ui:text from='{res.cancelButton}' />
-				</g:Button>
+			<g:HorizontalPanel>
+				<g:cell horizontalAlignment="ALIGN_RIGHT" width="100%">
+					<g:Button ui:field="deleteButton" /> <!-- delete or wipe -->
+				</g:cell>
+				<g:cell horizontalAlignment="ALIGN_RIGHT">
+					<g:Button ui:field="saveButton" /> <!-- save or apply -->
+				</g:cell>
+				<g:cell horizontalAlignment="ALIGN_RIGHT">
+					<g:Button ui:field="cancelButton">
+						<ui:text from='{res.cancelButton}' />
+					</g:Button>
+				</g:cell>
 			</g:HorizontalPanel>
 		</g:VerticalPanel>
 	</g:DialogBox>

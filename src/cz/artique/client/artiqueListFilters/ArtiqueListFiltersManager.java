@@ -32,10 +32,17 @@ public class ArtiqueListFiltersManager
 	public static final ArtiqueListFiltersManager MANAGER =
 		new ArtiqueListFiltersManager();
 
+	private Hierarchy<ListFilter> hierarchyRoot = HierarchyUtils
+		.createRootNode();
+
 	private ArtiqueListFiltersManager() {
 		super(
 			GWT
 				.<ClientListFilterServiceAsync> create(ClientListFilterService.class));
+		ListFilter adhoc = new ListFilter();
+		adhoc.setHierarchy("/");
+		adhoc.setName("");
+		HierarchyUtils.add(hierarchyRoot, adhoc);
 		refresh(null);
 	}
 
@@ -115,9 +122,6 @@ public class ArtiqueListFiltersManager
 		}
 	}
 
-	private Hierarchy<ListFilter> hierarchyRoot = HierarchyUtils
-		.createRootNode();
-
 	public Hierarchy<ListFilter> getHierarchyRoot() {
 		return hierarchyRoot;
 	}
@@ -126,7 +130,6 @@ public class ArtiqueListFiltersManager
 		return listFilterByKey.get(key);
 	}
 
-	// FIXME poradne otestovat prejmenovani a tak
 	public void addListFilter(final ListFilter listFilter,
 			final AsyncCallback<ListFilter> ping) {
 		service.addListFilter(listFilter, new AsyncCallback<ListFilter>() {

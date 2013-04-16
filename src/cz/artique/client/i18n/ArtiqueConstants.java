@@ -63,9 +63,6 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 	@DefaultStringValue("Wipe")
 	String wipeButton();
 
-	@DefaultStringValue("Clone")
-	String cloneButton();
-
 	@DefaultStringValue("Save")
 	String saveButton();
 
@@ -83,4 +80,25 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("Export name")
 	String exported();
+
+	@DefaultStringValue("Adhoc")
+	String adhoc();
+
+	@DefaultStringValue("Clears current filter.")
+	String clearListFilterTooltip();
+
+	@DefaultStringValue("Creates a new filter.")
+	String createNewListFilterTooltip();
+
+	@DefaultStringValue("Saves current filter.")
+	String saveCurrentListFilterTooltip();
+
+	@DefaultStringValue("Shows dialog with detail information about this filter.")
+	String detailListFilterTooltip();
+
+	@DefaultStringValue("Click to adjust current filter.")
+	String adhocTooltip();
+
+	@DefaultStringValue("Apply")
+	String applyButton();
 }

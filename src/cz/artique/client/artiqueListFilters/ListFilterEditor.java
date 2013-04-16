@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -140,6 +141,17 @@ public class ListFilterEditor extends Composite
 
 	public void setValue(ListFilter value, boolean fireEvents) {
 		setValue(value);
+	}
+
+	public void setProper(boolean proper) {
+		for (int i = 0; i < 3; i++) {
+			Element element = grid.getRowFormatter().getElement(i);
+			if (proper) {
+				element.getStyle().clearDisplay();
+			} else {
+				element.getStyle().setDisplay(Display.NONE);
+			}
+		}
 	}
 
 }
