@@ -5,4 +5,6 @@ import cz.artique.shared.utils.HasName;
 
 public interface ProvidesHierarchy<E extends HasName & HasHierarchy> {
 	Hierarchy<E> getHierarchyRoot();
+
+	Hierarchy<E> getAdhocItem();
 }

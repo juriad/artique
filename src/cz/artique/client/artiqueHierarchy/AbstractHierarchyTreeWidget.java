@@ -83,4 +83,15 @@ public class AbstractHierarchyTreeWidget<E extends HasHierarchy & HasName>
 		}
 		return image;
 	}
+
+	protected boolean selected = false;
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+		this.setStyleDependentName("selected", selected);
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
 }

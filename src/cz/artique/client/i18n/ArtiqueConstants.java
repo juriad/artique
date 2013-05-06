@@ -69,6 +69,9 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 	@DefaultStringValue("Delete")
 	String deleteButton();
 
+	@DefaultStringValue("Close")
+	String closeButton();
+
 	@DefaultStringValue("Cancel")
 	String cancelButton();
 
@@ -101,4 +104,11 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("Apply")
 	String applyButton();
+
+	@DefaultStringValue("Clears whole history.")
+	String clearHistoryTooltip();
+
+	@DefaultStringValue("Clears all messages.")
+	String clearMessagesTooltip();
+
 }

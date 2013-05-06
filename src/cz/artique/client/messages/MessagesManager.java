@@ -7,6 +7,7 @@ import java.util.List;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyUtils;
 import cz.artique.client.hierarchy.InnerNode;
 import cz.artique.client.hierarchy.ProvidesHierarchy;
@@ -112,5 +113,16 @@ public class MessagesManager
 
 	public boolean isReady() {
 		return true;
+	}
+
+	public Hierarchy<Message> getAdhocItem() {
+		return null;
+	}
+
+	public void clear() {
+		while (messages.size() > 0) {
+			Message removed = messages.remove(0);
+			HierarchyUtils.remove(hierarchyRoot, removed);
+		}
 	}
 }

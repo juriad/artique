@@ -141,4 +141,8 @@ public class ArtiqueSourcesManager
 		return hierarchyRoot;
 	}
 
+	public Hierarchy<UserSource> getAdhocItem() {
+		return null;
+	}
+
 }

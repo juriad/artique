@@ -1,6 +1,7 @@
 package cz.artique.shared.model.label;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slim3.datastore.Attribute;
@@ -156,5 +157,18 @@ public class Filter implements Serializable, HasDeepEquals<Filter> {
 			&& SharedUtils.eq(getType(), e.getType())
 			&& SharedUtils.eq(getUser(), e.getUser())
 			&& SharedUtils.deepEq(getFilterObjects(), e.getFilterObjects());
+	}
+
+	public List<Key> flat() {
+		List<Key> keys = new ArrayList<Key>();
+		if (getLabels() != null) {
+			keys.addAll(getLabels());
+		}
+		if (getFilterObjects() != null) {
+			for (Filter f : getFilterObjects()) {
+				keys.addAll(f.flat());
+			}
+		}
+		return keys;
 	}
 }

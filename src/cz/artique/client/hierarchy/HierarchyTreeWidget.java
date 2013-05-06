@@ -11,4 +11,8 @@ public interface HierarchyTreeWidget<E extends HasHierarchy & HasName>
 
 	Hierarchy<E> getHierarchy();
 
+	void setSelected(boolean selected);
+
+	boolean isSelected();
+
 }

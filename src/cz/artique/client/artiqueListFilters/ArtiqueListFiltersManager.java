@@ -35,6 +35,8 @@ public class ArtiqueListFiltersManager
 	private Hierarchy<ListFilter> hierarchyRoot = HierarchyUtils
 		.createRootNode();
 
+	private Hierarchy<ListFilter> adhocItem;
+
 	private ArtiqueListFiltersManager() {
 		super(
 			GWT
@@ -43,6 +45,7 @@ public class ArtiqueListFiltersManager
 		adhoc.setHierarchy("/");
 		adhoc.setName("");
 		HierarchyUtils.add(hierarchyRoot, adhoc);
+		adhocItem = HierarchyUtils.findInTree(hierarchyRoot, adhoc);
 		refresh(null);
 	}
 
@@ -222,5 +225,9 @@ public class ArtiqueListFiltersManager
 				}
 			}
 		});
+	}
+
+	public Hierarchy<ListFilter> getAdhocItem() {
+		return adhocItem;
 	}
 }

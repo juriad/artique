@@ -11,4 +11,9 @@ public class ArtiqueHistoryTree
 		super(ArtiqueHistory.HISTORY, HistoryWidgetFactory.FACTORY);
 	}
 
+	@Override
+	protected void initialized() {
+		expand(2);
+	}
+
 }

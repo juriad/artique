@@ -1,5 +1,8 @@
 package cz.artique.client.artiqueHierarchy;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -24,9 +27,11 @@ public class AbstractHierarchyTree<E extends HasHierarchy & HasName, F extends P
 	private final HierarchyTreeWidgetFactory<E> factory;
 	private TreeItem rootItem;
 	private Hierarchy<E> root;
+	private F manager;
 
 	public AbstractHierarchyTree(final F manager,
 			final HierarchyTreeWidgetFactory<E> factory) {
+		this.manager = manager;
 		this.factory = factory;
 		scrollPanel = new ScrollPanel();
 		initWidget(scrollPanel);
@@ -137,6 +142,37 @@ public class AbstractHierarchyTree<E extends HasHierarchy & HasName, F extends P
 		item.setState(true);
 		for (int i = 0; i < item.getChildCount(); i++) {
 			expand(item.getChild(i), levels - 1);
+		}
+	}
+
+	Boolean hasAdhocTreeItem = null;
+	TreeItem adhocTreeItem = null;
+
+	protected TreeItem getAdhocTreeItem() {
+		if (hasAdhocTreeItem == null) {
+			Hierarchy<E> adhocItem = manager.getAdhocItem();
+			if (adhocItem == null) {
+				hasAdhocTreeItem = false;
+			} else {
+				adhocTreeItem = findInTree(adhocItem, getRootItem());
+				hasAdhocTreeItem = true;
+			}
+		}
+		return adhocTreeItem;
+	}
+
+	List<HierarchyTreeWidget<E>> selectedItems =
+		new ArrayList<HierarchyTreeWidget<E>>();
+
+	protected void select(List<HierarchyTreeWidget<E>> widgets) {
+		for (HierarchyTreeWidget<E> lf : selectedItems) {
+			lf.setSelected(false);
+		}
+
+		if (widgets != null && widgets.size() > 0) {
+			for (HierarchyTreeWidget<E> lf : widgets) {
+				lf.setSelected(true);
+			}
 		}
 	}
 }

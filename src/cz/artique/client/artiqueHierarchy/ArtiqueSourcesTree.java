@@ -1,14 +1,25 @@
 package cz.artique.client.artiqueHierarchy;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.ui.TreeItem;
 
 import cz.artique.client.artiqueHierarchy.UserSourceWidget.UserSourceWidgetFactory;
 import cz.artique.client.artiqueHistory.ArtiqueHistory;
 import cz.artique.client.artiqueHistory.HistoryEvent;
 import cz.artique.client.artiqueHistory.HistoryHandler;
+import cz.artique.client.artiqueHistory.HistoryItem;
 import cz.artique.client.artiqueSources.ArtiqueSourcesManager;
+import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyTreeWidget;
+import cz.artique.client.hierarchy.HierarchyUtils;
 import cz.artique.client.manager.Managers;
+import cz.artique.shared.model.label.Filter;
+import cz.artique.shared.model.label.Label;
+import cz.artique.shared.model.label.LabelType;
+import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.source.UserSource;
 
 public class ArtiqueSourcesTree
@@ -25,12 +36,57 @@ public class ArtiqueSourcesTree
 				if (rootItem == null) {
 					return;
 				}
-
 				refreshAll(rootItem);
+
+				select(getAllSourcesWidgets());
 			}
 		});
 	}
 
+	@SuppressWarnings("unchecked")
+	protected List<HierarchyTreeWidget<UserSource>> getAllSourcesWidgets() {
+		List<HierarchyTreeWidget<UserSource>> allSourcesWidgets =
+			new ArrayList<HierarchyTreeWidget<UserSource>>();
+
+		List<Label> allSourcesLabels = getAllSourcesLabels();
+		for (Label l : allSourcesLabels) {
+			UserSource byLabel = Managers.SOURCES_MANAGER.getByLabel(l);
+			if (byLabel != null) {
+				Hierarchy<UserSource> findInTree =
+					HierarchyUtils.findInTree(getRoot(), byLabel);
+				if (findInTree != null) {
+					TreeItem inTree = findInTree(findInTree, getRootItem());
+					if (inTree != null) {
+						allSourcesWidgets
+							.add((HierarchyTreeWidget<UserSource>) inTree);
+					}
+				}
+			}
+		}
+		return allSourcesWidgets;
+	}
+
+	protected List<Label> getAllSourcesLabels() {
+		List<Label> labels = new ArrayList<Label>();
+		HistoryItem historyItem = ArtiqueHistory.HISTORY.getLastHistoryItem();
+		if (historyItem != null) {
+			ListFilter listFilter = historyItem.getListFilter();
+			Filter filterObject = listFilter.getFilterObject();
+			if (filterObject != null) {
+				List<Key> keys = filterObject.flat();
+				List<Label> sortedList =
+					Managers.LABELS_MANAGER.getSortedList(keys);
+				for (Label l : sortedList) {
+					if (LabelType.USER_SOURCE.equals(l.getLabelType())) {
+						labels.add(l);
+					}
+				}
+			}
+		}
+		return labels;
+	}
+
+	// TODO list
 	protected void refreshAll(TreeItem rootItem) {
 		HierarchyTreeWidget<UserSource> w = getHierarchyWidget(rootItem);
 		w.refresh();
@@ -42,6 +98,7 @@ public class ArtiqueSourcesTree
 	@Override
 	protected void initialized() {
 		observeHistoryChange();
+		expand(2);
 	}
 
 }

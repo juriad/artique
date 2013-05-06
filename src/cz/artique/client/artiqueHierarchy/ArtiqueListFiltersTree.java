@@ -1,5 +1,7 @@
 package cz.artique.client.artiqueHierarchy;
 
+import java.util.Arrays;
+
 import com.google.gwt.user.client.ui.TreeItem;
 
 import cz.artique.client.artiqueHierarchy.ListFilterWidget.ListFilterWidgetFactory;
@@ -9,6 +11,7 @@ import cz.artique.client.artiqueHistory.HistoryHandler;
 import cz.artique.client.artiqueHistory.HistoryItem;
 import cz.artique.client.artiqueListFilters.ArtiqueListFiltersManager;
 import cz.artique.client.hierarchy.Hierarchy;
+import cz.artique.client.hierarchy.HierarchyTreeWidget;
 import cz.artique.client.hierarchy.HierarchyUtils;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.ListFilter;
@@ -28,6 +31,7 @@ public class ArtiqueListFiltersTree
 
 	private void observeHistoryChange() {
 		ArtiqueHistory.HISTORY.addHistoryHandler(new HistoryHandler() {
+			@SuppressWarnings("unchecked")
 			public void onHistoryChanged(HistoryEvent e) {
 				HistoryItem historyItem =
 					ArtiqueHistory.HISTORY.getLastHistoryItem();
@@ -36,22 +40,21 @@ public class ArtiqueListFiltersTree
 					if (listFilter.getKey() != null) {
 						Hierarchy<ListFilter> hierarchy =
 							HierarchyUtils.findInTree(getRoot(), listFilter);
-						if (hierarchy == null) {
+						if (hierarchy != null) {
 							TreeItem inTree =
 								findInTree(hierarchy, getRootItem());
 							if (inTree != null) {
-								getTree().setSelectedItem(inTree);
+								select(Arrays
+									.asList((HierarchyTreeWidget<ListFilter>) inTree
+										.getWidget()));
+								return;
 							}
 						}
 					}
 				}
-				getTree().setSelectedItem(getAdhocTreeItem());
+				select(Arrays
+					.asList((HierarchyTreeWidget<ListFilter>) getAdhocTreeItem()));
 			}
 		});
-	}
-	
-	private TreeItem getAdhocTreeItem() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

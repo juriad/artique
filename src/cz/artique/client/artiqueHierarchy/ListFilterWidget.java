@@ -86,12 +86,12 @@ public class ListFilterWidget extends AbstractHierarchyTreeWidget<ListFilter> {
 			if (hierarchy.getParent() != null) {
 				createInnerNodePanel(panel);
 			} else {
-				createRoorPanel(panel);
+				createRootPanel(panel);
 			}
 		}
 	}
 
-	private void createRoorPanel(FlowPanel panel) {
+	private void createRootPanel(FlowPanel panel) {
 		String clearTooltip =
 			ArtiqueI18n.I18N.getConstants().clearListFilterTooltip();
 		createAnchor(panel, "/", null, clearHandler, clearTooltip);

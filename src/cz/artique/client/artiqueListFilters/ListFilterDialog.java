@@ -111,8 +111,10 @@ public class ListFilterDialog {
 
 		if (proper) {
 			saveButton.setText(constants.saveButton());
+			cancelButton.setText(constants.cancelButton());
 		} else {
 			saveButton.setText(constants.applyButton());
+			cancelButton.setText(constants.closeButton());
 		}
 	}
 

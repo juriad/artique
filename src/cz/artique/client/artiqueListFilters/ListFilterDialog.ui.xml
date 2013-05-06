@@ -20,9 +20,7 @@
 					<g:Button ui:field="saveButton" /> <!-- save or apply -->
 				</g:cell>
 				<g:cell horizontalAlignment="ALIGN_RIGHT">
-					<g:Button ui:field="cancelButton">
-						<ui:text from='{res.cancelButton}' />
-					</g:Button>
+					<g:Button ui:field="cancelButton" /> <!-- cancel or close -->
 				</g:cell>
 			</g:HorizontalPanel>
 		</g:VerticalPanel>

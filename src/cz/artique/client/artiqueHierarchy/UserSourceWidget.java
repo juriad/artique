@@ -9,7 +9,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.impl.HyperlinkImpl;
 
 import cz.artique.client.ArtiqueWorld;
@@ -23,8 +23,7 @@ import cz.artique.shared.model.label.FilterType;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.source.UserSource;
 
-public class UserSourceWidget extends Composite
-		implements HierarchyTreeWidget<UserSource> {
+public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 
 	public static class UserSourceWidgetFactory
 			implements HierarchyTreeWidgetFactory<UserSource> {
@@ -38,48 +37,43 @@ public class UserSourceWidget extends Composite
 		}
 	}
 
-	private final Hierarchy<UserSource> hierarchy;
-
 	private final Anchor anchor;
 
-	private Filter filter;
+	private final Filter filter;
 
 	private String serialized;
 
 	public UserSourceWidget(Hierarchy<UserSource> hierarchy) {
-		this.hierarchy = hierarchy;
+		super(hierarchy);
 
-		anchor = new Anchor(hierarchy.getName());
-		initWidget(anchor);
+		FlowPanel panel = new FlowPanel();
+		initWidget(panel);
+
 		filter = constructFilter();
-		refresh();
+		anchor =
+			createAnchor(panel, hierarchy.getName(), null, new ClickHandler() {
+				final HyperlinkImpl impl = GWT.create(HyperlinkImpl.class);
 
-		anchor.addClickHandler(new ClickHandler() {
-			final HyperlinkImpl impl = GWT.create(HyperlinkImpl.class);
-
-			public void onClick(ClickEvent event) {
-				if (impl.handleAsClick(Event.as(event.getNativeEvent()))) {
-					ListFilter baseListFilter =
-						ArtiqueHistory.HISTORY.getBaseListFilter();
-					baseListFilter.setFilterObject(filter);
-					ArtiqueHistory.HISTORY.setListFilter(baseListFilter,
-						serialized);
-
-					event.preventDefault();
+				public void onClick(ClickEvent event) {
+					if (impl.handleAsClick(Event.as(event.getNativeEvent()))) {
+						ListFilter baseListFilter =
+							ArtiqueHistory.HISTORY.getBaseListFilter();
+						baseListFilter.setFilterObject(filter);
+						ArtiqueHistory.HISTORY.setListFilter(baseListFilter,
+							serialized);
+						event.preventDefault();
+					}
 				}
-			}
-		});
-	}
-
-	public Hierarchy<UserSource> getHierarchy() {
-		return hierarchy;
+			}, null);
+		// TODO tooltip
+		refresh();
 	}
 
 	private Filter constructFilter() {
 		Filter f = new Filter();
 		f.setUser(ArtiqueWorld.WORLD.getUser());
 		f.setType(FilterType.TOP_LEVEL_FILTER);
-		if (hierarchy.getParent() != null) {
+		if (getHierarchy().getParent() != null) {
 			f.setLabels(getListOfLabels());
 		}
 		return f;
@@ -87,7 +81,7 @@ public class UserSourceWidget extends Composite
 
 	private List<Key> getListOfLabels() {
 		List<UserSource> list = new ArrayList<UserSource>();
-		hierarchy.getAll(list);
+		getHierarchy().getAll(list);
 		List<Key> labels = new ArrayList<Key>(list.size());
 		for (UserSource us : list) {
 			labels.add(us.getLabel());
@@ -96,6 +90,7 @@ public class UserSourceWidget extends Composite
 	}
 
 	public void refresh() {
+		anchor.setName(getHierarchy().getName());
 		serialized = CachingHistoryUtils.UTILS.serializeListFilter(filter);
 		anchor.setHref("#" + serialized);
 	}

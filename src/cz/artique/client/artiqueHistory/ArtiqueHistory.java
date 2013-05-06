@@ -12,6 +12,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import cz.artique.client.ArtiqueWorld;
+import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyUtils;
 import cz.artique.client.hierarchy.InnerNode;
 import cz.artique.client.hierarchy.ProvidesHierarchy;
@@ -212,5 +213,16 @@ public class ArtiqueHistory
 
 	public boolean isReady() {
 		return true;
+	}
+
+	public Hierarchy<HistoryItem> getAdhocItem() {
+		return null;
+	}
+
+	public void clear() {
+		while (historyItems.size() > 1) {
+			HistoryItem removed = historyItems.remove(1);
+			HierarchyUtils.remove(hierarchyRoot, removed);
+		}
 	}
 }

@@ -11,5 +11,10 @@ public class ArtiqueMessagesTree
 	public ArtiqueMessagesTree() {
 		super(Managers.MESSAGES_MANAGER, MessageWidgetFactory.FACTORY);
 	}
+	
+	@Override
+	protected void initialized() {
+		expand(2);
+	}
 
 }
