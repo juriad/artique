@@ -1,0 +1,78 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:a="urn:import:cz.artique.client.artiqueSources"
+	xmlns:db="urn:import:com.google.gwt.user.datepicker.client" xmlns:b="urn:import:cz.artique.client.artiqueLabels">
+
+	<ui:with field='res' type='cz.artique.client.i18n.ArtiqueConstants' />
+
+	<g:Grid ui:field="grid">
+		<g:row>
+			<g:cell>
+				<ui:text from='{res.name}' />
+			</g:cell>
+			<g:customCell>
+				<g:TextBox ui:field="name" />
+			</g:customCell>
+		</g:row>
+		<g:row>
+			<g:cell>
+				<ui:text from='{res.watching}' />
+			</g:cell>
+			<g:customCell>
+				<g:InlineLabel ui:field="watching" />
+			</g:customCell>
+		</g:row>
+		<g:row>
+			<g:cell>
+				<ui:text from='{res.hierarchy}' />
+			</g:cell>
+			<g:customCell>
+				<g:TextBox ui:field="hierarchy" />
+			</g:customCell>
+		</g:row>
+		<g:row>
+			<g:cell>
+				<ui:text from='{res.defaultLabels}' />
+			</g:cell>
+			<g:customCell>
+				<!-- TODO default labels -->
+				<b:ArtiqueLabelsBar ui:field="defaultLabels" />
+			</g:customCell>
+		</g:row>
+		<g:row>
+			<g:cell>
+				<ui:text from='{res.source}' />
+			</g:cell>
+			<g:customCell>
+				<a:SourceEditor ui:field="source" />
+			</g:customCell>
+		</g:row>
+		<g:row>
+			<g:cell>
+				<ui:text from='{res.lastCheck}' />
+			</g:cell>
+			<g:customCell>
+				<g:InlineLabel ui:field="lastCheck" />
+			</g:customCell>
+		</g:row>
+		<g:row>
+			<g:cell>
+				<ui:text from='{res.errorSequence}' />
+			</g:cell>
+			<g:customCell>
+				<g:InlineLabel ui:field="errorSequence" />
+			</g:customCell>
+		</g:row>
+		<g:row>
+			<g:cell>
+				<ui:text from='{res.nextCheck}' />
+			</g:cell>
+			<g:customCell>
+				<g:FlowPanel>
+					<g:InlineLabel ui:field="nextCheck" />
+					<g:Button ui:field="checkNow" text="{res.checkNow}" />
+				</g:FlowPanel>
+			</g:customCell>
+		</g:row>
+	</g:Grid>
+</ui:UiBinder>

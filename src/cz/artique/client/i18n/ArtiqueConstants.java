@@ -81,6 +81,15 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 	@DefaultStringValue("Hierarchy")
 	String hierarchy();
 
+	@DefaultStringValue("Url")
+	String url();
+
+	@DefaultStringValue("Watching")
+	String watching();
+
+	@DefaultStringValue("Auto-assigned labels")
+	String defaultLabels();
+
 	@DefaultStringValue("Export name")
 	String exported();
 
@@ -111,4 +120,45 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 	@DefaultStringValue("Clears all messages.")
 	String clearMessagesTooltip();
 
+	@DefaultStringValue("Last check")
+	String lastCheck();
+
+	@DefaultStringValue("Next check")
+	String nextCheck();
+
+	@DefaultStringValue("Check now")
+	String checkNow();
+
+	@DefaultStringValue("Source has not been watched yet.")
+	String watchingNotYet();
+
+	@DefaultStringValue("Source is beeing watched.")
+	String watchingYes();
+
+	@DefaultStringValue("Source is not beeing watched.")
+	String watchingNo();
+
+	@DefaultStringValue("Not available.")
+	String unavailable();
+
+	@DefaultStringValue("No check has been planned.")
+	String noCheckPlanned();
+
+	@DefaultStringValue("No check has been performed.")
+	String notCheckedYet();
+
+	@DefaultStringValue("Check error sequence")
+	String errorSequence();
+
+	@DefaultStringValue("There were no errors during last check.")
+	String noErrorSequence();
+
+	@DefaultStringValue("Source")
+	String source();
+
+	@DefaultStringValue("Region")
+	String region();
+
+	@DefaultStringValue("Source type")
+	String sourceType();
 }

@@ -54,6 +54,7 @@ public class EnumRadioPicker<E extends Enum<E>> extends Composite
 				button.setValue(true);
 				selected = e;
 			}
+			button.setEnabled(canBeSelected(e));
 			panel.add(button);
 
 			buttons.put(button, e);
@@ -67,10 +68,15 @@ public class EnumRadioPicker<E extends Enum<E>> extends Composite
 		return enabled;
 	}
 
+	// default implementation
+	protected boolean canBeSelected(E enu) {
+		return true;
+	}
+
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 		for (RadioButton rb : buttons.keySet()) {
-			rb.setEnabled(enabled);
+			rb.setEnabled(enabled && canBeSelected(buttons.get(rb)));
 		}
 	}
 
