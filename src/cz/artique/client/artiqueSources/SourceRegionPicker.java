@@ -1,45 +1,58 @@
 package cz.artique.client.artiqueSources;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasValue;
 
-import cz.artique.shared.model.source.Region;
+import cz.artique.shared.model.source.HasRegion;
 
 public class SourceRegionPicker extends Composite
-		implements HasEnabled, HasValue<Region> {
+		implements HasEnabled, HasValue<HasRegion> {
+
+	private boolean enabled;
+	private HasRegion hasRegion;
+
+	public SourceRegionPicker() {
+		initWidget(new FlowPanel()); // XXX quick fix
+	}
 
 	public HandlerRegistration addValueChangeHandler(
-			ValueChangeHandler<Region> handler) {
-		// TODO Auto-generated method stub
-		return null;
+			ValueChangeHandler<HasRegion> handler) {
+		return addHandler(handler, ValueChangeEvent.getType());
 	}
 
-	public Region getValue() {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * Called on source save
+	 */
+	public void saveRegion() {
+		if (hasRegion == null) {
+			return;
+		}
+
+		// TODO save
 	}
 
-	public void setValue(Region value) {
-		// TODO Auto-generated method stub
-
+	public HasRegion getValue() {
+		return hasRegion;
 	}
 
-	public void setValue(Region value, boolean fireEvents) {
-		// TODO Auto-generated method stub
+	public void setValue(HasRegion value) {
+		hasRegion = value;
+	}
 
+	public void setValue(HasRegion value, boolean fireEvents) {
+		setValue(value);
 	}
 
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return false;
+		return enabled;
 	}
 
 	public void setEnabled(boolean enabled) {
-		// TODO Auto-generated method stub
-
+		this.enabled = enabled;
 	}
-
 }

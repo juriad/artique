@@ -34,5 +34,4 @@ public class HTMLSource extends Source implements Serializable, GenKey {
 		String url = getUrl().getValue();
 		return SharedUtils.combineStringParts(prefix, url);
 	}
-
 }

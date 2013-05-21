@@ -23,4 +23,16 @@ public interface ArtiqueMessages extends Messages {
 
 	@DefaultMessage("{0} must be specified.")
 	String errorEmptyField(String field);
+
+	@DefaultMessage("Source {0} has been created.")
+	String userSourceCreated(String name);
+
+	@DefaultMessage("Source {0} has been updated.")
+	String userSourceUpdated(String name);
+
+	@DefaultMessage("Failed to create source {0}.")
+	String userSourceCreatedError(String name);
+
+	@DefaultMessage("Filter to update source {0}.")
+	String userSourceUpdatedError(String name);
 }

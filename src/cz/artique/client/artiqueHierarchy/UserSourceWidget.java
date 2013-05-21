@@ -15,9 +15,13 @@ import com.google.gwt.user.client.ui.impl.HyperlinkImpl;
 import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.artiqueHistory.ArtiqueHistory;
 import cz.artique.client.artiqueHistory.CachingHistoryUtils;
+import cz.artique.client.artiqueSources.UserSourceDialog;
 import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyTreeWidget;
 import cz.artique.client.hierarchy.HierarchyTreeWidgetFactory;
+import cz.artique.client.hierarchy.InnerNode;
+import cz.artique.client.hierarchy.LeafNode;
+import cz.artique.client.i18n.ArtiqueI18n;
 import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.FilterType;
 import cz.artique.shared.model.label.ListFilter;
@@ -36,6 +40,14 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 			return new UserSourceWidget(hierarchy);
 		}
 	}
+
+	private ClickHandler createNewHandler = new ClickHandler() {
+		public void onClick(ClickEvent event) {
+			UserSource userSource = new UserSource();
+			userSource.setHierarchy(getHierarchy().getHierarchy());
+			UserSourceDialog.DIALOG.showDialog(userSource);
+		}
+	};
 
 	private final Anchor anchor;
 
@@ -66,6 +78,25 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 				}
 			}, null);
 		// TODO tooltip
+
+		if (hierarchy instanceof LeafNode) {
+			LeafNode<UserSource> leaf = (LeafNode<UserSource>) hierarchy;
+			final UserSource item = leaf.getItem();
+			String detailTooltip =
+				ArtiqueI18n.I18N.getConstants().detailUserSourceTooltip();
+			createImage(panel, ArtiqueWorld.WORLD.getResources().detail(),
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						UserSourceDialog.DIALOG.showDialog(item);
+					}
+				}, detailTooltip);
+		} else if (hierarchy instanceof InnerNode) {
+			String createNewTooltip =
+				ArtiqueI18n.I18N.getConstants().createNewUserSourceTooltip();
+			createImage(panel, ArtiqueWorld.WORLD.getResources().createNew(),
+				createNewHandler, createNewTooltip);
+
+		}
 		refresh();
 	}
 

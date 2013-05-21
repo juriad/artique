@@ -26,7 +26,7 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 	public XMLSource addSource(XMLSource source)
 			throws PropertyValueException, PropertyEmptyException,
 			NullPointerException {
-		sourceCheck(source);
+		checkSouce(source);
 		Sanitizer.expectValue("parent", source.getParent(), null);
 		SourceService ss = new SourceService();
 		return ss.creatIfNotExist(source, XMLSourceMeta.get());
@@ -35,7 +35,7 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 	public HTMLSource addSource(HTMLSource source)
 			throws PropertyValueException, PropertyEmptyException,
 			NullPointerException {
-		sourceCheck(source);
+		checkSouce(source);
 		Sanitizer.expectValue("parent", source.getParent(), null);
 		SourceService ss = new SourceService();
 		return ss.creatIfNotExist(source, HTMLSourceMeta.get());
@@ -44,7 +44,7 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 	public PageChangeSource addSource(PageChangeSource source)
 			throws PropertyValueException, PropertyEmptyException,
 			NullPointerException {
-		sourceCheck(source);
+		checkSouce(source);
 		if (source.getParent() == null) {
 			throw new PropertyEmptyException("parent");
 		}
@@ -89,7 +89,7 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 	public WebSiteSource addSource(WebSiteSource source)
 			throws PropertyValueException, PropertyEmptyException,
 			NullPointerException {
-		sourceCheck(source);
+		checkSouce(source);
 		if (source.getParent() == null) {
 			throw new PropertyEmptyException("parent");
 		}
@@ -131,7 +131,7 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		return ss.creatIfNotExist(source, WebSiteSourceMeta.get());
 	}
 
-	private void sourceCheck(Source source)
+	private void checkSouce(Source source)
 			throws PropertyEmptyException, PropertyValueException,
 			NullPointerException {
 		if (source == null) {
@@ -187,10 +187,8 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 	}
 
 	public List<UserSource> getUserSources() {
-
 		UserSourceService uss = new UserSourceService();
 		User user = UserServiceFactory.getUserService().getCurrentUser();
 		return uss.getUserSources(user);
 	}
-
 }

@@ -117,8 +117,4 @@ public class ListFilterDialog {
 			cancelButton.setText(constants.closeButton());
 		}
 	}
-
-	public ListFilter getListFilter() {
-		return editor.getValue();
-	}
 }

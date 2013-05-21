@@ -8,6 +8,14 @@
 	<g:Grid ui:field="grid">
 		<g:row>
 			<g:cell>
+				<ui:text from='{res.source}' />
+			</g:cell>
+			<g:customCell>
+				<a:SourceEditor ui:field="sourceEditor" />
+			</g:customCell>
+		</g:row>
+		<g:row>
+			<g:cell>
 				<ui:text from='{res.name}' />
 			</g:cell>
 			<g:customCell>
@@ -19,7 +27,10 @@
 				<ui:text from='{res.watching}' />
 			</g:cell>
 			<g:customCell>
-				<g:InlineLabel ui:field="watching" />
+				<g:FlowPanel>
+					<g:InlineLabel ui:field="watching" />
+					<g:Button ui:field="watchButton" /> <!-- watch or unwatch -->
+				</g:FlowPanel>
 			</g:customCell>
 		</g:row>
 		<g:row>
@@ -34,18 +45,10 @@
 			<g:cell>
 				<ui:text from='{res.defaultLabels}' />
 			</g:cell>
-			<g:customCell>
+			<!-- <g:customCell> -->
 				<!-- TODO default labels -->
-				<b:ArtiqueLabelsBar ui:field="defaultLabels" />
-			</g:customCell>
-		</g:row>
-		<g:row>
-			<g:cell>
-				<ui:text from='{res.source}' />
-			</g:cell>
-			<g:customCell>
-				<a:SourceEditor ui:field="source" />
-			</g:customCell>
+				<!-- <b:ArtiqueLabelsBar ui:field="defaultLabels" />  -->
+	<!-- </g:customCell> -->
 		</g:row>
 		<g:row>
 			<g:cell>

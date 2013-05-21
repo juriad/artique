@@ -1,7 +1,9 @@
 package cz.artique.server.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slim3.datastore.Datastore;
 
@@ -109,6 +111,16 @@ public class UserSourceService {
 		UserSourceMeta meta = UserSourceMeta.get();
 		List<UserSource> userSources =
 			Datastore.query(meta).filter(meta.user.equal(user)).asList();
+
+		Map<Key, UserSource> map = new HashMap<Key, UserSource>();
+		for (UserSource userSource : userSources) {
+			map.put(userSource.getSource(), userSource);
+		}
+		List<Source> sources = Datastore.get(SourceMeta.get(), map.keySet());
+		for (Source source : sources) {
+			map.get(source.getKey()).setSourceObject(source);
+		}
+
 		return userSources;
 	}
 

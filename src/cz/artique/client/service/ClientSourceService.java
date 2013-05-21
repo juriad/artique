@@ -21,6 +21,8 @@ public interface ClientSourceService extends RemoteService {
 	PageChangeSource addSource(PageChangeSource source);
 
 	WebSiteSource addSource(WebSiteSource source);
+	
+	HTMLSource addSource(HTMLSource source);
 
 	List<Region> getRegions(HTMLSource source, RegionType type);
 

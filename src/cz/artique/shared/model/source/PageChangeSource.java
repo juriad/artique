@@ -16,7 +16,7 @@ import cz.artique.shared.utils.SharedUtils;
 
 @Model(schemaVersion = 1)
 public class PageChangeSource extends HTMLSource
-		implements Serializable, GenKey {
+		implements Serializable, GenKey, HasRegion {
 
 	private static final long serialVersionUID = 1L;
 	private Key region;
@@ -60,7 +60,8 @@ public class PageChangeSource extends HTMLSource
 	public String getKeyName() {
 		String prefix = "PAGE_CHANGE";
 		String url = getUrl().getValue();
-		String region = KeyFactory.keyToString(getRegion());
+		String region =
+			getRegion() != null ? KeyFactory.keyToString(getRegion()) : "null";
 		return SharedUtils.combineStringParts(prefix, url, region);
 	}
 
@@ -78,6 +79,10 @@ public class PageChangeSource extends HTMLSource
 
 	public void setLastChange(Date lastChange) {
 		this.lastChange = lastChange;
+	}
+
+	public RegionType getRegionType() {
+		return RegionType.PAGE_CHANGE;
 	}
 
 }

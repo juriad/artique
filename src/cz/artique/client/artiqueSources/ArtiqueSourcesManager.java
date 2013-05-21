@@ -20,7 +20,12 @@ import cz.artique.client.service.ClientSourceServiceAsync;
 import cz.artique.client.sources.SourcesManager;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
+import cz.artique.shared.model.source.HTMLSource;
+import cz.artique.shared.model.source.PageChangeSource;
+import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
+import cz.artique.shared.model.source.WebSiteSource;
+import cz.artique.shared.model.source.XMLSource;
 
 public class ArtiqueSourcesManager
 		extends AbstractManager<ClientSourceServiceAsync>
@@ -34,7 +39,6 @@ public class ArtiqueSourcesManager
 		refresh(null);
 	}
 
-	private List<UserSource> sources = new ArrayList<UserSource>();
 	private Map<Key, UserSource> sourcesKeys = new HashMap<Key, UserSource>();
 	private Map<String, UserSource> sourcesNames =
 		new HashMap<String, UserSource>();
@@ -77,6 +81,79 @@ public class ArtiqueSourcesManager
 		});
 	}
 
+	public <T extends Source> void createSource(T source,
+			final AsyncCallback<T> ping) {
+		if (source instanceof XMLSource) {
+			service.addSource((XMLSource) source,
+				new AsyncCallback<XMLSource>() {
+
+					public void onFailure(Throwable caught) {
+						if (ping != null) {
+							ping.onFailure(caught);
+						}
+					}
+
+					@SuppressWarnings("unchecked")
+					public void onSuccess(XMLSource result) {
+						if (ping != null) {
+							ping.onSuccess((T) result);
+						}
+					}
+				});
+		} else if (source instanceof HTMLSource) {
+			service.addSource((HTMLSource) source,
+				new AsyncCallback<HTMLSource>() {
+
+					public void onFailure(Throwable caught) {
+						if (ping != null) {
+							ping.onFailure(caught);
+						}
+					}
+
+					@SuppressWarnings("unchecked")
+					public void onSuccess(HTMLSource result) {
+						if (ping != null) {
+							ping.onSuccess((T) result);
+						}
+					}
+				});
+		} else if (source instanceof PageChangeSource) {
+			service.addSource((PageChangeSource) source,
+				new AsyncCallback<PageChangeSource>() {
+
+					public void onFailure(Throwable caught) {
+						if (ping != null) {
+							ping.onFailure(caught);
+						}
+					}
+
+					@SuppressWarnings("unchecked")
+					public void onSuccess(PageChangeSource result) {
+						if (ping != null) {
+							ping.onSuccess((T) result);
+						}
+					}
+				});
+		} else if (source instanceof WebSiteSource) {
+			service.addSource((WebSiteSource) source,
+				new AsyncCallback<WebSiteSource>() {
+
+					public void onFailure(Throwable caught) {
+						if (ping != null) {
+							ping.onFailure(caught);
+						}
+					}
+
+					@SuppressWarnings("unchecked")
+					public void onSuccess(WebSiteSource result) {
+						if (ping != null) {
+							ping.onSuccess((T) result);
+						}
+					}
+				});
+		}
+	}
+
 	private void updateHierarchy(Map<Key, UserSource> sourcesKeys,
 			Map<Key, UserSource> newSourcesKeys) {
 		Set<Key> keys = new HashSet<Key>();
@@ -116,7 +193,7 @@ public class ArtiqueSourcesManager
 	}
 
 	public List<UserSource> getSources() {
-		return sources;
+		return new ArrayList<UserSource>(sourcesNames.values());
 	}
 
 	public UserSource getSourceByName(String name) {
@@ -143,6 +220,16 @@ public class ArtiqueSourcesManager
 
 	public Hierarchy<UserSource> getAdhocItem() {
 		return null;
+	}
+
+	public void addUserSource(UserSource value, Object object) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void updateUserSource(UserSource value, Object object) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

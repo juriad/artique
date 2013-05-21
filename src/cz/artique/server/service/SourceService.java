@@ -45,6 +45,10 @@ public class SourceService {
 			theSource = source;
 		}
 		tx.commit();
+		if (source.getParent() != null && source.getParentObject() == null) {
+			source.setParentObject(Datastore.get(SourceMeta.get(),
+				source.getParent()));
+		}
 		return theSource;
 	}
 
@@ -68,6 +72,8 @@ public class SourceService {
 				.query(meta)
 				.filter(meta.parent.equal(parent.getKey()))
 				.filter(meta.enabled.equal(Boolean.TRUE))
+				.filter(meta.region.notEqual(null))
+				.sort(meta.region.asc)
 				.asList();
 		List<Key> regionKeys = new ArrayList<Key>();
 		for (PageChangeSource s : list) {
@@ -90,6 +96,8 @@ public class SourceService {
 				.query(meta)
 				.filter(meta.parent.equal(parent.getKey()))
 				.filter(meta.enabled.equal(Boolean.TRUE))
+				.filter(meta.region.notEqual(null))
+				.sort(meta.region.asc)
 				.asList();
 		List<Key> regionKeys = new ArrayList<Key>();
 		for (WebSiteSource s : list) {
@@ -105,15 +113,15 @@ public class SourceService {
 		return list;
 	}
 
-	public Source getSourceByKey(Key parent) {
+	public Source getSourceByKey(Key key) {
 		SourceMeta meta = SourceMeta.get();
-		Source source = Datastore.getOrNull(meta, parent);
+		Source source = Datastore.getOrNull(meta, key);
 		return source;
 	}
 
-	public Region getRegionByKey(Key region) {
+	public Region getRegionByKey(Key key) {
 		RegionMeta meta = RegionMeta.get();
-		Region regionObject = Datastore.getOrNull(meta, region);
+		Region regionObject = Datastore.getOrNull(meta, key);
 		return regionObject;
 	}
 }

@@ -48,6 +48,18 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 	@DefaultStringValue("Descending")
 	String listFilterOrder_DESCENDING();
 
+	@DefaultStringValue("RSS or ATOM")
+	String sourceType_RSS_ATOM();
+
+	@DefaultStringValue("Page change")
+	String sourceType_PAGE_CHANGE();
+
+	@DefaultStringValue("Website")
+	String sourceType_WEB_SITE();
+
+	@DefaultStringValue("Manual")
+	String sourceType_MANUAL();
+
 	@DefaultStringValue("Read")
 	String readState_READ();
 
@@ -81,7 +93,7 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 	@DefaultStringValue("Hierarchy")
 	String hierarchy();
 
-	@DefaultStringValue("Url")
+	@DefaultStringValue("URL")
 	String url();
 
 	@DefaultStringValue("Watching")
@@ -161,4 +173,31 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("Source type")
 	String sourceType();
+
+	@DefaultStringValue("Source editor")
+	String userSourceEditor();
+
+	@DefaultStringValue("Watch")
+	String watchButton();
+
+	@DefaultStringValue("Unwatch")
+	String unwatchButton();
+
+	@DefaultStringValue("Set URL")
+	String setUrl();
+
+	@DefaultStringValue("Shows dialog with detail information about this source.")
+	String detailUserSourceTooltip();
+
+	@DefaultStringValue("Creates a new source.")
+	String createNewUserSourceTooltip();
+
+	@DefaultStringValue("Source has been verified.")
+	String sourceCreated();
+
+	@DefaultStringValue("Source didn't pass validation.")
+	String sourceCreatedError();
+
+	@DefaultStringValue("The source become active as soon as you select region.")
+	String selectRegion();
 }

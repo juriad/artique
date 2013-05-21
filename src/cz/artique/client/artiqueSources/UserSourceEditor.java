@@ -2,6 +2,8 @@ package cz.artique.client.artiqueSources;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Visibility;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -10,6 +12,9 @@ import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.text.client.DateTimeFormatRenderer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
@@ -20,9 +25,9 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.ArtiqueWorld;
-import cz.artique.client.artiqueLabels.ArtiqueLabelsBar;
 import cz.artique.client.i18n.ArtiqueConstants;
 import cz.artique.client.i18n.ArtiqueI18n;
+import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
 
 public class UserSourceEditor extends Composite
@@ -44,10 +49,13 @@ public class UserSourceEditor extends Composite
 	InlineLabel watching;
 
 	@UiField
-	TextBox hierarchy;
+	Button watchButton;
 
 	@UiField
-	ArtiqueLabelsBar defaultLabels;
+	TextBox hierarchy;
+
+	//@UiField
+	//ArtiqueLabelsBar defaultLabels;
 
 	@UiField
 	InlineLabel lastCheck;
@@ -61,7 +69,12 @@ public class UserSourceEditor extends Composite
 	@UiField
 	Button checkNow;
 
+	@UiField
+	SourceEditor sourceEditor;
+
 	private boolean enabled = true;
+
+	private Boolean watchState;
 
 	private Key userSourceKey;
 
@@ -79,7 +92,7 @@ public class UserSourceEditor extends Composite
 		this.enabled = enabled;
 		name.setEnabled(enabled);
 		hierarchy.setEnabled(enabled);
-		defaultLabels.setEnabled(enabled);
+		//defaultLabels.setEnabled(enabled);
 	}
 
 	public HandlerRegistration addValueChangeHandler(
@@ -89,18 +102,46 @@ public class UserSourceEditor extends Composite
 
 	public UserSource getValue() {
 		UserSource us = new UserSource();
+		if (sourceKey != null) {
+			us.setSource(sourceKey);
+		} else {
+			return us;
+		}
+
 		us.setKey(userSourceKey);
 		us.setUser(ArtiqueWorld.WORLD.getUser());
 		us.setName(name.getValue());
 		us.setHierarchy(hierarchy.getValue());
+		us.setWatching(watchState == null ? true : watchState);
 
-		if (sourceKey != null) {
-			us.setSource(sourceKey);
-		} else {
-			// TODO new source
-		}
+		// TODO default labels
 
 		return us;
+	}
+
+	@UiHandler("watchButton")
+	protected void watchButtonClicked(ClickEvent event) {
+		if (watchState != null) {
+			watchState = !watchState;
+			setWatch();
+		}
+	}
+
+	private void setWatch() {
+		ArtiqueConstants constants = ArtiqueI18n.I18N.getConstants();
+		if (watchState == null) {
+			watching.setText(constants.watchingNotYet());
+			watchButton.setVisible(false);
+		} else {
+			watchButton.setVisible(true);
+			if (watchState) {
+				watching.setText(constants.watchingYes());
+				watchButton.setText(constants.unwatchButton());
+			} else {
+				watching.setText(constants.watchingNo());
+				watchButton.setText(constants.watchButton());
+			}
+		}
 	}
 
 	public void setValue(UserSource value) {
@@ -108,13 +149,8 @@ public class UserSourceEditor extends Composite
 		sourceKey = value.getSource();
 		ArtiqueConstants constants = ArtiqueI18n.I18N.getConstants();
 		name.setValue(value.getName());
-		if (value.getKey() == null) {
-			watching.setText(constants.watchingNotYet());
-		} else if (value.isWatching()) {
-			watching.setText(constants.watchingYes());
-		} else {
-			watching.setText(constants.watchingNo());
-		}
+		watchState = value.getKey() == null ? null : value.isWatching();
+		setWatch();
 		hierarchy.setValue(value.getHierarchy());
 
 		// TODO defaultLabels
@@ -154,6 +190,35 @@ public class UserSourceEditor extends Composite
 			errorSequence.setText(constants.unavailable());
 			checkNow.setEnabled(false);
 			checkNow.setVisible(true);
+		}
+
+		for (int i = 1; i < grid.getRowCount(); i++) {
+			Element element = grid.getRowFormatter().getElement(i);
+			element
+				.getStyle()
+				.setVisibility(
+					value.getKey() != null
+						? Visibility.VISIBLE
+						: Visibility.HIDDEN);
+		}
+
+		sourceEditor.setValue(value.getSourceObject());
+		if (value.getKey() == null) {
+			sourceEditor.setPing(new AsyncCallback<Source>() {
+
+				public void onSuccess(Source result) {
+					sourceKey = result.getKey();
+					for (int i = 1; i < grid.getRowCount(); i++) {
+						Element element = grid.getRowFormatter().getElement(i);
+						element.getStyle().setVisibility(Visibility.VISIBLE);
+					}
+				}
+
+				public void onFailure(Throwable caught) {
+					// TODO Auto-generated method stub
+
+				}
+			});
 		}
 	}
 

@@ -49,13 +49,13 @@ public class EnumRadioPicker<E extends Enum<E>> extends Composite
 			String name = group + "_" + e.name();
 			RadioButton button =
 				new RadioButton(group, constants.getString(name));
+			panel.add(button);
 			button.addValueChangeHandler(new ValueHandler());
 			if (enu.equals(e)) {
 				button.setValue(true);
 				selected = e;
 			}
 			button.setEnabled(canBeSelected(e));
-			panel.add(button);
 
 			buttons.put(button, e);
 			enums.put(e, button);
@@ -96,6 +96,9 @@ public class EnumRadioPicker<E extends Enum<E>> extends Composite
 	public void setValue(E value, boolean fireEvents) {
 		if (value == null) {
 			return;
+		}
+		for(RadioButton rb: enums.values()) {
+			rb.setValue(null);
 		}
 		RadioButton radioButton = enums.get(value);
 		radioButton.setValue(true, fireEvents);
