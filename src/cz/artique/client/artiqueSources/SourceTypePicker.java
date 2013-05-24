@@ -3,6 +3,7 @@ package cz.artique.client.artiqueSources;
 import com.google.gwt.uibinder.client.UiConstructor;
 
 import cz.artique.client.artiqueListFilters.EnumRadioPicker;
+import cz.artique.shared.model.source.SourceType;
 
 public class SourceTypePicker extends EnumRadioPicker<SourceType> {
 

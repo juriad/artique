@@ -59,6 +59,15 @@ public class UserSource
 
 	private Key label;
 
+	private SourceType sourceType;
+
+	private Key region;
+
+	@Attribute(persistent = false)
+	private Region regionObject;
+
+	private Key crawlerData;
+
 	public UserSource() {}
 
 	public UserSource(User user, Source source, String name) {
@@ -176,10 +185,6 @@ public class UserSource
 		this.watching = watching;
 	}
 
-	public Key getKeyParent() {
-		return null;
-	}
-
 	public String getKeyName() {
 		String userId = getUser().getUserId();
 		String sourceId = KeyFactory.keyToString(getSource());
@@ -217,5 +222,37 @@ public class UserSource
 			&& SharedUtils.eq(getLabel(), o.getLabel())
 			&& SharedUtils.eq(getName(), o.getLabel())
 			&& SharedUtils.eq(getSource(), o.getSource());
+	}
+
+	public SourceType getSourceType() {
+		return sourceType;
+	}
+
+	public void setSourceType(SourceType sourceType) {
+		this.sourceType = sourceType;
+	}
+
+	public Key getRegion() {
+		return region;
+	}
+
+	public void setRegion(Key region) {
+		this.region = region;
+	}
+
+	public Region getRegionObject() {
+		return regionObject;
+	}
+
+	public void setRegionObject(Region regionObject) {
+		this.regionObject = regionObject;
+	}
+
+	public Key getCrawlerData() {
+		return crawlerData;
+	}
+
+	public void setCrawlerData(Key crawlerData) {
+		this.crawlerData = crawlerData;
 	}
 }

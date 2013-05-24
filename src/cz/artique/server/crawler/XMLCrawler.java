@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.slim3.datastore.Datastore;
 
 import com.google.appengine.api.datastore.Text;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -16,87 +18,97 @@ import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedInput;
 
+import cz.artique.server.meta.item.ArticleItemMeta;
 import cz.artique.shared.model.item.ArticleItem;
 import cz.artique.shared.model.item.ContentType;
-import cz.artique.shared.model.item.Item;
+import cz.artique.shared.model.item.UserItem;
+import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.model.source.XMLSource;
 
-public class XMLCrawler extends AbstractCrawler<XMLSource> {
+public class XMLCrawler extends AbstractCrawler<XMLSource, ArticleItem> {
 
 	public XMLCrawler(XMLSource source) {
 		super(source);
 	}
 
-	public CrawlerResult fetchItems() {
-		CrawlerResult result = new CrawlerResult();
-
-		URI uri = getURI(result);
-		if (uri == null) {
-			return result;
+	public int fetchItems() throws CrawlerException {
+		URI uri;
+		try {
+			uri = getURI();
+		} catch (CrawlerException e) {
+			writeStat(e);
+			throw e;
 		}
 
-		SyndFeed feed = getFeed(result, uri);
-		if (feed == null) {
-			return result;
+		SyndFeed feed;
+		try {
+			feed = getFeed(uri);
+		} catch (CrawlerException e) {
+			writeStat(e);
+			throw e;
 		}
 
-		getItems(result, feed);
-		addItems(result);
-		return result;
+		List<ArticleItem> items = getItems(feed);
+		List<ArticleItem> items2 = createNonDuplicateItems(items);
+		createUserItems(items2);
+
+		int count = items2.size();
+		writeStat(count);
+		return count;
 	}
 
-	protected void addItems(CrawlerResult result) {
-		CrawlerResult res = new CrawlerResult();
-		res.getErrors().addAll(result.getErrors());
-		for (Item item : result.getItems()) {
-			boolean added = putItemIfNotDuplicate(source, item);
-			if (added) {
-				res.addItem(item);
+	protected void createUserItems(List<ArticleItem> items) {
+		List<UserSource> userSources = getUserSources();
+		for (ArticleItem item : items) {
+			List<UserItem> userItems = new ArrayList<UserItem>();
+			for (UserSource us : userSources) {
+				UserItem ui = createUserItem(us, item);
+				userItems.add(ui);
 			}
+			Datastore.put(userItems);
 		}
-		result = res;
 	}
 
-	protected SyndFeed getFeed(CrawlerResult result, URI uri) {
+	protected SyndFeed getFeed(URI uri) throws CrawlerException {
 		SyndFeedInput input = new SyndFeedInput();
-		SyndFeed feed = null;
 		try {
 			HttpClient client = getHttpClient();
 			HttpGet get = new HttpGet(uri);
 			HttpResponse resp = client.execute(get);
 			InputStream is = resp.getEntity().getContent();
-			feed = input.build(new InputStreamReader(is));
+			SyndFeed feed = input.build(new InputStreamReader(is));
+			return feed;
 		} catch (IllegalArgumentException e) {
-			result.addError(new CrawlerException("Unsupported feed", e));
+			throw new CrawlerException("Unsupported feed", e);
 		} catch (FeedException e) {
-			result.addError(new CrawlerException("Cannot parse feed", e));
+			throw new CrawlerException("Cannot parse feed", e);
 		} catch (IOException e) {
-			result.addError(new CrawlerException("Cannot open connection", e));
+			throw new CrawlerException("Cannot open connection", e);
 		}
-		return feed;
 	}
 
-	protected void getItems(CrawlerResult result, SyndFeed feed) {
-
+	protected List<ArticleItem> getItems(SyndFeed feed) {
+		List<ArticleItem> items = new ArrayList<ArticleItem>();
 		@SuppressWarnings("unchecked")
 		List<SyndEntry> entries = feed.getEntries();
 		for (SyndEntry entry : entries) {
-			ArticleItem a = new ArticleItem(source);
-
-			a.setTitle(entry.getTitle());
-			a.setContent(new Text(entry.getDescription().getValue()));
-			a.setContentType(ContentType
-				.guess(entry.getDescription().getType()));
-			a.setAuthor(entry.getAuthor());
-			a.setPublished(entry.getPublishedDate());
-
-			try {
-				a.setHash(getHash(entry));
-			} catch (CrawlerException e) {
-				result.addError(e);
+			ArticleItem item = getItem(entry);
+			if (item != null) {
+				items.add(item);
 			}
-			result.addItem(a);
 		}
+		return items;
+	}
+
+	protected ArticleItem getItem(SyndEntry entry) {
+		ArticleItem a = new ArticleItem(getSource());
+		a.setTitle(entry.getTitle());
+		a.setContent(new Text(entry.getDescription().getValue()));
+		a.setContentType(ContentType.guess(entry.getDescription().getType()));
+		a.setAuthor(entry.getAuthor());
+		a.setPublished(entry.getPublishedDate());
+		a.setHash(getHash(entry));
+		return a;
 	}
 
 	protected String getHash(SyndEntry entry) {
@@ -104,7 +116,19 @@ public class XMLCrawler extends AbstractCrawler<XMLSource> {
 		if (id == null) {
 			id = entry.getTitle();
 		}
-		return CrawlerUtils.toSHA1(source.getUrl().getValue() + "|" + id);
+		return CrawlerUtils.toSHA1(getSource().getUrl().getValue() + "|" + id);
+	}
+
+	@Override
+	protected List<ArticleItem> getCollidingItems(ArticleItem item) {
+		ArticleItemMeta meta = ArticleItemMeta.get();
+		List<ArticleItem> items =
+			Datastore
+				.query(meta)
+				.filter(meta.source.equal(getSource().getKey()))
+				.filter(meta.hash.equal(item.getHash()))
+				.asList();
+		return items;
 	}
 
 }

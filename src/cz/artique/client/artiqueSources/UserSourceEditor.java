@@ -1,7 +1,8 @@
 package cz.artique.client.artiqueSources;
 
-import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.Link;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -18,7 +19,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -27,11 +27,18 @@ import com.google.gwt.user.client.ui.Widget;
 import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.i18n.ArtiqueConstants;
 import cz.artique.client.i18n.ArtiqueI18n;
+import cz.artique.client.i18n.ArtiqueMessages;
+import cz.artique.client.manager.Managers;
+import cz.artique.client.messages.Message;
+import cz.artique.client.messages.MessageType;
+import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Source;
+import cz.artique.shared.model.source.SourceType;
 import cz.artique.shared.model.source.UserSource;
+import cz.artique.shared.model.source.WebSiteSource;
+import cz.artique.shared.model.source.XMLSource;
 
-public class UserSourceEditor extends Composite
-		implements HasEnabled, HasValue<UserSource> {
+public class UserSourceEditor extends Composite implements HasValue<UserSource> {
 
 	private static UserSourceEditorUiBinder uiBinder = GWT
 		.create(UserSourceEditorUiBinder.class);
@@ -54,8 +61,8 @@ public class UserSourceEditor extends Composite
 	@UiField
 	TextBox hierarchy;
 
-	//@UiField
-	//ArtiqueLabelsBar defaultLabels;
+	// @UiField
+	// ArtiqueLabelsBar defaultLabels;
 
 	@UiField
 	InlineLabel lastCheck;
@@ -70,29 +77,25 @@ public class UserSourceEditor extends Composite
 	Button checkNow;
 
 	@UiField
-	SourceEditor sourceEditor;
+	TextBox url;
 
-	private boolean enabled = true;
+	@UiField
+	SourceTypePicker sourceType;
+
+	@UiField
+	SourceRegionPicker region;
+
+	@UiField
+	Button urlButton;
 
 	private Boolean watchState;
 
-	private Key userSourceKey;
+	private Source source;
 
-	private Key sourceKey;
+	private UserSource userSource;
 
 	public UserSourceEditor() {
 		initWidget(uiBinder.createAndBindUi(this));
-	}
-
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-		name.setEnabled(enabled);
-		hierarchy.setEnabled(enabled);
-		//defaultLabels.setEnabled(enabled);
 	}
 
 	public HandlerRegistration addValueChangeHandler(
@@ -102,21 +105,66 @@ public class UserSourceEditor extends Composite
 
 	public UserSource getValue() {
 		UserSource us = new UserSource();
-		if (sourceKey != null) {
-			us.setSource(sourceKey);
+
+		if (name.getValue().trim().isEmpty()) {
+			ArtiqueMessages messages = ArtiqueI18n.I18N.getMessages();
+			ArtiqueConstants constants = ArtiqueI18n.I18N.getConstants();
+			Managers.MESSAGES_MANAGER.addMessage(new Message(MessageType.ERROR,
+				messages.errorEmptyField(constants.name())));
+			// ignore
+			return us;
+		}
+
+		if (sourceType.getValue() == null) {
+			// fail silently
+			return us;
+		}
+
+		if (source != null) {
+			us.setSource(source.getKey());
+			us.setSourceObject(source);
 		} else {
 			return us;
 		}
 
-		us.setKey(userSourceKey);
+		us.setKey(userSource.getKey());
 		us.setUser(ArtiqueWorld.WORLD.getUser());
 		us.setName(name.getValue());
 		us.setHierarchy(hierarchy.getValue());
 		us.setWatching(watchState == null ? true : watchState);
+		us.setSourceType(sourceType.getValue());
+		us.setCrawlerData(userSource.getCrawlerData());
 
 		// TODO default labels
 
+		UserSource regUs = region.getValue();
+		if (regUs.getRegionObject() != null) {
+			us.setRegionObject(regUs.getRegionObject());
+			us.setRegion(regUs.getRegion());
+		}
+
 		return us;
+	}
+
+	private void notPassedValidation() {
+		urlButton.setEnabled(true);
+		url.setEnabled(true);
+		sourceType.setEnabled(true);
+		ArtiqueConstants constants = ArtiqueI18n.I18N.getConstants();
+		Managers.MESSAGES_MANAGER.addMessage(new Message(MessageType.ERROR,
+			constants.sourceCreatedError()));
+	}
+
+	private void passedValidation() {
+		ArtiqueConstants constants = ArtiqueI18n.I18N.getConstants();
+		Managers.MESSAGES_MANAGER.addMessage(new Message(MessageType.INFO,
+			constants.sourceCreated()));
+	}
+
+	private void selectRegion() {
+		ArtiqueConstants constants = ArtiqueI18n.I18N.getConstants();
+		Managers.MESSAGES_MANAGER.addMessage(new Message(MessageType.INFO,
+			constants.selectRegion()));
 	}
 
 	@UiHandler("watchButton")
@@ -145,38 +193,62 @@ public class UserSourceEditor extends Composite
 	}
 
 	public void setValue(UserSource value) {
-		userSourceKey = value.getKey();
-		sourceKey = value.getSource();
-		ArtiqueConstants constants = ArtiqueI18n.I18N.getConstants();
-		name.setValue(value.getName());
-		watchState = value.getKey() == null ? null : value.isWatching();
+		userSource = value;
+		source = userSource.getSourceObject();
+
+		// source part
+
+		SourceType type =
+			userSource.getSourceType() != null
+				? userSource.getSourceType()
+				: SourceType.RSS_ATOM;
+		sourceType.setValue(type);
+		sourceType.setEnabled(source == null);
+
+		url.setValue(source == null ? "" : (source.getUrl() != null ? source
+			.getUrl()
+			.getValue() : ""));
+		url.setEnabled(source == null);
+		urlButton.setVisible(source == null);
+		urlButton.setEnabled(source == null);
+
+		// user source part
+
+		name.setValue(userSource.getName());
+		watchState =
+			userSource.getKey() == null ? null : userSource.isWatching();
 		setWatch();
-		hierarchy.setValue(value.getHierarchy());
+		hierarchy.setValue(userSource.getHierarchy());
 
 		// TODO defaultLabels
 
-		if (value.getKey() != null && value.isWatching()) {
+		region.setValue(userSource);
+
+		// stats
+
+		ArtiqueConstants constants = ArtiqueI18n.I18N.getConstants();
+		if (userSource.getKey() != null && userSource.isWatching()) {
 			DateTimeFormatRenderer renderer =
 				new DateTimeFormatRenderer(
 					DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM));
-			if (value.getSourceObject().getLastCheck() != null) {
-				lastCheck.setText(renderer.render(value
+			if (userSource.getSourceObject().getLastCheck() != null) {
+				lastCheck.setText(renderer.render(userSource
 					.getSourceObject()
 					.getLastCheck()));
 			} else {
 				lastCheck.setText(constants.notCheckedYet());
 			}
 
-			if (value.getSourceObject().getErrorSequence() > 0) {
-				errorSequence.setText(value
+			if (userSource.getSourceObject().getErrorSequence() > 0) {
+				errorSequence.setText(userSource
 					.getSourceObject()
 					.getErrorSequence() + "");
 			} else {
 				errorSequence.setText(constants.noErrorSequence());
 			}
 
-			if (value.getSourceObject().getNextCheck() != null) {
-				nextCheck.setText(renderer.render(value
+			if (userSource.getSourceObject().getNextCheck() != null) {
+				nextCheck.setText(renderer.render(userSource
 					.getSourceObject()
 					.getNextCheck()));
 			} else {
@@ -192,38 +264,90 @@ public class UserSourceEditor extends Composite
 			checkNow.setVisible(true);
 		}
 
-		for (int i = 1; i < grid.getRowCount(); i++) {
+		for (int i = 2; i < grid.getRowCount(); i++) {
 			Element element = grid.getRowFormatter().getElement(i);
-			element
-				.getStyle()
-				.setVisibility(
-					value.getKey() != null
-						? Visibility.VISIBLE
-						: Visibility.HIDDEN);
+			element.getStyle().setVisibility(
+				userSource.getKey() != null
+					? Visibility.VISIBLE
+					: Visibility.HIDDEN);
 		}
 
-		sourceEditor.setValue(value.getSourceObject());
-		if (value.getKey() == null) {
-			sourceEditor.setPing(new AsyncCallback<Source>() {
-
-				public void onSuccess(Source result) {
-					sourceKey = result.getKey();
-					for (int i = 1; i < grid.getRowCount(); i++) {
-						Element element = grid.getRowFormatter().getElement(i);
-						element.getStyle().setVisibility(Visibility.VISIBLE);
-					}
-				}
-
-				public void onFailure(Throwable caught) {
-					// TODO Auto-generated method stub
-
-				}
-			});
+		// DANGER, constant number
+		Element regionRow = grid.getRowFormatter().getElement(6);
+		if (userSource.getSourceType() == null
+			|| userSource.getSourceType().getRegionType() != null) {
+			regionRow.getStyle().clearDisplay();
+		} else {
+			regionRow.getStyle().setDisplay(Display.NONE);
 		}
 	}
 
 	public void setValue(UserSource value, boolean fireEvents) {
 		setValue(value);
+	}
+
+	@UiHandler("urlButton")
+	protected void urlButtonClicked(ClickEvent event) {
+		if (source != null) {
+			urlButton.setEnabled(false);
+			return;
+		}
+		if (url.getValue().trim().isEmpty()) {
+			ArtiqueMessages messages = ArtiqueI18n.I18N.getMessages();
+			ArtiqueConstants constants = ArtiqueI18n.I18N.getConstants();
+			Managers.MESSAGES_MANAGER.addMessage(new Message(MessageType.ERROR,
+				messages.errorEmptyField(constants.url())));
+			// ignore
+			return;
+		}
+
+		urlButton.setEnabled(false);
+		url.setEnabled(false);
+		sourceType.setEnabled(false);
+
+		Source newSource = null;
+		switch (sourceType.getValue()) {
+		case RSS_ATOM:
+			newSource = new XMLSource(new Link(url.getValue()));
+			break;
+		case PAGE_CHANGE:
+			newSource = new PageChangeSource(new Link(url.getValue()));
+			break;
+		case WEB_SITE:
+			newSource = new WebSiteSource(new Link(url.getValue()));
+			break;
+		case MANUAL:
+		default:
+			// ignore
+			return;
+		}
+		Managers.SOURCES_MANAGER.createSource(newSource,
+			new AsyncCallback<Source>() {
+				public void onFailure(Throwable caught) {
+					notPassedValidation();
+				}
+
+				public void onSuccess(Source result) {
+					passedValidation();
+					sourceCreated(result);
+				}
+			});
+	}
+
+	protected void sourceCreated(Source result) {
+		source = result;
+		if (sourceType.getValue().getRegionType() != null) {
+			UserSource us = new UserSource();
+			us.setSourceObject(source);
+			us.setSource(source.getKey());
+			us.setUser(ArtiqueWorld.WORLD.getUser());
+			region.setValue(us);
+
+			Element element = grid.getRowFormatter().getElement(6);
+			element.getStyle().setVisibility(Visibility.VISIBLE);
+
+			selectRegion();
+		}
 	}
 
 }

@@ -1,7 +1,5 @@
 package cz.artique.shared.model.config;
 
-import com.google.appengine.api.datastore.Key;
-
 import cz.artique.shared.utils.GenKey;
 import cz.artique.shared.utils.SharedUtils;
 
@@ -32,10 +30,6 @@ public enum ConfigKey implements GenKey {
 	@SuppressWarnings("unchecked")
 	public <T> T getDefaultValue() {
 		return (T) defaultValue;
-	}
-
-	public Key getKeyParent() {
-		return null;
 	}
 
 	// same as Config.getKeyName

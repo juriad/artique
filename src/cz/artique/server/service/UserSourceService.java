@@ -1,6 +1,5 @@
 package cz.artique.server.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +12,6 @@ import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
-import cz.artique.server.meta.source.ManualSourceMeta;
 import cz.artique.server.meta.source.SourceMeta;
 import cz.artique.server.meta.source.UserSourceMeta;
 import cz.artique.server.utils.ServerUtils;
@@ -23,32 +21,45 @@ import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
+import cz.artique.shared.utils.TransactionException;
 
 public class UserSourceService {
 
 	public UserSourceService() {}
 
-	/**
-	 * requires source object
-	 * 
-	 * @param userSource
-	 * @return
-	 */
 	public UserSource creatIfNotExist(UserSource userSource) {
-		Transaction tx = Datastore.beginTransaction();
-		Key key = ServerUtils.genKey(userSource);
-		UserSource theUserSource =
-			Datastore.getOrNull(tx, UserSourceMeta.get(), key);
-		if (theUserSource == null) {
+		UserSource old = createUserSourceIfNotExist(userSource);
+		if (old != null) {
+			userSource = old;
+
 			Label l = createLabelForUserSource(userSource);
-			userSource.setKey(key);
 			userSource.setLabel(l.getKey());
-			userSource.setDefaultLabels(new ArrayList<Key>());
-			updateUsage(userSource, tx);
-			Datastore.put(tx, userSource);
-			theUserSource = userSource;
+			List<Key> defaultLabels = userSource.getDefaultLabels();
+			defaultLabels.add(l.getKey());
 		}
-		tx.commit();
+
+		updateUsage(null, userSource);
+		return userSource;
+	}
+
+	private UserSource createUserSourceIfNotExist(UserSource userSource) {
+		Transaction tx = Datastore.beginTransaction();
+		UserSource theUserSource = null;
+		try {
+			Key key = ServerUtils.genKey(userSource);
+			theUserSource = Datastore.getOrNull(tx, UserSourceMeta.get(), key);
+			if (theUserSource == null) {
+				userSource.setKey(key);
+				Datastore.put(tx, userSource);
+			}
+			tx.commit();
+		} catch (Exception e) {
+			throw new TransactionException();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+		}
 		return theUserSource;
 	}
 
@@ -65,44 +76,64 @@ public class UserSourceService {
 
 	public void updateUserSource(UserSource userSource) {
 		Transaction tx = Datastore.beginTransaction();
-		updateUsage(userSource, tx);
-		Datastore.put(tx, userSource);
-		tx.commit();
+		UserSource original;
+		try {
+			original =
+				Datastore.get(tx, UserSourceMeta.get(), userSource.getKey());
+			Datastore.put(tx, userSource);
+			tx.commit();
+		} catch (Exception e) {
+			throw new TransactionException();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+		}
+		updateUsage(original, userSource);
 	}
 
-	private void updateUsage(UserSource us, Transaction tx) {
-		UserSource original =
-			Datastore.getOrNull(tx, UserSourceMeta.get(), us.getKey());
+	private void updateUsage(UserSource original, UserSource userSource) {
 		int diff = 0;
 		if (original == null) {
 			// new usersource
-			if (us.isWatching()) {
+			if (userSource.isWatching()) {
 				diff = 1;
 			} else {
 				// new but not watching, do nothing
 			}
-		} else if (us.isWatching() && !original.isWatching()) {
-			diff = 1;
-		} else if (!us.isWatching() && original.isWatching()) {
-			diff = -1;
+		} else {
+			// updating usersource
+			if (userSource.isWatching() && !original.isWatching()) {
+				// start watching
+				diff = 1;
+			} else if (!userSource.isWatching() && original.isWatching()) {
+				// stop watching
+				diff = -1;
+			}
 		}
 
-		if (diff != 0) {
-			Source s;
-			if (us.getSourceObject() == null) {
-				s = Datastore.get(tx, SourceMeta.get(), us.getSource());
-			} else {
-				s = us.getSourceObject();
-			}
-			s.setUsage(s.getUsage() + diff);
-			s.setEnabled(s.getUsage() > 0);
-			Datastore.put(tx, s);
+		if (diff == 0) {
+			return;
+		}
 
-			if (s.getParent() != null) {
-				Source s2 = Datastore.get(tx, SourceMeta.get(), s.getParent());
-				s2.setUsage(s2.getUsage() + diff);
-				s2.setEnabled(s2.getUsage() > 0);
-				Datastore.put(tx, s2);
+		Transaction tx = Datastore.beginTransaction();
+		try {
+			Source source =
+				Datastore.get(tx, SourceMeta.get(), userSource.getSource());
+			// extra for Manual Source, disables crawling
+			if (source instanceof ManualSource) {
+				source.setUsage(0);
+				source.setEnabled(false);
+			} else {
+				source.setUsage(source.getUsage() + diff);
+				source.setEnabled(source.getUsage() > 0);
+			}
+			Datastore.put(tx, source);
+		} catch (Exception e) {
+			throw new TransactionException();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
 			}
 		}
 	}
@@ -124,12 +155,12 @@ public class UserSourceService {
 		return userSources;
 	}
 
-	public UserSource getManualSource() {
+	public UserSource getManualUserSource() {
+		SourceService ss = new SourceService();
+		ManualSource manualSource = ss.getManualSource();
+
 		User user = UserServiceFactory.getUserService().getCurrentUser();
-		ManualSource ms = new ManualSource(user);
-		ManualSource manualSource =
-			Datastore.get(ManualSourceMeta.get(), ServerUtils.genKey(ms));
-		UserSource us = new UserSource(user, manualSource, "");
+		UserSource us = new UserSource(user, manualSource, "does_not_matter");
 		UserSource userSource =
 			Datastore.get(UserSourceMeta.get(), ServerUtils.genKey(us));
 		userSource.setSourceObject(manualSource);
@@ -137,32 +168,19 @@ public class UserSourceService {
 	}
 
 	public UserSource ensureManualSource() {
+		SourceService ss = new SourceService();
+		ManualSource manualSource = ss.ensureManualSource();
+
 		User user = UserServiceFactory.getUserService().getCurrentUser();
-		ManualSource ms = new ManualSource(user);
-		ManualSource manualSource =
-			Datastore.getOrNull(ManualSourceMeta.get(), ServerUtils.genKey(ms));
-		if (manualSource == null) {
-			ms.setKey(ServerUtils.genKey(ms));
-			ms.setEnabled(false);
-			ms.setUsage(0);
-			Datastore.put(ms);
-			manualSource = ms;
-		}
 		UserSource us = new UserSource(user, manualSource, "");
-		UserSource userSource =
-			Datastore.getOrNull(UserSourceMeta.get(), ServerUtils.genKey(us));
-		if (userSource == null) {
-			String name =
-				ConfigService.CONFIG_SERVICE.getConfig(
-					ConfigKey.MANUAL_SOURCE_NAME).<String> get();
-			Label l = createLabelForUserSource(us);
-			us.setLabel(l.getKey());
-			us.setName(name);
-			us.setKey(ServerUtils.genKey(us));
-			us.setWatching(true);
-			Datastore.put(us);
-			userSource = us;
-		}
+		String name =
+			ConfigService.CONFIG_SERVICE
+				.getConfig(ConfigKey.MANUAL_SOURCE_NAME)
+				.<String> get();
+		us.setName(name);
+		us.setKey(ServerUtils.genKey(us));
+		us.setWatching(true);
+		UserSource userSource = creatIfNotExist(us);
 		userSource.setSourceObject(manualSource);
 		return userSource;
 	}

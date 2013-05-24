@@ -1,10 +1,4 @@
-package cz.artique.client.artiqueSources;
-
-import cz.artique.shared.model.source.ManualSource;
-import cz.artique.shared.model.source.PageChangeSource;
-import cz.artique.shared.model.source.RegionType;
-import cz.artique.shared.model.source.WebSiteSource;
-import cz.artique.shared.model.source.XMLSource;
+package cz.artique.shared.model.source;
 
 public enum SourceType {
 	RSS_ATOM(XMLSource.class, true, null),

@@ -2,7 +2,6 @@ package cz.artique.shared.model.config;
 
 import java.io.Serializable;
 
-import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
 import cz.artique.shared.utils.GenKey;
@@ -32,11 +31,7 @@ public enum ClientConfigKey implements GenKey, Serializable {
 	public Value getDefaultValue() {
 		return defaultValue;
 	}
-
-	public Key getKeyParent() {
-		return null;
-	}
-
+	
 	public String getKeyName() {
 		return SharedUtils.combineStringParts(getUser().getUserId(), getKey());
 	}

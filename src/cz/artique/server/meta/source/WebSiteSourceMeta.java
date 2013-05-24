@@ -1,11 +1,8 @@
 package cz.artique.server.meta.source;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-21 21:03:28")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-24 14:49:11")
 /** */
 public final class WebSiteSourceMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.source.WebSiteSource> {
-
-    /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.WebSiteSource, com.google.appengine.api.datastore.Key> region = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.WebSiteSource, com.google.appengine.api.datastore.Key>(this, "region", "region", com.google.appengine.api.datastore.Key.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.WebSiteSource, java.lang.Boolean> enabled = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.WebSiteSource, java.lang.Boolean>(this, "enabled", "enabled", boolean.class);
@@ -24,9 +21,6 @@ public final class WebSiteSourceMeta extends org.slim3.datastore.ModelMeta<cz.ar
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.WebSiteSource, java.util.Date> nextCheck = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.WebSiteSource, java.util.Date>(this, "nextCheck", "nextCheck", java.util.Date.class);
-
-    /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.WebSiteSource, com.google.appengine.api.datastore.Key> parent = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.WebSiteSource, com.google.appengine.api.datastore.Key>(this, "parent", "parent", com.google.appengine.api.datastore.Key.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.WebSiteSource, com.google.appengine.api.datastore.Link> url = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.WebSiteSource, com.google.appengine.api.datastore.Link>(this, "url", "url", com.google.appengine.api.datastore.Link.class);
@@ -54,14 +48,12 @@ public final class WebSiteSourceMeta extends org.slim3.datastore.ModelMeta<cz.ar
     @Override
     public cz.artique.shared.model.source.WebSiteSource entityToModel(com.google.appengine.api.datastore.Entity entity) {
         cz.artique.shared.model.source.WebSiteSource model = new cz.artique.shared.model.source.WebSiteSource();
-        model.setRegion((com.google.appengine.api.datastore.Key) entity.getProperty("region"));
         model.setEnabled(booleanToPrimitiveBoolean((java.lang.Boolean) entity.getProperty("enabled")));
         model.setEnqued(booleanToPrimitiveBoolean((java.lang.Boolean) entity.getProperty("enqued")));
         model.setErrorSequence(longToPrimitiveInt((java.lang.Long) entity.getProperty("errorSequence")));
         model.setKey(entity.getKey());
         model.setLastCheck((java.util.Date) entity.getProperty("lastCheck"));
         model.setNextCheck((java.util.Date) entity.getProperty("nextCheck"));
-        model.setParent((com.google.appengine.api.datastore.Key) entity.getProperty("parent"));
         model.setUrl((com.google.appengine.api.datastore.Link) entity.getProperty("url"));
         model.setUsage(longToPrimitiveInt((java.lang.Long) entity.getProperty("usage")));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
@@ -77,13 +69,11 @@ public final class WebSiteSourceMeta extends org.slim3.datastore.ModelMeta<cz.ar
         } else {
             entity = new com.google.appengine.api.datastore.Entity(kind);
         }
-        entity.setProperty("region", m.getRegion());
         entity.setProperty("enabled", m.isEnabled());
         entity.setProperty("enqued", m.isEnqued());
         entity.setProperty("errorSequence", m.getErrorSequence());
         entity.setProperty("lastCheck", m.getLastCheck());
         entity.setProperty("nextCheck", m.getNextCheck());
-        entity.setProperty("parent", m.getParent());
         entity.setProperty("url", m.getUrl());
         entity.setProperty("usage", m.getUsage());
         entity.setProperty("version", m.getVersion());
@@ -150,14 +140,6 @@ public final class WebSiteSourceMeta extends org.slim3.datastore.ModelMeta<cz.ar
         cz.artique.shared.model.source.WebSiteSource m = (cz.artique.shared.model.source.WebSiteSource) model;
         writer.beginObject();
         org.slim3.datastore.json.Default encoder0 = new org.slim3.datastore.json.Default();
-        if(m.getRegion() != null){
-            writer.setNextPropertyName("region");
-            encoder0.encode(writer, m.getRegion());
-        }
-        if(m.getRegionObject() != null){
-            writer.setNextPropertyName("regionObject");
-            encoder0.encode(writer, m.getRegionObject());
-        }
         writer.setNextPropertyName("enabled");
         encoder0.encode(writer, m.isEnabled());
         writer.setNextPropertyName("enqued");
@@ -175,14 +157,6 @@ public final class WebSiteSourceMeta extends org.slim3.datastore.ModelMeta<cz.ar
         if(m.getNextCheck() != null){
             writer.setNextPropertyName("nextCheck");
             encoder0.encode(writer, m.getNextCheck());
-        }
-        if(m.getParent() != null){
-            writer.setNextPropertyName("parent");
-            encoder0.encode(writer, m.getParent());
-        }
-        if(m.getParentObject() != null){
-            writer.setNextPropertyName("parentObject");
-            encoder0.encode(writer, m.getParentObject());
         }
         if(m.getUrl() != null){
             writer.setNextPropertyName("url");
@@ -202,10 +176,6 @@ public final class WebSiteSourceMeta extends org.slim3.datastore.ModelMeta<cz.ar
         cz.artique.shared.model.source.WebSiteSource m = new cz.artique.shared.model.source.WebSiteSource();
         org.slim3.datastore.json.JsonReader reader = null;
         org.slim3.datastore.json.Default decoder0 = new org.slim3.datastore.json.Default();
-        reader = rootReader.newObjectReader("region");
-        m.setRegion(decoder0.decode(reader, m.getRegion()));
-        reader = rootReader.newObjectReader("regionObject");
-        m.setRegionObject(decoder0.decode(reader, m.getRegionObject(), cz.artique.shared.model.source.Region.class));
         reader = rootReader.newObjectReader("enabled");
         m.setEnabled(decoder0.decode(reader, m.isEnabled()));
         reader = rootReader.newObjectReader("enqued");
@@ -218,10 +188,6 @@ public final class WebSiteSourceMeta extends org.slim3.datastore.ModelMeta<cz.ar
         m.setLastCheck(decoder0.decode(reader, m.getLastCheck()));
         reader = rootReader.newObjectReader("nextCheck");
         m.setNextCheck(decoder0.decode(reader, m.getNextCheck()));
-        reader = rootReader.newObjectReader("parent");
-        m.setParent(decoder0.decode(reader, m.getParent()));
-        reader = rootReader.newObjectReader("parentObject");
-        m.setParentObject(decoder0.decode(reader, m.getParentObject(), cz.artique.shared.model.source.Source.class));
         reader = rootReader.newObjectReader("url");
         m.setUrl(decoder0.decode(reader, m.getUrl()));
         reader = rootReader.newObjectReader("usage");

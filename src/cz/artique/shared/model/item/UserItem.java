@@ -8,13 +8,16 @@ import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.users.User;
 
 import cz.artique.shared.model.source.UserSource;
+import cz.artique.shared.utils.GenKey;
 import cz.artique.shared.utils.HasKey;
+import cz.artique.shared.utils.SharedUtils;
 
 @Model(schemaVersion = 1)
-public class UserItem implements Serializable, HasKey<Key> {
+public class UserItem implements Serializable, HasKey<Key>, GenKey {
 
 	private static final long serialVersionUID = 1L;
 
@@ -192,5 +195,11 @@ public class UserItem implements Serializable, HasKey<Key> {
 
 	public void setUserSource(Key userSource) {
 		this.userSource = userSource;
+	}
+
+	public String getKeyName() {
+		String userId = getUser().getUserId();
+		String itemId = KeyFactory.keyToString(getItem());
+		return SharedUtils.combineStringParts(userId, itemId);
 	}
 }

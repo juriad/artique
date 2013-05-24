@@ -8,7 +8,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import cz.artique.shared.model.source.HTMLSource;
 import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Region;
-import cz.artique.shared.model.source.RegionType;
 import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.model.source.WebSiteSource;
 import cz.artique.shared.model.source.XMLSource;
@@ -22,9 +21,7 @@ public interface ClientSourceService extends RemoteService {
 
 	WebSiteSource addSource(WebSiteSource source);
 	
-	HTMLSource addSource(HTMLSource source);
-
-	List<Region> getRegions(HTMLSource source, RegionType type);
+	List<Region> getRegions(HTMLSource source);
 
 	UserSource addUserSource(UserSource userSource);
 

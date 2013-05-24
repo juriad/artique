@@ -1,8 +1,11 @@
 package cz.artique.server.meta.source;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-21 15:54:51")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-24 00:45:05")
 /** */
 public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.source.UserSource> {
+
+    /** */
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.UserSource, com.google.appengine.api.datastore.Key> crawlerData = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.UserSource, com.google.appengine.api.datastore.Key>(this, "crawlerData", "crawlerData", com.google.appengine.api.datastore.Key.class);
 
     /** */
     public final org.slim3.datastore.CollectionAttributeMeta<cz.artique.shared.model.source.UserSource, java.util.List<com.google.appengine.api.datastore.Key>, com.google.appengine.api.datastore.Key> defaultLabels = new org.slim3.datastore.CollectionAttributeMeta<cz.artique.shared.model.source.UserSource, java.util.List<com.google.appengine.api.datastore.Key>, com.google.appengine.api.datastore.Key>(this, "defaultLabels", "defaultLabels", java.util.List.class);
@@ -20,7 +23,13 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
     public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.source.UserSource> name = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.source.UserSource>(this, "name", "name");
 
     /** */
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.UserSource, com.google.appengine.api.datastore.Key> region = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.UserSource, com.google.appengine.api.datastore.Key>(this, "region", "region", com.google.appengine.api.datastore.Key.class);
+
+    /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.UserSource, com.google.appengine.api.datastore.Key> source = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.UserSource, com.google.appengine.api.datastore.Key>(this, "source", "source", com.google.appengine.api.datastore.Key.class);
+
+    /** */
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.UserSource, cz.artique.shared.model.source.SourceType> sourceType = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.UserSource, cz.artique.shared.model.source.SourceType>(this, "sourceType", "sourceType", cz.artique.shared.model.source.SourceType.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.UserSource, com.google.appengine.api.users.User> user = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.UserSource, com.google.appengine.api.users.User>(this, "user", "user", com.google.appengine.api.users.User.class);
@@ -48,12 +57,15 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
     @Override
     public cz.artique.shared.model.source.UserSource entityToModel(com.google.appengine.api.datastore.Entity entity) {
         cz.artique.shared.model.source.UserSource model = new cz.artique.shared.model.source.UserSource();
+        model.setCrawlerData((com.google.appengine.api.datastore.Key) entity.getProperty("crawlerData"));
         model.setDefaultLabels(toList(com.google.appengine.api.datastore.Key.class, entity.getProperty("defaultLabels")));
         model.setHierarchy((java.lang.String) entity.getProperty("hierarchy"));
         model.setKey(entity.getKey());
         model.setLabel((com.google.appengine.api.datastore.Key) entity.getProperty("label"));
         model.setName((java.lang.String) entity.getProperty("name"));
+        model.setRegion((com.google.appengine.api.datastore.Key) entity.getProperty("region"));
         model.setSource((com.google.appengine.api.datastore.Key) entity.getProperty("source"));
+        model.setSourceType(stringToEnum(cz.artique.shared.model.source.SourceType.class, (java.lang.String) entity.getProperty("sourceType")));
         model.setUser((com.google.appengine.api.users.User) entity.getProperty("user"));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
         model.setWatching(booleanToPrimitiveBoolean((java.lang.Boolean) entity.getProperty("watching")));
@@ -69,11 +81,14 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         } else {
             entity = new com.google.appengine.api.datastore.Entity(kind);
         }
+        entity.setProperty("crawlerData", m.getCrawlerData());
         entity.setProperty("defaultLabels", m.getDefaultLabels());
         entity.setProperty("hierarchy", m.getHierarchy());
         entity.setProperty("label", m.getLabel());
         entity.setProperty("name", m.getName());
+        entity.setProperty("region", m.getRegion());
         entity.setProperty("source", m.getSource());
+        entity.setProperty("sourceType", enumToString(m.getSourceType()));
         entity.setProperty("user", m.getUser());
         entity.setProperty("version", m.getVersion());
         entity.setProperty("watching", m.isWatching());
@@ -139,6 +154,10 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         cz.artique.shared.model.source.UserSource m = (cz.artique.shared.model.source.UserSource) model;
         writer.beginObject();
         org.slim3.datastore.json.Default encoder0 = new org.slim3.datastore.json.Default();
+        if(m.getCrawlerData() != null){
+            writer.setNextPropertyName("crawlerData");
+            encoder0.encode(writer, m.getCrawlerData());
+        }
         if(m.getDefaultLabels() != null){
             writer.setNextPropertyName("defaultLabels");
             writer.beginArray();
@@ -163,6 +182,14 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
             writer.setNextPropertyName("name");
             encoder0.encode(writer, m.getName());
         }
+        if(m.getRegion() != null){
+            writer.setNextPropertyName("region");
+            encoder0.encode(writer, m.getRegion());
+        }
+        if(m.getRegionObject() != null){
+            writer.setNextPropertyName("regionObject");
+            encoder0.encode(writer, m.getRegionObject());
+        }
         if(m.getSource() != null){
             writer.setNextPropertyName("source");
             encoder0.encode(writer, m.getSource());
@@ -170,6 +197,10 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         if(m.getSourceObject() != null){
             writer.setNextPropertyName("sourceObject");
             encoder0.encode(writer, m.getSourceObject());
+        }
+        if(m.getSourceType() != null){
+            writer.setNextPropertyName("sourceType");
+            encoder0.encode(writer, m.getSourceType());
         }
         if(m.getUser() != null){
             writer.setNextPropertyName("user");
@@ -189,6 +220,8 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         cz.artique.shared.model.source.UserSource m = new cz.artique.shared.model.source.UserSource();
         org.slim3.datastore.json.JsonReader reader = null;
         org.slim3.datastore.json.Default decoder0 = new org.slim3.datastore.json.Default();
+        reader = rootReader.newObjectReader("crawlerData");
+        m.setCrawlerData(decoder0.decode(reader, m.getCrawlerData()));
         reader = rootReader.newObjectReader("defaultLabels");
         {
             java.util.ArrayList<com.google.appengine.api.datastore.Key> elements = new java.util.ArrayList<com.google.appengine.api.datastore.Key>();
@@ -214,10 +247,16 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         m.setLabel(decoder0.decode(reader, m.getLabel()));
         reader = rootReader.newObjectReader("name");
         m.setName(decoder0.decode(reader, m.getName()));
+        reader = rootReader.newObjectReader("region");
+        m.setRegion(decoder0.decode(reader, m.getRegion()));
+        reader = rootReader.newObjectReader("regionObject");
+        m.setRegionObject(decoder0.decode(reader, m.getRegionObject(), cz.artique.shared.model.source.Region.class));
         reader = rootReader.newObjectReader("source");
         m.setSource(decoder0.decode(reader, m.getSource()));
         reader = rootReader.newObjectReader("sourceObject");
         m.setSourceObject(decoder0.decode(reader, m.getSourceObject(), cz.artique.shared.model.source.Source.class));
+        reader = rootReader.newObjectReader("sourceType");
+        m.setSourceType(decoder0.decode(reader, m.getSourceType(), cz.artique.shared.model.source.SourceType.class));
         reader = rootReader.newObjectReader("user");
         m.setUser(decoder0.decode(reader, m.getUser()));
         reader = rootReader.newObjectReader("version");

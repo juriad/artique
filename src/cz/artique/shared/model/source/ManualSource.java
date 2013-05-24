@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import org.slim3.datastore.Model;
 
-import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
 import cz.artique.shared.utils.GenKey;
@@ -20,7 +19,7 @@ public class ManualSource extends Source implements Serializable, GenKey {
 	public ManualSource() {}
 
 	public ManualSource(User user) {
-		super(null, null);
+		super(null);
 		setUser(user);
 	}
 
@@ -30,10 +29,6 @@ public class ManualSource extends Source implements Serializable, GenKey {
 
 	public void setUser(User user) {
 		this.user = user;
-	}
-
-	public Key getKeyParent() {
-		return null;
 	}
 
 	public String getKeyName() {

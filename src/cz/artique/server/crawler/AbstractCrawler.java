@@ -3,7 +3,12 @@ package cz.artique.server.crawler;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
@@ -14,31 +19,32 @@ import org.slim3.datastore.Datastore;
 
 import com.google.appengine.api.datastore.Key;
 
-import cz.artique.server.meta.item.ItemMeta;
+import cz.artique.server.meta.source.RegionMeta;
 import cz.artique.server.meta.source.UserSourceMeta;
 import cz.artique.server.utils.GAEConnectionManager;
+import cz.artique.server.utils.ServerUtils;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;
+import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
+import cz.artique.shared.model.source.Stats;
 import cz.artique.shared.model.source.UserSource;
 
-public abstract class AbstractCrawler<E extends Source> implements Crawler<E> {
+public abstract class AbstractCrawler<E extends Source, F extends Item>
+		implements Crawler<E> {
 
-	protected final E source;
+	private final E source;
 
 	protected AbstractCrawler(E source) {
 		this.source = source;
 	}
 
-	protected URI getURI(CrawlerResult result) {
-		URI uri = null;
+	protected URI getURI() throws CrawlerException {
 		try {
-			uri = new URI(source.getUrl().getValue());
-
+			return new URI(getSource().getUrl().getValue());
 		} catch (URISyntaxException e) {
-			result.addError(new CrawlerException("Wrong URI syntax", e));
+			throw new CrawlerException("Wrong URI syntax", e);
 		}
-		return uri;
 	}
 
 	protected HttpClient getHttpClient() {
@@ -49,64 +55,92 @@ public abstract class AbstractCrawler<E extends Source> implements Crawler<E> {
 		return httpClient;
 	}
 
-	protected boolean putItemIfNotDuplicate(Source source, Item item) {
-		ItemMeta meta = ItemMeta.get();
-		List<Item> items =
-			Datastore
-				.query(meta)
-				.filter(meta.source.equal(source.getKey()))
-				.filter(meta.hash.equal(item.getHash()))
-				.asList();
+	protected void writeStat(int items) {
+		Stats s = new Stats();
+		s.setProbeDate(new Date());
+		s.setSource(getSource().getKey());
+		s.setItemsAcquired(items);
+		Datastore.put(s);
+	}
 
-		for (Item i : items) {
+	protected void writeStat(Throwable t) {
+		Stats s = new Stats();
+		s.setProbeDate(new Date());
+		s.setSource(getSource().getKey());
+		s.setItemsAcquired(0);
+		s.setError(t.getLocalizedMessage());
+		Datastore.put(s);
+	}
+
+	protected List<F> createNonDuplicateItems(List<F> items) {
+		List<F> items2 = new ArrayList<F>();
+		for (F item : items) {
+			F duplicate = createNonDuplicateItem(item);
+			if (duplicate == null) {
+				items2.add(item);
+			}
+		}
+		return items2;
+	}
+
+	protected F createNonDuplicateItem(F item) {
+		List<F> items = getCollidingItems(item);
+		for (F i : items) {
 			if (isDuplicate(item, i)) {
-				return false;
+				return i;
 			}
 		}
 		Key key = Datastore.put(item);
 		item.setKey(key);
-
-		createUserItems(source, item);
-		return true;
+		return null;
 	}
 
-	protected void createUserItems(Source source, Item item) {
-		UserSourceMeta meta = UserSourceMeta.get();
-		List<UserSource> userSources =
-			Datastore
-				.query(meta)
-				.filter(meta.source.equal(source.getKey()))
-				.filter(meta.watching.equal(Boolean.TRUE))
-				.asList();
-		List<UserItem> userItems = new ArrayList<UserItem>();
-		for (UserSource us : userSources) {
-			UserItem ui = createUserItem(us, item);
-			userItems.add(ui);
-		}
-		Datastore.put(userItems);
-	}
+	protected abstract List<F> getCollidingItems(F item);
 
-	/**
-	 * modifies UserSource, must be discarded afterwards
-	 * 
-	 * @param us
-	 * @param item
-	 * @return
-	 */
-	protected UserItem createUserItem(UserSource us, Item item) {
+	protected UserItem createUserItem(UserSource us, F item) {
 		UserItem ui = new UserItem();
 		ui.setAdded(item.getAdded());
 		ui.setItem(item.getKey());
 		ui.setRead(false);
 		ui.setUser(us.getUser());
 		ui.setUserSource(us.getKey());
-		List<Key> labelsToAsign = us.getDefaultLabels();
-		labelsToAsign.add(us.getLabel());
-		ui.setLabels(labelsToAsign);
+		ui.setLabels(us.getDefaultLabels());
+		ui.setKey(ServerUtils.genKey(ui));
 		return ui;
 	}
 
-	protected boolean isDuplicate(Item i1, Item i2) {
+	protected List<UserSource> getUserSources() {
+		UserSourceMeta meta = UserSourceMeta.get();
+		List<UserSource> userSources =
+			Datastore
+				.query(meta)
+				.filter(meta.source.equal(getSource().getKey()))
+				.filter(meta.watching.equal(Boolean.TRUE))
+				.asList();
+		Set<Key> set = new HashSet<Key>();
+		for (UserSource us : userSources) {
+			if (us.getRegion() != null) {
+				set.add(us.getRegion());
+			}
+		}
+		if (set.size() > 0) {
+			List<Region> regions = Datastore.get(RegionMeta.get(), set);
+			Map<Key, Region> map = new HashMap<Key, Region>();
+			for (Region region : regions) {
+				map.put(region.getKey(), region);
+			}
+
+			for (UserSource us : userSources) {
+				if (us.getRegion() != null) {
+					Region region = map.get(us.getRegion());
+					us.setRegionObject(region);
+				}
+			}
+		}
+		return userSources;
+	}
+
+	protected boolean isDuplicate(F i1, F i2) {
 		if (i1.getSource().equals(i2.getSource())) {
 			// same sources
 			if (i1.getHash().equals(i2.getHash())) {
@@ -119,5 +153,9 @@ public abstract class AbstractCrawler<E extends Source> implements Crawler<E> {
 			}
 		}
 		return false;
+	}
+
+	public E getSource() {
+		return source;
 	}
 }

@@ -11,7 +11,7 @@ public class CrawlerUtils {
 		try {
 			md = MessageDigest.getInstance("SHA-1");
 		} catch (NoSuchAlgorithmException e) {
-			throw new CrawlerException("cannot hash by sha-1", e);
+			return original.substring(0, Math.min(32, original.length()));
 		}
 		byte[] bytes = md.digest(original.getBytes());
 

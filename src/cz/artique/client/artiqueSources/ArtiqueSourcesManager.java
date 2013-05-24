@@ -20,7 +20,6 @@ import cz.artique.client.service.ClientSourceServiceAsync;
 import cz.artique.client.sources.SourcesManager;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
-import cz.artique.shared.model.source.HTMLSource;
 import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
@@ -100,23 +99,6 @@ public class ArtiqueSourcesManager
 						}
 					}
 				});
-		} else if (source instanceof HTMLSource) {
-			service.addSource((HTMLSource) source,
-				new AsyncCallback<HTMLSource>() {
-
-					public void onFailure(Throwable caught) {
-						if (ping != null) {
-							ping.onFailure(caught);
-						}
-					}
-
-					@SuppressWarnings("unchecked")
-					public void onSuccess(HTMLSource result) {
-						if (ping != null) {
-							ping.onSuccess((T) result);
-						}
-					}
-				});
 		} else if (source instanceof PageChangeSource) {
 			service.addSource((PageChangeSource) source,
 				new AsyncCallback<PageChangeSource>() {
@@ -151,6 +133,11 @@ public class ArtiqueSourcesManager
 						}
 					}
 				});
+		} else {
+			if (ping != null) {
+				ping
+					.onFailure(new IllegalStateException("Unknown source type"));
+			}
 		}
 	}
 

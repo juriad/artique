@@ -177,10 +177,6 @@ public class Label
 		this.version = version;
 	}
 
-	public Key getKeyParent() {
-		return null;
-	}
-
 	public String getKeyName() {
 		String type = getLabelType().name();
 		String userId = getUser().getUserId();

@@ -140,10 +140,6 @@ public class ClientConfig implements Serializable, GenKey, HasKey<Key> {
 		this.stringValue = stringValue;
 	}
 
-	public Key getKeyParent() {
-		return null;
-	}
-
 	public String getKeyName() {
 		return SharedUtils.combineStringParts(getUser().getUserId(),
 			getConfigKey());

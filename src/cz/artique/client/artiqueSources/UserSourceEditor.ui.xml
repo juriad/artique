@@ -8,10 +8,23 @@
 	<g:Grid ui:field="grid">
 		<g:row>
 			<g:cell>
-				<ui:text from='{res.source}' />
+				<ui:text from='{res.sourceType}' />
 			</g:cell>
 			<g:customCell>
-				<a:SourceEditor ui:field="sourceEditor" />
+				<a:SourceTypePicker ui:field="sourceType" />
+			</g:customCell>
+		</g:row>
+		<g:row>
+			<g:cell>
+				<ui:text from='{res.url}' />
+			</g:cell>
+			<g:customCell>
+				<g:FlowPanel>
+					<g:TextBox ui:field="url" />
+					<g:Button ui:field="urlButton">
+						<ui:text from='{res.setUrl}' />
+					</g:Button>
+				</g:FlowPanel>
 			</g:customCell>
 		</g:row>
 		<g:row>
@@ -46,9 +59,17 @@
 				<ui:text from='{res.defaultLabels}' />
 			</g:cell>
 			<!-- <g:customCell> -->
-				<!-- TODO default labels -->
-				<!-- <b:ArtiqueLabelsBar ui:field="defaultLabels" />  -->
-	<!-- </g:customCell> -->
+			<!-- TODO default labels -->
+			<!-- <b:ArtiqueLabelsBar ui:field="defaultLabels" /> -->
+			<!-- </g:customCell> -->
+		</g:row>
+		<g:row>
+			<g:cell>
+				<ui:text from='{res.region}' />
+			</g:cell>
+			<g:customCell>
+				<a:SourceRegionPicker ui:field="region" />
+			</g:customCell>
 		</g:row>
 		<g:row>
 			<g:cell>

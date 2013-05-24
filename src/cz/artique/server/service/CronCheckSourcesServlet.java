@@ -67,7 +67,6 @@ public class CronCheckSourcesServlet extends HttpServlet {
 					.query(meta)
 					.filter(meta.enabled.equal(Boolean.TRUE))
 					.filter(meta.nextCheck.lessThan(new Date()))
-					.filter(meta.parent.equal(null))
 					.filterInMemory(meta.errorSequence.lessThan(maxErrors))
 					.asList();
 		} else if (parameterMap.containsKey("error")) {
@@ -75,7 +74,6 @@ public class CronCheckSourcesServlet extends HttpServlet {
 				Datastore
 					.query(meta)
 					.filter(meta.enabled.equal(Boolean.TRUE))
-					.filter(meta.parent.equal(null))
 					.filter(meta.errorSequence.greaterThanOrEqual(maxErrors))
 					.asList();
 		} else {

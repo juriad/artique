@@ -287,13 +287,13 @@ public class ItemService {
 
 	public UserItem addManualItem(ManualItem item) {
 		UserSourceService uss = new UserSourceService();
-		UserSource manualSource = uss.getManualSource();
+		UserSource manualUserSource = uss.getManualUserSource();
 
-		item.setSource(manualSource.getSource());
+		item.setSource(manualUserSource.getSource());
 		Key key = Datastore.put(item);
 		item.setKey(key);
 
-		UserItem ui = new UserItem(item, manualSource);
+		UserItem ui = new UserItem(item, manualUserSource);
 		Datastore.put(ui);
 		return ui;
 	}

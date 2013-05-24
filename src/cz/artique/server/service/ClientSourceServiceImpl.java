@@ -6,14 +6,12 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.artique.client.service.ClientSourceService;
-import cz.artique.server.meta.source.HTMLSourceMeta;
 import cz.artique.server.meta.source.PageChangeSourceMeta;
 import cz.artique.server.meta.source.WebSiteSourceMeta;
 import cz.artique.server.meta.source.XMLSourceMeta;
 import cz.artique.shared.model.source.HTMLSource;
 import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Region;
-import cz.artique.shared.model.source.RegionType;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.model.source.WebSiteSource;
@@ -27,62 +25,15 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 			throws PropertyValueException, PropertyEmptyException,
 			NullPointerException {
 		checkSouce(source);
-		Sanitizer.expectValue("parent", source.getParent(), null);
 		SourceService ss = new SourceService();
 		return ss.creatIfNotExist(source, XMLSourceMeta.get());
-	}
-
-	public HTMLSource addSource(HTMLSource source)
-			throws PropertyValueException, PropertyEmptyException,
-			NullPointerException {
-		checkSouce(source);
-		Sanitizer.expectValue("parent", source.getParent(), null);
-		SourceService ss = new SourceService();
-		return ss.creatIfNotExist(source, HTMLSourceMeta.get());
 	}
 
 	public PageChangeSource addSource(PageChangeSource source)
 			throws PropertyValueException, PropertyEmptyException,
 			NullPointerException {
 		checkSouce(source);
-		if (source.getParent() == null) {
-			throw new PropertyEmptyException("parent");
-		}
 		SourceService ss = new SourceService();
-		Source parentObject = ss.getSourceByKey(source.getParent());
-		if (parentObject == null) {
-			throw new PropertyValueException("parent", "null", "does not exist");
-		}
-		source.setParentObject(parentObject);
-
-		if (source.getRegion() == null) {
-			if (source.getRegionObject() == null) {
-				throw new PropertyEmptyException("region");
-			} else {
-				Region regionObject = source.getRegionObject();
-				regionObject.setHtmlSource(source.getParent());
-				regionObject.setType(RegionType.PAGE_CHANGE);
-
-				Region theRegion =
-					ss.addRegionIfNotExist(source.getRegionObject());
-				source.setRegion(theRegion.getKey());
-			}
-		} else {
-			Region regionObject = ss.getRegionByKey(source.getRegion());
-			if (regionObject == null) {
-				throw new PropertyValueException("region", "null",
-					"does not exist");
-			}
-			if (!regionObject.getHtmlSource().equals(source.getParent())) {
-				throw new PropertyValueException("region", "", "wrong source");
-			}
-			if (!regionObject.getType().equals(RegionType.PAGE_CHANGE)) {
-				throw new PropertyValueException("region", regionObject
-					.getType()
-					.name(), "wrong type");
-			}
-			source.setRegionObject(regionObject);
-		}
 		return ss.creatIfNotExist(source, PageChangeSourceMeta.get());
 	}
 
@@ -90,44 +41,7 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 			throws PropertyValueException, PropertyEmptyException,
 			NullPointerException {
 		checkSouce(source);
-		if (source.getParent() == null) {
-			throw new PropertyEmptyException("parent");
-		}
 		SourceService ss = new SourceService();
-		Source parentObject = ss.getSourceByKey(source.getParent());
-		if (parentObject == null) {
-			throw new PropertyValueException("parent", "null", "does not exist");
-		}
-		source.setParentObject(parentObject);
-
-		if (source.getRegion() == null) {
-			if (source.getRegionObject() == null) {
-				throw new PropertyEmptyException("region");
-			} else {
-				Region regionObject = source.getRegionObject();
-				regionObject.setHtmlSource(source.getParent());
-				regionObject.setType(RegionType.WEB_SITE);
-
-				Region theRegion =
-					ss.addRegionIfNotExist(source.getRegionObject());
-				source.setRegion(theRegion.getKey());
-			}
-		} else {
-			Region regionObject = ss.getRegionByKey(source.getRegion());
-			if (regionObject == null) {
-				throw new PropertyValueException("region", "null",
-					"does not exist");
-			}
-			if (!regionObject.getHtmlSource().equals(source.getParent())) {
-				throw new PropertyValueException("region", "", "wrong source");
-			}
-			if (!regionObject.getType().equals(RegionType.WEB_SITE)) {
-				throw new PropertyValueException("region", regionObject
-					.getType()
-					.name(), "wrong type");
-			}
-			source.setRegionObject(regionObject);
-		}
 		return ss.creatIfNotExist(source, WebSiteSourceMeta.get());
 	}
 
@@ -146,13 +60,13 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		Sanitizer.expectValue("nextCheck", source.getNextCheck(), null);
 	}
 
-	public List<Region> getRegions(HTMLSource source, RegionType type)
+	public List<Region> getRegions(HTMLSource source)
 			throws NullPointerException {
 		if (source == null) {
 			throw new NullPointerException();
 		}
 		SourceService ss = new SourceService();
-		return ss.getRegions(source, type);
+		return ss.getRegions(source);
 	}
 
 	public UserSource addUserSource(UserSource userSource) {
@@ -182,6 +96,8 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		Sanitizer.checkStringEmpty("name", userSource.getName());
 		Sanitizer.checkPreserveKey(userSource);
 		// TODO sanitize default labels
+
+		// TODO regions
 		UserSourceService uss = new UserSourceService();
 		uss.updateUserSource(userSource);
 	}

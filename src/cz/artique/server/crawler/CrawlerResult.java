@@ -1,41 +1,18 @@
 package cz.artique.server.crawler;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import cz.artique.shared.model.item.Item;
-
 public class CrawlerResult {
-	private List<Item> items;
-	private List<Throwable> errors;
+	private int items;
 
-	public CrawlerResult() {
-		this.items = new ArrayList<Item>();
-		this.errors = new ArrayList<Throwable>();
+	public CrawlerResult(int items) {
+		this.items = items;
 	}
 
-	public void addError(Throwable t) {
-		errors.add(t);
-	}
-
-	public void addItem(Item i) {
-		items.add(i);
-	}
-
-	public List<Item> getItems() {
+	public int getItems() {
 		return items;
 	}
 
-	public List<Throwable> getErrors() {
-		return errors;
-	}
-
-	public boolean isError() {
-		return !errors.isEmpty();
-	}
-
-	public int getItemsCount() {
-		return items.size();
+	public void setItems(int items) {
+		this.items = items;
 	}
 
 }

@@ -49,21 +49,12 @@ public abstract class Source implements Serializable, GenKey {
 	 */
 	private int errorSequence;
 
-	/**
-	 * Parent source
-	 */
-	private Key parent;
-
-	@Attribute(persistent = false)
-	private Source parentObject;
-
 	private Date lastCheck;
 
 	public Source() {}
 
-	protected Source(Link url, Key parent) {
+	protected Source(Link url) {
 		setUrl(url);
-		setParent(parent);
 	}
 
 	@Override
@@ -174,28 +165,12 @@ public abstract class Source implements Serializable, GenKey {
 		this.errorSequence = errorSequence;
 	}
 
-	public Key getParent() {
-		return parent;
-	}
-
-	public void setParent(Key parent) {
-		this.parent = parent;
-	}
-
 	public boolean isEnqued() {
 		return enqued;
 	}
 
 	public void setEnqued(boolean enqued) {
 		this.enqued = enqued;
-	}
-
-	public Source getParentObject() {
-		return parentObject;
-	}
-
-	public void setParentObject(Source parentObject) {
-		this.parentObject = parentObject;
 	}
 
 	public Date getLastCheck() {

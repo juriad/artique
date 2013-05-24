@@ -1,6 +1,6 @@
 package cz.artique.server.crawler;
 
-public class CrawlerException extends RuntimeException {
+public class CrawlerException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 

@@ -7,7 +7,6 @@ import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 
-import cz.artique.server.meta.source.SourceMeta;
 import cz.artique.shared.model.source.Source;
 
 public class CheckService {
@@ -16,17 +15,10 @@ public class CheckService {
 	public CheckService() {}
 
 	public void check(Source source) {
-		if (source.getParent() != null) {
-			SourceMeta meta = SourceMeta.get();
-			Source parent = Datastore.get(meta, source.getParent());
-			check(parent);
-		} else {
-			// this is root source
-			if (source.isEnabled() && !source.isEnqued()) {
-				enque(source.getKey());
-				source.setEnqued(true);
-				Datastore.put(source);
-			}
+		if (source.isEnabled() && !source.isEnqued()) {
+			enque(source.getKey());
+			source.setEnqued(true);
+			Datastore.put(source);
 		}
 	}
 

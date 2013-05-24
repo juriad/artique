@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import org.slim3.datastore.Model;
 
-import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Link;
 
 import cz.artique.shared.utils.GenKey;
@@ -18,11 +17,7 @@ public class XMLSource extends Source implements Serializable, GenKey {
 	public XMLSource() {}
 
 	public XMLSource(Link url) {
-		super(url, null);
-	}
-
-	public Key getKeyParent() {
-		return null;
+		super(url);
 	}
 
 	public String getKeyName() {

@@ -1,4 +1,4 @@
-package cz.artique.shared.model.config;
+package cz.artique.shared.model.source;
 
 import java.io.Serializable;
 
@@ -7,11 +7,8 @@ import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
 
-import cz.artique.shared.utils.GenKey;
-import cz.artique.shared.utils.HasKey;
-
 @Model(schemaVersion = 1)
-public class Config implements Serializable, GenKey, HasKey<Key> {
+public class CrawlerData implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -20,20 +17,6 @@ public class Config implements Serializable, GenKey, HasKey<Key> {
 
 	@Attribute(version = true)
 	private Long version;
-
-	private String configKey;
-
-	private int intValue;
-
-	private double doubleValue;
-
-	private String stringValue;
-
-	public Config() {}
-
-	public Config(String configKey) {
-		this.configKey = configKey;
-	}
 
 	/**
 	 * Returns the key.
@@ -92,7 +75,7 @@ public class Config implements Serializable, GenKey, HasKey<Key> {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		Config other = (Config) obj;
+		CrawlerData other = (CrawlerData) obj;
 		if (key == null) {
 			if (other.key != null) {
 				return false;
@@ -101,41 +84,5 @@ public class Config implements Serializable, GenKey, HasKey<Key> {
 			return false;
 		}
 		return true;
-	}
-
-	public String getConfigKey() {
-		return configKey;
-	}
-
-	public void setConfigKey(String configKey) {
-		this.configKey = configKey;
-	}
-
-	public int getIntValue() {
-		return intValue;
-	}
-
-	public void setIntValue(int intValue) {
-		this.intValue = intValue;
-	}
-
-	public double getDoubleValue() {
-		return doubleValue;
-	}
-
-	public void setDoubleValue(double doubleValue) {
-		this.doubleValue = doubleValue;
-	}
-
-	public String getStringValue() {
-		return stringValue;
-	}
-
-	public void setStringValue(String stringValue) {
-		this.stringValue = stringValue;
-	}
-
-	public String getKeyName() {
-		return getConfigKey();
 	}
 }

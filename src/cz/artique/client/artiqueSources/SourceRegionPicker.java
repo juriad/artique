@@ -8,43 +8,32 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasValue;
 
-import cz.artique.shared.model.source.HasRegion;
+import cz.artique.shared.model.source.UserSource;
 
 public class SourceRegionPicker extends Composite
-		implements HasEnabled, HasValue<HasRegion> {
+		implements HasEnabled, HasValue<UserSource> {
 
 	private boolean enabled;
-	private HasRegion hasRegion;
+	private UserSource userSource;
 
 	public SourceRegionPicker() {
 		initWidget(new FlowPanel()); // XXX quick fix
 	}
 
 	public HandlerRegistration addValueChangeHandler(
-			ValueChangeHandler<HasRegion> handler) {
+			ValueChangeHandler<UserSource> handler) {
 		return addHandler(handler, ValueChangeEvent.getType());
 	}
 
-	/**
-	 * Called on source save
-	 */
-	public void saveRegion() {
-		if (hasRegion == null) {
-			return;
-		}
-
-		// TODO save
+	public UserSource getValue() {
+		return userSource;
 	}
 
-	public HasRegion getValue() {
-		return hasRegion;
+	public void setValue(UserSource value) {
+		this.userSource = value;
 	}
 
-	public void setValue(HasRegion value) {
-		hasRegion = value;
-	}
-
-	public void setValue(HasRegion value, boolean fireEvents) {
+	public void setValue(UserSource value, boolean fireEvents) {
 		setValue(value);
 	}
 

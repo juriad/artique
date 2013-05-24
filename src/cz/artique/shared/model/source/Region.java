@@ -9,7 +9,6 @@ import org.slim3.datastore.Model;
 import com.google.appengine.api.datastore.Key;
 
 import cz.artique.shared.utils.GenKey;
-import cz.artique.shared.utils.SharedUtils;
 
 @Model(schemaVersion = 1)
 public class Region implements Serializable, GenKey {
@@ -146,14 +145,9 @@ public class Region implements Serializable, GenKey {
 		this.version = version;
 	}
 
-	public Key getKeyParent() {
-		return getHtmlSource();
-	}
-
 	public String getKeyName() {
-		String regionType = getType().name();
-		String name = getName();
-		return SharedUtils.combineStringParts(regionType, name);
+		// FIXME missing key name for region
+		return null;
 	}
 
 	public RegionType getType() {

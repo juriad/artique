@@ -3,7 +3,9 @@ package cz.artique.server.crawler;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -15,83 +17,54 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slim3.datastore.Datastore;
 
-import cz.artique.server.service.SourceService;
+import com.google.appengine.api.users.User;
+
+import cz.artique.server.meta.item.UserItemMeta;
 import cz.artique.shared.model.item.Item;
-import cz.artique.shared.model.item.PageChangeItem;
+import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.source.HTMLSource;
-import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Region;
-import cz.artique.shared.model.source.WebSiteSource;
 
-public class HTMLCrawler extends AbstractCrawler<HTMLSource> {
+public abstract class HTMLCrawler<E extends HTMLSource, F extends Item>
+		extends AbstractCrawler<E, F> {
 
-	public HTMLCrawler(HTMLSource source) {
+	protected HTMLCrawler(E source) {
 		super(source);
 	}
 
-	public CrawlerResult fetchItems() {
-		CrawlerResult result = new CrawlerResult();
+	protected Document getDocument(URI uri) throws CrawlerException {
+		HttpClient httpClient = getHttpClient();
+		HttpGet get = new HttpGet(uri);
 
-		URI uri = getURI(result);
-		if (uri == null) {
-			return result;
-		}
-
-		Document doc = getDocument(result, uri);
-		if (doc == null) {
-			return result;
-		}
-
-		SourceService ss = new SourceService();
-		List<PageChangeSource> sources1 = ss.getPageChangeSources(source);
-		for (PageChangeSource s : sources1) {
-			Document doc2 = doc.clone();
-			PageChangeCrawler crawler = new PageChangeCrawler(s);
-			Elements filteredPage = filterPage(s.getRegionObject(), doc2);
-			PageChangeItem pageChange = crawler.getPageChange(filteredPage);
-			if (pageChange != null) {
-				putItemIfNotDuplicate(s, pageChange);
-			}
-		}
-
-		List<WebSiteSource> sources2 = ss.getWebSiteSources(source);
-		for (WebSiteSource s : sources2) {
-			Document doc2 = doc.clone();
-			WebSiteCrawler crawler = new WebSiteCrawler(s);
-			Elements filteredPage = filterPage(s.getRegionObject(), doc2);
-			List<Item> links = crawler.getLinks(filteredPage);
-			if (links != null && links.size() > 0) {
-				for (Item link : links) {
-					putItemIfNotDuplicate(s, link);
-				}
-			}
-		}
-
-		return result;
-	}
-
-	private Document getDocument(CrawlerResult result, URI uri) {
+		HttpResponse resp;
 		try {
-			HttpClient httpClient = getHttpClient();
-
-			HttpGet get = new HttpGet(source.getUrl().getValue());
-			HttpResponse resp = httpClient.execute(get);
-			HttpEntity entity = resp.getEntity();
-
-			InputStream is = entity.getContent();
-
-			String charset = EntityUtils.getContentCharSet(entity);
-			if (charset == null) {
-				charset = HTTP.DEFAULT_CONTENT_CHARSET;
-			}
-
-			Document document = Jsoup.parse(is, charset, uri.toString());
-			return document;
+			resp = httpClient.execute(get);
 		} catch (IOException e) {
-			result.addError(e);
-			return null;
+			throw new CrawlerException("Cannot execute request");
 		}
+
+		HttpEntity entity = resp.getEntity();
+		InputStream is;
+		try {
+			is = entity.getContent();
+		} catch (IOException e) {
+			throw new CrawlerException("Cannot get response content");
+		}
+
+		String charset = EntityUtils.getContentCharSet(entity);
+		if (charset == null) {
+			charset = HTTP.DEFAULT_CONTENT_CHARSET;
+		}
+
+		Document document;
+		try {
+			document = Jsoup.parse(is, charset, uri.toString());
+		} catch (IOException e) {
+			throw new CrawlerException("Cannot parse html page");
+		}
+		return document;
 	}
 
 	protected Elements filterPage(Region region, Document doc) {
@@ -122,4 +95,17 @@ public class HTMLCrawler extends AbstractCrawler<HTMLSource> {
 		return simplified;
 	}
 
+	protected Set<User> getUsersAlreadyHavingItem(F item) {
+		UserItemMeta meta = UserItemMeta.get();
+		Iterable<UserItem> asIterable =
+			Datastore
+				.query(meta)
+				.filter(meta.item.equal(item.getKey()))
+				.asIterable();
+		Set<User> users = new HashSet<User>();
+		for (UserItem ui : asIterable) {
+			users.add(ui.getUser());
+		}
+		return users;
+	}
 }
