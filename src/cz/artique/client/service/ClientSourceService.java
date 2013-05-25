@@ -2,10 +2,10 @@ package cz.artique.client.service;
 
 import java.util.List;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-import cz.artique.shared.model.source.HTMLSource;
 import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.UserSource;
@@ -21,12 +21,14 @@ public interface ClientSourceService extends RemoteService {
 
 	WebSiteSource addSource(WebSiteSource source);
 	
-	List<Region> getRegions(HTMLSource source);
+	List<Region> getRegions(Key source);
 
 	UserSource addUserSource(UserSource userSource);
 
 	void updateUserSource(UserSource userSource);
 
 	List<UserSource> getUserSources();
+
+	boolean checkRegion(Region region);
 
 }

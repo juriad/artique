@@ -53,7 +53,8 @@ public class ArtiqueListFiltersTree
 					}
 				}
 				select(Arrays
-					.asList((HierarchyTreeWidget<ListFilter>) getAdhocTreeItem()));
+					.asList((HierarchyTreeWidget<ListFilter>) getAdhocTreeItem()
+						.getWidget()));
 			}
 		});
 	}

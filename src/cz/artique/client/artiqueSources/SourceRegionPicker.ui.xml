@@ -1,0 +1,54 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:com.google.gwt.user.cellview.client"
+	xmlns:db="urn:import:com.google.gwt.user.datepicker.client">
+
+	<ui:with field='res' type='cz.artique.client.i18n.ArtiqueConstants' />
+
+	<g:DisclosurePanel>
+		<g:customHeader>
+			<g:Label ui:field="header" />
+		</g:customHeader>
+		<g:HorizontalPanel>
+			<g:ScrollPanel>
+				<c:CellList ui:field="cellList" />
+			</g:ScrollPanel>
+			<g:Grid>
+				<g:row>
+					<g:cell>
+						<ui:text from="{res.name}" />
+					</g:cell>
+					<g:customCell>
+						<g:TextBox ui:field="name" />
+					</g:customCell>
+				</g:row>
+				<g:row>
+					<g:cell>
+						<ui:text from="{res.positiveSelector}" />
+					</g:cell>
+					<g:customCell>
+						<g:TextBox ui:field="positive" />
+					</g:customCell>
+				</g:row>
+				<g:row>
+					<g:cell>
+						<ui:text from="{res.negativeSelectors}" />
+					</g:cell>
+					<g:customCell>
+						<g:TextBox ui:field="negative" />
+					</g:customCell>
+				</g:row>
+				<g:row>
+					<g:cell>
+						<ui:text from="{res.checkRegion}" />
+					</g:cell>
+					<g:customCell>
+						<g:Button ui:field="checkButton">
+							<ui:text from="{res.checkRegion}" />
+						</g:Button>
+					</g:customCell>
+				</g:row>
+			</g:Grid>
+		</g:HorizontalPanel>
+	</g:DisclosurePanel>
+</ui:UiBinder>

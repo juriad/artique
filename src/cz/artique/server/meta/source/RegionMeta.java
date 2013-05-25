@@ -1,6 +1,6 @@
 package cz.artique.server.meta.source;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-24 00:45:05")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-25 15:45:46")
 /** */
 public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.source.Region> {
 
@@ -14,7 +14,7 @@ public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
     public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.source.Region> name = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.source.Region>(this, "name", "name");
 
     /** */
-    public final org.slim3.datastore.StringCollectionUnindexedAttributeMeta<cz.artique.shared.model.source.Region, java.util.List<java.lang.String>> negativeSelectors = new org.slim3.datastore.StringCollectionUnindexedAttributeMeta<cz.artique.shared.model.source.Region, java.util.List<java.lang.String>>(this, "negativeSelectors", "negativeSelectors", java.util.List.class);
+    public final org.slim3.datastore.StringUnindexedAttributeMeta<cz.artique.shared.model.source.Region> negativeSelector = new org.slim3.datastore.StringUnindexedAttributeMeta<cz.artique.shared.model.source.Region>(this, "negativeSelector", "negativeSelector");
 
     /** */
     public final org.slim3.datastore.StringUnindexedAttributeMeta<cz.artique.shared.model.source.Region> positiveSelector = new org.slim3.datastore.StringUnindexedAttributeMeta<cz.artique.shared.model.source.Region>(this, "positiveSelector", "positiveSelector");
@@ -45,7 +45,7 @@ public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
         model.setHtmlSource((com.google.appengine.api.datastore.Key) entity.getProperty("htmlSource"));
         model.setKey(entity.getKey());
         model.setName((java.lang.String) entity.getProperty("name"));
-        model.setNegativeSelectors(toList(java.lang.String.class, entity.getProperty("negativeSelectors")));
+        model.setNegativeSelector((java.lang.String) entity.getProperty("negativeSelector"));
         model.setPositiveSelector((java.lang.String) entity.getProperty("positiveSelector"));
         model.setType(stringToEnum(cz.artique.shared.model.source.RegionType.class, (java.lang.String) entity.getProperty("type")));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
@@ -63,7 +63,7 @@ public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
         }
         entity.setProperty("htmlSource", m.getHtmlSource());
         entity.setProperty("name", m.getName());
-        entity.setUnindexedProperty("negativeSelectors", m.getNegativeSelectors());
+        entity.setUnindexedProperty("negativeSelector", m.getNegativeSelector());
         entity.setUnindexedProperty("positiveSelector", m.getPositiveSelector());
         entity.setProperty("type", enumToString(m.getType()));
         entity.setProperty("version", m.getVersion());
@@ -141,13 +141,9 @@ public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
             writer.setNextPropertyName("name");
             encoder0.encode(writer, m.getName());
         }
-        if(m.getNegativeSelectors() != null){
-            writer.setNextPropertyName("negativeSelectors");
-            writer.beginArray();
-            for(java.lang.String v : m.getNegativeSelectors()){
-                encoder0.encode(writer, v);
-            }
-            writer.endArray();
+        if(m.getNegativeSelector() != null){
+            writer.setNextPropertyName("negativeSelector");
+            encoder0.encode(writer, m.getNegativeSelector());
         }
         if(m.getPositiveSelector() != null){
             writer.setNextPropertyName("positiveSelector");
@@ -175,23 +171,8 @@ public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
         m.setKey(decoder0.decode(reader, m.getKey()));
         reader = rootReader.newObjectReader("name");
         m.setName(decoder0.decode(reader, m.getName()));
-        reader = rootReader.newObjectReader("negativeSelectors");
-        {
-            java.util.ArrayList<java.lang.String> elements = new java.util.ArrayList<java.lang.String>();
-            org.slim3.datastore.json.JsonArrayReader r = rootReader.newArrayReader("negativeSelectors");
-            if(r != null){
-                reader = r;
-                int n = r.length();
-                for(int i = 0; i < n; i++){
-                    r.setIndex(i);
-                    java.lang.String v = decoder0.decode(reader, (java.lang.String)null)                    ;
-                    if(v != null){
-                        elements.add(v);
-                    }
-                }
-                m.setNegativeSelectors(elements);
-            }
-        }
+        reader = rootReader.newObjectReader("negativeSelector");
+        m.setNegativeSelector(decoder0.decode(reader, m.getNegativeSelector()));
         reader = rootReader.newObjectReader("positiveSelector");
         m.setPositiveSelector(decoder0.decode(reader, m.getPositiveSelector()));
         reader = rootReader.newObjectReader("type");

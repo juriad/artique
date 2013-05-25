@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.http.HttpEntity;
@@ -69,14 +68,19 @@ public abstract class HTMLCrawler<E extends HTMLSource, F extends Item>
 
 	protected Elements filterPage(Region region, Document doc) {
 		String positive = region.getPositiveSelector();
-		List<String> negatives = region.getNegativeSelectors();
-		Elements positiveElements = doc.select(positive);
+		String negative = region.getNegativeSelector();
+		Elements positiveElements;
+		if (positive == null || positive.trim().isEmpty()) {
+			positiveElements = new Elements(doc);
+		} else {
+			positiveElements = doc.select(positive);
+		}
 		if (positiveElements.isEmpty()) {
 			return positiveElements;
 		}
 
-		for (Element e : positiveElements) {
-			for (String negative : negatives) {
+		if (negative != null && !negative.trim().isEmpty()) {
+			for (Element e : positiveElements) {
 				Elements toRemove = e.select(negative);
 				toRemove.remove();
 			}

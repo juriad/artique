@@ -2,6 +2,11 @@ package cz.artique.server.service;
 
 import java.util.List;
 
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
+import org.jsoup.select.Selector;
+
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
@@ -9,7 +14,6 @@ import cz.artique.client.service.ClientSourceService;
 import cz.artique.server.meta.source.PageChangeSourceMeta;
 import cz.artique.server.meta.source.WebSiteSourceMeta;
 import cz.artique.server.meta.source.XMLSourceMeta;
-import cz.artique.shared.model.source.HTMLSource;
 import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
@@ -60,8 +64,7 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		Sanitizer.expectValue("nextCheck", source.getNextCheck(), null);
 	}
 
-	public List<Region> getRegions(HTMLSource source)
-			throws NullPointerException {
+	public List<Region> getRegions(Key source) throws NullPointerException {
 		if (source == null) {
 			throw new NullPointerException();
 		}
@@ -69,13 +72,19 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		return ss.getRegions(source);
 	}
 
-	public UserSource addUserSource(UserSource userSource) {
+	public UserSource addUserSource(UserSource userSource)
+			throws NullPointerException, PropertyEmptyException,
+			PropertyValueException {
 		if (userSource == null) {
 			throw new NullPointerException();
 		}
 		Sanitizer.checkUser("user", userSource.getUser());
 		Sanitizer.checkStringLength("name", userSource.getName());
 		Sanitizer.checkStringEmpty("name", userSource.getName());
+		if (userSource.getSourceType() == null) {
+			throw new PropertyValueException("source type", "null",
+				"is not set");
+		}
 		SourceService ss = new SourceService();
 		Source sourceObject = ss.getSourceByKey(userSource.getSource());
 		if (sourceObject == null) {
@@ -83,6 +92,8 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		}
 		userSource.setSourceObject(sourceObject);
 		// TODO sanitize default labels
+
+		// TODO regions
 		UserSourceService uss = new UserSourceService();
 		return uss.creatIfNotExist(userSource);
 	}
@@ -106,5 +117,31 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		UserSourceService uss = new UserSourceService();
 		User user = UserServiceFactory.getUserService().getCurrentUser();
 		return uss.getUserSources(user);
+	}
+
+	public boolean checkRegion(Region region) {
+		if (region.getPositiveSelector() != null) {
+			if (!region.getPositiveSelector().trim().isEmpty()) {
+				try {
+					Selector.select(region.getPositiveSelector(), new Element(
+						Tag.valueOf("html"), ""));
+				} catch (Exception e) {
+					return false;
+				}
+			}
+		}
+
+		if (region.getPositiveSelector() != null) {
+			if (!region.getNegativeSelector().trim().isEmpty()) {
+				try {
+					Selector.select(region.getNegativeSelector(), new Element(
+						Tag.valueOf("html"), ""));
+				} catch (Exception e) {
+					return false;
+				}
+			}
+		}
+		return true;
+
 	}
 }

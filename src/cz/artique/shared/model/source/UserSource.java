@@ -10,6 +10,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.users.User;
 
+import cz.artique.shared.model.label.Label;
 import cz.artique.shared.utils.GenKey;
 import cz.artique.shared.utils.HasDeepEquals;
 import cz.artique.shared.utils.HasHierarchy;
@@ -58,6 +59,12 @@ public class UserSource
 	private List<Key> defaultLabels;
 
 	private Key label;
+
+	/**
+	 * This label object is used exacly once: when the source is created
+	 */
+	@Attribute(persistent = false)
+	private Label labelObject;
 
 	private SourceType sourceType;
 
@@ -254,5 +261,13 @@ public class UserSource
 
 	public void setCrawlerData(Key crawlerData) {
 		this.crawlerData = crawlerData;
+	}
+
+	public Label getLabelObject() {
+		return labelObject;
+	}
+
+	public void setLabelObject(Label labelObject) {
+		this.labelObject = labelObject;
 	}
 }

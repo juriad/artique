@@ -15,12 +15,14 @@ import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyUtils;
 import cz.artique.client.hierarchy.ProvidesHierarchy;
 import cz.artique.client.manager.AbstractManager;
+import cz.artique.client.manager.Managers;
 import cz.artique.client.service.ClientSourceService;
 import cz.artique.client.service.ClientSourceServiceAsync;
 import cz.artique.client.sources.SourcesManager;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.source.PageChangeSource;
+import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.model.source.WebSiteSource;
@@ -209,14 +211,69 @@ public class ArtiqueSourcesManager
 		return null;
 	}
 
-	public void addUserSource(UserSource value, Object object) {
+	public void addUserSource(UserSource value,
+			final AsyncCallback<UserSource> ping) {
+		service.addUserSource(value, new AsyncCallback<UserSource>() {
+			public void onFailure(Throwable caught) {
+				if (ping != null) {
+					ping.onFailure(caught);
+				}
+			}
+
+			public void onSuccess(UserSource result) {
+				sourcesKeys.put(result.getKey(), result);
+				sourcesNames.put(result.getName(), result);
+				sourcesLabels.put(result.getLabel(), result);
+
+				// first register label, then add hierarchy (it needs label)
+				Managers.LABELS_MANAGER.updateUserSourceLabel(result);
+				HierarchyUtils.add(hierarchyRoot, result);
+
+				if (ping != null) {
+					ping.onSuccess(result);
+				}
+			}
+		});
+	}
+
+	public void updateUserSource(UserSource value,
+			AsyncCallback<UserSource> ping) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void updateUserSource(UserSource value, Object object) {
-		// TODO Auto-generated method stub
+	public void getRegions(Key source, final AsyncCallback<List<Region>> ping) {
+		service.getRegions(source, new AsyncCallback<List<Region>>() {
 
+			public void onFailure(Throwable caught) {
+				if (ping != null) {
+					ping.onFailure(caught);
+				}
+			}
+
+			public void onSuccess(List<Region> result) {
+				if (ping != null) {
+					ping.onSuccess(result);
+				}
+			}
+		});
+	}
+
+	public void checkRegion(Region region, final AsyncCallback<Boolean> ping) {
+		service.checkRegion(region, new AsyncCallback<Boolean>() {
+
+			public void onFailure(Throwable caught) {
+				if (ping != null) {
+					ping.onFailure(caught);
+				}
+			}
+
+			public void onSuccess(Boolean result) {
+				if (ping != null) {
+					ping.onSuccess(result);
+				}
+			}
+		});
 	}
 
 }

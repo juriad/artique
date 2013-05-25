@@ -2,9 +2,9 @@ package cz.artique.client.service;
 
 import java.util.List;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.shared.model.source.HTMLSource;
 import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.UserSource;
@@ -20,11 +20,13 @@ public interface ClientSourceServiceAsync {
 
 	void addSource(WebSiteSource source, AsyncCallback<WebSiteSource> callback);
 
-	void getRegions(HTMLSource source, AsyncCallback<List<Region>> callback);
+	void getRegions(Key source, AsyncCallback<List<Region>> callback);
 
 	void addUserSource(UserSource userSource, AsyncCallback<UserSource> callback);
 
 	void updateUserSource(UserSource userSource, AsyncCallback<Void> callback);
 
 	void getUserSources(AsyncCallback<List<UserSource>> callback);
+
+	void checkRegion(Region region, AsyncCallback<Boolean> asyncCallback);
 }

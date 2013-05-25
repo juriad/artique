@@ -1,6 +1,6 @@
 package cz.artique.server.meta.source;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-24 00:45:05")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-25 19:21:23")
 /** */
 public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.source.UserSource> {
 
@@ -178,6 +178,10 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
             writer.setNextPropertyName("label");
             encoder0.encode(writer, m.getLabel());
         }
+        if(m.getLabelObject() != null){
+            writer.setNextPropertyName("labelObject");
+            encoder0.encode(writer, m.getLabelObject());
+        }
         if(m.getName() != null){
             writer.setNextPropertyName("name");
             encoder0.encode(writer, m.getName());
@@ -245,6 +249,8 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         m.setKey(decoder0.decode(reader, m.getKey()));
         reader = rootReader.newObjectReader("label");
         m.setLabel(decoder0.decode(reader, m.getLabel()));
+        reader = rootReader.newObjectReader("labelObject");
+        m.setLabelObject(decoder0.decode(reader, m.getLabelObject(), cz.artique.shared.model.label.Label.class));
         reader = rootReader.newObjectReader("name");
         m.setName(decoder0.decode(reader, m.getName()));
         reader = rootReader.newObjectReader("region");

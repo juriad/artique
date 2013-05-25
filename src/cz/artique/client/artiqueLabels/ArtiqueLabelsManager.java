@@ -19,6 +19,7 @@ import cz.artique.client.service.ClientLabelService;
 import cz.artique.client.service.ClientLabelServiceAsync;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
+import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.utils.CatList;
 import cz.artique.shared.utils.SortedList;
 
@@ -57,11 +58,23 @@ public class ArtiqueLabelsManager
 		systemLabels.add(OR);
 	}
 
-	// TODO change display name if source is updated
+	public void updateUserSourceLabel(UserSource source) {
+		Key labelKey = source.getLabel();
+		Label label = labelsKeys.get(labelKey);
+		if (label == null) {
+			// source has been created, therefore it does not exist
+			label = source.getLabelObject();
+
+			userDefinedLabels.add(label);
+			labelNames.put(nameWithType(label.getLabelType(), label.getName()),
+				label);
+			labelsKeys.put(label.getKey(), label);
+		}
+		label.setDisplayName(source.getName());
+	}
 
 	public void refresh(final AsyncCallback<Void> ping) {
 		service.getAllLabels(new AsyncCallback<List<Label>>() {
-
 			public void onFailure(Throwable caught) {
 				if (ping != null) {
 					ping.onFailure(caught);
@@ -69,9 +82,7 @@ public class ArtiqueLabelsManager
 			}
 
 			public void onSuccess(final List<Label> list) {
-
 				Managers.waitForManagers(new AsyncCallback<Void>() {
-
 					public void onFailure(Throwable caught) {
 						if (ping != null) {
 							ping.onFailure(caught);
@@ -98,6 +109,15 @@ public class ArtiqueLabelsManager
 								newUserDefinedLabels.add(l);
 								break;
 							case USER_SOURCE:
+								System.out.println(l);
+								System.out.println(l != null
+									? l.getName()
+									: null);
+								UserSource byLabel =
+									Managers.SOURCES_MANAGER.getByLabel(l);
+								System.out.println(byLabel);
+								System.out.println(byLabel != null ? byLabel
+									.getName() : null);
 								l.setDisplayName(Managers.SOURCES_MANAGER
 									.getByLabel(l)
 									.getName());
@@ -126,7 +146,6 @@ public class ArtiqueLabelsManager
 	public void createNewLabel(String name, final AsyncCallback<Label> ping) {
 		Label label = new Label(ArtiqueWorld.WORLD.getUser(), name);
 		service.addLabel(label, new AsyncCallback<Label>() {
-
 			public void onFailure(Throwable caught) {
 				if (ping != null) {
 					ping.onFailure(null);
@@ -135,7 +154,6 @@ public class ArtiqueLabelsManager
 
 			public void onSuccess(Label result) {
 				if (!labelsKeys.containsKey(result.getKey())) {
-					userDefinedLabels.add(result);
 					userDefinedLabels.add(result);
 					labelNames.put(
 						nameWithType(result.getLabelType(), result.getName()),

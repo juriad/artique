@@ -1,5 +1,6 @@
 package cz.artique.server.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.Source;
+import cz.artique.shared.model.source.SourceType;
 import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.utils.TransactionException;
 
@@ -31,11 +33,16 @@ public class UserSourceService {
 		UserSource old = createUserSourceIfNotExist(userSource);
 		if (old != null) {
 			userSource = old;
-
+		} else {
 			Label l = createLabelForUserSource(userSource);
 			userSource.setLabel(l.getKey());
+			userSource.setLabelObject(l);
 			List<Key> defaultLabels = userSource.getDefaultLabels();
+			if (defaultLabels == null) {
+				defaultLabels = new ArrayList<Key>();
+			}
 			defaultLabels.add(l.getKey());
+			Datastore.put(userSource);
 		}
 
 		updateUsage(null, userSource);
@@ -180,6 +187,7 @@ public class UserSourceService {
 		us.setName(name);
 		us.setKey(ServerUtils.genKey(us));
 		us.setWatching(true);
+		us.setSourceType(SourceType.MANUAL);
 		UserSource userSource = creatIfNotExist(us);
 		userSource.setSourceObject(manualSource);
 		return userSource;

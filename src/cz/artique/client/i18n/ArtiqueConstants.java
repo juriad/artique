@@ -141,9 +141,6 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 	@DefaultStringValue("Check now")
 	String checkNow();
 
-	@DefaultStringValue("Source has not been watched yet.")
-	String watchingNotYet();
-
 	@DefaultStringValue("Source is beeing watched.")
 	String watchingYes();
 
@@ -200,4 +197,25 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("The source become active as soon as you select region.")
 	String selectRegion();
+
+	@DefaultStringValue("Positive selector")
+	String positiveSelector();
+
+	@DefaultStringValue("Negative selectors")
+	String negativeSelectors();
+
+	@DefaultStringValue("Check region")
+	String checkRegion();
+
+	@DefaultStringValue("Failed to load list of regions.")
+	String failedToGetRegions();
+
+	@DefaultStringValue("Region check failed.")
+	String regionCheckError();
+
+	@DefaultStringValue("Region passed the check.")
+	String regionCheckPass();
+
+	@DefaultStringValue("Custom")
+	String customRegion();
 }

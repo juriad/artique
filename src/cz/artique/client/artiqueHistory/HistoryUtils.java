@@ -159,6 +159,8 @@ public class HistoryUtils {
 	}
 
 	protected String serializeLabel(Label l) {
+		System.out.println(l);
+		System.out.println(l != null ? l.getName() : null);
 		switch (l.getLabelType()) {
 		case SYSTEM:
 			return "lsys$" + l.getName();

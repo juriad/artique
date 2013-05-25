@@ -1,17 +1,14 @@
 package cz.artique.shared.model.source;
 
 import java.io.Serializable;
-import java.util.List;
 
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
 
-import cz.artique.shared.utils.GenKey;
-
 @Model(schemaVersion = 1)
-public class Region implements Serializable, GenKey {
+public class Region implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -36,7 +33,7 @@ public class Region implements Serializable, GenKey {
 	 * List of selectors of content which shall be excluded from processing
 	 */
 	@Attribute(unindexed = true)
-	private List<String> negativeSelectors;
+	private String negativeSelector;
 
 	/**
 	 * Reference to HTMLSource
@@ -84,8 +81,8 @@ public class Region implements Serializable, GenKey {
 		return name;
 	}
 
-	public List<String> getNegativeSelectors() {
-		return negativeSelectors;
+	public String getNegativeSelector() {
+		return negativeSelector;
 	}
 
 	public String getPositiveSelector() {
@@ -127,8 +124,8 @@ public class Region implements Serializable, GenKey {
 		this.name = name;
 	}
 
-	public void setNegativeSelectors(List<String> negativeSelectors) {
-		this.negativeSelectors = negativeSelectors;
+	public void setNegativeSelector(String negativeSelector) {
+		this.negativeSelector = negativeSelector;
 	}
 
 	public void setPositiveSelector(String positiveSelector) {
@@ -143,11 +140,6 @@ public class Region implements Serializable, GenKey {
 	 */
 	public void setVersion(Long version) {
 		this.version = version;
-	}
-
-	public String getKeyName() {
-		// FIXME missing key name for region
-		return null;
 	}
 
 	public RegionType getType() {

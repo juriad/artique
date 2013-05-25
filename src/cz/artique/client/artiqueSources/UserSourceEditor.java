@@ -3,7 +3,6 @@ package cz.artique.client.artiqueSources;
 import com.google.appengine.api.datastore.Link;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -105,15 +104,7 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 
 	public UserSource getValue() {
 		UserSource us = new UserSource();
-
-		if (name.getValue().trim().isEmpty()) {
-			ArtiqueMessages messages = ArtiqueI18n.I18N.getMessages();
-			ArtiqueConstants constants = ArtiqueI18n.I18N.getConstants();
-			Managers.MESSAGES_MANAGER.addMessage(new Message(MessageType.ERROR,
-				messages.errorEmptyField(constants.name())));
-			// ignore
-			return us;
-		}
+		// empty name is handled in dialog
 
 		if (sourceType.getValue() == null) {
 			// fail silently
@@ -177,8 +168,9 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 
 	private void setWatch() {
 		ArtiqueConstants constants = ArtiqueI18n.I18N.getConstants();
-		if (watchState == null) {
-			watching.setText(constants.watchingNotYet());
+		if (watchState == null
+			|| SourceType.MANUAL.equals(sourceType.getValue())) {
+			watching.setText(constants.unavailable());
 			watchButton.setVisible(false);
 		} else {
 			watchButton.setVisible(true);
@@ -195,6 +187,7 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 	public void setValue(UserSource value) {
 		userSource = value;
 		source = userSource.getSourceObject();
+		ArtiqueConstants constants = ArtiqueI18n.I18N.getConstants();
 
 		// source part
 
@@ -208,6 +201,9 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		url.setValue(source == null ? "" : (source.getUrl() != null ? source
 			.getUrl()
 			.getValue() : ""));
+		if (SourceType.MANUAL.equals(type)) {
+			url.setValue(constants.unavailable());
+		}
 		url.setEnabled(source == null);
 		urlButton.setVisible(source == null);
 		urlButton.setEnabled(source == null);
@@ -226,8 +222,8 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 
 		// stats
 
-		ArtiqueConstants constants = ArtiqueI18n.I18N.getConstants();
-		if (userSource.getKey() != null && userSource.isWatching()) {
+		if (userSource.getKey() != null && userSource.isWatching()
+			&& !SourceType.MANUAL.equals(type)) {
 			DateTimeFormatRenderer renderer =
 				new DateTimeFormatRenderer(
 					DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM));
@@ -261,21 +257,22 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 			nextCheck.setText(constants.unavailable());
 			errorSequence.setText(constants.unavailable());
 			checkNow.setEnabled(false);
-			checkNow.setVisible(true);
+			checkNow.setVisible(false);
 		}
 
 		for (int i = 2; i < grid.getRowCount(); i++) {
 			Element element = grid.getRowFormatter().getElement(i);
-			element.getStyle().setVisibility(
-				userSource.getKey() != null
-					? Visibility.VISIBLE
-					: Visibility.HIDDEN);
+			if (userSource.getKey() == null) {
+				element.getStyle().setDisplay(Display.NONE);
+			} else {
+				element.getStyle().clearDisplay();
+			}
 		}
 
 		// DANGER, constant number
 		Element regionRow = grid.getRowFormatter().getElement(6);
-		if (userSource.getSourceType() == null
-			|| userSource.getSourceType().getRegionType() != null) {
+		if (userSource.getSourceType() != null
+			&& userSource.getSourceType().getRegionType() != null) {
 			regionRow.getStyle().clearDisplay();
 		} else {
 			regionRow.getStyle().setDisplay(Display.NONE);
@@ -336,17 +333,22 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 
 	protected void sourceCreated(Source result) {
 		source = result;
+		for (int i = 2; i < grid.getRowCount(); i++) {
+			Element e = grid.getRowFormatter().getElement(i);
+			e.getStyle().clearDisplay();
+		}
+
+		Element element = grid.getRowFormatter().getElement(6);
 		if (sourceType.getValue().getRegionType() != null) {
 			UserSource us = new UserSource();
 			us.setSourceObject(source);
 			us.setSource(source.getKey());
 			us.setUser(ArtiqueWorld.WORLD.getUser());
 			region.setValue(us);
-
-			Element element = grid.getRowFormatter().getElement(6);
-			element.getStyle().setVisibility(Visibility.VISIBLE);
-
 			selectRegion();
+			element.getStyle().clearDisplay();
+		} else {
+			element.getStyle().setDisplay(Display.NONE);
 		}
 	}
 

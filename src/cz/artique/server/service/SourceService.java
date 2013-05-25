@@ -15,20 +15,18 @@ import cz.artique.server.meta.source.ManualSourceMeta;
 import cz.artique.server.meta.source.RegionMeta;
 import cz.artique.server.meta.source.SourceMeta;
 import cz.artique.server.utils.ServerUtils;
-import cz.artique.shared.model.source.HTMLSource;
 import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.utils.TransactionException;
 
 public class SourceService {
-	public List<Region> getRegions(HTMLSource source) {
+	public List<Region> getRegions(Key source) {
 		RegionMeta meta = RegionMeta.get();
 		List<Region> list =
 			Datastore
 				.query(meta)
-				.filter(meta.htmlSource.equal(source.getKey()))
-				.filter(meta.type.equal(source.getRegionType()))
+				.filter(meta.htmlSource.equal(source))
 				.asList();
 		return list;
 	}
@@ -56,26 +54,8 @@ public class SourceService {
 		return theSource;
 	}
 
-	public Region addRegionIfNotExist(Region region) {
-		Transaction tx = Datastore.beginTransaction();
-		Region theRegion;
-		try {
-			Key key = ServerUtils.genKey(region);
-			theRegion = Datastore.getOrNull(tx, RegionMeta.get(), key);
-			if (theRegion == null) {
-				region.setKey(key);
-				Datastore.put(tx, region);
-				theRegion = region;
-			}
-			tx.commit();
-		} catch (Exception e) {
-			throw new TransactionException();
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-		}
-		return theRegion;
+	public void addRegion(Region region) {
+		Datastore.put(region);
 	}
 
 	public Source getSourceByKey(Key key) {
