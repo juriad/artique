@@ -45,7 +45,7 @@ public class UserSourceDialog {
 	@UiHandler("saveButton")
 	protected void saveButtonClicked(ClickEvent event) {
 		final UserSource value = editor.getValue();
-		if (value.getName() == null) {
+		if (value.getName() == null || value.getName().trim().isEmpty()) {
 			ArtiqueMessages messages = ArtiqueI18n.I18N.getMessages();
 			ArtiqueConstants constants = ArtiqueI18n.I18N.getConstants();
 			Managers.MESSAGES_MANAGER.addMessage(new Message(MessageType.ERROR,

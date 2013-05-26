@@ -13,6 +13,7 @@ import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
+import cz.artique.server.meta.source.RegionMeta;
 import cz.artique.server.meta.source.SourceMeta;
 import cz.artique.server.meta.source.UserSourceMeta;
 import cz.artique.server.utils.ServerUtils;
@@ -20,6 +21,7 @@ import cz.artique.shared.model.config.ConfigKey;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.source.ManualSource;
+import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.SourceType;
 import cz.artique.shared.model.source.UserSource;
@@ -29,7 +31,63 @@ public class UserSourceService {
 
 	public UserSourceService() {}
 
-	public UserSource creatIfNotExist(UserSource userSource) {
+	public void fillRegions(Iterable<UserSource> userSources) {
+		Map<Key, List<UserSource>> map = new HashMap<Key, List<UserSource>>();
+		for (UserSource us : userSources) {
+			if (us.getRegion() != null) {
+				if (!map.containsKey(us.getRegion())) {
+					map.put(us.getRegion(), new ArrayList<UserSource>());
+				}
+				map.get(us.getRegion()).add(us);
+			}
+		}
+		List<Region> regions = Datastore.get(RegionMeta.get(), map.keySet());
+		for (Region region : regions) {
+			List<UserSource> list = map.get(region.getKey());
+			if (list != null) {
+				for (UserSource us : list) {
+					us.setRegionObject(region);
+				}
+			}
+		}
+	}
+
+	public void fillRegions(UserSource... userSources) {
+		fillRegions(userSources);
+	}
+
+	public void fillSources(Iterable<UserSource> userSources) {
+		Map<Key, List<UserSource>> map = new HashMap<Key, List<UserSource>>();
+		for (UserSource us : userSources) {
+			if (us.getSource() != null) {
+				if (!map.containsKey(us.getSource())) {
+					map.put(us.getSource(), new ArrayList<UserSource>());
+				}
+				map.get(us.getSource()).add(us);
+			}
+		}
+		List<Source> sources = Datastore.get(SourceMeta.get(), map.keySet());
+		for (Source source : sources) {
+			List<UserSource> list = map.get(source.getKey());
+			if (list != null) {
+				for (UserSource us : list) {
+					us.setSourceObject(source);
+				}
+			}
+		}
+	}
+
+	public void fillSources(UserSource... userSources) {
+		fillSources(userSources);
+	}
+
+	/**
+	 * Returns old if already exists
+	 * 
+	 * @param userSource
+	 * @return incomplete usersource
+	 */
+	public UserSource createUserSource(UserSource userSource) {
 		UserSource old = createUserSourceIfNotExist(userSource);
 		if (old != null) {
 			userSource = old;
@@ -42,11 +100,22 @@ public class UserSourceService {
 				defaultLabels = new ArrayList<Key>();
 			}
 			defaultLabels.add(l.getKey());
+
+			handleRegionChange(userSource);
+
 			Datastore.put(userSource);
 		}
 
 		updateUsage(null, userSource);
 		return userSource;
+	}
+
+	private void handleRegionChange(UserSource userSource) {
+		if (userSource.getRegion() == null
+			&& userSource.getRegionObject() != null) {
+			SourceService ss = new SourceService();
+			ss.addRegion(userSource.getRegionObject());
+		}
 	}
 
 	private UserSource createUserSourceIfNotExist(UserSource userSource) {
@@ -84,6 +153,7 @@ public class UserSourceService {
 	public void updateUserSource(UserSource userSource) {
 		Transaction tx = Datastore.beginTransaction();
 		UserSource original;
+		handleRegionChange(userSource);
 		try {
 			original =
 				Datastore.get(tx, UserSourceMeta.get(), userSource.getKey());
@@ -149,46 +219,30 @@ public class UserSourceService {
 		UserSourceMeta meta = UserSourceMeta.get();
 		List<UserSource> userSources =
 			Datastore.query(meta).filter(meta.user.equal(user)).asList();
-
-		Map<Key, UserSource> map = new HashMap<Key, UserSource>();
-		for (UserSource userSource : userSources) {
-			map.put(userSource.getSource(), userSource);
-		}
-		List<Source> sources = Datastore.get(SourceMeta.get(), map.keySet());
-		for (Source source : sources) {
-			map.get(source.getKey()).setSourceObject(source);
-		}
-
+		fillSources(userSources);
+		fillRegions(userSources);
 		return userSources;
 	}
 
 	public UserSource getManualUserSource() {
 		SourceService ss = new SourceService();
-		ManualSource manualSource = ss.getManualSource();
-
-		User user = UserServiceFactory.getUserService().getCurrentUser();
-		UserSource us = new UserSource(user, manualSource, "does_not_matter");
-		UserSource userSource =
-			Datastore.get(UserSourceMeta.get(), ServerUtils.genKey(us));
-		userSource.setSourceObject(manualSource);
-		return userSource;
-	}
-
-	public UserSource ensureManualSource() {
-		SourceService ss = new SourceService();
 		ManualSource manualSource = ss.ensureManualSource();
 
 		User user = UserServiceFactory.getUserService().getCurrentUser();
-		UserSource us = new UserSource(user, manualSource, "");
-		String name =
-			ConfigService.CONFIG_SERVICE
-				.getConfig(ConfigKey.MANUAL_SOURCE_NAME)
-				.<String> get();
-		us.setName(name);
+		UserSource us = new UserSource(user, manualSource, "does_not_matter");
 		us.setKey(ServerUtils.genKey(us));
-		us.setWatching(true);
-		us.setSourceType(SourceType.MANUAL);
-		UserSource userSource = creatIfNotExist(us);
+
+		UserSource userSource =
+			Datastore.getOrNull(UserSourceMeta.get(), us.getKey());
+		if (userSource == null) {
+			String name =
+				ConfigService.CONFIG_SERVICE.getConfig(
+					ConfigKey.MANUAL_SOURCE_NAME).<String> get();
+			us.setName(name);
+			us.setWatching(true);
+			us.setSourceType(SourceType.MANUAL);
+			userSource = createUserSource(us);
+		}
 		userSource.setSourceObject(manualSource);
 		return userSource;
 	}

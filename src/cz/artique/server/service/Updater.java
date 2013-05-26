@@ -42,6 +42,6 @@ public class Updater extends HttpServlet {
 			new UserSource(new User("test@example.com", "gmail.com",
 				"18580476422013912411"), s1, "9gag");
 		us1.setWatching(true);
-		uss.creatIfNotExist(us1);
+		uss.createUserSource(us1);
 	}
 }

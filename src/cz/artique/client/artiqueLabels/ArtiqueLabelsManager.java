@@ -109,15 +109,11 @@ public class ArtiqueLabelsManager
 								newUserDefinedLabels.add(l);
 								break;
 							case USER_SOURCE:
-								System.out.println(l);
-								System.out.println(l != null
-									? l.getName()
-									: null);
 								UserSource byLabel =
 									Managers.SOURCES_MANAGER.getByLabel(l);
-								System.out.println(byLabel);
-								System.out.println(byLabel != null ? byLabel
-									.getName() : null);
+								if (byLabel == null) {
+									System.out.println(byLabel);
+								}
 								l.setDisplayName(Managers.SOURCES_MANAGER
 									.getByLabel(l)
 									.getName());

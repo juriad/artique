@@ -4,11 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
@@ -19,13 +15,12 @@ import org.slim3.datastore.Datastore;
 
 import com.google.appengine.api.datastore.Key;
 
-import cz.artique.server.meta.source.RegionMeta;
 import cz.artique.server.meta.source.UserSourceMeta;
+import cz.artique.server.service.UserSourceService;
 import cz.artique.server.utils.GAEConnectionManager;
 import cz.artique.server.utils.ServerUtils;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;
-import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.Stats;
 import cz.artique.shared.model.source.UserSource;
@@ -117,26 +112,8 @@ public abstract class AbstractCrawler<E extends Source, F extends Item>
 				.filter(meta.source.equal(getSource().getKey()))
 				.filter(meta.watching.equal(Boolean.TRUE))
 				.asList();
-		Set<Key> set = new HashSet<Key>();
-		for (UserSource us : userSources) {
-			if (us.getRegion() != null) {
-				set.add(us.getRegion());
-			}
-		}
-		if (set.size() > 0) {
-			List<Region> regions = Datastore.get(RegionMeta.get(), set);
-			Map<Key, Region> map = new HashMap<Key, Region>();
-			for (Region region : regions) {
-				map.put(region.getKey(), region);
-			}
-
-			for (UserSource us : userSources) {
-				if (us.getRegion() != null) {
-					Region region = map.get(us.getRegion());
-					us.setRegionObject(region);
-				}
-			}
-		}
+		UserSourceService uss = new UserSourceService();
+		uss.fillRegions(userSources);
 		return userSources;
 	}
 

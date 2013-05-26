@@ -17,6 +17,7 @@ import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
@@ -83,6 +84,9 @@ public class SourceRegionPicker extends Composite
 
 	@UiField
 	Label header;
+
+	@UiField
+	DisclosurePanel disclosure;
 
 	private static SourceRegionPickerUiBinder uiBinder = GWT
 		.create(SourceRegionPickerUiBinder.class);
@@ -170,7 +174,20 @@ public class SourceRegionPicker extends Composite
 			return userSource;
 		} else {
 			UserSource us = new UserSource();
-			us.setRegion(selectedObject.getKey());
+			if (selectedObject.getKey() == null) {
+				if (name.getText().trim().isEmpty()) {
+					selectedObject = null;
+				} else {
+					selectedObject = new Region(userSource.getSource());
+					selectedObject.setName(name.getText());
+					selectedObject.setNegativeSelector(negative.getText());
+					selectedObject.setPositiveSelector(positive.getText());
+				}
+			}
+
+			us.setRegion(selectedObject != null
+				? selectedObject.getKey()
+				: null);
 			us.setRegionObject(selectedObject);
 			return us;
 		}
@@ -185,6 +202,7 @@ public class SourceRegionPicker extends Composite
 	public void setValue(final UserSource value) {
 		this.userSource = value;
 		ArtiqueConstants constants = ArtiqueI18n.I18N.getConstants();
+		disclosure.setOpen(value.getKey() == null);
 
 		if (value.getSource() == null) {
 			// does not exist yet
@@ -199,7 +217,7 @@ public class SourceRegionPicker extends Composite
 			header.setText(constants.unavailable());
 		} else {
 			cellList.setRowData(new ArrayList<Region>());
-			selectionChanged(new Region());
+			selectionChanged(new Region(userSource.getSource()));
 
 			Managers.SOURCES_MANAGER.getRegions(userSource.getSource(),
 				new AsyncCallback<List<Region>>() {
@@ -209,23 +227,22 @@ public class SourceRegionPicker extends Composite
 						cellList.setRowData(new ArrayList<Region>());
 						Region regionObject = userSource.getRegionObject();
 						if (regionObject == null) {
-							regionObject = new Region();
+							regionObject = new Region(userSource.getSource());
 						}
 						selectionChanged(regionObject);
 					}
 
 					public void onSuccess(List<Region> result) {
-						Region custom = new Region();
+						Region custom = new Region(userSource.getSource());
 						result.add(custom);
 						cellList.setRowData(result);
 						Region regionObject = userSource.getRegionObject();
 						if (regionObject == null) {
-							cellList.getSelectionModel().setSelected(custom,
-								true);
-						} else {
-							cellList.getSelectionModel().setSelected(
-								regionObject, true);
+							regionObject = custom;
 						}
+						selectionChanged(regionObject);
+						cellList.getSelectionModel().setSelected(regionObject,
+							true);
 					}
 				});
 		}

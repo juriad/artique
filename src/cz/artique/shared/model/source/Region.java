@@ -40,7 +40,11 @@ public class Region implements Serializable {
 	 */
 	private Key htmlSource;
 
-	private RegionType type;
+	public Region() {}
+
+	public Region(Key htmlSource) {
+		this.htmlSource = htmlSource;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -140,13 +144,5 @@ public class Region implements Serializable {
 	 */
 	public void setVersion(Long version) {
 		this.version = version;
-	}
-
-	public RegionType getType() {
-		return type;
-	}
-
-	public void setType(RegionType type) {
-		this.type = type;
 	}
 }

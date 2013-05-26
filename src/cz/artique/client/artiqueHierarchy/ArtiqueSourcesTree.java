@@ -58,7 +58,7 @@ public class ArtiqueSourcesTree
 					TreeItem inTree = findInTree(findInTree, getRootItem());
 					if (inTree != null) {
 						allSourcesWidgets
-							.add((HierarchyTreeWidget<UserSource>) inTree);
+							.add((HierarchyTreeWidget<UserSource>) inTree.getWidget());
 					}
 				}
 			}

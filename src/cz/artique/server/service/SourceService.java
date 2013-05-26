@@ -55,7 +55,8 @@ public class SourceService {
 	}
 
 	public void addRegion(Region region) {
-		Datastore.put(region);
+		Key key = Datastore.put(region);
+		region.setKey(key);
 	}
 
 	public Source getSourceByKey(Key key) {
@@ -68,14 +69,6 @@ public class SourceService {
 		RegionMeta meta = RegionMeta.get();
 		Region regionObject = Datastore.getOrNull(meta, key);
 		return regionObject;
-	}
-
-	public ManualSource getManualSource() {
-		User user = UserServiceFactory.getUserService().getCurrentUser();
-		ManualSource ms = new ManualSource(user);
-		ManualSource manualSource =
-			Datastore.getOrNull(ManualSourceMeta.get(), ServerUtils.genKey(ms));
-		return manualSource;
 	}
 
 	public ManualSource ensureManualSource() {

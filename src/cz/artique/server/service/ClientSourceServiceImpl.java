@@ -5,48 +5,35 @@ import java.util.List;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 import org.jsoup.select.Selector;
+import org.slim3.datastore.Datastore;
+import org.slim3.datastore.ModelMeta;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.artique.client.service.ClientSourceService;
-import cz.artique.server.meta.source.PageChangeSourceMeta;
-import cz.artique.server.meta.source.WebSiteSourceMeta;
-import cz.artique.server.meta.source.XMLSourceMeta;
-import cz.artique.shared.model.source.PageChangeSource;
+import cz.artique.server.meta.source.SourceMeta;
+import cz.artique.server.utils.ServerSourceType;
 import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
+import cz.artique.shared.model.source.SourceType;
 import cz.artique.shared.model.source.UserSource;
-import cz.artique.shared.model.source.WebSiteSource;
-import cz.artique.shared.model.source.XMLSource;
 import cz.artique.shared.utils.PropertyEmptyException;
 import cz.artique.shared.utils.PropertyValueException;
 
 public class ClientSourceServiceImpl implements ClientSourceService {
 
-	public XMLSource addSource(XMLSource source)
+	@SuppressWarnings("unchecked")
+	public <E extends Source> E addSource(E source)
 			throws PropertyValueException, PropertyEmptyException,
 			NullPointerException {
 		checkSouce(source);
 		SourceService ss = new SourceService();
-		return ss.creatIfNotExist(source, XMLSourceMeta.get());
-	}
-
-	public PageChangeSource addSource(PageChangeSource source)
-			throws PropertyValueException, PropertyEmptyException,
-			NullPointerException {
-		checkSouce(source);
-		SourceService ss = new SourceService();
-		return ss.creatIfNotExist(source, PageChangeSourceMeta.get());
-	}
-
-	public WebSiteSource addSource(WebSiteSource source)
-			throws PropertyValueException, PropertyEmptyException,
-			NullPointerException {
-		checkSouce(source);
-		SourceService ss = new SourceService();
-		return ss.creatIfNotExist(source, WebSiteSourceMeta.get());
+		ServerSourceType serverSourceType =
+			ServerSourceType.get(SourceType.get(source.getClass()));
+		return ss.creatIfNotExist(source,
+			(ModelMeta<E>) serverSourceType.getMeta());
 	}
 
 	private void checkSouce(Source source)
@@ -93,12 +80,22 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		userSource.setSourceObject(sourceObject);
 		// TODO sanitize default labels
 
-		// TODO regions
+		if (userSource.getRegionObject() != null) {
+			Sanitizer.checkStringEmpty("region name", userSource
+				.getRegionObject()
+				.getName());
+			if (userSource.getRegionObject().getHtmlSource() == null) {
+				throw new PropertyValueException("region source", "null",
+					"does not exist");
+			}
+			checkRegion(userSource.getRegionObject());
+		}
+
 		UserSourceService uss = new UserSourceService();
-		return uss.creatIfNotExist(userSource);
+		return uss.createUserSource(userSource);
 	}
 
-	public void updateUserSource(UserSource userSource) {
+	public UserSource updateUserSource(UserSource userSource) {
 		if (userSource == null) {
 			throw new NullPointerException();
 		}
@@ -108,9 +105,23 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		Sanitizer.checkPreserveKey(userSource);
 		// TODO sanitize default labels
 
-		// TODO regions
+		if (userSource.getRegionObject() != null) {
+			Sanitizer.checkStringEmpty("region name", userSource
+				.getRegionObject()
+				.getName());
+			if (userSource.getRegionObject().getHtmlSource() == null) {
+				throw new PropertyValueException("region source", "null",
+					"does not exist");
+			}
+			checkRegion(userSource.getRegionObject());
+		}
+
 		UserSourceService uss = new UserSourceService();
 		uss.updateUserSource(userSource);
+
+		Source source = Datastore.get(SourceMeta.get(), userSource.getSource());
+		userSource.setSourceObject(source);
+		return userSource;
 	}
 
 	public List<UserSource> getUserSources() {

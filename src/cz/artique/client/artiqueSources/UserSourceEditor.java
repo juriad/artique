@@ -125,6 +125,7 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		us.setWatching(watchState == null ? true : watchState);
 		us.setSourceType(sourceType.getValue());
 		us.setCrawlerData(userSource.getCrawlerData());
+		us.setLabel(userSource.getLabel());
 
 		// TODO default labels
 

@@ -5,7 +5,7 @@
 
 	<ui:with field='res' type='cz.artique.client.i18n.ArtiqueConstants' />
 
-	<g:DisclosurePanel>
+	<g:DisclosurePanel ui:field="disclosure">
 		<g:customHeader>
 			<g:Label ui:field="header" />
 		</g:customHeader>

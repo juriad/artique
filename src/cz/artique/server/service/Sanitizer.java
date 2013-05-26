@@ -29,7 +29,7 @@ public class Sanitizer {
 
 	public static void checkStringEmpty(String property, String value)
 			throws PropertyEmptyException {
-		if (value == null || value.isEmpty()) {
+		if (value == null || value.trim().isEmpty()) {
 			throw new PropertyEmptyException(property);
 		}
 	}

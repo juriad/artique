@@ -21,12 +21,9 @@ import cz.artique.client.service.ClientSourceServiceAsync;
 import cz.artique.client.sources.SourcesManager;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
-import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
-import cz.artique.shared.model.source.WebSiteSource;
-import cz.artique.shared.model.source.XMLSource;
 
 public class ArtiqueSourcesManager
 		extends AbstractManager<ClientSourceServiceAsync>
@@ -84,63 +81,21 @@ public class ArtiqueSourcesManager
 
 	public <T extends Source> void createSource(T source,
 			final AsyncCallback<T> ping) {
-		if (source instanceof XMLSource) {
-			service.addSource((XMLSource) source,
-				new AsyncCallback<XMLSource>() {
+		service.addSource(source, new AsyncCallback<Source>() {
 
-					public void onFailure(Throwable caught) {
-						if (ping != null) {
-							ping.onFailure(caught);
-						}
-					}
-
-					@SuppressWarnings("unchecked")
-					public void onSuccess(XMLSource result) {
-						if (ping != null) {
-							ping.onSuccess((T) result);
-						}
-					}
-				});
-		} else if (source instanceof PageChangeSource) {
-			service.addSource((PageChangeSource) source,
-				new AsyncCallback<PageChangeSource>() {
-
-					public void onFailure(Throwable caught) {
-						if (ping != null) {
-							ping.onFailure(caught);
-						}
-					}
-
-					@SuppressWarnings("unchecked")
-					public void onSuccess(PageChangeSource result) {
-						if (ping != null) {
-							ping.onSuccess((T) result);
-						}
-					}
-				});
-		} else if (source instanceof WebSiteSource) {
-			service.addSource((WebSiteSource) source,
-				new AsyncCallback<WebSiteSource>() {
-
-					public void onFailure(Throwable caught) {
-						if (ping != null) {
-							ping.onFailure(caught);
-						}
-					}
-
-					@SuppressWarnings("unchecked")
-					public void onSuccess(WebSiteSource result) {
-						if (ping != null) {
-							ping.onSuccess((T) result);
-						}
-					}
-				});
-		} else {
-			if (ping != null) {
-				ping
-					.onFailure(new IllegalStateException("Unknown source type"));
+			public void onFailure(Throwable caught) {
+				if (ping != null) {
+					ping.onFailure(caught);
+				}
 			}
-		}
+
+			@SuppressWarnings("unchecked")
+			public void onSuccess(Source result) {
+				if (ping != null) {
+					ping.onSuccess((T) result);
+				}
+			}
+		});
 	}
 
 	private void updateHierarchy(Map<Key, UserSource> sourcesKeys,
@@ -229,6 +184,8 @@ public class ArtiqueSourcesManager
 				Managers.LABELS_MANAGER.updateUserSourceLabel(result);
 				HierarchyUtils.add(hierarchyRoot, result);
 
+				selectSource(result);
+
 				if (ping != null) {
 					ping.onSuccess(result);
 				}
@@ -237,9 +194,38 @@ public class ArtiqueSourcesManager
 	}
 
 	public void updateUserSource(UserSource value,
-			AsyncCallback<UserSource> ping) {
-		// TODO Auto-generated method stub
+			final AsyncCallback<UserSource> ping) {
+		service.updateUserSource(value, new AsyncCallback<UserSource>() {
+			public void onFailure(Throwable caught) {
+				if (ping != null) {
+					ping.onFailure(caught);
+				}
+			}
 
+			public void onSuccess(UserSource result) {
+				UserSource old = sourcesKeys.get(result.getKey());
+				sourcesKeys.put(result.getKey(), result);
+				sourcesNames.remove(old.getName());
+				sourcesNames.put(result.getName(), result);
+				sourcesLabels.put(result.getLabel(), result);
+
+				// first register label, then add hierarchy (it needs label)
+				Managers.LABELS_MANAGER.updateUserSourceLabel(result);
+
+				HierarchyUtils.remove(hierarchyRoot, old);
+				HierarchyUtils.add(hierarchyRoot, result);
+
+				selectSource(result);
+
+				if (ping != null) {
+					ping.onSuccess(result);
+				}
+			}
+		});
+	}
+
+	protected void selectSource(UserSource result) {
+		// TODO nice to have selected source after creating or update
 	}
 
 	public void getRegions(Key source, final AsyncCallback<List<Region>> ping) {

@@ -32,6 +32,6 @@ public class UserServiceWrapperImpl extends RemoteServiceServlet
 
 	private void ensureManualSource() {
 		UserSourceService uss = new UserSourceService();
-		uss.ensureManualSource();
+		uss.getManualUserSource();
 	}
 }
