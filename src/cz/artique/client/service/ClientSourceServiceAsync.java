@@ -1,5 +1,6 @@
 package cz.artique.client.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.google.appengine.api.datastore.Key;
@@ -22,4 +23,6 @@ public interface ClientSourceServiceAsync {
 	void getUserSources(AsyncCallback<List<UserSource>> callback);
 
 	void checkRegion(Region region, AsyncCallback<Boolean> asyncCallback);
+
+	void planSourceCheck(Key source, AsyncCallback<Date> asyncCallback);
 }

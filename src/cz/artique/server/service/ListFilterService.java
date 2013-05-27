@@ -87,7 +87,7 @@ public class ListFilterService {
 		return filter.getKey();
 	}
 
-	private Filter getFilter(Key key) {
+	public Filter getFilter(Key key) {
 		if (key == null) {
 			return null;
 		}

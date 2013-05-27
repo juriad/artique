@@ -1,6 +1,7 @@
 package cz.artique.client.artiqueSources;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -255,6 +256,22 @@ public class ArtiqueSourcesManager
 			}
 
 			public void onSuccess(Boolean result) {
+				if (ping != null) {
+					ping.onSuccess(result);
+				}
+			}
+		});
+	}
+
+	public void planSourceCheck(Key source, final AsyncCallback<Date> ping) {
+		service.planSourceCheck(source, new AsyncCallback<Date>() {
+			public void onFailure(Throwable caught) {
+				if (ping != null) {
+					ping.onFailure(caught);
+				}
+			}
+
+			public void onSuccess(Date result) {
 				if (ping != null) {
 					ping.onSuccess(result);
 				}

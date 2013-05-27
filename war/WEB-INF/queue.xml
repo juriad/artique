@@ -17,6 +17,19 @@
 
 	</queue>
 	<queue>
+		<name>backupItems</name>
+		<rate>10/s</rate>
+		<bucket-size>5</bucket-size>
+		<max-concurrent-requests>10</max-concurrent-requests>
+		<retry-parameters>
+			<task-retry-limit>3</task-retry-limit>
+			<min-backoff-seconds>10</min-backoff-seconds>
+			<max-backoff-seconds>200</max-backoff-seconds>
+			<max-doublings>2</max-doublings>
+		</retry-parameters>
+
+	</queue>
+	<queue>
 		<name>slim3-gtx-queue</name>
 		<rate>10/s</rate>
 		<bucket-size>10</bucket-size>

@@ -1,5 +1,7 @@
 package cz.artique.client.artiqueSources;
 
+import java.util.Date;
+
 import com.google.appengine.api.datastore.Link;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Display;
@@ -282,6 +284,39 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 
 	public void setValue(UserSource value, boolean fireEvents) {
 		setValue(value);
+	}
+
+	@UiHandler("checkNow")
+	protected void checkNowClicked(ClickEvent event) {
+		if (userSource.getKey() == null || source == null) {
+			checkNow.setVisible(false);
+			checkNow.setEnabled(false);
+			return;
+		}
+		Managers.SOURCES_MANAGER.planSourceCheck(source.getKey(),
+			new AsyncCallback<Date>() {
+				public void onFailure(Throwable caught) {
+					ArtiqueMessages messages = ArtiqueI18n.I18N.getMessages();
+					Managers.MESSAGES_MANAGER.addMessage(new Message(
+						MessageType.ERROR, messages.planCheckFailed(userSource
+							.getName())));
+				}
+
+				public void onSuccess(Date result) {
+					userSource.getSourceObject().setNextCheck(result);
+					ArtiqueMessages messages = ArtiqueI18n.I18N.getMessages();
+					Managers.MESSAGES_MANAGER.addMessage(new Message(
+						MessageType.INFO, messages
+							.sourceCheckPlanned(userSource.getName())));
+
+					DateTimeFormatRenderer renderer =
+						new DateTimeFormatRenderer(DateTimeFormat
+							.getFormat(PredefinedFormat.DATE_TIME_MEDIUM));
+					nextCheck.setText(renderer.render(userSource
+						.getSourceObject()
+						.getNextCheck()));
+				}
+			});
 	}
 
 	@UiHandler("urlButton")

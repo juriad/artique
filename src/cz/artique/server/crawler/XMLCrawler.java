@@ -34,7 +34,7 @@ public class XMLCrawler extends AbstractCrawler<XMLSource, ArticleItem> {
 	public int fetchItems() throws CrawlerException {
 		URI uri;
 		try {
-			uri = getURI();
+			uri = getURI(getSource().getUrl());
 		} catch (CrawlerException e) {
 			writeStat(e);
 			throw e;

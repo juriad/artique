@@ -35,4 +35,11 @@ public interface ArtiqueMessages extends Messages {
 
 	@DefaultMessage("Filter to update source {0}.")
 	String userSourceUpdatedError(String name);
+
+	@DefaultMessage("Failed to plan check for source {0}.")
+	String planCheckFailed(String name);
+
+	@DefaultMessage("Check for source {0} has been planned;\n"
+		+ "it will be performed withing a minute.")
+	String sourceCheckPlanned(String name);
 }

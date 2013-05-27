@@ -1,5 +1,6 @@
 package cz.artique.client.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.google.appengine.api.datastore.Key;
@@ -24,5 +25,7 @@ public interface ClientSourceService extends RemoteService {
 	List<UserSource> getUserSources();
 
 	boolean checkRegion(Region region);
+
+	Date planSourceCheck(Key source);
 
 }

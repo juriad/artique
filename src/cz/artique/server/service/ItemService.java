@@ -12,8 +12,10 @@ import org.slim3.datastore.Datastore;
 import org.slim3.datastore.FilterCriterion;
 import org.slim3.datastore.ModelQuery;
 
+import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
+import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.api.users.User;
 
 import cz.artique.server.meta.item.ItemMeta;
@@ -25,9 +27,10 @@ import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Filter;
-import cz.artique.shared.model.label.ListFilterOrder;
 import cz.artique.shared.model.label.ListFilter;
+import cz.artique.shared.model.label.ListFilterOrder;
 import cz.artique.shared.model.source.UserSource;
+import cz.artique.shared.utils.TransactionException;
 
 public class ItemService {
 	public ListingUpdate<UserItem> getItems(User user,
@@ -285,6 +288,15 @@ public class ItemService {
 		}
 	}
 
+	public UserItem getByKey(Key key) {
+		UserItem userItem = Datastore.getOrNull(UserItemMeta.get(), key);
+		if (userItem != null) {
+			Item item = Datastore.get(ItemMeta.get(), userItem.getItem());
+			userItem.setItemObject(item);
+		}
+		return userItem;
+	}
+
 	public UserItem addManualItem(ManualItem item) {
 		UserSourceService uss = new UserSourceService();
 		UserSource manualUserSource = uss.getManualUserSource();
@@ -321,5 +333,22 @@ public class ItemService {
 		}
 		Datastore.put(userItems);
 		return result;
+	}
+
+	public void setBackup(Key userItemKey, BlobKey blobKey) {
+		Transaction tx = Datastore.beginTransaction();
+		try {
+			UserItem userItem =
+				Datastore.get(tx, UserItemMeta.get(), userItemKey);
+			userItem.setBackupBlobKey(blobKey.getKeyString());
+			Datastore.put(tx, userItem);
+			tx.commit();
+		} catch (Exception e) {
+			throw new TransactionException();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+		}
 	}
 }

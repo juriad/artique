@@ -65,7 +65,7 @@ public class WebSiteCrawler extends HTMLCrawler<WebSiteSource, LinkItem> {
 	public int fetchItems() throws CrawlerException {
 		URI uri;
 		try {
-			uri = getURI();
+			uri = getURI(getSource().getUrl());
 		} catch (CrawlerException e) {
 			writeStat(e);
 			throw e;

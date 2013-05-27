@@ -1,18 +1,8 @@
 package cz.artique.server.crawler;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -31,39 +21,6 @@ public abstract class HTMLCrawler<E extends HTMLSource, F extends Item>
 
 	protected HTMLCrawler(E source) {
 		super(source);
-	}
-
-	protected Document getDocument(URI uri) throws CrawlerException {
-		HttpClient httpClient = getHttpClient();
-		HttpGet get = new HttpGet(uri);
-
-		HttpResponse resp;
-		try {
-			resp = httpClient.execute(get);
-		} catch (IOException e) {
-			throw new CrawlerException("Cannot execute request");
-		}
-
-		HttpEntity entity = resp.getEntity();
-		InputStream is;
-		try {
-			is = entity.getContent();
-		} catch (IOException e) {
-			throw new CrawlerException("Cannot get response content");
-		}
-
-		String charset = EntityUtils.getContentCharSet(entity);
-		if (charset == null) {
-			charset = HTTP.DEFAULT_CONTENT_CHARSET;
-		}
-
-		Document document;
-		try {
-			document = Jsoup.parse(is, charset, uri.toString());
-		} catch (IOException e) {
-			throw new CrawlerException("Cannot parse html page");
-		}
-		return document;
 	}
 
 	protected Elements filterPage(Region region, Document doc) {

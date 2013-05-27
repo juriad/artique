@@ -1,5 +1,6 @@
 package cz.artique.server.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.jsoup.nodes.Element;
@@ -130,7 +131,10 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		return uss.getUserSources(user);
 	}
 
-	public boolean checkRegion(Region region) {
+	public boolean checkRegion(Region region) throws NullPointerException {
+		if (region == null) {
+			throw new NullPointerException();
+		}
 		if (region.getPositiveSelector() != null) {
 			if (!region.getPositiveSelector().trim().isEmpty()) {
 				try {
@@ -154,5 +158,13 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		}
 		return true;
 
+	}
+
+	public Date planSourceCheck(Key source) throws NullPointerException {
+		if (source == null) {
+			throw new NullPointerException();
+		}
+		SourceService ss = new SourceService();
+		return ss.planSourceCheck(source);
 	}
 }

@@ -7,7 +7,8 @@ public enum ConfigKey implements GenKey {
 	MAX_ERROR_SEQUENCE("check.normal.max-error-sequence", ConfigType.INT, 5),
 	DIFF_EDIT_COST("crawler.diff.edit-cost", ConfigType.INT, 10),
 	DIFF_TIMEOUT("crawler.diff.timeout", ConfigType.DOUBLE, 0.1),
-	MANUAL_SOURCE_NAME("source.manual.name", ConfigType.STRING, "manual");
+	MANUAL_SOURCE_NAME("source.manual.name", ConfigType.STRING, "manual"),
+	EXPORT_FETCH_COUNT("export.fetch-count", ConfigType.INT, 30);
 
 	private final ConfigType type;
 	private final String key;

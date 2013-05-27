@@ -1,5 +1,6 @@
 package cz.artique.server.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slim3.datastore.Datastore;
@@ -32,5 +33,20 @@ public class LabelService {
 			theLabel = label;
 		}
 		return theLabel;
+	}
+
+	public List<Label> getLabelsByKeys(Iterable<Key> labelKeys) {
+		if (labelKeys == null) {
+			return new ArrayList<Label>();
+		}
+		List<Label> labels = Datastore.get(LabelMeta.get(), labelKeys);
+		return labels;
+	}
+
+	public Label getLabelsByKeys(Key labelKey) {
+		if (labelKey == null) {
+			return null;
+		}
+		return getLabelsByKeys(labelKey);
 	}
 }

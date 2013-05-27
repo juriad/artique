@@ -53,6 +53,8 @@ public class UserItem implements Serializable, HasKey<Key>, GenKey {
 
 	private Key userSource;
 
+	private String backupBlobKey;
+
 	public UserItem() {}
 
 	public UserItem(Item item, UserSource userSource) {
@@ -201,5 +203,13 @@ public class UserItem implements Serializable, HasKey<Key>, GenKey {
 		String userId = getUser().getUserId();
 		String itemId = KeyFactory.keyToString(getItem());
 		return SharedUtils.combineStringParts(userId, itemId);
+	}
+
+	public String getBackupBlobKey() {
+		return backupBlobKey;
+	}
+
+	public void setBackupBlobKey(String backupBlobKey) {
+		this.backupBlobKey = backupBlobKey;
 	}
 }

@@ -1,23 +1,15 @@
 package cz.artique.server.crawler;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
 import org.slim3.datastore.Datastore;
 
 import com.google.appengine.api.datastore.Key;
 
 import cz.artique.server.meta.source.UserSourceMeta;
 import cz.artique.server.service.UserSourceService;
-import cz.artique.server.utils.GAEConnectionManager;
 import cz.artique.server.utils.ServerUtils;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;
@@ -26,28 +18,12 @@ import cz.artique.shared.model.source.Stats;
 import cz.artique.shared.model.source.UserSource;
 
 public abstract class AbstractCrawler<E extends Source, F extends Item>
-		implements Crawler<E> {
+		extends Fetcher implements Crawler<E> {
 
 	private final E source;
 
 	protected AbstractCrawler(E source) {
 		this.source = source;
-	}
-
-	protected URI getURI() throws CrawlerException {
-		try {
-			return new URI(getSource().getUrl().getValue());
-		} catch (URISyntaxException e) {
-			throw new CrawlerException("Wrong URI syntax", e);
-		}
-	}
-
-	protected HttpClient getHttpClient() {
-		HttpParams httpParams = new BasicHttpParams();
-		ClientConnectionManager connectionManager = new GAEConnectionManager();
-		HttpClient httpClient =
-			new DefaultHttpClient(connectionManager, httpParams);
-		return httpClient;
 	}
 
 	protected void writeStat(int items) {

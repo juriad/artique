@@ -1,10 +1,18 @@
 package cz.artique.shared.model.label;
 
 public enum BackupLevel {
-	NO_BACKUP,
-	TEXT,
-	HTML,
-	HTML_CSS,
-	HTML_CSS_IMG,
-	FULL_BACKUP;
+	NO_BACKUP(false),
+	HTML(false),
+	HTML_CSS(true);
+
+	private final boolean inlineCss;
+
+	private BackupLevel(boolean inlineCss) {
+		this.inlineCss = inlineCss;
+
+	}
+
+	public boolean isInlineCss() {
+		return inlineCss;
+	}
 }

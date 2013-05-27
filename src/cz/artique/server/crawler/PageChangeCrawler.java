@@ -36,7 +36,7 @@ public class PageChangeCrawler
 	public int fetchItems() throws CrawlerException {
 		URI uri;
 		try {
-			uri = getURI();
+			uri = getURI(getSource().getUrl());
 		} catch (CrawlerException e) {
 			writeStat(e);
 			throw e;

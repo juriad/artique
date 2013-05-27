@@ -79,4 +79,16 @@ public class SourceService {
 		manualSource.setUsage(0);
 		return creatIfNotExist(manualSource, ManualSourceMeta.get());
 	}
+
+	public Date planSourceCheck(Key source) {
+		Source sourceByKey = getSourceByKey(source);
+		if (sourceByKey instanceof ManualSource) {
+			throw new IllegalArgumentException(
+				"Source must not be a manual source");
+		}
+		Date date = new Date();
+		sourceByKey.setNextCheck(date);
+		Datastore.put(sourceByKey);
+		return date;
+	}
 }

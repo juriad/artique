@@ -78,6 +78,13 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>ExportServlet</servlet-name>
+		<servlet-class>cz.artique.server.service.ExportServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>Updater</servlet-name>
 		<servlet-class>cz.artique.server.service.Updater
 		</servlet-class>
@@ -107,6 +114,11 @@
 	<servlet-mapping>
 		<servlet-name>UserService</servlet-name>
 		<url-pattern>/main/userService</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ExportServlet</servlet-name>
+		<url-pattern>/export/feedService</url-pattern>
 	</servlet-mapping>
 
 	<!-- TODO odstranit v produkci -->
