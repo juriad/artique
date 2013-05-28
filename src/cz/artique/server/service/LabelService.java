@@ -9,7 +9,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
 import cz.artique.server.meta.label.LabelMeta;
-import cz.artique.server.utils.ServerUtils;
+import cz.artique.server.utils.KeyGen;
 import cz.artique.shared.model.label.Label;
 
 public class LabelService {
@@ -24,7 +24,7 @@ public class LabelService {
 	}
 
 	public Label creatIfNotExist(Label label) {
-		Key key = ServerUtils.genKey(label);
+		Key key = KeyGen.genKey(label);
 		LabelMeta meta = LabelMeta.get();
 		Label theLabel = Datastore.getOrNull(meta, key);
 		if (theLabel == null) {

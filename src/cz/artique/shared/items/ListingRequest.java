@@ -1,29 +1,26 @@
 package cz.artique.shared.items;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import com.google.appengine.api.datastore.Key;
 
 import cz.artique.shared.model.label.ListFilter;
 
-public class ListingUpdateRequest implements Serializable {
+public class ListingRequest implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private ListFilter listFilter;
 	private Key firstKey;
 	private Key lastKey;
-	private Date lastFetch;
 	private int fetchCount;
 
-	public ListingUpdateRequest() {}
+	public ListingRequest() {}
 
-	public ListingUpdateRequest(ListFilter listFilter, Key firstKey,
-			Key lastKey, Date lastFetch, int fetchCount) {
+	public ListingRequest(ListFilter listFilter, Key firstKey, Key lastKey,
+			int fetchCount) {
 		this.setListFilter(listFilter);
 		this.setFirstKey(firstKey);
 		this.setLastKey(lastKey);
-		this.setLastFetch(lastFetch);
 		this.setFetchCount(fetchCount);
 	}
 
@@ -39,10 +36,6 @@ public class ListingUpdateRequest implements Serializable {
 		return listFilter;
 	}
 
-	public Date getLastFetch() {
-		return lastFetch;
-	}
-
 	public void setListFilter(ListFilter listFilter) {
 		this.listFilter = listFilter;
 	}
@@ -53,10 +46,6 @@ public class ListingUpdateRequest implements Serializable {
 
 	public void setLastKey(Key lastKey) {
 		this.lastKey = lastKey;
-	}
-
-	public void setLastFetch(Date lastFetch) {
-		this.lastFetch = lastFetch;
 	}
 
 	public int getFetchCount() {

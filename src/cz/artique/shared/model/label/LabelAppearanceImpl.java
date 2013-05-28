@@ -6,6 +6,7 @@ public class LabelAppearanceImpl implements LabelAppearance, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	// TODO visibilityLevel: presunout do label
 	VisibilityLevel visibilityLevel;
 
 	AppearanceType apperianceType;

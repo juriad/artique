@@ -6,9 +6,9 @@ import com.google.appengine.api.datastore.Key;
 
 import cz.artique.shared.utils.GenKey;
 
-public class ServerUtils {
+public class KeyGen {
 
-	private ServerUtils() {}
+	private KeyGen() {}
 
 	public static Key genKey(GenKey model) {
 		String name = model.getKeyName();

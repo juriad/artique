@@ -21,8 +21,8 @@ import com.google.appengine.api.users.User;
 import cz.artique.server.meta.item.ItemMeta;
 import cz.artique.server.meta.item.UserItemMeta;
 import cz.artique.shared.items.ChangeSet;
-import cz.artique.shared.items.ListingUpdate;
-import cz.artique.shared.items.ListingUpdateRequest;
+import cz.artique.shared.items.ListingResponse;
+import cz.artique.shared.items.ListingRequest;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.item.UserItem;
@@ -33,8 +33,8 @@ import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.utils.TransactionException;
 
 public class ItemService {
-	public ListingUpdate<UserItem> getItems(User user,
-			ListingUpdateRequest request) {
+	public ListingResponse<UserItem> getItems(User user,
+			ListingRequest request) {
 		UserItemMeta meta = UserItemMeta.get();
 		Date date = new Date();
 
@@ -152,7 +152,7 @@ public class ItemService {
 				endReached = false;
 			}
 		}
-		return new ListingUpdate<UserItem>(head, tail, date, endReached);
+		return new ListingResponse<UserItem>(head, tail, date, endReached);
 	}
 
 	private ModelQuery<UserItem> getBaseQuery(ListFilter listFilter,
@@ -297,17 +297,34 @@ public class ItemService {
 		return userItem;
 	}
 
-	public UserItem addManualItem(ManualItem item) {
+	public UserItem addManualItem(UserItem userItem) {
 		UserSourceService uss = new UserSourceService();
 		UserSource manualUserSource = uss.getManualUserSource();
 
+		ManualItem item = (ManualItem) userItem.getItemObject();
+		Date now = new Date();
+		item.setAdded(now);
+		item.setPublished(now);
 		item.setSource(manualUserSource.getSource());
-		Key key = Datastore.put(item);
-		item.setKey(key);
+		Key itemKey = Datastore.put(item);
+		item.setKey(itemKey);
 
-		UserItem ui = new UserItem(item, manualUserSource);
-		Datastore.put(ui);
-		return ui;
+		userItem.setAdded(now);
+		userItem.setItem(item.getKey());
+		userItem.setRead(false);
+		userItem.setUser(manualUserSource.getUser());
+		userItem.setLastChanged(null);
+
+		List<Key> labels = userItem.getLabels();
+		if (labels == null) {
+			labels = new ArrayList<Key>();
+		}
+		labels.addAll(manualUserSource.getDefaultLabels());
+		userItem.setLabels(labels);
+
+		Key userItemKey = Datastore.put(userItem);
+		userItem.setKey(userItemKey);
+		return userItem;
 	}
 
 	public Map<Key, UserItem> updateItems(List<Key> itemKeys,

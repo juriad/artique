@@ -32,6 +32,7 @@ public class Filter implements Serializable, HasDeepEquals<Filter> {
 	/**
 	 * Filter composition
 	 */
+	@Attribute(unindexed = true)
 	private List<Key> filters;
 
 	@Attribute(persistent = false)
@@ -40,6 +41,7 @@ public class Filter implements Serializable, HasDeepEquals<Filter> {
 	/**
 	 * Operands of this filter
 	 */
+	@Attribute(unindexed = true)
 	private List<Key> labels;
 
 	private FilterType type;

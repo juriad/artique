@@ -1,6 +1,6 @@
 package cz.artique.server.meta.item;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-27 22:25:23")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-28 21:30:21")
 /** */
 public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.item.UserItem> {
 
@@ -8,7 +8,7 @@ public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.UserItem, java.util.Date> added = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.UserItem, java.util.Date>(this, "added", "added", java.util.Date.class);
 
     /** */
-    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.item.UserItem> backupBlobKey = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.item.UserItem>(this, "backupBlobKey", "backupBlobKey");
+    public final org.slim3.datastore.StringUnindexedAttributeMeta<cz.artique.shared.model.item.UserItem> backupBlobKey = new org.slim3.datastore.StringUnindexedAttributeMeta<cz.artique.shared.model.item.UserItem>(this, "backupBlobKey", "backupBlobKey");
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.UserItem, com.google.appengine.api.datastore.Key> item = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.UserItem, com.google.appengine.api.datastore.Key>(this, "item", "item", com.google.appengine.api.datastore.Key.class);
@@ -74,7 +74,7 @@ public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique
             entity = new com.google.appengine.api.datastore.Entity(kind);
         }
         entity.setProperty("added", m.getAdded());
-        entity.setProperty("backupBlobKey", m.getBackupBlobKey());
+        entity.setUnindexedProperty("backupBlobKey", m.getBackupBlobKey());
         entity.setProperty("item", m.getItem());
         entity.setProperty("labels", m.getLabels());
         entity.setProperty("lastChanged", m.getLastChanged());

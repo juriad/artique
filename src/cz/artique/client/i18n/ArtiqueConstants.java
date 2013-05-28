@@ -90,11 +90,20 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 	@DefaultStringValue("Name")
 	String name();
 
+	@DefaultStringValue("Title")
+	String title();
+
+	@DefaultStringValue("Content")
+	String content();
+
 	@DefaultStringValue("Hierarchy")
 	String hierarchy();
 
 	@DefaultStringValue("URL")
 	String url();
+
+	@DefaultStringValue("Labels:")
+	String labels();
 
 	@DefaultStringValue("Watching")
 	String watching();
@@ -189,6 +198,12 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 	@DefaultStringValue("Creates a new source.")
 	String createNewUserSourceTooltip();
 
+	@DefaultStringValue("Click to show disabled sources.")
+	String showDisabledSourcesTooltip();
+
+	@DefaultStringValue("Click to hide disabled sources.")
+	String hideDisabledSourcesTooltip();
+
 	@DefaultStringValue("Source has been verified.")
 	String sourceCreated();
 
@@ -218,4 +233,10 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("Custom")
 	String customRegion();
+
+	@DefaultStringValue("Click to show items of all descendant sources.")
+	String sourceFolderTooltip();
+
+	@DefaultStringValue("Click to add manual item.")
+	String addManualItemTooltip();
 }

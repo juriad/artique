@@ -25,6 +25,9 @@ import com.google.appengine.api.files.AppEngineFile;
 import com.google.appengine.api.files.FileService;
 import com.google.appengine.api.files.FileServiceFactory;
 import com.google.appengine.api.files.FileWriteChannel;
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
 
 import cz.artique.server.crawler.CrawlerException;
 import cz.artique.server.crawler.Fetcher;
@@ -33,6 +36,9 @@ import cz.artique.shared.model.label.BackupLevel;
 import cz.artique.shared.model.label.Label;
 
 public class BackupService extends Fetcher {
+
+	private static final String queueName = "backupItems";
+
 	public BackupService() {}
 
 	public BlobKey backup(UserItem userItem, BackupLevel backupLevel)
@@ -133,7 +139,6 @@ public class BackupService extends Fetcher {
 
 	public void serveBackup(String blobKey, HttpServletResponse response)
 			throws IOException {
-		// TODO call this
 		BlobstoreService blobstoreService =
 			BlobstoreServiceFactory.getBlobstoreService();
 		BlobKey bk = new BlobKey(blobKey);
@@ -141,6 +146,7 @@ public class BackupService extends Fetcher {
 	}
 
 	public void planForBackup(UserItem userItem) {
+		// TODO call whenever a change ocures
 		LabelService ls = new LabelService();
 		List<Label> labelsByKeys = ls.getLabelsByKeys(userItem.getLabels());
 		for (Label l : labelsByKeys) {
@@ -153,7 +159,10 @@ public class BackupService extends Fetcher {
 	}
 
 	private void doPlanForBackup(UserItem userItem, Label l) {
-		// TODO Auto-generated method stub
-		// synchronizace ve fronte
+		Queue queue = QueueFactory.getQueue(queueName);
+		TaskOptions task =
+			TaskOptions.Builder.withPayload(new BackupTask(userItem.getKey(), l
+				.getKey()));
+		queue.add(task);
 	}
 }

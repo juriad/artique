@@ -1,6 +1,6 @@
 package cz.artique.server.meta.config;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-27 12:39:22")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-28 21:33:28")
 /** */
 public final class ClientConfigMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.config.ClientConfig> {
 
@@ -17,7 +17,7 @@ public final class ClientConfigMeta extends org.slim3.datastore.ModelMeta<cz.art
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.config.ClientConfig, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.config.ClientConfig, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
 
     /** */
-    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.config.ClientConfig> stringValue = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.config.ClientConfig>(this, "stringValue", "stringValue");
+    public final org.slim3.datastore.StringUnindexedAttributeMeta<cz.artique.shared.model.config.ClientConfig> stringValue = new org.slim3.datastore.StringUnindexedAttributeMeta<cz.artique.shared.model.config.ClientConfig>(this, "stringValue", "stringValue");
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.config.ClientConfig, com.google.appengine.api.users.User> user = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.config.ClientConfig, com.google.appengine.api.users.User>(this, "user", "user", com.google.appengine.api.users.User.class);
@@ -62,9 +62,9 @@ public final class ClientConfigMeta extends org.slim3.datastore.ModelMeta<cz.art
             entity = new com.google.appengine.api.datastore.Entity(kind);
         }
         entity.setProperty("configKey", m.getConfigKey());
-        entity.setProperty("doubleValue", m.getDoubleValue());
-        entity.setProperty("intValue", m.getIntValue());
-        entity.setProperty("stringValue", m.getStringValue());
+        entity.setUnindexedProperty("doubleValue", m.getDoubleValue());
+        entity.setUnindexedProperty("intValue", m.getIntValue());
+        entity.setUnindexedProperty("stringValue", m.getStringValue());
         entity.setProperty("user", m.getUser());
         entity.setProperty("version", m.getVersion());
         entity.setProperty("slim3.schemaVersion", 1);

@@ -11,38 +11,40 @@ import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.artique.client.service.ClientItemService;
 import cz.artique.shared.items.ChangeSet;
-import cz.artique.shared.items.ListingUpdate;
-import cz.artique.shared.items.ListingUpdateRequest;
+import cz.artique.shared.items.ListingResponse;
+import cz.artique.shared.items.ListingRequest;
 import cz.artique.shared.model.item.ContentType;
-import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.utils.PropertyEmptyException;
 import cz.artique.shared.utils.PropertyTooLongException;
 import cz.artique.shared.utils.SecurityBreachException;
+import cz.artique.shared.validation.ValidationException;
 
 public class ClientItemServiceImpl implements ClientItemService {
 
-	public ListingUpdate<UserItem> getItems(ListingUpdateRequest request) {
-		// TODO sanitize getItems
+	public ListingResponse<UserItem> getItems(ListingRequest request)
+			throws ValidationException {
 		ItemService is = new ItemService();
 		User user = UserServiceFactory.getUserService().getCurrentUser();
 		return is.getItems(user, request);
 	}
 
-	public UserItem addItem(ManualItem item)
+	public UserItem addManualItem(UserItem item)
 			throws NullPointerException, PropertyTooLongException,
 			PropertyEmptyException, SecurityBreachException {
 		if (item == null) {
 			throw new NullPointerException("Adding manual item may not be null");
 		}
-		Sanitizer.checkStringEmpty("title", item.getTitle());
-		Sanitizer.checkTextEmpty("content", item.getContent());
-		Sanitizer.checkUrl("url", item.getUrl());
-		item.setContent(Sanitizer.trimText(item.getContent()));
-		item.setContentType(ContentType.PLAIN_TEXT);
+
+		Sanitizer.checkStringEmpty("title", item.getItemObject().getTitle());
+		Sanitizer.checkTextEmpty("content", item.getItemObject().getContent());
+		Sanitizer.checkUrl("url", item.getItemObject().getUrl());
+		item.getItemObject().setContent(
+			Sanitizer.trimText(item.getItemObject().getContent()));
+		item.getItemObject().setContentType(ContentType.PLAIN_TEXT);
 		item.setAdded(new Date());
-		item.setPublished(null);
-		item.setHash(null);
+		item.getItemObject().setPublished(null);
+		item.getItemObject().setHash(null);
 
 		ItemService is = new ItemService();
 		return is.addManualItem(item);

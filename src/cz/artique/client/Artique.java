@@ -61,6 +61,7 @@ public class Artique extends Composite {
 		list = new ArtiqueList(UserItemRow.factory);
 		initWidget(uiBinder.createAndBindUi(this));
 		ArtiqueWorld.WORLD.setList(list);
+		ArtiqueWorld.WORLD.setSourcesTree(sources);
 
 		initHistory();
 

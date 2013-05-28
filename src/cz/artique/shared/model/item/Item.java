@@ -34,31 +34,37 @@ public abstract class Item implements Serializable {
 	/**
 	 * URL of this item
 	 */
+	@Attribute(unindexed=true)
 	private Link url;
 
 	/**
 	 * Title of this item
 	 */
+	@Attribute(unindexed=true)
 	private String title;
 
 	/**
 	 * When the item was added to system
 	 */
+	@Attribute(unindexed=true)
 	private Date added;
 
 	/**
 	 * Date of publish
 	 */
+	@Attribute(unindexed=true)
 	private Date published;
 
 	/**
 	 * Content of item
 	 */
+	@Attribute(unindexed=true)
 	private Text content;
 
 	/**
 	 * Type of content
 	 */
+	@Attribute(unindexed=true)
 	private ContentType contentType;
 
 	/**

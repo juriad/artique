@@ -1,4 +1,4 @@
-package cz.artique.server.service;
+package cz.artique.server.test;
 
 import java.io.IOException;
 
@@ -11,9 +11,12 @@ import com.google.appengine.api.datastore.Link;
 import com.google.appengine.api.users.User;
 
 import cz.artique.server.meta.source.XMLSourceMeta;
+import cz.artique.server.service.SourceService;
+import cz.artique.server.service.UserSourceService;
 import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.model.source.XMLSource;
 
+@Deprecated
 public class Updater extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

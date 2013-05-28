@@ -22,7 +22,7 @@ import com.google.appengine.api.datastore.Link;
 
 import cz.artique.server.utils.GAEConnectionManager;
 
-public class Fetcher {
+public abstract class Fetcher {
 	protected URI getURI(Link link) throws CrawlerException {
 		if (link == null) {
 			throw new NullPointerException();
@@ -42,7 +42,7 @@ public class Fetcher {
 		return httpClient;
 	}
 
-	protected Document getDocument(URI uri) throws CrawlerException {
+	protected HttpEntity getEntity(URI uri) throws CrawlerException {
 		HttpClient httpClient = getHttpClient();
 		HttpGet get = new HttpGet(uri);
 
@@ -50,10 +50,17 @@ public class Fetcher {
 		try {
 			resp = httpClient.execute(get);
 		} catch (IOException e) {
-			throw new CrawlerException("Cannot execute request");
+			throw new CrawlerException("Cannot execute request", e);
+		} catch (Exception e) {
+			throw new CrawlerException("Unknown exception", e);
 		}
 
 		HttpEntity entity = resp.getEntity();
+		return entity;
+	}
+
+	protected Document getDocument(URI uri) throws CrawlerException {
+		HttpEntity entity = getEntity(uri);
 		InputStream is;
 		try {
 			is = entity.getContent();

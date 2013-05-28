@@ -18,6 +18,8 @@ public class CrawlerData implements Serializable {
 	@Attribute(version = true)
 	private Long version;
 
+	// TODO nice to have: attribute usage
+
 	/**
 	 * Returns the key.
 	 * 

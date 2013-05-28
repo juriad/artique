@@ -28,6 +28,7 @@ public class ListFilter
 	@Attribute(version = true)
 	private Long version;
 
+	@Attribute(unindexed = true)
 	private Key filter;
 
 	@Attribute(persistent = false)

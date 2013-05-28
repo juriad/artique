@@ -26,9 +26,4 @@ public class PageChangeSource extends HTMLSource
 		String url = getUrl().getValue();
 		return SharedUtils.combineStringParts(prefix, url);
 	}
-
-	public RegionType getRegionType() {
-		return RegionType.PAGE_CHANGE;
-	}
-
 }

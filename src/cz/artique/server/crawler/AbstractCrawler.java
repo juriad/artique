@@ -10,7 +10,6 @@ import com.google.appengine.api.datastore.Key;
 
 import cz.artique.server.meta.source.UserSourceMeta;
 import cz.artique.server.service.UserSourceService;
-import cz.artique.server.utils.ServerUtils;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.source.Source;
@@ -76,7 +75,6 @@ public abstract class AbstractCrawler<E extends Source, F extends Item>
 		ui.setUser(us.getUser());
 		ui.setUserSource(us.getKey());
 		ui.setLabels(us.getDefaultLabels());
-		ui.setKey(ServerUtils.genKey(ui));
 		return ui;
 	}
 

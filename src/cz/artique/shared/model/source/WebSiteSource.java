@@ -25,8 +25,4 @@ public class WebSiteSource extends HTMLSource implements Serializable, GenKey {
 		String url = getUrl().getValue();
 		return SharedUtils.combineStringParts(prefix, url);
 	}
-
-	public RegionType getRegionType() {
-		return RegionType.WEB_SITE;
-	}
 }

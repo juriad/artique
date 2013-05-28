@@ -14,7 +14,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 import cz.artique.server.meta.source.ManualSourceMeta;
 import cz.artique.server.meta.source.RegionMeta;
 import cz.artique.server.meta.source.SourceMeta;
-import cz.artique.server.utils.ServerUtils;
+import cz.artique.server.utils.KeyGen;
 import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
@@ -35,7 +35,7 @@ public class SourceService {
 		Transaction tx = Datastore.beginTransaction();
 		E theSource;
 		try {
-			Key key = ServerUtils.genKey(source);
+			Key key = KeyGen.genKey(source);
 			theSource = Datastore.getOrNull(tx, meta, key);
 			if (theSource == null) {
 				source.setKey(key);
@@ -74,7 +74,7 @@ public class SourceService {
 	public ManualSource ensureManualSource() {
 		User user = UserServiceFactory.getUserService().getCurrentUser();
 		ManualSource manualSource = new ManualSource(user);
-		manualSource.setKey(ServerUtils.genKey(manualSource));
+		manualSource.setKey(KeyGen.genKey(manualSource));
 		manualSource.setEnabled(false);
 		manualSource.setUsage(0);
 		return creatIfNotExist(manualSource, ManualSourceMeta.get());

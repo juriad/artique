@@ -22,8 +22,8 @@ import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedOutput;
 
 import cz.artique.server.meta.label.ListFilterMeta;
-import cz.artique.shared.items.ListingUpdate;
-import cz.artique.shared.items.ListingUpdateRequest;
+import cz.artique.shared.items.ListingResponse;
+import cz.artique.shared.items.ListingRequest;
 import cz.artique.shared.model.config.ConfigKey;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;
@@ -120,9 +120,9 @@ public class ExportServlet extends HttpServlet {
 			ConfigService.CONFIG_SERVICE
 				.getConfig(ConfigKey.EXPORT_FETCH_COUNT)
 				.<Integer> get();
-		ListingUpdateRequest request =
-			new ListingUpdateRequest(listFilter, null, null, null, fetchCount);
-		ListingUpdate<UserItem> items =
+		ListingRequest request =
+			new ListingRequest(listFilter, null, null, null, fetchCount);
+		ListingResponse<UserItem> items =
 			is.getItems(listFilter.getUser(), request);
 
 		List<SyndEntry> entries = new ArrayList<SyndEntry>();

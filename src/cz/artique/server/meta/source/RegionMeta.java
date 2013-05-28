@@ -1,6 +1,6 @@
 package cz.artique.server.meta.source;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-27 12:39:21")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-28 21:03:51")
 /** */
 public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.source.Region> {
 
@@ -11,7 +11,7 @@ public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Region, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Region, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
 
     /** */
-    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.source.Region> name = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.source.Region>(this, "name", "name");
+    public final org.slim3.datastore.StringUnindexedAttributeMeta<cz.artique.shared.model.source.Region> name = new org.slim3.datastore.StringUnindexedAttributeMeta<cz.artique.shared.model.source.Region>(this, "name", "name");
 
     /** */
     public final org.slim3.datastore.StringUnindexedAttributeMeta<cz.artique.shared.model.source.Region> negativeSelector = new org.slim3.datastore.StringUnindexedAttributeMeta<cz.artique.shared.model.source.Region>(this, "negativeSelector", "negativeSelector");
@@ -58,7 +58,7 @@ public final class RegionMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
             entity = new com.google.appengine.api.datastore.Entity(kind);
         }
         entity.setProperty("htmlSource", m.getHtmlSource());
-        entity.setProperty("name", m.getName());
+        entity.setUnindexedProperty("name", m.getName());
         entity.setUnindexedProperty("negativeSelector", m.getNegativeSelector());
         entity.setUnindexedProperty("positiveSelector", m.getPositiveSelector());
         entity.setProperty("version", m.getVersion());

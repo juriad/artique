@@ -7,16 +7,16 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import cz.artique.shared.items.ChangeSet;
-import cz.artique.shared.items.ListingUpdate;
-import cz.artique.shared.items.ListingUpdateRequest;
-import cz.artique.shared.model.item.ManualItem;
+import cz.artique.shared.items.ListingResponse;
+import cz.artique.shared.items.ListingRequest;
 import cz.artique.shared.model.item.UserItem;
+import cz.artique.shared.validation.ValidationException;
 
 @RemoteServiceRelativePath("service.s3gwt")
 public interface ClientItemService extends RemoteService {
-	ListingUpdate<UserItem> getItems(ListingUpdateRequest request);
+	ListingResponse<UserItem> getItems(ListingRequest request) throws ValidationException;
 
-	UserItem addItem(ManualItem item);
+	UserItem addManualItem(UserItem item);
 
 	Map<Key, UserItem> updateItems(Map<Key, ChangeSet> changeSets);
 }

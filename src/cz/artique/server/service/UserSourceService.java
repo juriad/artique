@@ -16,7 +16,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 import cz.artique.server.meta.source.RegionMeta;
 import cz.artique.server.meta.source.SourceMeta;
 import cz.artique.server.meta.source.UserSourceMeta;
-import cz.artique.server.utils.ServerUtils;
+import cz.artique.server.utils.KeyGen;
 import cz.artique.shared.model.config.ConfigKey;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
@@ -100,6 +100,7 @@ public class UserSourceService {
 				defaultLabels = new ArrayList<Key>();
 			}
 			defaultLabels.add(l.getKey());
+			userSource.setDefaultLabels(defaultLabels);
 
 			handleRegionChange(userSource);
 
@@ -122,7 +123,7 @@ public class UserSourceService {
 		Transaction tx = Datastore.beginTransaction();
 		UserSource theUserSource = null;
 		try {
-			Key key = ServerUtils.genKey(userSource);
+			Key key = KeyGen.genKey(userSource);
 			theUserSource = Datastore.getOrNull(tx, UserSourceMeta.get(), key);
 			if (theUserSource == null) {
 				userSource.setKey(key);
@@ -144,7 +145,7 @@ public class UserSourceService {
 		String labelName = KeyFactory.keyToString(userSource.getSource());
 		final Label l = new Label(userSource.getUser(), labelName);
 		l.setLabelType(LabelType.USER_SOURCE);
-		labelKey = ServerUtils.genKey(l);
+		labelKey = KeyGen.genKey(l);
 		l.setKey(labelKey);
 		Datastore.put(l);
 		return l;
@@ -206,6 +207,7 @@ public class UserSourceService {
 				source.setEnabled(source.getUsage() > 0);
 			}
 			Datastore.put(tx, source);
+			tx.commit();
 		} catch (Exception e) {
 			throw new TransactionException();
 		} finally {
@@ -230,7 +232,7 @@ public class UserSourceService {
 
 		User user = UserServiceFactory.getUserService().getCurrentUser();
 		UserSource us = new UserSource(user, manualSource, "does_not_matter");
-		us.setKey(ServerUtils.genKey(us));
+		us.setKey(KeyGen.genKey(us));
 
 		UserSource userSource =
 			Datastore.getOrNull(UserSourceMeta.get(), us.getKey());

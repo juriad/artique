@@ -1,17 +1,17 @@
 package cz.artique.server.meta.label;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-27 12:39:22")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-28 21:17:46")
 /** */
 public final class FilterMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.label.Filter> {
 
     /** */
-    public final org.slim3.datastore.CollectionAttributeMeta<cz.artique.shared.model.label.Filter, java.util.List<com.google.appengine.api.datastore.Key>, com.google.appengine.api.datastore.Key> filters = new org.slim3.datastore.CollectionAttributeMeta<cz.artique.shared.model.label.Filter, java.util.List<com.google.appengine.api.datastore.Key>, com.google.appengine.api.datastore.Key>(this, "filters", "filters", java.util.List.class);
+    public final org.slim3.datastore.CollectionUnindexedAttributeMeta<cz.artique.shared.model.label.Filter, java.util.List<com.google.appengine.api.datastore.Key>, com.google.appengine.api.datastore.Key> filters = new org.slim3.datastore.CollectionUnindexedAttributeMeta<cz.artique.shared.model.label.Filter, java.util.List<com.google.appengine.api.datastore.Key>, com.google.appengine.api.datastore.Key>(this, "filters", "filters", java.util.List.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Filter, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Filter, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
 
     /** */
-    public final org.slim3.datastore.CollectionAttributeMeta<cz.artique.shared.model.label.Filter, java.util.List<com.google.appengine.api.datastore.Key>, com.google.appengine.api.datastore.Key> labels = new org.slim3.datastore.CollectionAttributeMeta<cz.artique.shared.model.label.Filter, java.util.List<com.google.appengine.api.datastore.Key>, com.google.appengine.api.datastore.Key>(this, "labels", "labels", java.util.List.class);
+    public final org.slim3.datastore.CollectionUnindexedAttributeMeta<cz.artique.shared.model.label.Filter, java.util.List<com.google.appengine.api.datastore.Key>, com.google.appengine.api.datastore.Key> labels = new org.slim3.datastore.CollectionUnindexedAttributeMeta<cz.artique.shared.model.label.Filter, java.util.List<com.google.appengine.api.datastore.Key>, com.google.appengine.api.datastore.Key>(this, "labels", "labels", java.util.List.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Filter, cz.artique.shared.model.label.FilterType> type = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Filter, cz.artique.shared.model.label.FilterType>(this, "type", "type", cz.artique.shared.model.label.FilterType.class);
@@ -57,8 +57,8 @@ public final class FilterMeta extends org.slim3.datastore.ModelMeta<cz.artique.s
         } else {
             entity = new com.google.appengine.api.datastore.Entity(kind);
         }
-        entity.setProperty("filters", m.getFilters());
-        entity.setProperty("labels", m.getLabels());
+        entity.setUnindexedProperty("filters", m.getFilters());
+        entity.setUnindexedProperty("labels", m.getLabels());
         entity.setProperty("type", enumToString(m.getType()));
         entity.setProperty("user", m.getUser());
         entity.setProperty("version", m.getVersion());

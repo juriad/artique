@@ -7,7 +7,7 @@ public enum LabelType {
 
 	private final String type;
 
-	LabelType(String type) {
+	private LabelType(String type) {
 		this.type = type;
 	}
 

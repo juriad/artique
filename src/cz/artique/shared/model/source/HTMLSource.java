@@ -18,7 +18,4 @@ public abstract class HTMLSource extends Source implements Serializable, GenKey 
 	public HTMLSource(Link url) {
 		super(url);
 	}
-
-	public abstract RegionType getRegionType();
-
 }

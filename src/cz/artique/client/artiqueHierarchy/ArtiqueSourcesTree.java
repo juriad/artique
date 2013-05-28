@@ -58,7 +58,8 @@ public class ArtiqueSourcesTree
 					TreeItem inTree = findInTree(findInTree, getRootItem());
 					if (inTree != null) {
 						allSourcesWidgets
-							.add((HierarchyTreeWidget<UserSource>) inTree.getWidget());
+							.add((HierarchyTreeWidget<UserSource>) inTree
+								.getWidget());
 					}
 				}
 			}
@@ -86,19 +87,45 @@ public class ArtiqueSourcesTree
 		return labels;
 	}
 
-	// TODO list
-	protected void refreshAll(TreeItem rootItem) {
-		HierarchyTreeWidget<UserSource> w = getHierarchyWidget(rootItem);
-		w.refresh();
+	/**
+	 * Returns number of shown
+	 * 
+	 * @param rootItem
+	 * @return
+	 */
+	protected boolean refreshAll(TreeItem rootItem) {
+		boolean visible = rootItem.equals(getRootItem());
 		for (int i = 0; i < rootItem.getChildCount(); i++) {
-			refreshAll(rootItem.getChild(i));
+			boolean v = refreshAll(rootItem.getChild(i));
+			if (v) {
+				visible = true;
+			}
 		}
+		HierarchyTreeWidget<UserSource> w = getHierarchyWidget(rootItem);
+		boolean v2 = w.refresh();
+		if (v2) {
+			visible = true;
+		}
+		rootItem.setVisible(visible || showDisabled);
+		return visible;
 	}
 
 	@Override
 	protected void initialized() {
 		observeHistoryChange();
 		expand(2);
+		refreshAll(getRootItem());
+	}
+
+	public boolean isShowingDisabled() {
+		return showDisabled;
+	}
+
+	boolean showDisabled = false;
+
+	public void toggleDisabled() {
+		showDisabled = !showDisabled;
+		refreshAll(getRootItem());
 	}
 
 }

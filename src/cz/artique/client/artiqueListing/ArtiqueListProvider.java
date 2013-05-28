@@ -7,7 +7,7 @@ import cz.artique.client.artiqueItems.ModifiedEvent;
 import cz.artique.client.artiqueItems.ModifiedHandler;
 import cz.artique.client.listing.InfiniteList;
 import cz.artique.client.manager.Managers;
-import cz.artique.shared.items.ListingUpdate;
+import cz.artique.shared.items.ListingResponse;
 import cz.artique.shared.model.config.ClientConfigKey;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.ListFilter;
@@ -25,7 +25,7 @@ public class ArtiqueListProvider extends AbstractListDataProvider
 	}
 
 	@Override
-	protected void applyFetchedData(ListingUpdate<UserItem> result) {
+	protected void applyFetchedData(ListingResponse<UserItem> result) {
 		super.applyFetchedData(result);
 		if (canceled) {
 			return;

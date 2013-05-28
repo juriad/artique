@@ -3,6 +3,7 @@ package cz.artique.shared.model.item;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Text;
@@ -17,13 +18,16 @@ public class PageChangeItem extends Item implements Serializable {
 	/**
 	 * Full diff of change
 	 */
+	@Attribute(unindexed = true)
 	private Text diff;
 
+	@Attribute(unindexed = true)
 	private ContentType diffType;
 
 	/**
 	 * Diff was created against page of this date
 	 */
+	@Attribute(unindexed = true)
 	private Date comparedTo;
 
 	public PageChangeItem() {}

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class ListingUpdate<E> implements Serializable {
+public class ListingResponse<E> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private List<E> head;
@@ -12,9 +12,9 @@ public class ListingUpdate<E> implements Serializable {
 	private Date fetched;
 	private boolean endReached;
 
-	public ListingUpdate() {}
+	public ListingResponse() {}
 
-	public ListingUpdate(List<E> head, List<E> tail, Date fetched,
+	public ListingResponse(List<E> head, List<E> tail, Date fetched,
 			boolean endReached) {
 		this.setHead(head);
 		this.setTail(tail);

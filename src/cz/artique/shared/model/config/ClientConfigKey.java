@@ -11,7 +11,7 @@ public enum ClientConfigKey implements GenKey, Serializable {
 	SERVICE_TIMEOUT("service.timeout", new Value(2000)),
 	LIST_INIT_SIZE("list.init_size", new Value(30)),
 	LIST_FETCH_STEP("list.fetch_step", new Value(20)),
-	LIST_FETCH_INTERVAL("list.fetch_interval", new Value(5000)),
+	LIST_FETCH_INTERVAL("list.fetch_interval", new Value(5000*100)),
 	HISTORY_MAX_ITEMS("history.max_items", new Value(100)),
 	MESSENGER_MAX_ITEMS("messanger.max_items", new Value(100));
 

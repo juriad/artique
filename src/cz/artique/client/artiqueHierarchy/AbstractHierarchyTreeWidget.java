@@ -24,8 +24,9 @@ public class AbstractHierarchyTreeWidget<E extends HasHierarchy & HasName>
 		this.hierarchy = hierarchy;
 	}
 
-	public void refresh() {
+	public boolean refresh() {
 		// do nothing
+		return true;
 	}
 
 	public Hierarchy<E> getHierarchy() {
@@ -43,9 +44,7 @@ public class AbstractHierarchyTreeWidget<E extends HasHierarchy & HasName>
 			anchor.addClickHandler(clickHandler);
 		}
 		if (tooltip != null) {
-			Tooltip tt = new Tooltip();
-			tt.setPosition(TooltipPosition.RIGHT_MIDDLE);
-			tt.setText(tooltip);
+			Tooltip tt = addTooltip(tooltip);
 			tt.attachTo(anchor);
 		}
 		return anchor;
@@ -59,9 +58,7 @@ public class AbstractHierarchyTreeWidget<E extends HasHierarchy & HasName>
 			label.addClickHandler(clickHandler);
 		}
 		if (tooltip != null) {
-			Tooltip tt = new Tooltip();
-			tt.setPosition(TooltipPosition.RIGHT_MIDDLE);
-			tt.setText(tooltip);
+			Tooltip tt = addTooltip(tooltip);
 			tt.attachTo(label);
 		}
 		return label;
@@ -69,19 +66,29 @@ public class AbstractHierarchyTreeWidget<E extends HasHierarchy & HasName>
 
 	protected Image createImage(FlowPanel panel, ImageResource resource,
 			ClickHandler clickHandler, String tooltip) {
-		Image image = new Image(resource);
+		Image image;
+		if (resource != null) {
+			image = new Image(resource);
+		} else {
+			image = new Image();
+		}
 		image.setStylePrimaryName("hiddenAction");
 		panel.add(image);
 		if (clickHandler != null) {
 			image.addClickHandler(clickHandler);
 		}
 		if (tooltip != null) {
-			Tooltip tt = new Tooltip();
-			tt.setPosition(TooltipPosition.RIGHT_MIDDLE);
-			tt.setText(tooltip);
+			Tooltip tt = addTooltip(tooltip);
 			tt.attachTo(image);
 		}
 		return image;
+	}
+
+	protected Tooltip addTooltip(String tooltip) {
+		Tooltip tt = new Tooltip();
+		tt.setPosition(TooltipPosition.RIGHT_MIDDLE);
+		tt.setText(tooltip);
+		return tt;
 	}
 
 	protected boolean selected = false;

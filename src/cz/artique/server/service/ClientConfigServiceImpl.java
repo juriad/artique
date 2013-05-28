@@ -13,7 +13,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.artique.client.service.ClientConfigService;
 import cz.artique.server.meta.config.ClientConfigMeta;
-import cz.artique.server.utils.ServerUtils;
+import cz.artique.server.utils.KeyGen;
 import cz.artique.shared.model.config.ClientConfig;
 import cz.artique.shared.model.config.ClientConfigKey;
 import cz.artique.shared.model.config.ClientConfigValue;
@@ -101,7 +101,7 @@ public class ClientConfigServiceImpl implements ClientConfigService {
 		for (ClientConfigValue config : configs) {
 			ClientConfigKey configKey = config.getKey();
 			configKey.setUser(user);
-			Key key = ServerUtils.genKey(configKey);
+			Key key = KeyGen.genKey(configKey);
 			configKey.setUser(null);
 			if (config.getDefaultValue().equals(config.getValue())
 				|| config.getValue() == null) {

@@ -10,7 +10,7 @@ import org.slim3.datastore.Datastore;
 import com.google.appengine.api.datastore.Key;
 
 import cz.artique.server.meta.config.ConfigMeta;
-import cz.artique.server.utils.ServerUtils;
+import cz.artique.server.utils.KeyGen;
 import cz.artique.shared.model.config.Config;
 import cz.artique.shared.model.config.ConfigKey;
 import cz.artique.shared.model.config.ConfigValue;
@@ -96,7 +96,7 @@ public enum ConfigService {
 			new HashMap<Key, ConfigValue<?>>();
 		List<Key> keysToDelete = new ArrayList<Key>();
 		for (ConfigValue<?> config : changedConfigs) {
-			Key key = ServerUtils.genKey(config.getKey());
+			Key key = KeyGen.genKey(config.getKey());
 			if (config.getDefaultValue().equals(config.getValue())
 				|| config.getValue() == null) {
 				keysToDelete.add(key);

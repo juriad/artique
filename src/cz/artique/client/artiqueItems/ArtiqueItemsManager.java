@@ -20,8 +20,8 @@ import cz.artique.client.manager.Managers;
 import cz.artique.client.service.ClientItemService;
 import cz.artique.client.service.ClientItemServiceAsync;
 import cz.artique.shared.items.ChangeSet;
-import cz.artique.shared.items.ListingUpdate;
-import cz.artique.shared.items.ListingUpdateRequest;
+import cz.artique.shared.items.ListingResponse;
+import cz.artique.shared.items.ListingRequest;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Label;
 
@@ -199,8 +199,8 @@ public class ArtiqueItemsManager
 		}
 	}
 
-	public void getItems(final ListingUpdateRequest request,
-			final AsyncCallback<ListingUpdate<UserItem>> ping) {
+	public void getItems(final ListingRequest request,
+			final AsyncCallback<ListingResponse<UserItem>> ping) {
 		Managers.LABELS_MANAGER.ready(new AsyncCallback<Void>() {
 
 			public void onFailure(Throwable caught) {
@@ -236,5 +236,22 @@ public class ArtiqueItemsManager
 				handlers.remove(handler);
 			}
 		};
+	}
+
+	public void addManualItem(UserItem item, final AsyncCallback<UserItem> ping) {
+		service.addManualItem(item, new AsyncCallback<UserItem>() {
+
+			public void onFailure(Throwable caught) {
+				if (ping != null) {
+					ping.onFailure(caught);
+				}
+			}
+
+			public void onSuccess(UserItem result) {
+				if (ping != null) {
+					ping.onSuccess(result);
+				}
+			}
+		});
 	}
 }

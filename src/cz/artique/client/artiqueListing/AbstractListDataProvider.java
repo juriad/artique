@@ -9,8 +9,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import cz.artique.client.listing.InfiniteList;
 import cz.artique.client.listing.InfiniteListDataProvider;
 import cz.artique.client.manager.Managers;
-import cz.artique.shared.items.ListingUpdate;
-import cz.artique.shared.items.ListingUpdateRequest;
+import cz.artique.shared.items.ListingResponse;
+import cz.artique.shared.items.ListingRequest;
 import cz.artique.shared.model.config.ClientConfigKey;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.ListFilter;
@@ -129,12 +129,12 @@ public class AbstractListDataProvider
 		}
 		lastFetchProbeDate = new Date();
 		lastFetchProbeCount = count;
-		ListingUpdateRequest request =
-			new ListingUpdateRequest(listFilter, first, last, lastFetch, count);
+		ListingRequest request =
+			new ListingRequest(listFilter, first, last, count);
 		Managers.ITEMS_MANAGER.getItems(request,
-			new AsyncCallback<ListingUpdate<UserItem>>() {
+			new AsyncCallback<ListingResponse<UserItem>>() {
 
-				public void onSuccess(ListingUpdate<UserItem> result) {
+				public void onSuccess(ListingResponse<UserItem> result) {
 					lastFetch = result.getFetched();
 					if (!endReached) {
 						endReached = result.isEndReached();
@@ -151,7 +151,7 @@ public class AbstractListDataProvider
 			});
 	}
 
-	protected void applyFetchedData(ListingUpdate<UserItem> result) {
+	protected void applyFetchedData(ListingResponse<UserItem> result) {
 		if (canceled) {
 			return;
 		}

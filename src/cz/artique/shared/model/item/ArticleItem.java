@@ -2,6 +2,7 @@ package cz.artique.shared.model.item;
 
 import java.io.Serializable;
 
+import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 
 import cz.artique.shared.model.source.Source;
@@ -14,6 +15,7 @@ public class ArticleItem extends Item implements Serializable {
 	/**
 	 * Author of article
 	 */
+	@Attribute(unindexed = true)
 	private String author;
 
 	public ArticleItem() {}

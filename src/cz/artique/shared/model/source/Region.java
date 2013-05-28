@@ -21,6 +21,7 @@ public class Region implements Serializable {
 	/**
 	 * Name of this region, not personalizable
 	 */
+	@Attribute(unindexed = true)
 	private String name;
 
 	/**
@@ -39,6 +40,9 @@ public class Region implements Serializable {
 	 * Reference to HTMLSource
 	 */
 	private Key htmlSource;
+
+	// TODO nice to have: attribute last used
+	// TODO nice to have: attribute usage
 
 	public Region() {}
 

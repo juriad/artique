@@ -15,6 +15,7 @@ public interface LabelAppearance {
 
 	String getUnAssignedTextColor();
 
+	// TODO getVisibilityLevel: presunout do label
 	VisibilityLevel getVisibilityLevel();
 
 }

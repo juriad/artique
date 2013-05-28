@@ -22,4 +22,25 @@ public interface Resources extends ClientBundle {
 
 	@Source("icons/edit-clear.png")
 	ImageResource clear();
+
+	@Source("icons/mail-mark-not-junk.png")
+	ImageResource hideDisabled();
+
+	@Source("icons/mail-mark-junk.png")
+	ImageResource showDisabled();
+
+	@Source("icons/dialog-error.png")
+	ImageResource error();
+
+	@Source("icons/dialog-warning.png")
+	ImageResource warning();
+
+	@Source("icons/dialog-information.png")
+	ImageResource info();
+
+	@Source("icons/reload.png")
+	ImageResource reload();
+
+	@Source("icons/add.png")
+	ImageResource add();
 }

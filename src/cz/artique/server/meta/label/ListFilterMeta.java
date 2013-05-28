@@ -1,6 +1,6 @@
 package cz.artique.server.meta.label;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-27 12:39:21")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-28 21:17:47")
 /** */
 public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.label.ListFilter> {
 
@@ -79,7 +79,7 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         }
         entity.setUnindexedProperty("endTo", m.getEndTo());
         entity.setProperty("exportAlias", m.getExportAlias());
-        entity.setProperty("filter", m.getFilter());
+        entity.setUnindexedProperty("filter", m.getFilter());
         entity.setProperty("hierarchy", m.getHierarchy());
         entity.setProperty("name", m.getName());
         entity.setUnindexedProperty("order", enumToString(m.getOrder()));

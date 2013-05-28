@@ -9,7 +9,6 @@ public enum BackupLevel {
 
 	private BackupLevel(boolean inlineCss) {
 		this.inlineCss = inlineCss;
-
 	}
 
 	public boolean isInlineCss() {

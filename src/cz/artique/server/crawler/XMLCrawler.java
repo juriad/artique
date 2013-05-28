@@ -84,6 +84,8 @@ public class XMLCrawler extends AbstractCrawler<XMLSource, ArticleItem> {
 			throw new CrawlerException("Cannot parse feed", e);
 		} catch (IOException e) {
 			throw new CrawlerException("Cannot open connection", e);
+		} catch (Exception e) {
+			throw new CrawlerException("Unknown exception", e);
 		}
 	}
 

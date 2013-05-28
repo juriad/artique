@@ -42,4 +42,10 @@ public interface ArtiqueMessages extends Messages {
 	@DefaultMessage("Check for source {0} has been planned;\n"
 		+ "it will be performed withing a minute.")
 	String sourceCheckPlanned(String name);
+
+	@DefaultMessage("Manual item {0} has been created.")
+	String manualItemCreated(String title);
+
+	@DefaultMessage("Failed to create manual item {0}.")
+	String errorCreatingManualItem(String title);
 }

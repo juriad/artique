@@ -23,10 +23,13 @@ public class Config implements Serializable, GenKey, HasKey<Key> {
 
 	private String configKey;
 
+	@Attribute(unindexed = true)
 	private int intValue;
 
+	@Attribute(unindexed = true)
 	private double doubleValue;
 
+	@Attribute(unindexed = true)
 	private String stringValue;
 
 	public Config() {}

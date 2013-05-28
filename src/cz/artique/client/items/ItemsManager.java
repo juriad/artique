@@ -3,8 +3,8 @@ package cz.artique.client.items;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import cz.artique.client.manager.Manager;
-import cz.artique.shared.items.ListingUpdate;
-import cz.artique.shared.items.ListingUpdateRequest;
+import cz.artique.shared.items.ListingResponse;
+import cz.artique.shared.items.ListingRequest;
 
 public interface ItemsManager<E, F> extends Manager {
 	void labelAdded(E userItem, F label, AsyncCallback<E> ping);
@@ -13,6 +13,6 @@ public interface ItemsManager<E, F> extends Manager {
 
 	void readSet(E userItem, boolean read, AsyncCallback<E> ping);
 
-	void getItems(ListingUpdateRequest request,
-			AsyncCallback<ListingUpdate<E>> ping);
+	void getItems(ListingRequest request,
+			AsyncCallback<ListingResponse<E>> ping);
 }

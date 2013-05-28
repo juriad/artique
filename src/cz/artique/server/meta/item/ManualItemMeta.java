@@ -1,17 +1,17 @@
 package cz.artique.server.meta.item;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-27 12:39:22")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-28 21:31:27")
 /** */
 public final class ManualItemMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.item.ManualItem> {
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, java.util.Date> added = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, java.util.Date>(this, "added", "added", java.util.Date.class);
+    public final org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.item.ManualItem, java.util.Date> added = new org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.item.ManualItem, java.util.Date>(this, "added", "added", java.util.Date.class);
 
     /** */
     public final org.slim3.datastore.UnindexedAttributeMeta<cz.artique.shared.model.item.ManualItem, com.google.appengine.api.datastore.Text> content = new org.slim3.datastore.UnindexedAttributeMeta<cz.artique.shared.model.item.ManualItem, com.google.appengine.api.datastore.Text>(this, "content", "content", com.google.appengine.api.datastore.Text.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, cz.artique.shared.model.item.ContentType> contentType = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, cz.artique.shared.model.item.ContentType>(this, "contentType", "contentType", cz.artique.shared.model.item.ContentType.class);
+    public final org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.item.ManualItem, cz.artique.shared.model.item.ContentType> contentType = new org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.item.ManualItem, cz.artique.shared.model.item.ContentType>(this, "contentType", "contentType", cz.artique.shared.model.item.ContentType.class);
 
     /** */
     public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.item.ManualItem> hash = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.item.ManualItem>(this, "hash", "hash");
@@ -20,16 +20,16 @@ public final class ManualItemMeta extends org.slim3.datastore.ModelMeta<cz.artiq
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, java.util.Date> published = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, java.util.Date>(this, "published", "published", java.util.Date.class);
+    public final org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.item.ManualItem, java.util.Date> published = new org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.item.ManualItem, java.util.Date>(this, "published", "published", java.util.Date.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, com.google.appengine.api.datastore.Key> source = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, com.google.appengine.api.datastore.Key>(this, "source", "source", com.google.appengine.api.datastore.Key.class);
 
     /** */
-    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.item.ManualItem> title = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.item.ManualItem>(this, "title", "title");
+    public final org.slim3.datastore.StringUnindexedAttributeMeta<cz.artique.shared.model.item.ManualItem> title = new org.slim3.datastore.StringUnindexedAttributeMeta<cz.artique.shared.model.item.ManualItem>(this, "title", "title");
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, com.google.appengine.api.datastore.Link> url = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, com.google.appengine.api.datastore.Link>(this, "url", "url", com.google.appengine.api.datastore.Link.class);
+    public final org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.item.ManualItem, com.google.appengine.api.datastore.Link> url = new org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.item.ManualItem, com.google.appengine.api.datastore.Link>(this, "url", "url", com.google.appengine.api.datastore.Link.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.ManualItem, java.lang.Long>(this, "version", "version", java.lang.Long.class);
@@ -73,14 +73,14 @@ public final class ManualItemMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         } else {
             entity = new com.google.appengine.api.datastore.Entity(kind);
         }
-        entity.setProperty("added", m.getAdded());
+        entity.setUnindexedProperty("added", m.getAdded());
         entity.setUnindexedProperty("content", m.getContent());
-        entity.setProperty("contentType", enumToString(m.getContentType()));
+        entity.setUnindexedProperty("contentType", enumToString(m.getContentType()));
         entity.setProperty("hash", m.getHash());
-        entity.setProperty("published", m.getPublished());
+        entity.setUnindexedProperty("published", m.getPublished());
         entity.setProperty("source", m.getSource());
-        entity.setProperty("title", m.getTitle());
-        entity.setProperty("url", m.getUrl());
+        entity.setUnindexedProperty("title", m.getTitle());
+        entity.setUnindexedProperty("url", m.getUrl());
         entity.setProperty("version", m.getVersion());
         entity.setProperty("slim3.schemaVersion", 1);
         entity.setProperty("slim3.classHierarchyList", classHierarchyList);

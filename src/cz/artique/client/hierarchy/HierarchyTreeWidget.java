@@ -7,7 +7,7 @@ import cz.artique.shared.utils.HasName;
 
 public interface HierarchyTreeWidget<E extends HasHierarchy & HasName>
 		extends IsWidget {
-	void refresh();
+	boolean refresh();
 
 	Hierarchy<E> getHierarchy();
 
