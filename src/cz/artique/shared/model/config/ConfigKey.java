@@ -8,7 +8,13 @@ public enum ConfigKey implements GenKey {
 	DIFF_EDIT_COST("crawler.diff.edit-cost", ConfigType.INT, 10),
 	DIFF_TIMEOUT("crawler.diff.timeout", ConfigType.DOUBLE, 0.1),
 	MANUAL_SOURCE_NAME("source.manual.name", ConfigType.STRING, "manual"),
-	EXPORT_FETCH_COUNT("export.fetch-count", ConfigType.INT, 30);
+	EXPORT_FETCH_COUNT("export.fetch-count", ConfigType.INT, 30),
+	CRAWLER_CHECK_INTERVAL_FIRST("crawler.check-interval.first",
+			ConfigType.INT, 60 * 60 * 1000),
+	CRAWLER_CHECK_INTERVAL_MIN("crawler.check-interval.min", ConfigType.INT,
+			10 * 60 * 1000),
+	CRAWLER_CHECK_INTERVAL_MAX("crawler.check-interval.max", ConfigType.INT,
+			12 * 60 * 60 * 1000);
 
 	private final ConfigType type;
 	private final String key;

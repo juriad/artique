@@ -6,10 +6,10 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.artique.client.service.ClientLabelService;
+import cz.artique.server.validation.Validator;
 import cz.artique.shared.model.label.Label;
-import cz.artique.shared.utils.PropertyEmptyException;
-import cz.artique.shared.utils.PropertyTooLongException;
-import cz.artique.shared.utils.SecurityBreachException;
+import cz.artique.shared.model.label.LabelType;
+import cz.artique.shared.validation.ValidationException;
 
 public class ClientLabelServiceImpl implements ClientLabelService {
 
@@ -19,15 +19,13 @@ public class ClientLabelServiceImpl implements ClientLabelService {
 		return ls.getAllLabels(user);
 	}
 
-	public Label addLabel(Label label)
-			throws NullPointerException, PropertyTooLongException,
-			PropertyEmptyException, SecurityBreachException {
-		if (label == null) {
-			throw new NullPointerException();
-		}
-		Sanitizer.checkUser("user", label.getUser());
-		Sanitizer.checkStringEmpty("name", label.getName());
-		Sanitizer.checkStringLength("name", label.getName());
+	public Label addLabel(Label label) throws ValidationException {
+		Validator<AddLabel> validator = new Validator<AddLabel>();
+		validator.checkNullability(AddLabel.LABEL, false, label);
+		User user = UserServiceFactory.getUserService().getCurrentUser();
+		label.setUser(user);
+		label.setLabelType(LabelType.USER_DEFINED);
+		label.setName(validator.checkLabel(AddLabel.NAME, label.getName()));
 
 		LabelService ls = new LabelService();
 		return ls.creatIfNotExist(label);

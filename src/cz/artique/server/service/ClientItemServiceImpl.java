@@ -10,47 +10,71 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.artique.client.service.ClientItemService;
+import cz.artique.server.validation.Validator;
 import cz.artique.shared.items.ChangeSet;
-import cz.artique.shared.items.ListingResponse;
 import cz.artique.shared.items.ListingRequest;
+import cz.artique.shared.items.ListingResponse;
 import cz.artique.shared.model.item.ContentType;
+import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.item.UserItem;
-import cz.artique.shared.utils.PropertyEmptyException;
-import cz.artique.shared.utils.PropertyTooLongException;
-import cz.artique.shared.utils.SecurityBreachException;
+import cz.artique.shared.model.label.Label;
+import cz.artique.shared.validation.Issue;
+import cz.artique.shared.validation.IssueType;
 import cz.artique.shared.validation.ValidationException;
 
 public class ClientItemServiceImpl implements ClientItemService {
 
-	public ListingResponse<UserItem> getItems(ListingRequest request)
-			throws ValidationException {
+	public ListingResponse<UserItem> getItems(ListingRequest request) {
+		if (request == null) {
+			request = new ListingRequest();
+		}
 		ItemService is = new ItemService();
 		User user = UserServiceFactory.getUserService().getCurrentUser();
 		return is.getItems(user, request);
 	}
 
-	public UserItem addManualItem(UserItem item)
-			throws NullPointerException, PropertyTooLongException,
-			PropertyEmptyException, SecurityBreachException {
-		if (item == null) {
-			throw new NullPointerException("Adding manual item may not be null");
+	public UserItem addManualItem(UserItem item) throws ValidationException {
+		// FIXME call plan backup
+		Validator<AddManualItem> validator = new Validator<AddManualItem>();
+		validator.checkNullability(AddManualItem.USER_ITEM, false, item);
+		User user = UserServiceFactory.getUserService().getCurrentUser();
+		item.setUser(user);
+		item.setBackupBlobKey(null);
+		item.setAdded(new Date());
+
+		LabelService ls = new LabelService();
+		List<Label> labelsByKeys = ls.getLabelsByKeys(item.getLabels());
+		for (Label l : labelsByKeys) {
+			validator.checkUser(AddManualItem.LABELS, user, l.getUser());
 		}
 
-		Sanitizer.checkStringEmpty("title", item.getItemObject().getTitle());
-		Sanitizer.checkTextEmpty("content", item.getItemObject().getContent());
-		Sanitizer.checkUrl("url", item.getItemObject().getUrl());
-		item.getItemObject().setContent(
-			Sanitizer.trimText(item.getItemObject().getContent()));
-		item.getItemObject().setContentType(ContentType.PLAIN_TEXT);
-		item.setAdded(new Date());
-		item.getItemObject().setPublished(null);
-		item.getItemObject().setHash(null);
+		validator.checkNullability(AddManualItem.ITEM, false,
+			item.getItemObject());
+		if (!(item.getItemObject() instanceof ManualItem)) {
+			throw new ValidationException(new Issue<AddManualItem>(
+				AddManualItem.ITEM, IssueType.WRONG_TYPE));
+		}
+		ManualItem mi = (ManualItem) item.getItemObject();
+		mi.setAdded(new Date());
+		mi.setContent(validator.checkText(AddManualItem.ITEM_CONTENT,
+			mi.getContent(), true, true));
+		mi.setHash(null);
+		mi.setPublished(null);
+		mi.setTitle(validator.checkString(AddManualItem.ITEM_TITLE,
+			mi.getTitle(), false, false));
+		mi
+			.setUrl(validator.checkUrl(AddManualItem.ITEM_URL, mi.getUrl(),
+				false));
+		mi.setContentType(ContentType.PLAIN_TEXT);
 
 		ItemService is = new ItemService();
-		return is.addManualItem(item);
+		is.addManualItem(item);
+		return item;
 	}
 
 	public Map<Key, UserItem> updateItems(Map<Key, ChangeSet> changeSets) {
+		// FIXME validate updateItems
+		// FIXME call plan backup
 		List<Key> itemKeys = new ArrayList<Key>();
 		for (Key itemKey : changeSets.keySet()) {
 			ChangeSet change = changeSets.get(itemKey);

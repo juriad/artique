@@ -67,13 +67,16 @@ public class PageChangeCrawler
 		for (Region region : byRegion.keySet()) {
 			Document doc2 = doc.clone();
 			Elements filteredPage = filterPage(region, doc2);
-			handleByRegion(region, filteredPage, byRegion.get(region));
+			int added =
+				handleByRegion(region, filteredPage, byRegion.get(region));
+			count += added;
 		}
 
 		return count;
 	}
 
-	private void handleByRegion(Region region, Elements filteredPage,
+	// FIXME move datastore to service
+	private int handleByRegion(Region region, Elements filteredPage,
 			List<UserSource> list) {
 		List<UserSource> firstTime = new ArrayList<UserSource>();
 		List<UserSource> older = new ArrayList<UserSource>();
@@ -91,6 +94,8 @@ public class PageChangeCrawler
 			}
 		}
 
+		int added = 0;
+
 		String newContent = filteredPage.text();
 		if (data != null) {
 			String oldContent = data.getContent().getValue();
@@ -106,6 +111,7 @@ public class PageChangeCrawler
 					userItems.add(userItem);
 				}
 				Datastore.put(userItems);
+				added = 1;
 			}
 		} else {
 			if (firstTime.size() > 0) {
@@ -122,6 +128,8 @@ public class PageChangeCrawler
 			}
 			Datastore.put(firstTime);
 		}
+
+		return added;
 	}
 
 	protected PageChangeItem getPageChangeItem(Elements page, String diff) {

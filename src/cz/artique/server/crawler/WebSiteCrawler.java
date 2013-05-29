@@ -127,6 +127,7 @@ public class WebSiteCrawler extends HTMLCrawler<WebSiteSource, LinkItem> {
 		return count;
 	}
 
+	// FIXME move datastore to service
 	@Override
 	protected List<LinkItem> getCollidingItems(LinkItem item) {
 		LinkItemMeta meta = LinkItemMeta.get();

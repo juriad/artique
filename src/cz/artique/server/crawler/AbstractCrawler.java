@@ -16,6 +16,7 @@ import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.Stats;
 import cz.artique.shared.model.source.UserSource;
 
+// FIXME move datastore to service
 public abstract class AbstractCrawler<E extends Source, F extends Item>
 		extends Fetcher implements Crawler<E> {
 

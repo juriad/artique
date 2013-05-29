@@ -1,12 +1,9 @@
 package cz.artique.server.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.jsoup.nodes.Element;
-import org.jsoup.parser.Tag;
-import org.jsoup.select.Selector;
-import org.slim3.datastore.Datastore;
 import org.slim3.datastore.ModelMeta;
 
 import com.google.appengine.api.datastore.Key;
@@ -14,22 +11,37 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.artique.client.service.ClientSourceService;
-import cz.artique.server.meta.source.SourceMeta;
+import cz.artique.server.utils.KeyGen;
 import cz.artique.server.utils.ServerSourceType;
+import cz.artique.server.validation.Validator;
+import cz.artique.shared.model.label.Label;
+import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.SourceType;
 import cz.artique.shared.model.source.UserSource;
-import cz.artique.shared.utils.PropertyEmptyException;
-import cz.artique.shared.utils.PropertyValueException;
+import cz.artique.shared.validation.Issue;
+import cz.artique.shared.validation.IssueType;
+import cz.artique.shared.validation.ValidationException;
 
 public class ClientSourceServiceImpl implements ClientSourceService {
 
 	@SuppressWarnings("unchecked")
-	public <E extends Source> E addSource(E source)
-			throws PropertyValueException, PropertyEmptyException,
-			NullPointerException {
-		checkSouce(source);
+	public <E extends Source> E addSource(E source) throws ValidationException {
+		Validator<AddSource> validator = new Validator<AddSource>();
+		validator.checkNullability(AddSource.SOURCE, false, source);
+		validator.checkReachability(AddSource.URL, source.getUrl(), false);
+		source.setUsage(0);
+		source.setEnabled(false);
+		source.setEnqued(false);
+		source.setErrorSequence(0);
+		source.setLastCheck(null);
+		source.setNextCheck(null);
+		if (source instanceof ManualSource) {
+			throw new ValidationException(new Issue<AddSource>(AddSource.TYPE,
+				IssueType.ALREADY_EXISTS));
+		}
+
 		SourceService ss = new SourceService();
 		ServerSourceType serverSourceType =
 			ServerSourceType.get(SourceType.get(source.getClass()));
@@ -37,92 +49,149 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 			(ModelMeta<E>) serverSourceType.getMeta());
 	}
 
-	private void checkSouce(Source source)
-			throws PropertyEmptyException, PropertyValueException,
-			NullPointerException {
-		if (source == null) {
-			throw new NullPointerException();
-		}
-		Sanitizer.checkUrl("url", source.getUrl());
-		Sanitizer.expectValue("usage", source.getUsage(), 0);
-		Sanitizer.expectValue("enabled", source.isEnabled(), false);
-		Sanitizer.expectValue("enqued", source.isEnqued(), false);
-		Sanitizer.expectValue("errorSequence", source.getErrorSequence(), 0);
-		Sanitizer.expectValue("lastCheck", source.getLastCheck(), null);
-		Sanitizer.expectValue("nextCheck", source.getNextCheck(), null);
-	}
+	public List<Region> getRegions(Key source) throws ValidationException {
+		Validator<GetRegions> validator = new Validator<GetRegions>();
+		validator.checkNullability(GetRegions.SOURCE, false, source);
 
-	public List<Region> getRegions(Key source) throws NullPointerException {
-		if (source == null) {
-			throw new NullPointerException();
-		}
 		SourceService ss = new SourceService();
-		return ss.getRegions(source);
+		return ss.getAllRegions(source);
 	}
 
 	public UserSource addUserSource(UserSource userSource)
-			throws NullPointerException, PropertyEmptyException,
-			PropertyValueException {
-		if (userSource == null) {
-			throw new NullPointerException();
-		}
-		Sanitizer.checkUser("user", userSource.getUser());
-		Sanitizer.checkStringLength("name", userSource.getName());
-		Sanitizer.checkStringEmpty("name", userSource.getName());
-		if (userSource.getSourceType() == null) {
-			throw new PropertyValueException("source type", "null",
-				"is not set");
-		}
-		SourceService ss = new SourceService();
-		Source sourceObject = ss.getSourceByKey(userSource.getSource());
-		if (sourceObject == null) {
-			throw new PropertyValueException("source", "null", "does not exist");
-		}
-		userSource.setSourceObject(sourceObject);
-		// TODO sanitize default labels
-
-		if (userSource.getRegionObject() != null) {
-			Sanitizer.checkStringEmpty("region name", userSource
-				.getRegionObject()
-				.getName());
-			if (userSource.getRegionObject().getHtmlSource() == null) {
-				throw new PropertyValueException("region source", "null",
-					"does not exist");
-			}
-			checkRegion(userSource.getRegionObject());
-		}
+			throws ValidationException {
+		User user = UserServiceFactory.getUserService().getCurrentUser();
+		Validator<AddUserSource> validator = new Validator<AddUserSource>();
+		validator
+			.checkNullability(AddUserSource.USER_SOURCE, false, userSource);
+		userSource.setUser(user);
+		userSource.setName(validator.checkString(AddUserSource.NAME,
+			userSource.getName(), false, false));
+		validator.checkNullability(AddUserSource.SOURCE_TYPE, false,
+			userSource.getSourceType());
+		userSource.setCrawlerData(null);
+		userSource.setHierarchy(validator.checkString(AddUserSource.HIERARCHY,
+			userSource.getHierarchy(), false, false));
+		userSource.setLabel(null);
+		userSource.setLabelObject(null);
+		validator.checkNullability(AddUserSource.SOURCE, false,
+			userSource.getSource());
 
 		UserSourceService uss = new UserSourceService();
-		return uss.createUserSource(userSource);
+		uss.fillSources(userSource);
+
+		LabelService ls = new LabelService();
+		List<Label> labelsByKeys =
+			ls.getLabelsByKeys(userSource.getDefaultLabels());
+		for (Label l : labelsByKeys) {
+			validator
+				.checkUser(AddUserSource.DEFAULT_LABELS, user, l.getUser());
+		}
+
+		Region region = userSource.getRegionObject();
+		if (userSource.getRegion() != null) {
+			uss.fillRegions(userSource);
+			if (userSource
+				.getRegionObject()
+				.getHtmlSource()
+				.equals(userSource.getSource())) {
+				throw new ValidationException(new Issue<AddUserSource>(
+					AddUserSource.REGION, IssueType.SECURITY_BREACH));
+			}
+		}
+		userSource.setRegionObject(region);
+
+		if (region != null) {
+			region.setHtmlSource(userSource.getSource());
+			region.setName(validator.checkString(AddUserSource.REGION_NAME,
+				region.getName(), false, false));
+			region.setPositiveSelector(validator.checkSelector(
+				AddUserSource.REGION_POSITIVE, region.getPositiveSelector(),
+				true));
+			region.setNegativeSelector(validator.checkSelector(
+				AddUserSource.REGION_NEGATIVE, region.getNegativeSelector(),
+				true));
+		}
+
+		UserSource userSource2 = uss.createUserSource(userSource);
+		if (userSource2 == userSource) {
+			uss.fillRegions(userSource);
+		} else {
+			throw new ValidationException(new Issue<AddUserSource>(
+				AddUserSource.USER_SOURCE, IssueType.ALREADY_EXISTS));
+		}
+
+		return userSource;
 	}
 
-	public UserSource updateUserSource(UserSource userSource) {
-		if (userSource == null) {
-			throw new NullPointerException();
-		}
-		Sanitizer.checkUser("user", userSource.getUser());
-		Sanitizer.checkStringLength("name", userSource.getName());
-		Sanitizer.checkStringEmpty("name", userSource.getName());
-		Sanitizer.checkPreserveKey(userSource);
-		// TODO sanitize default labels
-
-		if (userSource.getRegionObject() != null) {
-			Sanitizer.checkStringEmpty("region name", userSource
-				.getRegionObject()
-				.getName());
-			if (userSource.getRegionObject().getHtmlSource() == null) {
-				throw new PropertyValueException("region source", "null",
-					"does not exist");
-			}
-			checkRegion(userSource.getRegionObject());
+	public UserSource updateUserSource(UserSource userSource)
+			throws ValidationException {
+		User user = UserServiceFactory.getUserService().getCurrentUser();
+		Validator<UpdateUserSource> validator =
+			new Validator<UpdateUserSource>();
+		validator.checkNullability(UpdateUserSource.USER_SOURCE, false,
+			userSource);
+		validator.checkNullability(UpdateUserSource.USER_SOURCE, false,
+			userSource.getKey());
+		userSource.setUser(user);
+		validator.checkNullability(UpdateUserSource.SOURCE, false,
+			userSource.getSource());
+		validator.checkNullability(UpdateUserSource.SOURCE_TYPE, false,
+			userSource.getSourceType());
+		Key genKey = KeyGen.genKey(userSource);
+		if (!genKey.equals(userSource.getKey())) {
+			throw new ValidationException(new Issue<UpdateUserSource>(
+				UpdateUserSource.USER_SOURCE, IssueType.SECURITY_BREACH));
 		}
 
 		UserSourceService uss = new UserSourceService();
-		uss.updateUserSource(userSource);
+		UserSource old = uss.getUserSource(userSource.getKey());
+		old.setName(validator.checkString(UpdateUserSource.NAME,
+			userSource.getName(), false, false));
+		old.setHierarchy(validator.checkString(UpdateUserSource.HIERARCHY,
+			userSource.getHierarchy(), false, false));
 
-		Source source = Datastore.get(SourceMeta.get(), userSource.getSource());
-		userSource.setSourceObject(source);
-		return userSource;
+		LabelService ls = new LabelService();
+		List<Key> defaultLabels = userSource.getDefaultLabels();
+		List<Label> labelsByKeys = ls.getLabelsByKeys(defaultLabels);
+		for (Label l : labelsByKeys) {
+			validator.checkUser(UpdateUserSource.DEFAULT_LABELS, user,
+				l.getUser());
+		}
+		if (defaultLabels == null) {
+			defaultLabels = new ArrayList<Key>();
+		}
+		if (!defaultLabels.contains(old.getLabel())) {
+			defaultLabels.add(old.getLabel());
+		}
+		old.setDefaultLabels(defaultLabels);
+
+		Region region = userSource.getRegionObject();
+		if (userSource.getRegion() != null) {
+			uss.fillRegions(userSource);
+			if (userSource
+				.getRegionObject()
+				.getHtmlSource()
+				.equals(userSource.getSource())) {
+				throw new ValidationException(new Issue<UpdateUserSource>(
+					UpdateUserSource.REGION, IssueType.SECURITY_BREACH));
+			}
+		}
+
+		if (region != null) {
+			region.setHtmlSource(userSource.getSource());
+			region.setName(validator.checkString(UpdateUserSource.REGION_NAME,
+				region.getName(), false, false));
+			region.setPositiveSelector(validator.checkSelector(
+				UpdateUserSource.REGION_POSITIVE, region.getPositiveSelector(),
+				true));
+			region.setNegativeSelector(validator.checkSelector(
+				UpdateUserSource.REGION_NEGATIVE, region.getNegativeSelector(),
+				true));
+		}
+		old.setRegionObject(region);
+
+		uss.updateUserSource(old);
+		return old;
 	}
 
 	public List<UserSource> getUserSources() {
@@ -131,40 +200,28 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		return uss.getUserSources(user);
 	}
 
-	public boolean checkRegion(Region region) throws NullPointerException {
-		if (region == null) {
-			throw new NullPointerException();
-		}
-		if (region.getPositiveSelector() != null) {
-			if (!region.getPositiveSelector().trim().isEmpty()) {
-				try {
-					Selector.select(region.getPositiveSelector(), new Element(
-						Tag.valueOf("html"), ""));
-				} catch (Exception e) {
-					return false;
-				}
-			}
-		}
+	public Region checkRegion(Region region) throws ValidationException {
+		Validator<CheckRegion> validator = new Validator<CheckRegion>();
+		validator.checkNullability(CheckRegion.REGION, false, region);
 
-		if (region.getPositiveSelector() != null) {
-			if (!region.getNegativeSelector().trim().isEmpty()) {
-				try {
-					Selector.select(region.getNegativeSelector(), new Element(
-						Tag.valueOf("html"), ""));
-				} catch (Exception e) {
-					return false;
-				}
-			}
-		}
-		return true;
+		// do not check source
 
+		region.setName(validator.checkString(CheckRegion.REGION_NAME,
+			region.getName(), false, false));
+		region.setPositiveSelector(validator.checkSelector(
+			CheckRegion.REGION_POSITIVE, region.getPositiveSelector(), true));
+		region.setNegativeSelector(validator.checkSelector(
+			CheckRegion.REGION_NEGATIVE, region.getNegativeSelector(), true));
+		return region;
 	}
 
-	public Date planSourceCheck(Key source) throws NullPointerException {
-		if (source == null) {
-			throw new NullPointerException();
-		}
+	public Date planSourceCheck(Key key) throws ValidationException {
+		Validator<PlanSourceCheck> validator = new Validator<PlanSourceCheck>();
+		validator.checkNullability(PlanSourceCheck.SOURCE, false, key);
+
 		SourceService ss = new SourceService();
+		Source source = ss.getSourceByKey(key);
+		validator.checkNullability(PlanSourceCheck.SOURCE, false, source);
 		return ss.planSourceCheck(source);
 	}
 }

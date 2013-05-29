@@ -6,15 +6,47 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import cz.artique.shared.model.label.ListFilter;
+import cz.artique.shared.validation.HasIssue;
+import cz.artique.shared.validation.ValidationException;
 
 @RemoteServiceRelativePath("service.s3gwt")
 public interface ClientListFilterService extends RemoteService {
 
 	List<ListFilter> getAllListFilters();
 
-	ListFilter addListFilter(ListFilter listFilter);
-	
-	ListFilter updateListFilter(ListFilter listFilter);
-	
-	void deleteListFilter(ListFilter listFilter);
+	public enum AddListFilter implements HasIssue {
+		LIST_FILTER,
+		NAME,
+		HIERARCHY,
+		EXPORT_ALIAS,
+		FILTER_LABELS;
+		public String enumName() {
+			return "AddListFilter";
+		}
+	}
+
+	ListFilter addListFilter(ListFilter listFilter) throws ValidationException;
+
+	public enum UpdateListFilter implements HasIssue {
+		LIST_FILTER,
+		NAME,
+		HIERARCHY,
+		EXPORT_ALIAS,
+		FILTER_LABELS;
+		public String enumName() {
+			return "UpdateListFilter";
+		}
+	}
+
+	ListFilter updateListFilter(ListFilter listFilter)
+			throws ValidationException;
+
+	public enum DeleteListFilter implements HasIssue {
+		LIST_FILTER;
+		public String enumName() {
+			return "DeleteListFilter";
+		}
+	}
+
+	void deleteListFilter(ListFilter listFilter) throws ValidationException;
 }

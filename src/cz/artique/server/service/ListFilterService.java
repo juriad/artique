@@ -1,6 +1,7 @@
 package cz.artique.server.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,56 +19,71 @@ import cz.artique.shared.utils.SharedUtils;
 
 public class ListFilterService {
 
+	public void fillFilters(Iterable<ListFilter> listFilters) {
+		Map<Key, List<ListFilter>> map = new HashMap<Key, List<ListFilter>>();
+		for (ListFilter lf : listFilters) {
+			if (lf.getFilter() != null) {
+				if (!map.containsKey(lf.getFilter())) {
+					map.put(lf.getFilter(), new ArrayList<ListFilter>());
+				}
+				map.get(lf.getFilter()).add(lf);
+			}
+		}
+		List<Filter> filters = Datastore.get(FilterMeta.get(), map.keySet());
+		for (Filter filter : filters) {
+			List<ListFilter> list = map.get(filter.getKey());
+			if (list != null) {
+				if (filter.getFilters() != null
+					&& filter.getFilters().size() > 0) {
+					// second level:
+					List<Filter> list2 =
+						Datastore.get(FilterMeta.get(), filter.getFilters());
+					filter.setFilterObjects(list2);
+				}
+
+				for (ListFilter lf : list) {
+					lf.setFilterObject(filter);
+				}
+			}
+		}
+	}
+
+	public void fillFilters(ListFilter... listFilters) {
+		fillFilters(Arrays.asList(listFilters));
+	}
+
 	public List<ListFilter> getAllListFilters(User user) {
 		ListFilterMeta meta = ListFilterMeta.get();
 		List<ListFilter> listFilters =
 			Datastore.query(meta).filter(meta.user.equal(user)).asList();
-
-		Map<Key, ListFilter> map = new HashMap<Key, ListFilter>();
-		for (ListFilter listFilter : listFilters) {
-			map.put(listFilter.getFilter(), listFilter);
-		}
-		List<Filter> topLevel = Datastore.get(FilterMeta.get(), map.keySet());
-
-		Map<Key, Filter> map2 = new HashMap<Key, Filter>();
-		for (Filter top : topLevel) {
-			if (top.getFilters() != null && !top.getFilters().isEmpty()) {
-				for (Key k : top.getFilters()) {
-					map2.put(k, top);
-				}
-			}
-			map.get(top.getKey()).setFilterObject(top);
-		}
-		List<Filter> secondLevel =
-			Datastore.get(FilterMeta.get(), map2.keySet());
-		for (Filter second : secondLevel) {
-			Filter top = map2.get(second.getKey());
-			if (top.getFilterObjects() == null) {
-				top.setFilterObjects(new ArrayList<Filter>());
-			}
-			top.getFilterObjects().add(second);
-		}
-
+		fillFilters(listFilters);
 		return listFilters;
 	}
 
-	public ListFilter createListFilter(ListFilter listFilter) {
+	public void createListFilter(ListFilter listFilter) {
 		Filter filter = listFilter.getFilterObject();
 		Key filterKey = saveFilter(filter);
 		listFilter.setFilter(filterKey);
 		Key key = Datastore.put(listFilter);
 		listFilter.setKey(key);
-		return listFilter;
 	}
 
 	public void updateListFilter(ListFilter listFilter) {
-		Filter f = getFilter(listFilter.getFilter());
-		if (!SharedUtils.deepEq(f, listFilter.getFilterObject())) {
-			deleteFilter(f);
+		ListFilter old = new ListFilter();
+		old.setFilter(listFilter.getFilter());
+		fillFilters(old);
+
+		boolean toDelete = false;
+		if (!SharedUtils.deepEq(old.getFilterObject(),
+			listFilter.getFilterObject())) {
+			toDelete = true;
 			Key filterKey = saveFilter(listFilter.getFilterObject());
 			listFilter.setFilter(filterKey);
 		}
 		Datastore.put(listFilter);
+		if (toDelete) {
+			deleteFilter(old.getFilterObject());
+		}
 	}
 
 	private Key saveFilter(Filter filter) {
@@ -87,35 +103,40 @@ public class ListFilterService {
 		return filter.getKey();
 	}
 
-	public Filter getFilter(Key key) {
-		if (key == null) {
-			return null;
-		}
-		Filter filter = Datastore.get(FilterMeta.get(), key);
-		if (filter.getFilterObjects() != null
-			&& !filter.getFilterObjects().isEmpty()) {
-			List<Filter> subFilters =
-				Datastore.get(FilterMeta.get(), filter.getFilters());
-			filter.setFilterObjects(subFilters);
-		}
-
-		return filter;
-	}
-
 	private void deleteFilter(Filter filter) {
-		if (filter != null) {
-			List<Key> keys = filter.getFilters();
-			if (keys == null) {
-				keys = new ArrayList<Key>();
-			}
-			keys.add(filter.getKey());
-			Datastore.deleteAsync(keys);
+		if (filter == null) {
+			return;
 		}
+		List<Key> keys = filter.getFilters();
+		if (keys == null) {
+			keys = new ArrayList<Key>();
+		}
+		keys.add(filter.getKey());
+		Datastore.deleteAsync(keys);
 	}
 
 	public void deleteListFilter(ListFilter listFilter) {
-		Filter f = getFilter(listFilter.getFilter());
-		deleteFilter(f);
+		fillFilters(listFilter);
+		deleteFilter(listFilter.getFilterObject());
 		Datastore.delete(listFilter.getKey());
+	}
+
+	public List<ListFilter> getExportsByAlias(String alias) {
+		ListFilterMeta meta = ListFilterMeta.get();
+		List<ListFilter> exports =
+			Datastore
+				.query(meta)
+				.filter(meta.exportAlias.equal(alias))
+				.asList();
+		if (exports.size() > 0) {
+			fillFilters(exports);
+		}
+		return exports;
+	}
+
+	public ListFilter getListFilterByKey(Key key) {
+		ListFilter listFilter = Datastore.get(ListFilterMeta.get(), key);
+		fillFilters(listFilter);
+		return listFilter;
 	}
 }

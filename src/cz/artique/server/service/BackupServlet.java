@@ -43,11 +43,14 @@ public class BackupServlet extends HttpServlet {
 	 */
 	protected void process(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+
+		// backup
 		@SuppressWarnings("unchecked")
 		Map<String, String[]> parameterMap = req.getParameterMap();
 		String[] backups = parameterMap.get("backup");
 		if (backups == null || backups.length <= 0) {
-			throw new IllegalArgumentException("Missing backup key.");
+			resp.sendError(500, "Missing backup key.");
+			return;
 		}
 		String backup = backups[0].trim();
 

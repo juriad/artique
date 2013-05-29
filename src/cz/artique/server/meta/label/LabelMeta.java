@@ -1,6 +1,6 @@
 package cz.artique.server.meta.label;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-27 16:55:57")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-28 22:58:49")
 /** */
 public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.label.Label> {
 
@@ -70,7 +70,7 @@ public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
         entity.setUnindexedProperty("backupLevel", enumToString(m.getBackupLevel()));
         entity.setProperty("labelType", enumToString(m.getLabelType()));
         entity.setProperty("name", m.getName());
-        entity.setProperty("priority", m.getPriority());
+        entity.setUnindexedProperty("priority", m.getPriority());
         entity.setProperty("user", m.getUser());
         entity.setProperty("version", m.getVersion());
         entity.setProperty("slim3.schemaVersion", 1);

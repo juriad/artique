@@ -77,8 +77,6 @@ public class BackupService extends Fetcher {
 		FileWriteChannel writeChannel =
 			fileService.openWriteChannel(file, false);
 
-		// Different standard Java ways of writing to the channel
-		// are possible. Here we use a PrintWriter:
 		PrintWriter out =
 			new PrintWriter(Channels.newWriter(writeChannel, "UTF8"));
 		out.println(html);
@@ -118,6 +116,7 @@ public class BackupService extends Fetcher {
 			String styleSheet = getStyleSheet(url);
 			if (styleSheet != null) {
 				style.text(styleSheet);
+				link.after(link);
 				link.remove();
 			}
 		}

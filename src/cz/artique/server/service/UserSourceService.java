@@ -1,11 +1,13 @@
 package cz.artique.server.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.slim3.datastore.Datastore;
+import org.slim3.datastore.ModelQuery;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -53,7 +55,7 @@ public class UserSourceService {
 	}
 
 	public void fillRegions(UserSource... userSources) {
-		fillRegions(userSources);
+		fillRegions(Arrays.asList(userSources));
 	}
 
 	public void fillSources(Iterable<UserSource> userSources) {
@@ -78,7 +80,7 @@ public class UserSourceService {
 	}
 
 	public void fillSources(UserSource... userSources) {
-		fillSources(userSources);
+		fillSources(Arrays.asList(userSources));
 	}
 
 	/**
@@ -107,7 +109,7 @@ public class UserSourceService {
 			Datastore.put(userSource);
 		}
 
-		updateUsage(null, userSource);
+		updateSourceUsage(null, userSource);
 		return userSource;
 	}
 
@@ -152,9 +154,9 @@ public class UserSourceService {
 	}
 
 	public void updateUserSource(UserSource userSource) {
+		handleRegionChange(userSource);
 		Transaction tx = Datastore.beginTransaction();
 		UserSource original;
-		handleRegionChange(userSource);
 		try {
 			original =
 				Datastore.get(tx, UserSourceMeta.get(), userSource.getKey());
@@ -167,10 +169,10 @@ public class UserSourceService {
 				tx.rollback();
 			}
 		}
-		updateUsage(original, userSource);
+		updateSourceUsage(original, userSource);
 	}
 
-	private void updateUsage(UserSource original, UserSource userSource) {
+	private void updateSourceUsage(UserSource original, UserSource userSource) {
 		int diff = 0;
 		if (original == null) {
 			// new usersource
@@ -219,8 +221,9 @@ public class UserSourceService {
 
 	public List<UserSource> getUserSources(User user) {
 		UserSourceMeta meta = UserSourceMeta.get();
-		List<UserSource> userSources =
-			Datastore.query(meta).filter(meta.user.equal(user)).asList();
+		ModelQuery<UserSource> query =
+			Datastore.query(meta).filter(meta.user.equal(user));
+		List<UserSource> userSources = query.asList();
 		fillSources(userSources);
 		fillRegions(userSources);
 		return userSources;
@@ -246,6 +249,14 @@ public class UserSourceService {
 			userSource = createUserSource(us);
 		}
 		userSource.setSourceObject(manualSource);
+		// will never have region
+		return userSource;
+	}
+
+	public UserSource getUserSource(Key key) {
+		UserSource userSource = Datastore.get(UserSourceMeta.get(), key);
+		fillRegions(userSource);
+		fillSources(userSource);
 		return userSource;
 	}
 

@@ -1,11 +1,8 @@
 package cz.artique.server.service;
 
-import org.slim3.datastore.Datastore;
-
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.taskqueue.DeferredTask;
 
-import cz.artique.server.meta.source.SourceMeta;
 import cz.artique.shared.model.source.Source;
 
 public class CheckSourceTask implements DeferredTask {
@@ -19,8 +16,8 @@ public class CheckSourceTask implements DeferredTask {
 	}
 
 	public void run() {
-		SourceMeta meta = SourceMeta.get();
-		Source source = Datastore.get(meta, sourceKey);
+		SourceService ss = new SourceService();
+		Source source = ss.getSourceByKey(sourceKey);
 		if (!source.isEnabled()) {
 			// it is nonsence to check this source
 			return;
@@ -35,7 +32,7 @@ public class CheckSourceTask implements DeferredTask {
 					+ source.getUrl().getValue() + " failed.");
 			}
 		} finally {
-			Datastore.put(source);
+			ss.saveSource(source);
 		}
 	}
 }

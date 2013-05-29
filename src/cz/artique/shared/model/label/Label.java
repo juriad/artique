@@ -53,6 +53,7 @@ public class Label
 	@Attribute(unindexed = true)
 	private BackupLevel backupLevel;
 
+	@Attribute(unindexed = true)
 	private int priority;
 
 	/**
@@ -89,7 +90,7 @@ public class Label
 			if (other.key != null) {
 				return false;
 			} else {
-				if(!equalsDeeply(other)) {
+				if (!equalsDeeply(other)) {
 					return false;
 				}
 			}

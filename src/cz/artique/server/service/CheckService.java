@@ -18,6 +18,8 @@ public class CheckService {
 		if (source.isEnabled() && !source.isEnqued()) {
 			enque(source.getKey());
 			source.setEnqued(true);
+
+			// FIXME datastore: call service
 			Datastore.put(source);
 		}
 	}

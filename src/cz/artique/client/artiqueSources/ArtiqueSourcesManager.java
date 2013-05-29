@@ -246,8 +246,8 @@ public class ArtiqueSourcesManager
 		});
 	}
 
-	public void checkRegion(Region region, final AsyncCallback<Boolean> ping) {
-		service.checkRegion(region, new AsyncCallback<Boolean>() {
+	public void checkRegion(Region region, final AsyncCallback<Region> ping) {
+		service.checkRegion(region, new AsyncCallback<Region>() {
 
 			public void onFailure(Throwable caught) {
 				if (ping != null) {
@@ -255,7 +255,7 @@ public class ArtiqueSourcesManager
 				}
 			}
 
-			public void onSuccess(Boolean result) {
+			public void onSuccess(Region result) {
 				if (ping != null) {
 					ping.onSuccess(result);
 				}

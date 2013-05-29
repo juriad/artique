@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slim3.datastore.Datastore;
-
 import com.google.appengine.api.users.User;
 import com.sun.syndication.feed.synd.SyndContentImpl;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -21,13 +19,12 @@ import com.sun.syndication.feed.synd.SyndFeedImpl;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedOutput;
 
-import cz.artique.server.meta.label.ListFilterMeta;
-import cz.artique.shared.items.ListingResponse;
 import cz.artique.shared.items.ListingRequest;
+import cz.artique.shared.items.ListingResponse;
 import cz.artique.shared.model.config.ConfigKey;
+import cz.artique.shared.model.item.ArticleItem;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;
-import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.ListFilter;
 
 public class ExportServlet extends HttpServlet {
@@ -65,20 +62,25 @@ public class ExportServlet extends HttpServlet {
 	 */
 	protected void process(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		// user
 		@SuppressWarnings("unchecked")
 		Map<String, String[]> parameterMap = req.getParameterMap();
 		String[] users = parameterMap.get("user");
 		if (users == null || users.length <= 0) {
-			throw new IllegalArgumentException("Missing user.");
+			resp.sendError(500, "User has not been specified.");
+			return;
 		}
 		String user = users[0].trim();
 
+		// export
 		String[] exports = parameterMap.get("export");
 		if (exports == null || exports.length <= 0) {
-			throw new IllegalArgumentException("Missing export name.");
+			resp.sendError(500, "Export has not been specified.");
+			return;
 		}
 		String export = exports[0].trim();
 
+		// type
 		String type;
 		String[] types = parameterMap.get("type");
 		if (types == null || types.length <= 0) {
@@ -94,7 +96,9 @@ public class ExportServlet extends HttpServlet {
 
 		ListFilter bestListFilter = findBestListFilter(user, export);
 		if (bestListFilter == null) {
-			throw new IllegalArgumentException("No such export found");
+			resp.sendError(404, "No such export found: " + export
+				+ " for user " + user);
+			return;
 		}
 
 		SyndFeed feed = createFeed(bestListFilter, type);
@@ -107,8 +111,8 @@ public class ExportServlet extends HttpServlet {
 		try {
 			respondFeed(resp, feed, bestListFilter, type);
 		} catch (FeedException e) {
-			throw new IllegalStateException("Failed to print feed to output.",
-				e);
+			resp.sendError(500,
+				"Failed to print feed to output: " + e.getLocalizedMessage());
 		}
 	}
 
@@ -121,7 +125,7 @@ public class ExportServlet extends HttpServlet {
 				.getConfig(ConfigKey.EXPORT_FETCH_COUNT)
 				.<Integer> get();
 		ListingRequest request =
-			new ListingRequest(listFilter, null, null, null, fetchCount);
+			new ListingRequest(listFilter, null, null, fetchCount);
 		ListingResponse<UserItem> items =
 			is.getItems(listFilter.getUser(), request);
 
@@ -134,6 +138,14 @@ public class ExportServlet extends HttpServlet {
 			entry.setUri(object.getUrl().getValue());
 			entry.setPublishedDate(object.getPublished() == null ? object
 				.getAdded() : object.getPublished());
+			if (object instanceof ArticleItem) {
+				ArticleItem ai = (ArticleItem) object;
+				if (ai.getAuthor() != null) {
+					entry.setAuthor(ai.getAuthor());
+				}
+			}
+			// read difference between description and content
+			// TODO export: content
 
 			SyndContentImpl description = new SyndContentImpl();
 			description.setType(object.getContentType().getType());
@@ -154,37 +166,24 @@ public class ExportServlet extends HttpServlet {
 		feed.setTitle(listFilter.getExportAlias());
 		feed.setDescription("This feed contains items which Artique user "
 			+ listFilter.getUser().getNickname()
-			+ " marked to be exported via RSS/Atom.");
+			+ " marked to be exported via RSS/Atom feed.");
 
 		feed.setAuthor(listFilter.getUser().getNickname());
 		return feed;
 	}
 
 	private ListFilter findBestListFilter(String user, String export) {
+		ListFilterService lfs = new ListFilterService();
+		List<ListFilter> exportsByAlias = lfs.getExportsByAlias(export);
 
-		ListFilterMeta meta = ListFilterMeta.get();
-		List<ListFilter> allExports =
-			Datastore
-				.query(meta)
-				.filter(meta.exportAlias.equal(export))
-				.asList();
 		ListFilter best = null;
-		for (ListFilter lf : allExports) {
+		for (ListFilter lf : exportsByAlias) {
 			User user2 = lf.getUser();
-			if (user2.getNickname().equalsIgnoreCase(user)) {
+			if (user2.getNickname().equalsIgnoreCase(user)
+				|| user2.getEmail().equalsIgnoreCase(user)) {
 				best = lf;
 				break;
 			}
-			if (user2.getEmail().equalsIgnoreCase(user)) {
-				best = lf;
-				break;
-			}
-		}
-
-		if (best != null) {
-			ListFilterService lfs = new ListFilterService();
-			Filter filter = lfs.getFilter(best.getFilter());
-			best.setFilterObject(filter);
 		}
 
 		return best;

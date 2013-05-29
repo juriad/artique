@@ -22,7 +22,7 @@ public interface ClientSourceServiceAsync {
 
 	void getUserSources(AsyncCallback<List<UserSource>> callback);
 
-	void checkRegion(Region region, AsyncCallback<Boolean> asyncCallback);
+	void checkRegion(Region region, AsyncCallback<Region> asyncCallback);
 
 	void planSourceCheck(Key source, AsyncCallback<Date> asyncCallback);
 }

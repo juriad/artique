@@ -137,12 +137,12 @@ public class SourceRegionPicker extends Composite
 			return;
 		}
 		Managers.SOURCES_MANAGER.checkRegion(selectedObject,
-			new AsyncCallback<Boolean>() {
+			new AsyncCallback<Region>() {
 				public void onFailure(Throwable caught) {
 					notPassedValidation();
 				}
 
-				public void onSuccess(Boolean result) {
+				public void onSuccess(Region result) {
 					passedValidation();
 				}
 			});

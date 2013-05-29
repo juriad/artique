@@ -10,13 +10,35 @@ import cz.artique.shared.items.ChangeSet;
 import cz.artique.shared.items.ListingResponse;
 import cz.artique.shared.items.ListingRequest;
 import cz.artique.shared.model.item.UserItem;
+import cz.artique.shared.validation.HasIssue;
 import cz.artique.shared.validation.ValidationException;
 
 @RemoteServiceRelativePath("service.s3gwt")
 public interface ClientItemService extends RemoteService {
-	ListingResponse<UserItem> getItems(ListingRequest request) throws ValidationException;
+	ListingResponse<UserItem> getItems(ListingRequest request);
 
-	UserItem addManualItem(UserItem item);
+	public enum AddManualItem implements HasIssue {
+		USER_ITEM,
+		ITEM,
+		LABELS,
+		ITEM_CONTENT,
+		ITEM_TITLE,
+		ITEM_URL;
+		public String enumName() {
+			return "AddManualItem";
+		}
+	}
 
-	Map<Key, UserItem> updateItems(Map<Key, ChangeSet> changeSets);
+	UserItem addManualItem(UserItem item) throws ValidationException;
+
+	public enum UpdateItems implements HasIssue {
+		LABEL,
+		NAME;
+		public String enumName() {
+			return "UpdateItems";
+		}
+	}
+
+	Map<Key, UserItem> updateItems(Map<Key, ChangeSet> changeSets)
+			throws ValidationException;
 }

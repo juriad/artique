@@ -15,13 +15,14 @@ import cz.artique.server.meta.source.ManualSourceMeta;
 import cz.artique.server.meta.source.RegionMeta;
 import cz.artique.server.meta.source.SourceMeta;
 import cz.artique.server.utils.KeyGen;
+import cz.artique.shared.model.config.ConfigKey;
 import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.utils.TransactionException;
 
 public class SourceService {
-	public List<Region> getRegions(Key source) {
+	public List<Region> getAllRegions(Key source) {
 		RegionMeta meta = RegionMeta.get();
 		List<Region> list =
 			Datastore
@@ -65,12 +66,6 @@ public class SourceService {
 		return source;
 	}
 
-	public Region getRegionByKey(Key key) {
-		RegionMeta meta = RegionMeta.get();
-		Region regionObject = Datastore.getOrNull(meta, key);
-		return regionObject;
-	}
-
 	public ManualSource ensureManualSource() {
 		User user = UserServiceFactory.getUserService().getCurrentUser();
 		ManualSource manualSource = new ManualSource(user);
@@ -80,15 +75,49 @@ public class SourceService {
 		return creatIfNotExist(manualSource, ManualSourceMeta.get());
 	}
 
-	public Date planSourceCheck(Key source) {
-		Source sourceByKey = getSourceByKey(source);
-		if (sourceByKey instanceof ManualSource) {
-			throw new IllegalArgumentException(
-				"Source must not be a manual source");
+	public Date planSourceCheck(Source source) {
+		if (source instanceof ManualSource) {
+			// just ignore this request
+			return source.getNextCheck();
 		}
 		Date date = new Date();
-		sourceByKey.setNextCheck(date);
-		Datastore.put(sourceByKey);
+		source.setNextCheck(date);
+		Datastore.put(source);
 		return date;
+	}
+
+	public List<Source> getSourcesForNormalCheck() {
+		int maxErrors =
+			ConfigService.CONFIG_SERVICE
+				.getConfig(ConfigKey.MAX_ERROR_SEQUENCE)
+				.get();
+		SourceMeta meta = SourceMeta.get();
+		List<Source> list =
+			Datastore
+				.query(meta)
+				.filter(meta.enabled.equal(Boolean.TRUE))
+				.filter(meta.nextCheck.lessThan(new Date()))
+				.filterInMemory(meta.errorSequence.lessThan(maxErrors))
+				.asList();
+		return list;
+	}
+
+	public List<Source> getSourcesForErrorCheck() {
+		int maxErrors =
+			ConfigService.CONFIG_SERVICE
+				.getConfig(ConfigKey.MAX_ERROR_SEQUENCE)
+				.get();
+		SourceMeta meta = SourceMeta.get();
+		List<Source> list =
+			Datastore
+				.query(meta)
+				.filter(meta.enabled.equal(Boolean.TRUE))
+				.filter(meta.errorSequence.greaterThanOrEqual(maxErrors))
+				.asList();
+		return list;
+	}
+
+	public void saveSource(Source source) {
+		Datastore.put(source);
 	}
 }

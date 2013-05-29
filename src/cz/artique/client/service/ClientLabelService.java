@@ -6,12 +6,22 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import cz.artique.shared.model.label.Label;
+import cz.artique.shared.validation.HasIssue;
+import cz.artique.shared.validation.ValidationException;
 
 @RemoteServiceRelativePath("service.s3gwt")
 public interface ClientLabelService extends RemoteService {
 
 	List<Label> getAllLabels();
 
-	Label addLabel(Label label);
+	public enum AddLabel implements HasIssue {
+		LABEL,
+		NAME;
+		public String enumName() {
+			return "AddLabel";
+		}
+	}
+
+	Label addLabel(Label label) throws ValidationException;
 
 }

@@ -9,13 +9,15 @@ import org.jsoup.parser.Tag;
 import org.jsoup.select.Selector;
 
 import com.google.appengine.api.datastore.Link;
+import com.google.appengine.api.datastore.Text;
+import com.google.appengine.api.users.User;
 
 import cz.artique.server.crawler.CrawlerException;
 import cz.artique.server.crawler.Fetcher;
 import cz.artique.shared.validation.HasIssue;
-import cz.artique.shared.validation.ValidationException;
 import cz.artique.shared.validation.Issue;
 import cz.artique.shared.validation.IssueType;
+import cz.artique.shared.validation.ValidationException;
 
 public class Validator<E extends Enum<E> & HasIssue> {
 
@@ -73,8 +75,13 @@ public class Validator<E extends Enum<E> & HasIssue> {
 
 	private URI checkUri(Enum<E> property, Link url, boolean nullable)
 			throws ValidationException {
-		if (!checkNullability(property, nullable, url, url.getValue())) {
+		if (!checkNullability(property, nullable, url)) {
 			return null;
+		}
+		if (url != null) {
+			if (!checkNullability(property, nullable, url.getValue())) {
+				return null;
+			}
 		}
 
 		try {
@@ -128,16 +135,23 @@ public class Validator<E extends Enum<E> & HasIssue> {
 		return value;
 	}
 
-	public String checkText(Enum<E> property, String value, boolean nullable,
+	public Text checkText(Enum<E> property, Text value, boolean nullable,
 			boolean cut) throws ValidationException {
 		if (!checkNullability(property, nullable, value)) {
 			return null;
 		}
+		if (value != null) {
+			if (!checkNullability(property, nullable, value.getValue())) {
+				return null;
+			}
+		}
 
-		if (value.length() > 1000 * 1000) {
+		value = new Text(value.getValue().trim());
+
+		if (value.getValue().length() > 1000 * 1000) {
 			if (cut) {
-				return value
-					.substring(0, Math.min(value.length(), 1000 * 1000));
+				return new Text(value.getValue().substring(0,
+					Math.min(value.getValue().length(), 1000 * 1000)));
 			}
 			throw new ValidationException(new Issue<E>(property,
 				IssueType.PROPERTY_TOO_LONG));
@@ -177,5 +191,18 @@ public class Validator<E extends Enum<E> & HasIssue> {
 			}
 		}
 		return value;
+	}
+
+	public void checkUser(Enum<E> property, User user, User... users)
+			throws ValidationException {
+		if (users == null || users.length == 0) {
+			return;
+		}
+		for (User u : users) {
+			if (!user.equals(u)) {
+				throw new ValidationException(new Issue<E>(property,
+					IssueType.SECURITY_BREACH));
+			}
+		}
 	}
 }

@@ -56,6 +56,7 @@ public abstract class HTMLCrawler<E extends HTMLSource, F extends Item>
 		return simplified;
 	}
 
+	// FIXME move datastore to service
 	protected Set<User> getUsersAlreadyHavingItem(F item) {
 		UserItemMeta meta = UserItemMeta.get();
 		Iterable<UserItem> asIterable =

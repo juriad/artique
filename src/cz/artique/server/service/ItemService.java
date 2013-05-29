@@ -1,6 +1,7 @@
 package cz.artique.server.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,8 +22,8 @@ import com.google.appengine.api.users.User;
 import cz.artique.server.meta.item.ItemMeta;
 import cz.artique.server.meta.item.UserItemMeta;
 import cz.artique.shared.items.ChangeSet;
-import cz.artique.shared.items.ListingResponse;
 import cz.artique.shared.items.ListingRequest;
+import cz.artique.shared.items.ListingResponse;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.item.UserItem;
@@ -33,8 +34,32 @@ import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.utils.TransactionException;
 
 public class ItemService {
-	public ListingResponse<UserItem> getItems(User user,
-			ListingRequest request) {
+	public void fillItems(Iterable<UserItem> userItems) {
+		Map<Key, List<UserItem>> map = new HashMap<Key, List<UserItem>>();
+		for (UserItem ui : userItems) {
+			if (ui.getItem() != null) {
+				if (!map.containsKey(ui.getItem())) {
+					map.put(ui.getItem(), new ArrayList<UserItem>());
+				}
+				map.get(ui.getItem()).add(ui);
+			}
+		}
+		List<Item> items = Datastore.get(ItemMeta.get(), map.keySet());
+		for (Item item : items) {
+			List<UserItem> list = map.get(item.getKey());
+			if (list != null) {
+				for (UserItem ui : list) {
+					ui.setItemObject(item);
+				}
+			}
+		}
+	}
+
+	public void fillItems(UserItem... userItems) {
+		fillItems(Arrays.asList(userItems));
+	}
+
+	public ListingResponse<UserItem> getItems(User user, ListingRequest request) {
 		UserItemMeta meta = UserItemMeta.get();
 		Date date = new Date();
 
@@ -99,8 +124,7 @@ public class ItemService {
 						.sort(meta.key.asc)
 						.limit(request.getFetchCount())
 						.asList();
-				List<Key> tailKeys = getListOfItemKeys(tail);
-				fetchItemsForUserItems(tail, tailKeys);
+				fillItems(tail);
 				if (tail.size() < request.getFetchCount()) {
 					endReached = true;
 				} else {
@@ -119,8 +143,7 @@ public class ItemService {
 					headQuery =
 						headQuery.filter(meta.key.greaterThan(lastHave));
 					head = headQuery.sort(meta.key.desc).asList();
-					List<Key> headKeys = getListOfItemKeys(head);
-					fetchItemsForUserItems(head, headKeys);
+					fillItems(head);
 				} else {
 					head = new ArrayList<UserItem>();
 				}
@@ -140,8 +163,7 @@ public class ItemService {
 						.sort(meta.key.desc)
 						.limit(request.getFetchCount())
 						.asList();
-				List<Key> tailKeys = getListOfItemKeys(tail);
-				fetchItemsForUserItems(tail, tailKeys);
+				fillItems(tail);
 				if (tail.size() < request.getFetchCount()) {
 					endReached = true;
 				} else {
@@ -203,7 +225,7 @@ public class ItemService {
 		}
 	}
 
-	public static Key min(Key... ks) {
+	private static Key min(Key... ks) {
 		if (ks == null || ks.length == 0) {
 			return null;
 		}
@@ -217,7 +239,7 @@ public class ItemService {
 		return min;
 	}
 
-	public static Key max(Key... ks) {
+	private static Key max(Key... ks) {
 		if (ks == null || ks.length == 0) {
 			return null;
 		}
@@ -272,49 +294,24 @@ public class ItemService {
 		}
 	}
 
-	private List<Key> getListOfItemKeys(List<UserItem> userItems) {
-		List<Key> keys = new ArrayList<Key>(userItems.size());
-		for (UserItem ui : userItems) {
-			keys.add(ui.getItem());
-		}
-		return keys;
-	}
-
-	private void fetchItemsForUserItems(List<UserItem> userItems, List<Key> keys) {
-		ItemMeta iMeta = ItemMeta.get();
-		List<Item> items = Datastore.get(iMeta, keys);
-		for (int i = 0; i < items.size(); i++) {
-			userItems.get(i).setItemObject(items.get(i));
-		}
-	}
-
 	public UserItem getByKey(Key key) {
 		UserItem userItem = Datastore.getOrNull(UserItemMeta.get(), key);
 		if (userItem != null) {
-			Item item = Datastore.get(ItemMeta.get(), userItem.getItem());
-			userItem.setItemObject(item);
+			fillItems(userItem);
 		}
 		return userItem;
 	}
 
-	public UserItem addManualItem(UserItem userItem) {
+	public void addManualItem(UserItem userItem) {
 		UserSourceService uss = new UserSourceService();
 		UserSource manualUserSource = uss.getManualUserSource();
 
 		ManualItem item = (ManualItem) userItem.getItemObject();
-		Date now = new Date();
-		item.setAdded(now);
-		item.setPublished(now);
 		item.setSource(manualUserSource.getSource());
 		Key itemKey = Datastore.put(item);
 		item.setKey(itemKey);
 
-		userItem.setAdded(now);
 		userItem.setItem(item.getKey());
-		userItem.setRead(false);
-		userItem.setUser(manualUserSource.getUser());
-		userItem.setLastChanged(null);
-
 		List<Key> labels = userItem.getLabels();
 		if (labels == null) {
 			labels = new ArrayList<Key>();
@@ -324,7 +321,6 @@ public class ItemService {
 
 		Key userItemKey = Datastore.put(userItem);
 		userItem.setKey(userItemKey);
-		return userItem;
 	}
 
 	public Map<Key, UserItem> updateItems(List<Key> itemKeys,
@@ -334,7 +330,7 @@ public class ItemService {
 		Map<Key, UserItem> result = new HashMap<Key, UserItem>();
 		for (UserItem userItem : userItems) {
 			if (!userItem.getUser().equals(user)) {
-				// error
+				// error, ignore this item
 				continue;
 			}
 			ChangeSet change = changeSets.get(userItem.getKey());

@@ -24,7 +24,7 @@ public class BackupTask implements DeferredTask {
 		ItemService is = new ItemService();
 		UserItem userItem = is.getByKey(userItemKey);
 		LabelService ls = new LabelService();
-		Label backupLabel = ls.getLabelsByKeys(backupLabelKey);
+		Label backupLabel = ls.getLabelByKey(backupLabelKey);
 
 		BackupService bs = new BackupService();
 		BlobKey blobKey;

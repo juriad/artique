@@ -121,6 +121,7 @@ public class XMLCrawler extends AbstractCrawler<XMLSource, ArticleItem> {
 		return CrawlerUtils.toSHA1(getSource().getUrl().getValue() + "|" + id);
 	}
 
+	// FIXME move datastore to service
 	@Override
 	protected List<ArticleItem> getCollidingItems(ArticleItem item) {
 		ArticleItemMeta meta = ArticleItemMeta.get();
