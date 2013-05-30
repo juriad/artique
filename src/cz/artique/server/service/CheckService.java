@@ -1,7 +1,5 @@
 package cz.artique.server.service;
 
-import org.slim3.datastore.Datastore;
-
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
@@ -18,9 +16,9 @@ public class CheckService {
 		if (source.isEnabled() && !source.isEnqued()) {
 			enque(source.getKey());
 			source.setEnqued(true);
-
-			// FIXME datastore: call service
-			Datastore.put(source);
+			
+			SourceService ss = new SourceService();
+			ss.saveSource(source);
 		}
 	}
 

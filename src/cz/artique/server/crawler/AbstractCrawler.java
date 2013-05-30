@@ -4,26 +4,25 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.slim3.datastore.Datastore;
-
-import com.google.appengine.api.datastore.Key;
-
-import cz.artique.server.meta.source.UserSourceMeta;
-import cz.artique.server.service.UserSourceService;
+import cz.artique.server.service.BackupService;
+import cz.artique.server.service.ItemService;
+import cz.artique.server.service.SourceService;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.Stats;
 import cz.artique.shared.model.source.UserSource;
 
-// FIXME move datastore to service
 public abstract class AbstractCrawler<E extends Source, F extends Item>
 		extends Fetcher implements Crawler<E> {
 
 	private final E source;
 
+	private final BackupService backupService;
+
 	protected AbstractCrawler(E source) {
 		this.source = source;
+		backupService = new BackupService();
 	}
 
 	protected void writeStat(int items) {
@@ -31,7 +30,8 @@ public abstract class AbstractCrawler<E extends Source, F extends Item>
 		s.setProbeDate(new Date());
 		s.setSource(getSource().getKey());
 		s.setItemsAcquired(items);
-		Datastore.put(s);
+		SourceService ss = new SourceService();
+		ss.addStat(s);
 	}
 
 	protected void writeStat(Throwable t) {
@@ -40,7 +40,8 @@ public abstract class AbstractCrawler<E extends Source, F extends Item>
 		s.setSource(getSource().getKey());
 		s.setItemsAcquired(0);
 		s.setError(t.getLocalizedMessage());
-		Datastore.put(s);
+		SourceService ss = new SourceService();
+		ss.addStat(s);
 	}
 
 	protected List<F> createNonDuplicateItems(List<F> items) {
@@ -61,8 +62,8 @@ public abstract class AbstractCrawler<E extends Source, F extends Item>
 				return i;
 			}
 		}
-		Key key = Datastore.put(item);
-		item.setKey(key);
+		ItemService is = new ItemService();
+		is.addItem(item);
 		return null;
 	}
 
@@ -79,17 +80,19 @@ public abstract class AbstractCrawler<E extends Source, F extends Item>
 		return ui;
 	}
 
+	protected void saveUserItems(List<UserItem> userItems) {
+		ItemService is = new ItemService();
+		is.saveUserItems(userItems);
+		for (UserItem ui : userItems) {
+			backupService.planForBackup(ui);
+		}
+	}
+
 	protected List<UserSource> getUserSources() {
-		UserSourceMeta meta = UserSourceMeta.get();
-		List<UserSource> userSources =
-			Datastore
-				.query(meta)
-				.filter(meta.source.equal(getSource().getKey()))
-				.filter(meta.watching.equal(Boolean.TRUE))
-				.asList();
-		UserSourceService uss = new UserSourceService();
-		uss.fillRegions(userSources);
-		return userSources;
+		SourceService ss = new SourceService();
+		List<UserSource> activeUserSourcesForSource =
+			ss.getActiveUserSourcesForSource(getSource().getKey());
+		return activeUserSourcesForSource;
 	}
 
 	protected boolean isDuplicate(F i1, F i2) {

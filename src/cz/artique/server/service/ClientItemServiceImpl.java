@@ -2,8 +2,11 @@ package cz.artique.server.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
@@ -17,6 +20,7 @@ import cz.artique.shared.items.ListingResponse;
 import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.item.UserItem;
+import cz.artique.shared.model.label.BackupLevel;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.validation.Issue;
 import cz.artique.shared.validation.IssueType;
@@ -34,7 +38,6 @@ public class ClientItemServiceImpl implements ClientItemService {
 	}
 
 	public UserItem addManualItem(UserItem item) throws ValidationException {
-		// FIXME call plan backup
 		Validator<AddManualItem> validator = new Validator<AddManualItem>();
 		validator.checkNullability(AddManualItem.USER_ITEM, false, item);
 		User user = UserServiceFactory.getUserService().getCurrentUser();
@@ -44,8 +47,13 @@ public class ClientItemServiceImpl implements ClientItemService {
 
 		LabelService ls = new LabelService();
 		List<Label> labelsByKeys = ls.getLabelsByKeys(item.getLabels());
+		Label backupLabel = null;
 		for (Label l : labelsByKeys) {
 			validator.checkUser(AddManualItem.LABELS, user, l.getUser());
+			if (l.getBackupLevel() != null
+				|| !BackupLevel.NO_BACKUP.equals(l.getBackupLevel())) {
+				backupLabel = l;
+			}
 		}
 
 		validator.checkNullability(AddManualItem.ITEM, false,
@@ -69,28 +77,66 @@ public class ClientItemServiceImpl implements ClientItemService {
 
 		ItemService is = new ItemService();
 		is.addManualItem(item);
+		if (backupLabel != null) {
+			BackupService bs = new BackupService();
+			bs.doPlanForBackup(item, backupLabel);
+		}
 		return item;
 	}
 
-	public Map<Key, UserItem> updateItems(Map<Key, ChangeSet> changeSets) {
-		// FIXME validate updateItems
-		// FIXME call plan backup
-		List<Key> itemKeys = new ArrayList<Key>();
-		for (Key itemKey : changeSets.keySet()) {
-			ChangeSet change = changeSets.get(itemKey);
+	public Map<Key, UserItem> updateItems(Map<Key, ChangeSet> changeSets)
+			throws ValidationException {
+		if (changeSets == null || changeSets.size() == 0) {
+			return new HashMap<Key, UserItem>();
+		}
+
+		Validator<UpdateItems> validator = new Validator<UpdateItems>();
+		User user = UserServiceFactory.getUserService().getCurrentUser();
+		Set<Key> labelKeys = new HashSet<Key>();
+		for (Key key : changeSets.keySet()) {
+			ChangeSet change = changeSets.get(key);
+			validator.checkNullability(UpdateItems.ITEMS, false, key);
+			labelKeys.addAll(change.getLabelsAdded());
+		}
+		LabelService ls = new LabelService();
+		List<Label> labels = ls.getLabelsByKeys(labelKeys);
+
+		Map<Key, Label> backupLabels = new HashMap<Key, Label>();
+		for (Label l : labels) {
+			validator.checkUser(UpdateItems.LABELS, user, l.getUser());
+			if (l.getBackupLevel() != null
+				|| !BackupLevel.NO_BACKUP.equals(l.getBackupLevel())) {
+				backupLabels.put(l.getKey(), l);
+			}
+		}
+
+		ItemService is = new ItemService();
+		List<UserItem> userItemsByKeys =
+			is.getUserItemsByKeys(changeSets.keySet());
+
+		BackupService bs = new BackupService();
+		List<UserItem> toUpdate = new ArrayList<UserItem>();
+		for (UserItem userItem : userItemsByKeys) {
+			ChangeSet change = changeSets.get(userItem.getKey());
 			if (change.isEmpty()) {
 				// empty
 				continue;
 			}
-			if (!change.getUserItem().equals(itemKey)) {
+			if (!change.getUserItem().equals(userItem.getKey())) {
 				// invalid
 				continue;
 			}
-			itemKeys.add(itemKey);
+			toUpdate.add(userItem);
+
+			for (Key added : change.getLabelsAdded()) {
+				Label backupLabel = backupLabels.get(added);
+				if (backupLabel != null) {
+					bs.doPlanForBackup(userItem, backupLabel);
+					break;
+				}
+			}
 		}
 
-		ItemService is = new ItemService();
-		User user = UserServiceFactory.getUserService().getCurrentUser();
-		return is.updateItems(itemKeys, changeSets, user);
+		return is.updateItems(userItemsByKeys, changeSets, user);
 	}
 }

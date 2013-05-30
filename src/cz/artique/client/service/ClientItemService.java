@@ -32,8 +32,8 @@ public interface ClientItemService extends RemoteService {
 	UserItem addManualItem(UserItem item) throws ValidationException;
 
 	public enum UpdateItems implements HasIssue {
-		LABEL,
-		NAME;
+		LABELS,
+		ITEMS;
 		public String enumName() {
 			return "UpdateItems";
 		}

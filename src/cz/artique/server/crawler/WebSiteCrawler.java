@@ -10,13 +10,12 @@ import java.util.Set;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slim3.datastore.Datastore;
 
 import com.google.appengine.api.datastore.Link;
 import com.google.appengine.api.datastore.Text;
 import com.google.appengine.api.users.User;
 
-import cz.artique.server.meta.item.LinkItemMeta;
+import cz.artique.server.service.ItemService;
 import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.LinkItem;
@@ -119,7 +118,7 @@ public class WebSiteCrawler extends HTMLCrawler<WebSiteSource, LinkItem> {
 				userItems.add(userItem);
 			}
 			if (userItems.size() > 0) {
-				Datastore.put(userItems);
+				saveUserItems(userItems);
 				count++;
 			}
 		}
@@ -127,16 +126,11 @@ public class WebSiteCrawler extends HTMLCrawler<WebSiteSource, LinkItem> {
 		return count;
 	}
 
-	// FIXME move datastore to service
 	@Override
 	protected List<LinkItem> getCollidingItems(LinkItem item) {
-		LinkItemMeta meta = LinkItemMeta.get();
-		List<LinkItem> items =
-			Datastore
-				.query(meta)
-				.filter(meta.source.equal(getSource().getKey()))
-				.filter(meta.hash.equal(item.getHash()))
-				.asList();
-		return items;
+		ItemService is = new ItemService();
+		List<LinkItem> collidingLinkItems =
+			is.getCollidingLinkItems(getSource().getKey(), item.getHash());
+		return collidingLinkItems;
 	}
 }

@@ -14,11 +14,14 @@ import com.google.appengine.api.users.UserServiceFactory;
 import cz.artique.server.meta.source.ManualSourceMeta;
 import cz.artique.server.meta.source.RegionMeta;
 import cz.artique.server.meta.source.SourceMeta;
+import cz.artique.server.meta.source.UserSourceMeta;
 import cz.artique.server.utils.KeyGen;
 import cz.artique.shared.model.config.ConfigKey;
 import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
+import cz.artique.shared.model.source.Stats;
+import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.utils.TransactionException;
 
 public class SourceService {
@@ -119,5 +122,22 @@ public class SourceService {
 
 	public void saveSource(Source source) {
 		Datastore.put(source);
+	}
+
+	public void addStat(Stats stat) {
+		Datastore.put(stat);
+	}
+
+	public List<UserSource> getActiveUserSourcesForSource(Key sourceKey) {
+		UserSourceMeta meta = UserSourceMeta.get();
+		List<UserSource> userSources =
+			Datastore
+				.query(meta)
+				.filter(meta.source.equal(sourceKey))
+				.filter(meta.watching.equal(Boolean.TRUE))
+				.asList();
+		UserSourceService uss = new UserSourceService();
+		uss.fillRegions(userSources);
+		return userSources;
 	}
 }

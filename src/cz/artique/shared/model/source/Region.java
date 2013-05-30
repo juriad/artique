@@ -7,8 +7,10 @@ import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
 
+import cz.artique.shared.utils.HasDeepEquals;
+
 @Model(schemaVersion = 1)
-public class Region implements Serializable {
+public class Region implements Serializable, HasDeepEquals<Region> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -118,6 +120,29 @@ public class Region implements Serializable {
 		this.htmlSource = htmlSource;
 	}
 
+	public boolean equalsDeeply(Region other) {
+		if (this == other)
+			return true;
+		if (other == null)
+			return false;
+		if (htmlSource == null) {
+			if (other.htmlSource != null)
+				return false;
+		} else if (!htmlSource.equals(other.htmlSource))
+			return false;
+		if (negativeSelector == null) {
+			if (other.negativeSelector != null)
+				return false;
+		} else if (!negativeSelector.equals(other.negativeSelector))
+			return false;
+		if (positiveSelector == null) {
+			if (other.positiveSelector != null)
+				return false;
+		} else if (!positiveSelector.equals(other.positiveSelector))
+			return false;
+		return true;
+	}
+
 	/**
 	 * Sets the key.
 	 * 
@@ -149,4 +174,5 @@ public class Region implements Serializable {
 	public void setVersion(Long version) {
 		this.version = version;
 	}
+
 }

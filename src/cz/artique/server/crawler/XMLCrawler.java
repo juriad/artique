@@ -10,7 +10,6 @@ import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.slim3.datastore.Datastore;
 
 import com.google.appengine.api.datastore.Text;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -18,7 +17,7 @@ import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedInput;
 
-import cz.artique.server.meta.item.ArticleItemMeta;
+import cz.artique.server.service.ItemService;
 import cz.artique.shared.model.item.ArticleItem;
 import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.UserItem;
@@ -65,7 +64,7 @@ public class XMLCrawler extends AbstractCrawler<XMLSource, ArticleItem> {
 				UserItem ui = createUserItem(us, item);
 				userItems.add(ui);
 			}
-			Datastore.put(userItems);
+			saveUserItems(userItems);
 		}
 	}
 
@@ -121,17 +120,11 @@ public class XMLCrawler extends AbstractCrawler<XMLSource, ArticleItem> {
 		return CrawlerUtils.toSHA1(getSource().getUrl().getValue() + "|" + id);
 	}
 
-	// FIXME move datastore to service
 	@Override
 	protected List<ArticleItem> getCollidingItems(ArticleItem item) {
-		ArticleItemMeta meta = ArticleItemMeta.get();
-		List<ArticleItem> items =
-			Datastore
-				.query(meta)
-				.filter(meta.source.equal(getSource().getKey()))
-				.filter(meta.hash.equal(item.getHash()))
-				.asList();
-		return items;
+		ItemService is = new ItemService();
+		List<ArticleItem> collidingArticleItems =
+			is.getCollidingArticleItems(getSource().getKey(), item.getHash());
+		return collidingArticleItems;
 	}
-
 }

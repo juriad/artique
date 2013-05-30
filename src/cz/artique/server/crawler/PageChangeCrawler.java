@@ -9,14 +9,12 @@ import java.util.Map;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.slim3.datastore.Datastore;
 
-import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Text;
 
 import cz.artique.server.crawler.DiffMatchPatch.Diff;
-import cz.artique.server.meta.source.PageChangeCrawlerDataMeta;
 import cz.artique.server.service.ConfigService;
+import cz.artique.server.service.UserSourceService;
 import cz.artique.shared.model.config.ConfigKey;
 import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.PageChangeItem;
@@ -75,9 +73,10 @@ public class PageChangeCrawler
 		return count;
 	}
 
-	// FIXME move datastore to service
 	private int handleByRegion(Region region, Elements filteredPage,
 			List<UserSource> list) {
+		UserSourceService uss = new UserSourceService();
+
 		List<UserSource> firstTime = new ArrayList<UserSource>();
 		List<UserSource> older = new ArrayList<UserSource>();
 		PageChangeCrawlerData data = null;
@@ -86,9 +85,7 @@ public class PageChangeCrawler
 				firstTime.add(us);
 			} else {
 				if (data == null) {
-					data =
-						Datastore.get(PageChangeCrawlerDataMeta.get(),
-							us.getCrawlerData());
+					data = uss.getPageChangeCrawlerData(us.getCrawlerData());
 				}
 				older.add(us);
 			}
@@ -100,7 +97,7 @@ public class PageChangeCrawler
 		if (data != null) {
 			String oldContent = data.getContent().getValue();
 			data.setContent(new Text(newContent));
-			Datastore.put(data);
+			uss.saveCrawlerData(data);
 
 			String diff = generateDiff(oldContent, newContent);
 			if (diff != null) {
@@ -110,23 +107,19 @@ public class PageChangeCrawler
 					UserItem userItem = createUserItem(us, item);
 					userItems.add(userItem);
 				}
-				Datastore.put(userItems);
+				saveUserItems(userItems);
 				added = 1;
 			}
 		} else {
 			if (firstTime.size() > 0) {
 				data = new PageChangeCrawlerData();
 				data.setContent(new Text(newContent));
-				Key key = Datastore.put(data);
-				data.setKey(key);
+				uss.saveCrawlerData(data);
 			}
 		}
 
 		if (firstTime.size() > 0) {
-			for (UserSource us : firstTime) {
-				us.setCrawlerData(data.getKey());
-			}
-			Datastore.put(firstTime);
+			uss.setCrawlerData(firstTime, data.getKey());
 		}
 
 		return added;

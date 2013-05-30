@@ -1,16 +1,16 @@
 package cz.artique.server.crawler;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slim3.datastore.Datastore;
 
 import com.google.appengine.api.users.User;
 
-import cz.artique.server.meta.item.UserItemMeta;
+import cz.artique.server.service.ItemService;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.source.HTMLSource;
@@ -56,16 +56,11 @@ public abstract class HTMLCrawler<E extends HTMLSource, F extends Item>
 		return simplified;
 	}
 
-	// FIXME move datastore to service
 	protected Set<User> getUsersAlreadyHavingItem(F item) {
-		UserItemMeta meta = UserItemMeta.get();
-		Iterable<UserItem> asIterable =
-			Datastore
-				.query(meta)
-				.filter(meta.item.equal(item.getKey()))
-				.asIterable();
+		ItemService is = new ItemService();
+		List<UserItem> userItemsForItem = is.getUserItemsForItem(item.getKey());
 		Set<User> users = new HashSet<User>();
-		for (UserItem ui : asIterable) {
+		for (UserItem ui : userItemsForItem) {
 			users.add(ui.getUser());
 		}
 		return users;

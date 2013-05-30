@@ -145,7 +145,6 @@ public class BackupService extends Fetcher {
 	}
 
 	public void planForBackup(UserItem userItem) {
-		// TODO call whenever a change ocures
 		LabelService ls = new LabelService();
 		List<Label> labelsByKeys = ls.getLabelsByKeys(userItem.getLabels());
 		for (Label l : labelsByKeys) {
@@ -157,7 +156,7 @@ public class BackupService extends Fetcher {
 		}
 	}
 
-	private void doPlanForBackup(UserItem userItem, Label l) {
+	public void doPlanForBackup(UserItem userItem, Label l) {
 		Queue queue = QueueFactory.getQueue(queueName);
 		TaskOptions task =
 			TaskOptions.Builder.withPayload(new BackupTask(userItem.getKey(), l

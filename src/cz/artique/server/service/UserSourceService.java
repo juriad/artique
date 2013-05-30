@@ -15,6 +15,7 @@ import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
+import cz.artique.server.meta.source.PageChangeCrawlerDataMeta;
 import cz.artique.server.meta.source.RegionMeta;
 import cz.artique.server.meta.source.SourceMeta;
 import cz.artique.server.meta.source.UserSourceMeta;
@@ -23,6 +24,7 @@ import cz.artique.shared.model.config.ConfigKey;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.source.ManualSource;
+import cz.artique.shared.model.source.PageChangeCrawlerData;
 import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.SourceType;
@@ -160,6 +162,16 @@ public class UserSourceService {
 		try {
 			original =
 				Datastore.get(tx, UserSourceMeta.get(), userSource.getKey());
+			fillRegions(original);
+
+			if (userSource.getCrawlerData() != null) {
+				if (original.getRegionObject() == null
+					|| !original.getRegionObject().equalsDeeply(
+						userSource.getRegionObject())) {
+					userSource.setCrawlerData(null);
+				}
+			}
+
 			Datastore.put(tx, userSource);
 			tx.commit();
 		} catch (Exception e) {
@@ -258,6 +270,39 @@ public class UserSourceService {
 		fillRegions(userSource);
 		fillSources(userSource);
 		return userSource;
+	}
+
+	public PageChangeCrawlerData getPageChangeCrawlerData(Key crawlerData) {
+		PageChangeCrawlerData pageChangeCrawlerData =
+			Datastore.get(PageChangeCrawlerDataMeta.get(), crawlerData);
+		return pageChangeCrawlerData;
+	}
+
+	public void saveCrawlerData(PageChangeCrawlerData data) {
+		Key key = Datastore.put(data);
+		data.setKey(key);
+	}
+
+	public void setCrawlerData(List<UserSource> firstTime, Key crawlerDataKey) {
+		List<Key> keys = new ArrayList<Key>();
+		for (UserSource us : firstTime) {
+			keys.add(us.getKey());
+		}
+		Transaction tx = Datastore.beginTransaction();
+		try {
+			List<UserSource> list =
+				Datastore.get(tx, UserSourceMeta.get(), keys);
+			for (UserSource us : list) {
+				us.setCrawlerData(crawlerDataKey);
+			}
+			Datastore.put(tx, list);
+		} catch (Exception e) {
+			throw new TransactionException();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+		}
 	}
 
 }

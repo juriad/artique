@@ -19,12 +19,16 @@ import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.api.users.User;
 
+import cz.artique.server.meta.item.ArticleItemMeta;
 import cz.artique.server.meta.item.ItemMeta;
+import cz.artique.server.meta.item.LinkItemMeta;
 import cz.artique.server.meta.item.UserItemMeta;
 import cz.artique.shared.items.ChangeSet;
 import cz.artique.shared.items.ListingRequest;
 import cz.artique.shared.items.ListingResponse;
+import cz.artique.shared.model.item.ArticleItem;
 import cz.artique.shared.model.item.Item;
+import cz.artique.shared.model.item.LinkItem;
 import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Filter;
@@ -323,10 +327,8 @@ public class ItemService {
 		userItem.setKey(userItemKey);
 	}
 
-	public Map<Key, UserItem> updateItems(List<Key> itemKeys,
+	public Map<Key, UserItem> updateItems(List<UserItem> userItems,
 			Map<Key, ChangeSet> changeSets, User user) {
-		UserItemMeta meta = UserItemMeta.get();
-		List<UserItem> userItems = Datastore.get(meta, itemKeys);
 		Map<Key, UserItem> result = new HashMap<Key, UserItem>();
 		for (UserItem userItem : userItems) {
 			if (!userItem.getUser().equals(user)) {
@@ -363,5 +365,59 @@ public class ItemService {
 				tx.rollback();
 			}
 		}
+	}
+
+	public void addItem(Item item) {
+		Key key = Datastore.put(item);
+		item.setKey(key);
+	}
+
+	public List<UserItem> getUserItemsForItem(Key itemKey) {
+		UserItemMeta meta = UserItemMeta.get();
+		List<UserItem> list =
+			Datastore.query(meta).filter(meta.item.equal(itemKey)).asList();
+		return list;
+	}
+
+	/**
+	 * Returns incomplete
+	 * 
+	 * @param itemKeys
+	 * @return
+	 */
+	public List<UserItem> getUserItemsByKeys(Iterable<Key> itemKeys) {
+		List<UserItem> list = Datastore.get(UserItemMeta.get(), itemKeys);
+		return list;
+	}
+
+	public List<ArticleItem> getCollidingArticleItems(Key sourceKey, String hash) {
+		ArticleItemMeta meta = ArticleItemMeta.get();
+		List<ArticleItem> items =
+			Datastore
+				.query(meta)
+				.filter(meta.source.equal(sourceKey))
+				.filter(meta.hash.equal(hash))
+				.asList();
+		return items;
+	}
+
+	public void saveUserItems(List<UserItem> userItems) {
+		List<Key> keys = Datastore.put(userItems);
+		int i = 0;
+		for (UserItem ui : userItems) {
+			ui.setKey(keys.get(i));
+			i++;
+		}
+	}
+
+	public List<LinkItem> getCollidingLinkItems(Key sourceKey, String hash) {
+		LinkItemMeta meta = LinkItemMeta.get();
+		List<LinkItem> items =
+			Datastore
+				.query(meta)
+				.filter(meta.source.equal(sourceKey))
+				.filter(meta.hash.equal(hash))
+				.asList();
+		return items;
 	}
 }
