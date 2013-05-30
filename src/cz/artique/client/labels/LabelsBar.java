@@ -4,85 +4,79 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
-import com.google.gwt.user.client.ui.InlineLabel;
 
+import cz.artique.client.common.AddButton;
+import cz.artique.client.common.PanelWithMore;
 import cz.artique.client.labels.suggestion.LabelSuggestion;
-import cz.artique.client.labels.suggestion.SuggesionLabelFactory;
 import cz.artique.client.labels.suggestion.SuggestionResult;
+import cz.artique.client.manager.Managers;
+import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
-import cz.artique.shared.utils.HasDisplayName;
-import cz.artique.shared.utils.HasKey;
 
-public abstract class LabelsBar<E extends HasDisplayName & HasKey<K> & Comparable<E>, K>
-		extends Composite implements HasEnabled {
+public abstract class LabelsBar extends Composite implements HasEnabled {
 
-	class LabelRemoveHandler implements RemoveHandler {
-		public void onRemove(RemoveEvent e) {
+	class LabelCloseHandler implements CloseHandler<LabelWidget> {
+		public void onClose(CloseEvent<LabelWidget> e) {
 			if (e.getSource() instanceof LabelWidget) {
-				@SuppressWarnings("unchecked")
-				LabelWidget<E> toBeRemoved = (LabelWidget<E>) e.getSource();
+				LabelWidget toBeRemoved = (LabelWidget) e.getSource();
 				labelRemoved(toBeRemoved);
 			}
 		}
 	}
 
-	private InlineLabel addLabel;
+	private AddButton<LabelsBar> addLabel;
 
-	private List<E> selectedLabels;
+	private List<Label> selectedLabels;
 
-	private final PanelWithMore<LabelWidget<E>> panel;
+	private final PanelWithMore<LabelWidget> panel;
 
-	protected final LabelsManager<E, K> manager;
+	private LabelWidgetFactory factory;
 
-	private LabelWidgetFactory<E> factory;
-
-	private final RemoveHandler labelRemoveHandler = new LabelRemoveHandler();
+	private final CloseHandler<LabelWidget> labelCloseHandler =
+		new LabelCloseHandler();
 
 	private boolean enabled = true;
 
-	public LabelsBar(final LabelsManager<E, K> manager,
-			LabelWidgetFactory<E> factory,
-			final SuggesionLabelFactory<E> factory2, int maxSize) {
-		this.manager = manager;
+	public LabelsBar(LabelWidgetFactory factory) {
 		this.factory = factory;
-		selectedLabels = new ArrayList<E>();
-		panel = new PanelWithMore<LabelWidget<E>>(maxSize);
+		selectedLabels = new ArrayList<Label>();
+		panel = new PanelWithMore<LabelWidget>();
 		initWidget(panel);
 
 		setStylePrimaryName("labels-bar");
 
-		addLabel = AddLabelButtonFactory.FACTORY.createAddLabel();
-		addLabel.setStylePrimaryName("labels-bar-add-button");
+		addLabel = AddButton.FACTORY.createWidget(this);
 		panel.setExtraWidget(addLabel);
-		addLabel.addClickHandler(new ClickHandler() {
+		addLabel.addOpenHandler(new OpenHandler<LabelsBar>() {
 
-			private List<E> allLabels;
+			private List<Label> allLabels;
 
-			private LabelSuggestion<E> box;
+			private LabelSuggestion box;
 
-			public void onClick(ClickEvent event) {
-				allLabels = manager.getLabels(LabelType.USER_DEFINED);
+			public void onOpen(OpenEvent<LabelsBar> event) {
+				allLabels =
+					Managers.LABELS_MANAGER.getLabels(LabelType.USER_DEFINED);
 				allLabels.removeAll(getSelectedLabels());
 
-				box =
-					new LabelSuggestion<E>(manager, allLabels, factory2, true);
+				box = new LabelSuggestion(allLabels, true);
 				box.setStylePrimaryName("labels-bar-suggest-box");
 				panel.setExtraWidget(box);
-				panel.setShowMoreButton(false);
 
 				box
-					.addSelectionHandler(new SelectionHandler<SuggestionResult<E>>() {
+					.addSelectionHandler(new SelectionHandler<SuggestionResult>() {
 
 						public void onSelection(
-								SelectionEvent<SuggestionResult<E>> event) {
+								SelectionEvent<SuggestionResult> event) {
 							GWT.log("on selection");
-							SuggestionResult<E> selectedItem =
+							SuggestionResult selectedItem =
 								event.getSelectedItem();
 							if (selectedItem.isHasValue()) {
 								if (selectedItem.isExisting()) {
@@ -100,27 +94,26 @@ public abstract class LabelsBar<E extends HasDisplayName & HasKey<K> & Comparabl
 
 			private void end() {
 				panel.setExtraWidget(addLabel);
-				panel.setShowMoreButton(true);
 			}
 
 		});
 	}
 
-	protected void addLabel(E label) {
+	protected void addLabel(Label label) {
 		getSelectedLabels().add(label);
-		LabelWidget<E> labelWidget = factory.createWidget(label);
+		LabelWidget labelWidget = factory.createWidget(label);
 		panel.add(labelWidget);
-		labelWidget.addRemoveHandler(labelRemoveHandler);
+		labelWidget.addCloseHandler(labelCloseHandler);
 	}
 
-	protected void removeLabel(LabelWidget<E> labelWidget) {
+	protected void removeLabel(LabelWidget labelWidget) {
 		getSelectedLabels().remove(labelWidget.getLabel());
 		panel.remove(labelWidget);
 	}
 
-	protected void removeLabel(E label) {
+	protected void removeLabel(Label label) {
 		getSelectedLabels().remove(label);
-		for (LabelWidget<E> w : panel.getAll()) {
+		for (LabelWidget w : panel.getWidgets()) {
 			if (w.getLabel().equals(label)) {
 				panel.remove(w);
 				break;
@@ -130,11 +123,11 @@ public abstract class LabelsBar<E extends HasDisplayName & HasKey<K> & Comparabl
 
 	protected abstract void newLabelAdded(String name);
 
-	protected abstract void labelAdded(E label);
+	protected abstract void labelAdded(Label label);
 
-	protected abstract void labelRemoved(LabelWidget<E> labelWidget);
+	protected abstract void labelRemoved(LabelWidget labelWidget);
 
-	public List<E> getSelectedLabels() {
+	public List<Label> getSelectedLabels() {
 		return selectedLabels;
 	}
 
@@ -153,7 +146,7 @@ public abstract class LabelsBar<E extends HasDisplayName & HasKey<K> & Comparabl
 		}
 		this.enabled = enabled;
 
-		for (LabelWidget<E> labelWidget : panel.getAll()) {
+		for (LabelWidget labelWidget : panel.getWidgets()) {
 			labelWidget.setEnabled(enabled);
 		}
 

@@ -36,7 +36,7 @@ public class UserItemRow extends AbstractRowWidget<UserItem, Key> {
 		super(data);
 
 		header = new FlowPanel();
-		labels = new ArtiqueLabelsBar(data, 3);
+		labels = new ArtiqueLabelsBar(data);
 		header.add(labels);
 
 		title = new Label(getData(false).getItemObject().getTitle());

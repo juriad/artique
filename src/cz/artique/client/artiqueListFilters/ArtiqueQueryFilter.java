@@ -1,7 +1,7 @@
 package cz.artique.client.artiqueListFilters;
 
-import static cz.artique.client.artiqueLabels.ArtiqueLabelsManager.AND;
-import static cz.artique.client.artiqueLabels.ArtiqueLabelsManager.OR;
+import static cz.artique.client.artiqueLabels.LabelsManager.AND;
+import static cz.artique.client.artiqueLabels.LabelsManager.OR;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +10,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
 import cz.artique.client.ArtiqueWorld;
-import cz.artique.client.artiqueLabels.ArtiqueLabelSuggestionFactory;
-import cz.artique.client.artiqueLabels.ArtiqueLabelWidget;
+import cz.artique.client.labels.LabelWidget;
 import cz.artique.client.labels.suggestion.SuggestionResult;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.Filter;
@@ -21,8 +20,7 @@ import cz.artique.shared.model.label.Label;
 public class ArtiqueQueryFilter extends AbstractQueryFilter {
 
 	public ArtiqueQueryFilter() {
-		super(Managers.LABELS_MANAGER, ArtiqueLabelWidget.REMOVABLE_FACTORY,
-			ArtiqueLabelSuggestionFactory.factory);
+		super(LabelWidget.FACTORY);
 	}
 
 	@Override
@@ -67,7 +65,7 @@ public class ArtiqueQueryFilter extends AbstractQueryFilter {
 	}
 
 	@Override
-	protected Label getAddedLabel(SuggestionResult<Label> selectedItem) {
+	protected Label getAddedLabel(SuggestionResult selectedItem) {
 		if (selectedItem.isHasValue()) {
 			if (selectedItem.isExisting()) {
 				return selectedItem.getExistingValue();

@@ -1,44 +1,28 @@
-package cz.artique.client.artiqueLabels;
+package cz.artique.client.labels;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
 import cz.artique.client.artiqueHistory.ArtiqueHistory;
 import cz.artique.client.artiqueHistory.CachingHistoryUtils;
-import cz.artique.client.labels.LabelWidgetFactory;
 import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.ListFilter;
 
-public class ClickableArtiqueLabel extends ArtiqueLabelWidget {
+public class ClickableLabelWidget extends LabelWidget {
 
 	public static final ClickableArtiqueLabelFactory FACTORY =
-		new ClickableArtiqueLabelFactory(false);
-
-	public static final ClickableArtiqueLabelFactory REMOVABLE_FACTORY =
-		new ClickableArtiqueLabelFactory(true);
+		new ClickableArtiqueLabelFactory();
 
 	public static class ClickableArtiqueLabelFactory
-			implements LabelWidgetFactory<Label> {
-
-		private final boolean removable;
-
-		public ClickableArtiqueLabelFactory(boolean removable) {
-			this.removable = removable;
-		}
-
-		public ArtiqueLabelWidget createWidget(Label l) {
-			return new ClickableArtiqueLabel(l, removable);
+			implements LabelWidgetFactory {
+		public LabelWidget createWidget(Label l) {
+			return new ClickableLabelWidget(l);
 		}
 	}
 
-	public ClickableArtiqueLabel(final Label label, boolean removable) {
-		super(label, removable);
-
-		Filter filter = CachingHistoryUtils.UTILS.getFilterForLabel(label);
-		String serialized =
-			CachingHistoryUtils.UTILS.serializeListFilter(filter);
-		nameLabel.setHref("#" + serialized);
+	public ClickableLabelWidget(final Label label) {
+		super(label);
 
 		nameLabel.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {

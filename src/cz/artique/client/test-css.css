@@ -1,3 +1,28 @@
+/* panel with more */
+.panelWithMore {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+}
+
+.panelWithMore-expanded,.panelWithMore:hover {
+	
+}
+
+/* close button */
+.closeButton {
+	font-size: x-small;
+	vertical-align: top;
+	color: grey;
+	font-weight: bold;
+}
+
+.closeButton:hover {
+	color: red;
+}
+
+/* */
 .row {
 	border: 1px solid blue;
 	padding: 1em 0;

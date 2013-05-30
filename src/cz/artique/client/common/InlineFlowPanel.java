@@ -1,4 +1,4 @@
-package cz.artique.client.utils;
+package cz.artique.client.common;
 
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.DOM;

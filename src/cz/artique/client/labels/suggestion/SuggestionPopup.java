@@ -9,19 +9,19 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ValueLabel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import cz.artique.client.artiqueLabels.ActionEvent;
-import cz.artique.client.artiqueLabels.ActionHandler;
-import cz.artique.client.artiqueLabels.HasActionHandlers;
-import cz.artique.shared.utils.HasDisplayName;
+import cz.artique.client.artiqueLabels.ArtiqueLabelSuggestionFactory;
+import cz.artique.shared.model.label.Label;
 
-public class SuggestionPopup<E extends HasDisplayName> extends Composite
-		implements HasActionHandlers {
+public class SuggestionPopup extends Composite
+		implements HasSelectionHandlers<Label> {
 
 	private boolean mouseOver = false;
 
@@ -33,7 +33,7 @@ public class SuggestionPopup<E extends HasDisplayName> extends Composite
 
 		public void onMouseOver(MouseOverEvent event) {
 			@SuppressWarnings("unchecked")
-			ValueLabel<E> source = (ValueLabel<E>) event.getSource();
+			ValueLabel<Label> source = (ValueLabel<Label>) event.getSource();
 
 			int oldFocused = focused;
 			int index = valueLabels.indexOf(source);
@@ -46,32 +46,33 @@ public class SuggestionPopup<E extends HasDisplayName> extends Composite
 		}
 	}
 
-	private final List<ValueLabel<E>> valueLabels =
-		new ArrayList<ValueLabel<E>>();
-	private final Label moreLabels;
+	private final List<ValueLabel<Label>> valueLabels =
+		new ArrayList<ValueLabel<Label>>();
+	private final com.google.gwt.user.client.ui.Label moreLabels;
 
 	private final VerticalPanel panel;
 	private final int maxItems;
-	private E selectedValue;
+	private Label selectedValue;
 
 	private int focused = -1;
 	private int actualSize = 0;
 
-	public SuggestionPopup(SuggesionLabelFactory<E> factory, int maxItems) {
+	public SuggestionPopup(int maxItems) {
 		this.maxItems = maxItems;
 		panel = new VerticalPanel();
 		initWidget(panel);
 		for (int i = 0; i < maxItems; i++) {
-			ValueLabel<E> l = factory.createLabel();
+			ValueLabel<Label> l = ArtiqueLabelSuggestionFactory.FACTORY.createLabel();
 			l.setVisible(false);
 			l.addDomHandler(new ClickHandler() {
 
 				public void onClick(ClickEvent event) {
 					@SuppressWarnings("unchecked")
-					ValueLabel<E> source = (ValueLabel<E>) event.getSource();
-					E value = source.getValue();
+					ValueLabel<Label> source =
+						(ValueLabel<Label>) event.getSource();
+					Label value = source.getValue();
 					setSelectedValue(value);
-					fireEvent(new ActionEvent());
+					SelectionEvent.fire(SuggestionPopup.this, value);
 				}
 
 			}, ClickEvent.getType());
@@ -82,34 +83,29 @@ public class SuggestionPopup<E extends HasDisplayName> extends Composite
 			panel.add(l);
 		}
 
-		moreLabels = new Label();
+		moreLabels = new com.google.gwt.user.client.ui.Label();
 		moreLabels.setVisible(false);
 		moreLabels.addStyleName("more");
 		panel.add(moreLabels);
 	}
 
-	protected void setSelectedValue(E value) {
+	protected void setSelectedValue(Label value) {
 		this.selectedValue = value;
 	}
 
-	public E getSelectedValue() {
+	public Label getSelectedValue() {
 		return selectedValue;
 	}
 
-	public HandlerRegistration addActionHandler(
-			ActionHandler handler) {
-		return addHandler(handler, ActionEvent.getType());
-	}
-
-	public void setData(List<E> labels) {
+	public void setData(List<Label> labels) {
 		actualSize = Math.min(labels.size(), maxItems);
 		for (int i = 0; i < actualSize; i++) {
-			ValueLabel<E> valueLabel = valueLabels.get(i);
+			ValueLabel<Label> valueLabel = valueLabels.get(i);
 			valueLabel.setValue(labels.get(i));
 			valueLabel.setVisible(true);
 		}
 		for (int i = actualSize; i < maxItems; i++) {
-			ValueLabel<E> valueLabel = valueLabels.get(i);
+			ValueLabel<Label> valueLabel = valueLabels.get(i);
 			valueLabel.setVisible(false);
 		}
 
@@ -121,9 +117,9 @@ public class SuggestionPopup<E extends HasDisplayName> extends Composite
 		selectedValue = null;
 	}
 
-	public E getFirstAvaliable() {
+	public Label getFirstAvaliable() {
 		if (valueLabels.size() > 0) {
-			ValueLabel<E> valueLabel = valueLabels.get(0);
+			ValueLabel<Label> valueLabel = valueLabels.get(0);
 			if (valueLabel.isVisible()) {
 				return valueLabel.getValue();
 			}
@@ -179,7 +175,7 @@ public class SuggestionPopup<E extends HasDisplayName> extends Composite
 		}
 
 		if (newFocused >= 0) {
-			ValueLabel<E> valueLabel = valueLabels.get(newFocused);
+			ValueLabel<Label> valueLabel = valueLabels.get(newFocused);
 			valueLabel.addStyleName("selected");
 			selectedValue = valueLabel.getValue();
 		} else {
@@ -194,5 +190,10 @@ public class SuggestionPopup<E extends HasDisplayName> extends Composite
 		int oldFocused = focused;
 		focused = index;
 		changeFocus(oldFocused, focused);
+	}
+
+	public HandlerRegistration addSelectionHandler(
+			SelectionHandler<Label> handler) {
+		return addHandler(handler, SelectionEvent.getType());
 	}
 }

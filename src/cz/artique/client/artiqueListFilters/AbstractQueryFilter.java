@@ -2,8 +2,10 @@ package cz.artique.client.artiqueListFilters;
 
 import java.util.List;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.Composite;
@@ -11,26 +13,22 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 
-import cz.artique.client.labels.AddLabelButtonFactory;
+import cz.artique.client.common.AddButton;
 import cz.artique.client.labels.LabelWidget;
 import cz.artique.client.labels.LabelWidgetFactory;
-import cz.artique.client.labels.LabelsManager;
-import cz.artique.client.labels.RemoveEvent;
-import cz.artique.client.labels.RemoveHandler;
 import cz.artique.client.labels.suggestion.LabelSuggestion;
-import cz.artique.client.labels.suggestion.SuggesionLabelFactory;
 import cz.artique.client.labels.suggestion.SuggestionResult;
+import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.Label;
 
 public abstract class AbstractQueryFilter extends Composite
 		implements HasEnabled {
 
-	class LabelRemoveHandler implements RemoveHandler {
+	class LabelCloseHandler implements CloseHandler<LabelWidget> {
 
-		public void onRemove(RemoveEvent e) {
-			@SuppressWarnings("unchecked")
-			LabelWidget<Label> source = (LabelWidget<Label>) e.getSource();
+		public void onClose(CloseEvent<LabelWidget> e) {
+			LabelWidget source = (LabelWidget) e.getTarget();
 
 			int widgetIndex = panel.getWidgetIndex(source);
 			if (widgetIndex >= 0) {
@@ -42,37 +40,38 @@ public abstract class AbstractQueryFilter extends Composite
 		}
 	}
 
-	class AddClickHandler implements ClickHandler {
-		public void onClick(ClickEvent event) {
+	class AddOpenHandler implements OpenHandler<AbstractQueryFilter> {
+		public void onOpen(OpenEvent<AbstractQueryFilter> event) {
 			final Widget source = (Widget) event.getSource();
 			final int widgetIndex = panel.getWidgetIndex(source);
 			if (widgetIndex < 0) {
 				return;
 			}
 
-			final LabelSuggestion<Label> labelSuggestion =
-				new LabelSuggestion<Label>(manager, manager.getLabels(null),
-					factory2, false);
+			final LabelSuggestion labelSuggestion =
+				new LabelSuggestion(Managers.LABELS_MANAGER.getLabels(null),
+					false);
 			source.setVisible(false);
 			panel.insert(labelSuggestion, widgetIndex);
 			labelSuggestion
-				.addSelectionHandler(new SelectionHandler<SuggestionResult<Label>>() {
+				.addSelectionHandler(new SelectionHandler<SuggestionResult>() {
 
 					public void onSelection(
-							SelectionEvent<SuggestionResult<Label>> event) {
+							SelectionEvent<SuggestionResult> event) {
 						labelSuggestion.removeFromParent();
 						source.setVisible(true);
 
 						Label added = getAddedLabel(event.getSelectedItem());
 
 						if (added != null) {
-							LabelWidget<Label> labelWidget =
+							LabelWidget labelWidget =
 								factory.createWidget(added);
-							labelWidget.addRemoveHandler(removeHandler);
+							labelWidget.addCloseHandler(closeHandler);
 							panel.insert(labelWidget, widgetIndex);
-							com.google.gwt.user.client.ui.Label addButton =
-								AddLabelButtonFactory.FACTORY.createAddLabel();
-							addButton.addClickHandler(addHandler);
+							AddButton<AbstractQueryFilter> addButton =
+								AddButton.FACTORY
+									.createWidget(AbstractQueryFilter.this);
+							addButton.addOpenHandler(openHandler);
 							panel.insert(addButton, widgetIndex);
 
 							labels.add(widgetIndex / 2, added);
@@ -89,24 +88,16 @@ public abstract class AbstractQueryFilter extends Composite
 
 	private List<Label> labels;
 
-	private LabelWidgetFactory<Label> factory;
-
-	private SuggesionLabelFactory<Label> factory2;
+	private LabelWidgetFactory factory;
 
 	private boolean enabled = true;
 
-	private final LabelRemoveHandler removeHandler = new LabelRemoveHandler();
+	private final LabelCloseHandler closeHandler = new LabelCloseHandler();
 
-	private final AddClickHandler addHandler = new AddClickHandler();
+	private final AddOpenHandler openHandler = new AddOpenHandler();
 
-	protected final LabelsManager<Label, ?> manager;
-
-	public AbstractQueryFilter(LabelsManager<Label, ?> manager,
-			LabelWidgetFactory<Label> factory,
-			SuggesionLabelFactory<Label> factory2) {
-		this.manager = manager;
+	public AbstractQueryFilter(LabelWidgetFactory factory) {
 		this.factory = factory;
-		this.factory2 = factory2;
 		panel = new FlowPanel();
 		initWidget(panel);
 		setFilter(new Filter());
@@ -124,25 +115,25 @@ public abstract class AbstractQueryFilter extends Composite
 	private void fillPanel(List<Label> labels2) {
 		panel.clear();
 		{
-			com.google.gwt.user.client.ui.Label addButton =
-				AddLabelButtonFactory.FACTORY.createAddLabel();
-			addButton.addClickHandler(addHandler);
+			AddButton<AbstractQueryFilter> addButton =
+				AddButton.FACTORY.createWidget(this);
+			addButton.addOpenHandler(openHandler);
 			panel.add(addButton);
 		}
 		for (Label l : labels2) {
-			LabelWidget<Label> labelWidget = factory.createWidget(l);
-			labelWidget.addRemoveHandler(removeHandler);
+			LabelWidget labelWidget = factory.createWidget(l);
+			labelWidget.addCloseHandler(closeHandler);
 			panel.add(labelWidget);
-			com.google.gwt.user.client.ui.Label addButton =
-				AddLabelButtonFactory.FACTORY.createAddLabel();
-			addButton.addClickHandler(addHandler);
+			AddButton<AbstractQueryFilter> addButton =
+				AddButton.FACTORY.createWidget(this);
+			addButton.addOpenHandler(openHandler);
 			panel.add(addButton);
 		}
 	}
 
 	protected abstract List<Label> getLabelsFromFilter(Filter filter);
 
-	protected abstract Label getAddedLabel(SuggestionResult<Label> selectedItem);
+	protected abstract Label getAddedLabel(SuggestionResult selectedItem);
 
 	protected List<Label> getLabels() {
 		return labels;

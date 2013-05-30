@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import cz.artique.client.labels.ClickableLabelWidget;
 import cz.artique.client.labels.LabelWidget;
 import cz.artique.client.labels.LabelsBar;
 import cz.artique.client.manager.Managers;
@@ -13,17 +14,16 @@ import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
 
-public class ArtiqueLabelsBar extends LabelsBar<Label, Key> {
+public class ArtiqueLabelsBar extends LabelsBar {
 
 	private UserItem item;
 
-	public ArtiqueLabelsBar(UserItem item, int maxSize) {
-		super(Managers.LABELS_MANAGER, ClickableArtiqueLabel.REMOVABLE_FACTORY,
-			new ArtiqueLabelSuggestionFactory(), maxSize);
+	public ArtiqueLabelsBar(UserItem item) {
+		super(ClickableLabelWidget.FACTORY);
 		this.item = item;
 
 		for (Key key : item.getLabels()) {
-			Label label = manager.getLabelByKey(key);
+			Label label = Managers.LABELS_MANAGER.getLabelByKey(key);
 			if (LabelType.USER_DEFINED.equals(label.getLabelType())) {
 				addLabel(label);
 			}
@@ -37,7 +37,7 @@ public class ArtiqueLabelsBar extends LabelsBar<Label, Key> {
 	}
 
 	@Override
-	protected void labelRemoved(final LabelWidget<Label> labelWidget) {
+	protected void labelRemoved(final LabelWidget labelWidget) {
 		Managers.ITEMS_MANAGER.labelRemoved(getItem(), labelWidget.getLabel(),
 			null);
 		removeLabel(labelWidget);
@@ -52,16 +52,17 @@ public class ArtiqueLabelsBar extends LabelsBar<Label, Key> {
 		if (labelByName != null) {
 			labelAdded(labelByName);
 		} else {
-			manager.createNewLabel(name, new AsyncCallback<Label>() {
+			Managers.LABELS_MANAGER.createNewLabel(name,
+				new AsyncCallback<Label>() {
 
-				public void onFailure(Throwable caught) {
-					// TODO Auto-generated method stub
-				}
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub
+					}
 
-				public void onSuccess(Label result) {
-					labelAdded(result);
-				}
-			});
+					public void onSuccess(Label result) {
+						labelAdded(result);
+					}
+				});
 		}
 	}
 
@@ -71,8 +72,10 @@ public class ArtiqueLabelsBar extends LabelsBar<Label, Key> {
 
 	public void setNewData(UserItem userItem) {
 		this.item = userItem;
-		List<Label> newList = manager.getSortedList(userItem.getLabels());
-		List<Label> oldList = manager.getSortedList(userItem.getLabels());
+		List<Label> newList =
+			Managers.LABELS_MANAGER.getSortedList(userItem.getLabels());
+		List<Label> oldList =
+			Managers.LABELS_MANAGER.getSortedList(userItem.getLabels());
 
 		List<Label> newListCopy = new ArrayList<Label>(newList);
 		newListCopy.removeAll(oldList);

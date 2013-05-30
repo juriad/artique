@@ -12,7 +12,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.i18n.ArtiqueI18n;
-import cz.artique.client.labels.LabelsManager;
 import cz.artique.client.manager.AbstractManager;
 import cz.artique.client.manager.Managers;
 import cz.artique.client.service.ClientLabelService;
@@ -23,9 +22,8 @@ import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.utils.CatList;
 import cz.artique.shared.utils.SortedList;
 
-public class ArtiqueLabelsManager
-		extends AbstractManager<ClientLabelServiceAsync>
-		implements LabelsManager<Label, Key> {
+public class LabelsManager
+		extends AbstractManager<ClientLabelServiceAsync> {
 
 	public static final Label AND, OR;
 
@@ -41,8 +39,8 @@ public class ArtiqueLabelsManager
 		OR.setDisplayName(ArtiqueI18n.I18N.getConstants().operatorOr());
 	}
 
-	public static final ArtiqueLabelsManager MANAGER =
-		new ArtiqueLabelsManager();
+	public static final LabelsManager MANAGER =
+		new LabelsManager();
 
 	private Map<Key, Label> labelsKeys = new HashMap<Key, Label>();
 	private Map<String, Label> labelNames = new HashMap<String, Label>();
@@ -51,7 +49,7 @@ public class ArtiqueLabelsManager
 	private List<Label> systemLabels = new ArrayList<Label>();
 	private List<Label> userDefinedLabels = new ArrayList<Label>();
 
-	private ArtiqueLabelsManager() {
+	private LabelsManager() {
 		super(GWT.<ClientLabelServiceAsync> create(ClientLabelService.class));
 		refresh(null);
 		systemLabels.add(AND);

@@ -9,7 +9,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import cz.artique.client.artiqueHistory.ArtiqueHistory;
 import cz.artique.client.artiqueItems.ArtiqueItemsManager;
-import cz.artique.client.artiqueLabels.ArtiqueLabelsManager;
+import cz.artique.client.artiqueLabels.LabelsManager;
 import cz.artique.client.artiqueListFilters.ArtiqueListFiltersManager;
 import cz.artique.client.artiqueSources.ArtiqueSourcesManager;
 import cz.artique.client.config.ArtiqueConfigManager;
@@ -27,8 +27,8 @@ public class Managers {
 		ArtiqueConfigManager.MANAGER;
 	public static final ArtiqueItemsManager ITEMS_MANAGER =
 		ArtiqueItemsManager.MANAGER;
-	public static final ArtiqueLabelsManager LABELS_MANAGER =
-		ArtiqueLabelsManager.MANAGER;
+	public static final LabelsManager LABELS_MANAGER =
+		LabelsManager.MANAGER;
 	public static final ArtiqueSourcesManager SOURCES_MANAGER =
 		ArtiqueSourcesManager.MANAGER;
 	public static final ArtiqueListFiltersManager LIST_FILTERS_MANAGER =

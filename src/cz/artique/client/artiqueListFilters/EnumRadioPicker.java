@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.RadioButton;
 
 import cz.artique.client.i18n.ArtiqueConstants;
 import cz.artique.client.i18n.ArtiqueI18n;
-import cz.artique.client.utils.InlineFlowPanel;
+import cz.artique.client.common.InlineFlowPanel;
 
 public class EnumRadioPicker<E extends Enum<E>> extends Composite
 		implements HasEnabled, HasValue<E> {

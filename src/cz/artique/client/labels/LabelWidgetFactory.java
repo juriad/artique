@@ -1,5 +1,7 @@
 package cz.artique.client.labels;
 
-public interface LabelWidgetFactory<E> {
-	LabelWidget<E> createWidget(E l);
+import cz.artique.shared.model.label.Label;
+
+public interface LabelWidgetFactory {
+	LabelWidget createWidget(Label label);
 }

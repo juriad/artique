@@ -1,12 +1,14 @@
 package cz.artique.client.labels.suggestion;
 
-public class SuggestionResult<E> {
-	private final E existingValue;
+import cz.artique.shared.model.label.Label;
+
+public class SuggestionResult {
+	private final Label existingValue;
 	private final String newValue;
 	private final boolean existing;
 	private final boolean hasValue;
 
-	public SuggestionResult(E existingValue) {
+	public SuggestionResult(Label existingValue) {
 		this.existingValue = existingValue;
 		existing = true;
 		newValue = null;
@@ -27,7 +29,7 @@ public class SuggestionResult<E> {
 		hasValue = false;
 	}
 
-	public E getExistingValue() {
+	public Label getExistingValue() {
 		return existingValue;
 	}
 

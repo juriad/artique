@@ -19,26 +19,20 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
-import cz.artique.client.artiqueLabels.ActionEvent;
-import cz.artique.client.artiqueLabels.ActionHandler;
-import cz.artique.client.labels.LabelsManager;
-import cz.artique.shared.utils.HasDisplayName;
-import cz.artique.shared.utils.HasKey;
+import cz.artique.client.manager.Managers;
+import cz.artique.shared.model.label.Label;
 
-public class LabelSuggestion<E extends HasDisplayName & Comparable<E> & HasKey<?>>
-		extends Composite implements HasSelectionHandlers<SuggestionResult<E>> {
+public class LabelSuggestion extends Composite
+		implements HasSelectionHandlers<SuggestionResult> {
 
 	private final TextBox textBox;
-	private final SuggestionPopup<E> popup;
+	private final SuggestionPopup popup;
 
 	private boolean complete = false;
 	private boolean allowNewValue;
-	private LabelsManager<E, ?> manager;
-	private List<E> allLabels;
+	private List<Label> allLabels;
 
-	public LabelSuggestion(LabelsManager<E, ?> manager, List<E> allLabels,
-			SuggesionLabelFactory<E> factory, boolean allowNewValue) {
-		this.manager = manager;
+	public LabelSuggestion(List<Label> allLabels, boolean allowNewValue) {
 		this.allLabels = allLabels;
 		this.allowNewValue = allowNewValue;
 
@@ -49,7 +43,7 @@ public class LabelSuggestion<E extends HasDisplayName & Comparable<E> & HasKey<?
 		panel.add(textBox);
 
 		// TODO settings maxItems in poput: 20
-		popup = new SuggestionPopup<E>(factory, 20);
+		popup = new SuggestionPopup(20);
 		panel.add(popup);
 
 		textBox.addBlurHandler(new BlurHandler() {
@@ -115,9 +109,9 @@ public class LabelSuggestion<E extends HasDisplayName & Comparable<E> & HasKey<?
 			}
 		});
 
-		popup.addActionHandler(new ActionHandler() {
+		popup.addSelectionHandler(new SelectionHandler<Label>() {
 
-			public void onClick(ActionEvent e) {
+			public void onSelection(SelectionEvent<Label> e) {
 				if (complete) {
 					return;
 				}
@@ -141,19 +135,18 @@ public class LabelSuggestion<E extends HasDisplayName & Comparable<E> & HasKey<?
 
 		if (allowNewValue) {
 			if (textBox.getValue().trim().isEmpty()) {
-				SelectionEvent.fire(this, new SuggestionResult<E>());
+				SelectionEvent.fire(this, new SuggestionResult());
 			} else {
-				SelectionEvent.fire(this, new SuggestionResult<E>(textBox
+				SelectionEvent.fire(this, new SuggestionResult(textBox
 					.getValue()
 					.trim()));
 			}
 		} else {
-			E firstAvaliable = popup.getFirstAvaliable();
+			Label firstAvaliable = popup.getFirstAvaliable();
 			if (firstAvaliable != null) {
-				SelectionEvent.fire(this, new SuggestionResult<E>(
-					firstAvaliable));
+				SelectionEvent.fire(this, new SuggestionResult(firstAvaliable));
 			} else {
-				SelectionEvent.fire(this, new SuggestionResult<E>());
+				SelectionEvent.fire(this, new SuggestionResult());
 			}
 		}
 	}
@@ -161,13 +154,14 @@ public class LabelSuggestion<E extends HasDisplayName & Comparable<E> & HasKey<?
 	protected void saveExistingValue() {
 		complete();
 		SelectionEvent.fire(this,
-			new SuggestionResult<E>(popup.getSelectedValue()));
+			new SuggestionResult(popup.getSelectedValue()));
 	}
 
 	protected void textChanged() {
 		String text = textBox.getText();
 		if (text.length() > 0) {
-			List<E> prefixes = manager.fullTextSearch(text, allLabels);
+			List<Label> prefixes =
+				Managers.LABELS_MANAGER.fullTextSearch(text, allLabels);
 			popup.setData(prefixes);
 
 			if (prefixes.isEmpty()) {
@@ -194,7 +188,7 @@ public class LabelSuggestion<E extends HasDisplayName & Comparable<E> & HasKey<?
 
 	protected void cancel() {
 		complete();
-		SelectionEvent.fire(this, new SuggestionResult<E>());
+		SelectionEvent.fire(this, new SuggestionResult());
 	}
 
 	protected void keyDown() {
@@ -210,7 +204,7 @@ public class LabelSuggestion<E extends HasDisplayName & Comparable<E> & HasKey<?
 	}
 
 	public HandlerRegistration addSelectionHandler(
-			SelectionHandler<SuggestionResult<E>> handler) {
+			SelectionHandler<SuggestionResult> handler) {
 		return addHandler(handler, SelectionEvent.getType());
 	}
 

@@ -16,10 +16,10 @@ import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyUtils;
 import cz.artique.client.hierarchy.ProvidesHierarchy;
 import cz.artique.client.manager.AbstractManager;
+import cz.artique.client.manager.Manager;
 import cz.artique.client.manager.Managers;
 import cz.artique.client.service.ClientSourceService;
 import cz.artique.client.service.ClientSourceServiceAsync;
-import cz.artique.client.sources.SourcesManager;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.source.Region;
@@ -28,7 +28,7 @@ import cz.artique.shared.model.source.UserSource;
 
 public class ArtiqueSourcesManager
 		extends AbstractManager<ClientSourceServiceAsync>
-		implements SourcesManager<UserSource, Key>,
+		implements Manager,
 		ProvidesHierarchy<UserSource> {
 	public static final ArtiqueSourcesManager MANAGER =
 		new ArtiqueSourcesManager();
