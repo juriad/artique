@@ -43,6 +43,11 @@ public class BackupService extends Fetcher {
 
 	public BlobKey backup(UserItem userItem, BackupLevel backupLevel)
 			throws CrawlerException {
+		if (userItem.getItemObject().getUrl() == null
+			|| userItem.getItemObject().getUrl().getValue() == null) {
+			throw new CrawlerException("Missing url.");
+		}
+
 		URI uri;
 		try {
 			uri = getURI(userItem.getItemObject().getUrl());

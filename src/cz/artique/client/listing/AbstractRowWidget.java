@@ -40,7 +40,7 @@ public abstract class AbstractRowWidget<E extends HasKey<K>, K>
 		this.content = content;
 		panel.add(content);
 		content.setVisible(false);
-		content.setStylePrimaryName("row-content");
+		content.setStylePrimaryName("rowContent");
 		collapse();
 	}
 
@@ -49,7 +49,7 @@ public abstract class AbstractRowWidget<E extends HasKey<K>, K>
 			panel.remove(this.header);
 		}
 		this.header = header;
-		header.setStylePrimaryName("row-header");
+		header.setStylePrimaryName("rowHeader");
 		panel.insert(header, 0);
 	}
 

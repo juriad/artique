@@ -2,8 +2,8 @@ package cz.artique.client;
 
 import com.google.appengine.api.users.User;
 
-import cz.artique.client.artiqueHierarchy.ArtiqueSourcesTree;
 import cz.artique.client.artiqueListing.ArtiqueList;
+import cz.artique.client.hierarchy.tree.SourcesTree;
 
 public enum ArtiqueWorld {
 	WORLD;
@@ -11,7 +11,7 @@ public enum ArtiqueWorld {
 	private UserInfo userInfo;
 	private ArtiqueList list;
 	private Resources resources;
-	private ArtiqueSourcesTree sourcesTree;
+	private SourcesTree sourcesTree;
 
 	public UserInfo getUserInfo() {
 		return userInfo;
@@ -41,11 +41,11 @@ public enum ArtiqueWorld {
 		return resources;
 	}
 
-	public ArtiqueSourcesTree getSourcesTree() {
+	public SourcesTree getSourcesTree() {
 		return sourcesTree;
 	}
 
-	public void setSourcesTree(ArtiqueSourcesTree sourcesTree) {
+	public void setSourcesTree(SourcesTree sourcesTree) {
 		this.sourcesTree = sourcesTree;
 	}
 

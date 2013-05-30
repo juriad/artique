@@ -35,7 +35,7 @@ public class AddButton<E> extends InlineLabel implements HasOpenHandlers<E> {
 		});
 	}
 
-	boolean enabled;
+	boolean enabled = true;
 
 	public boolean isEnabled() {
 		return enabled;

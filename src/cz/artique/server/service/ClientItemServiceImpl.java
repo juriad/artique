@@ -105,7 +105,7 @@ public class ClientItemServiceImpl implements ClientItemService {
 		for (Label l : labels) {
 			validator.checkUser(UpdateItems.LABELS, user, l.getUser());
 			if (l.getBackupLevel() != null
-				|| !BackupLevel.NO_BACKUP.equals(l.getBackupLevel())) {
+				&& !BackupLevel.NO_BACKUP.equals(l.getBackupLevel())) {
 				backupLabels.put(l.getKey(), l);
 			}
 		}

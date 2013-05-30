@@ -40,6 +40,7 @@ public class LabelService {
 				Datastore.put(tx, label);
 				theLabel = label;
 			}
+			tx.commit();
 		} catch (Exception e) {
 			throw new TransactionException();
 		} finally {

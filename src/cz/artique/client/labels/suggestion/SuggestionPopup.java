@@ -17,7 +17,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ValueLabel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import cz.artique.client.artiqueLabels.ArtiqueLabelSuggestionFactory;
 import cz.artique.shared.model.label.Label;
 
 public class SuggestionPopup extends Composite
@@ -62,7 +61,7 @@ public class SuggestionPopup extends Composite
 		panel = new VerticalPanel();
 		initWidget(panel);
 		for (int i = 0; i < maxItems; i++) {
-			ValueLabel<Label> l = ArtiqueLabelSuggestionFactory.FACTORY.createLabel();
+			ValueLabel<Label> l = LabelSuggestionFactory.FACTORY.createLabel();
 			l.setVisible(false);
 			l.addDomHandler(new ClickHandler() {
 

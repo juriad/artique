@@ -1,11 +1,14 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:al="urn:import:cz.artique.client.artiqueListing"
-	xmlns:ah="urn:import:cz.artique.client.artiqueHierarchy" xmlns:am="urn:import:cz.artique.client.messages">
+	xmlns:ah="urn:import:cz.artique.client.hierarchy.tree" xmlns:m="urn:import:cz.artique.client.messages">
 
-	<ui:with field='res' type='cz.artique.client.i18n.ArtiqueConstants' />
+	<ui:with field='res' type='cz.artique.client.i18n.Constants' />
 
 	<g:LayoutPanel>
+		<g:layer left="33%" right="33%" top="0px" height="100%">
+			<m:Messenger ui:field="messenger" />
+		</g:layer>
 		<g:layer>
 			<g:SplitLayoutPanel>
 				<g:west size="120">
@@ -23,25 +26,25 @@
 									<g:header size="3">
 										<ui:text from='{res.sources}' />
 									</g:header>
-									<ah:ArtiqueSourcesTree ui:field="sources" />
+									<ah:SourcesTree ui:field="sources" />
 								</g:stack>
 								<g:stack>
 									<g:header size="3">
 										<ui:text from='{res.filters}' />
 									</g:header>
-									<ah:ArtiqueListFiltersTree ui:field="filters" />
+									<ah:ListFiltersTree ui:field="filters" />
 								</g:stack>
 								<g:stack>
 									<g:header size="3">
 										<ui:text from='{res.history}' />
 									</g:header>
-									<ah:ArtiqueHistoryTree ui:field="history" />
+									<ah:HistoryTree ui:field="history" />
 								</g:stack>
 								<g:stack>
 									<g:header size="3">
 										<ui:text from='{res.messages}' />
 									</g:header>
-									<ah:ArtiqueMessagesTree ui:field="messages" />
+									<ah:MessagesTree ui:field="messages" />
 								</g:stack>
 							</g:StackLayoutPanel>
 						</g:center>
@@ -51,9 +54,6 @@
 					<al:ArtiqueList ui:field="list" />
 				</g:center>
 			</g:SplitLayoutPanel>
-		</g:layer>
-		<g:layer left="33%" right="33%" top="0px" height="10em">
-			<am:ArtiqueMessenger ui:field="messenger" />
 		</g:layer>
 	</g:LayoutPanel>
 </ui:UiBinder>

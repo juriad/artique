@@ -36,7 +36,7 @@ public class CloseButton<E> extends InlineLabel implements HasCloseHandlers<E> {
 		});
 	}
 
-	boolean enabled;
+	boolean enabled = true;
 
 	public boolean isEnabled() {
 		return enabled;

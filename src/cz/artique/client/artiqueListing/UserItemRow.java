@@ -7,7 +7,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 
-import cz.artique.client.artiqueLabels.ArtiqueLabelsBar;
+import cz.artique.client.labels.LabelsBar;
 import cz.artique.client.listing.AbstractRowWidget;
 import cz.artique.client.listing.RowWidget;
 import cz.artique.client.listing.RowWidgetFactory;
@@ -26,7 +26,7 @@ public class UserItemRow extends AbstractRowWidget<UserItem, Key> {
 
 	}
 
-	private ArtiqueLabelsBar labels;
+	private LabelsBar labels;
 	private FlowPanel header;
 
 	private Label title;
@@ -36,10 +36,11 @@ public class UserItemRow extends AbstractRowWidget<UserItem, Key> {
 		super(data);
 
 		header = new FlowPanel();
-		labels = new ArtiqueLabelsBar(data);
+		labels = new LabelsBar(data);
 		header.add(labels);
 
 		title = new Label(getData(false).getItemObject().getTitle());
+		title.setStylePrimaryName("rowTitle");
 		header.add(title);
 		setHeader(header);
 

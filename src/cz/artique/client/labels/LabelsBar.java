@@ -3,153 +3,89 @@ package cz.artique.client.labels;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasEnabled;
+import com.google.appengine.api.datastore.Key;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.client.common.AddButton;
-import cz.artique.client.common.PanelWithMore;
-import cz.artique.client.labels.suggestion.LabelSuggestion;
-import cz.artique.client.labels.suggestion.SuggestionResult;
+import cz.artique.client.labels.ClickableLabelWidget;
+import cz.artique.client.labels.LabelWidget;
+import cz.artique.client.labels.AbstractLabelsBar;
 import cz.artique.client.manager.Managers;
+import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
 
-public abstract class LabelsBar extends Composite implements HasEnabled {
+public class LabelsBar extends AbstractLabelsBar {
 
-	class LabelCloseHandler implements CloseHandler<LabelWidget> {
-		public void onClose(CloseEvent<LabelWidget> e) {
-			if (e.getSource() instanceof LabelWidget) {
-				LabelWidget toBeRemoved = (LabelWidget) e.getSource();
-				labelRemoved(toBeRemoved);
+	private UserItem item;
+
+	public LabelsBar(UserItem item) {
+		super(ClickableLabelWidget.FACTORY);
+		this.item = item;
+
+		for (Key key : item.getLabels()) {
+			Label label = Managers.LABELS_MANAGER.getLabelByKey(key);
+			if (LabelType.USER_DEFINED.equals(label.getLabelType())) {
+				addLabel(label);
 			}
 		}
 	}
 
-	private AddButton<LabelsBar> addLabel;
-
-	private List<Label> selectedLabels;
-
-	private final PanelWithMore<LabelWidget> panel;
-
-	private LabelWidgetFactory factory;
-
-	private final CloseHandler<LabelWidget> labelCloseHandler =
-		new LabelCloseHandler();
-
-	private boolean enabled = true;
-
-	public LabelsBar(LabelWidgetFactory factory) {
-		this.factory = factory;
-		selectedLabels = new ArrayList<Label>();
-		panel = new PanelWithMore<LabelWidget>();
-		initWidget(panel);
-
-		setStylePrimaryName("labels-bar");
-
-		addLabel = AddButton.FACTORY.createWidget(this);
-		panel.setExtraWidget(addLabel);
-		addLabel.addOpenHandler(new OpenHandler<LabelsBar>() {
-
-			private List<Label> allLabels;
-
-			private LabelSuggestion box;
-
-			public void onOpen(OpenEvent<LabelsBar> event) {
-				allLabels =
-					Managers.LABELS_MANAGER.getLabels(LabelType.USER_DEFINED);
-				allLabels.removeAll(getSelectedLabels());
-
-				box = new LabelSuggestion(allLabels, true);
-				box.setStylePrimaryName("labels-bar-suggest-box");
-				panel.setExtraWidget(box);
-
-				box
-					.addSelectionHandler(new SelectionHandler<SuggestionResult>() {
-
-						public void onSelection(
-								SelectionEvent<SuggestionResult> event) {
-							GWT.log("on selection");
-							SuggestionResult selectedItem =
-								event.getSelectedItem();
-							if (selectedItem.isHasValue()) {
-								if (selectedItem.isExisting()) {
-									labelAdded(selectedItem.getExistingValue());
-								} else {
-									newLabelAdded(selectedItem.getNewValue());
-								}
-							}
-							end();
-						}
-
-					});
-				box.focus();
-			}
-
-			private void end() {
-				panel.setExtraWidget(addLabel);
-			}
-
-		});
+	@Override
+	protected void labelAdded(final Label label) {
+		Managers.ITEMS_MANAGER.labelAdded(getItem(), label, null);
+		addLabel(label);
 	}
 
-	protected void addLabel(Label label) {
-		getSelectedLabels().add(label);
-		LabelWidget labelWidget = factory.createWidget(label);
-		panel.add(labelWidget);
-		labelWidget.addCloseHandler(labelCloseHandler);
+	@Override
+	protected void labelRemoved(final LabelWidget labelWidget) {
+		Managers.ITEMS_MANAGER.labelRemoved(getItem(), labelWidget.getLabel(),
+			null);
+		removeLabel(labelWidget);
 	}
 
-	protected void removeLabel(LabelWidget labelWidget) {
-		getSelectedLabels().remove(labelWidget.getLabel());
-		panel.remove(labelWidget);
-	}
+	@Override
+	protected void newLabelAdded(final String name) {
 
-	protected void removeLabel(Label label) {
-		getSelectedLabels().remove(label);
-		for (LabelWidget w : panel.getWidgets()) {
-			if (w.getLabel().equals(label)) {
-				panel.remove(w);
-				break;
-			}
+		Label labelByName =
+			Managers.LABELS_MANAGER
+				.getLabelByName(LabelType.USER_DEFINED, name);
+		if (labelByName != null) {
+			labelAdded(labelByName);
+		} else {
+			Managers.LABELS_MANAGER.createNewLabel(name,
+				new AsyncCallback<Label>() {
+
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub
+					}
+
+					public void onSuccess(Label result) {
+						labelAdded(result);
+					}
+				});
 		}
 	}
 
-	protected abstract void newLabelAdded(String name);
-
-	protected abstract void labelAdded(Label label);
-
-	protected abstract void labelRemoved(LabelWidget labelWidget);
-
-	public List<Label> getSelectedLabels() {
-		return selectedLabels;
+	public UserItem getItem() {
+		return item;
 	}
 
-	public boolean isEnabled() {
-		return enabled;
-	}
+	public void setNewData(UserItem userItem) {
+		this.item = userItem;
+		List<Label> newList =
+			Managers.LABELS_MANAGER.getSortedList(userItem.getLabels());
+		List<Label> oldList =
+			Managers.LABELS_MANAGER.getSortedList(userItem.getLabels());
 
-	/**
-	 * Incorrect if new label is being added
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasEnabled#setEnabled(boolean)
-	 */
-	public void setEnabled(boolean enabled) {
-		if (enabled == this.enabled) {
-			return;
-		}
-		this.enabled = enabled;
-
-		for (LabelWidget labelWidget : panel.getWidgets()) {
-			labelWidget.setEnabled(enabled);
+		List<Label> newListCopy = new ArrayList<Label>(newList);
+		newListCopy.removeAll(oldList);
+		for (Label l : newListCopy) {
+			addLabel(l);
 		}
 
-		addLabel.setVisible(enabled);
+		oldList.removeAll(newList);
+		for (Label l : oldList) {
+			removeLabel(l);
+		}
 	}
 }

@@ -47,10 +47,13 @@ public class PanelWithMore<E extends IsWidget & Comparable<E>>
 	}
 
 	public void setExtraWidget(Widget extraWidget) {
-		if (extraWidget != null) {
-			remove(extraWidget);
+		if (getExtraWidget() != null) { // old
+			remove(getExtraWidget());
 		}
-		add(extraWidget);
+		this.extraWidget = extraWidget; // set
+		if (getExtraWidget() != null) { // add
+			add(getExtraWidget());
+		}
 	}
 
 	public Widget getExtraWidget() {

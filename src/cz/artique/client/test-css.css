@@ -4,72 +4,132 @@
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	-o-text-overflow: ellipsis;
+	position: absolute;
 }
 
 .panelWithMore-expanded,.panelWithMore:hover {
-	
+	z-index: 10;
 }
 
 /* close button */
 .closeButton {
 	font-size: x-small;
-	vertical-align: top;
+	position: relative;
+	top: -0.5em;
 	color: grey;
 	font-weight: bold;
+	cursor: pointer;
 }
 
 .closeButton:hover {
 	color: red;
 }
 
-/* */
+/* add button */
+.addButton {
+	font-weight: bold;
+	color: grey;
+	cursor: pointer;
+}
+
+.addButton:hover {
+	color: red;
+}
+
+/* labels bar */
+.labelsBar {
+	float: left;
+	width: 15em;
+	height: 100%;
+}
+
+.labelsBar .panelWithMore {
+	width: 15em;
+	background-color: orange;
+}
+
+.labelsBar .panelWithMore-expanded,.panelWithMore:hover {
+	width: auto;
+}
+
+.labelsBar .addButton {
+	display: none;
+	margin: 0px 0.5em;
+}
+
+.labelsBar:hover .addButton {
+	display: inline;
+}
+
+.label,.labels-bar-suggest-box {
+	margin: 0px 0.5em;
+}
+
+.labels-bar-suggest-box {
+	display: inline;
+}
+
+/* row */
 .row {
 	border: 1px solid blue;
-	padding: 1em 0;
 	background-color: orange;
 	width: 100%;
 }
 
-.row-content {
+.rowHeader {
+	height: 2em;
+	line-height: 1.9em;
+}
+
+.rowContent {
 	background-color: red;
 	margin: 1em;
 }
 
-.row-expanded .row-header {
+.row-expanded .rowTitle {
 	font-weight: bold;
 }
 
-.labels-bar-add-button {
-	display: none;
+.rowTitle {
+	margin-left: 15em;
 }
 
-.labels-bar:hover .labels-bar-add-button {
-	display: inline-block;
+/* message */
+.messages {
+	position: fixed;
+	width: 100%;
+	z-index: 100;
 }
 
-.label,.labels-bar-add-button,.panel-with-more-button,.labels-bar-suggest-box
-	{
-	margin: 0px 0.5em;
+.message {
+	widgth: 50%;
+	height: 3em;
+	padding: 0.5em;
+	margin: 0.5em;
 }
 
-.label-remove-button {
-	font-size: x-small;
-	vertical-align: top;
-	color: grey;
-	font-weight: bold;
+.message .closeButton {
+	font-size: medium;
+	position: static;
+	float: right;
 }
 
-.label-remove-button:hover {
-	color: red;
+.message .messageContent {
+	margin-right: 1em;
+	padding: 0.3em 1em;
 }
 
-.labels-bar,.labels-bar-suggest-box {
-	display: inline;
+.message-INFO {
+	background: #ffff73;
+	border: 1px solid #ffff20;
 }
 
-.labels-bar {
-	float: left;
-	width: 15em;
-	min-height: 1ex;
-	overflow: hidden;
+.message-WARN {
+	background: #7373ff;
+	border: 1px solid #2020ff;
+}
+
+.message-ERROR {
+	background: #ff7373;
+	border: 1px solid #ff2020;
 }

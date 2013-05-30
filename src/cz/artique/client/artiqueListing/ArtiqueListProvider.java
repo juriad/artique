@@ -3,8 +3,8 @@ package cz.artique.client.artiqueListing;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.client.artiqueItems.ModifiedEvent;
-import cz.artique.client.artiqueItems.ModifiedHandler;
+import cz.artique.client.items.ModifiedEvent;
+import cz.artique.client.items.ModifiedHandler;
 import cz.artique.client.listing.InfiniteList;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.items.ListingResponse;

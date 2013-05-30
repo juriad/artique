@@ -1,0 +1,40 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+	<ui:with field='res' type='cz.artique.client.i18n.Constants' />
+
+	<g:Grid ui:field="grid">
+		<g:row>
+			<g:cell>
+				<ui:text from='{res.url}' />
+			</g:cell>
+			<g:customCell>
+				<g:TextBox ui:field="url" />
+			</g:customCell>
+		</g:row>
+		<g:row>
+			<g:cell>
+				<ui:text from='{res.title}' />
+			</g:cell>
+			<g:customCell>
+				<g:TextBox ui:field="title" />
+			</g:customCell>
+		</g:row>
+		<g:row>
+			<g:cell>
+				<ui:text from='{res.content}' />
+			</g:cell>
+			<g:customCell>
+				<g:TextArea ui:field="content" />
+			</g:customCell>
+		</g:row>
+		<g:row>
+			<g:cell>
+				<ui:text from='{res.labels}' />
+			</g:cell>
+			<!-- TODO labels -->
+			<!-- <g:customCell> <g:TextBox ui:field="labels" /> </g:customCell> -->
+		</g:row>
+	</g:Grid>
+</ui:UiBinder>

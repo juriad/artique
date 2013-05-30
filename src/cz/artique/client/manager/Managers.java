@@ -7,13 +7,13 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.client.artiqueHistory.ArtiqueHistory;
-import cz.artique.client.artiqueItems.ArtiqueItemsManager;
-import cz.artique.client.artiqueLabels.LabelsManager;
-import cz.artique.client.artiqueListFilters.ArtiqueListFiltersManager;
-import cz.artique.client.artiqueSources.ArtiqueSourcesManager;
-import cz.artique.client.config.ArtiqueConfigManager;
+import cz.artique.client.config.ConfigManager;
+import cz.artique.client.history.HistoryManager;
+import cz.artique.client.items.ItemsManager;
+import cz.artique.client.labels.LabelsManager;
+import cz.artique.client.listFilters.ListFiltersManager;
 import cz.artique.client.messages.MessagesManager;
+import cz.artique.client.sources.SourcesManager;
 import cz.artique.shared.model.config.ClientConfigKey;
 
 public class Managers {
@@ -23,17 +23,17 @@ public class Managers {
 	private static List<Manager> ready = new ArrayList<Manager>();
 	private static List<WaitRequest> waiting = new LinkedList<WaitRequest>();
 
-	public static final ArtiqueConfigManager CONFIG_MANAGER =
-		ArtiqueConfigManager.MANAGER;
-	public static final ArtiqueItemsManager ITEMS_MANAGER =
-		ArtiqueItemsManager.MANAGER;
+	public static final ConfigManager CONFIG_MANAGER =
+		ConfigManager.MANAGER;
+	public static final ItemsManager ITEMS_MANAGER =
+		ItemsManager.MANAGER;
 	public static final LabelsManager LABELS_MANAGER =
 		LabelsManager.MANAGER;
-	public static final ArtiqueSourcesManager SOURCES_MANAGER =
-		ArtiqueSourcesManager.MANAGER;
-	public static final ArtiqueListFiltersManager LIST_FILTERS_MANAGER =
-		ArtiqueListFiltersManager.MANAGER;
-	public static final ArtiqueHistory HISTORY_MANAGER = ArtiqueHistory.HISTORY;
+	public static final SourcesManager SOURCES_MANAGER =
+		SourcesManager.MANAGER;
+	public static final ListFiltersManager LIST_FILTERS_MANAGER =
+		ListFiltersManager.MANAGER;
+	public static final HistoryManager HISTORY_MANAGER = HistoryManager.HISTORY;
 	public static final MessagesManager MESSAGES_MANAGER =
 		MessagesManager.MESSENGER;
 

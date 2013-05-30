@@ -7,10 +7,9 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
 
-import cz.artique.client.artiqueHistory.CachingHistoryUtils;
-import cz.artique.client.artiqueLabels.LabelRenderer;
 import cz.artique.client.common.CloseButton;
 import cz.artique.client.common.InlineFlowPanel;
+import cz.artique.client.history.CachingHistoryUtils;
 import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.Label;
 

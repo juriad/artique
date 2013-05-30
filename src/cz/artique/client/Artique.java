@@ -10,16 +10,16 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-import cz.artique.client.artiqueHierarchy.ArtiqueHistoryTree;
-import cz.artique.client.artiqueHierarchy.ArtiqueListFiltersTree;
-import cz.artique.client.artiqueHierarchy.ArtiqueSourcesTree;
-import cz.artique.client.artiqueHistory.HistoryEvent;
-import cz.artique.client.artiqueHistory.HistoryHandler;
 import cz.artique.client.artiqueListing.ArtiqueList;
 import cz.artique.client.artiqueListing.ArtiqueListProvider;
 import cz.artique.client.artiqueListing.UserItemRow;
+import cz.artique.client.hierarchy.tree.HistoryTree;
+import cz.artique.client.hierarchy.tree.ListFiltersTree;
+import cz.artique.client.hierarchy.tree.SourcesTree;
+import cz.artique.client.history.HistoryEvent;
+import cz.artique.client.history.HistoryHandler;
 import cz.artique.client.manager.Managers;
-import cz.artique.client.messages.ArtiqueMessenger;
+import cz.artique.client.messages.Messenger;
 import cz.artique.shared.model.label.ListFilter;
 
 public class Artique extends Composite {
@@ -38,16 +38,16 @@ public class Artique extends Composite {
 	Anchor logout;
 
 	@UiField
-	ArtiqueSourcesTree sources;
+	SourcesTree sources;
 
 	@UiField
-	ArtiqueHistoryTree history;
+	HistoryTree history;
 
 	@UiField
-	ArtiqueListFiltersTree filters;
+	ListFiltersTree filters;
 
 	@UiField
-	ArtiqueMessenger messenger;
+	Messenger messenger;
 
 	private static Resources resources;
 

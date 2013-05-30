@@ -11,6 +11,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 
+import com.google.appengine.api.datastore.Link;
 import com.google.appengine.api.datastore.Text;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -109,6 +110,7 @@ public class XMLCrawler extends AbstractCrawler<XMLSource, ArticleItem> {
 		a.setAuthor(entry.getAuthor());
 		a.setPublished(entry.getPublishedDate());
 		a.setHash(getHash(entry));
+		a.setUrl(new Link(entry.getLink()));
 		return a;
 	}
 
