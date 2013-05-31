@@ -38,7 +38,7 @@ public class Validator<E extends Enum<E> & HasIssue> {
 	 * @return true=not null, false=good null, exception=bad null
 	 * @throws ValidationException
 	 */
-	public boolean checkNullability(Enum<E> property, boolean nullable,
+	public boolean checkNullability(E property, boolean nullable,
 			Object... objs) throws ValidationException {
 		if (objs == null) {
 			return true;
@@ -73,7 +73,7 @@ public class Validator<E extends Enum<E> & HasIssue> {
 		return true;
 	}
 
-	private URI checkUri(Enum<E> property, Link url, boolean nullable)
+	private URI checkUri(E property, Link url, boolean nullable)
 			throws ValidationException {
 		if (!checkNullability(property, nullable, url)) {
 			return null;
@@ -92,7 +92,7 @@ public class Validator<E extends Enum<E> & HasIssue> {
 		}
 	}
 
-	public Link checkUrl(Enum<E> property, Link url, boolean nullable)
+	public Link checkUrl(E property, Link url, boolean nullable)
 			throws ValidationException {
 		URI uri = checkUri(property, url, nullable);
 		if (uri == null) {
@@ -101,7 +101,7 @@ public class Validator<E extends Enum<E> & HasIssue> {
 		return new Link(uri.toString());
 	}
 
-	public Link checkReachability(Enum<E> property, Link url, boolean nullable)
+	public Link checkReachability(E property, Link url, boolean nullable)
 			throws ValidationException {
 		FetcherValidator fv = new FetcherValidator();
 		URI uri = checkUri(property, url, nullable);
@@ -118,7 +118,7 @@ public class Validator<E extends Enum<E> & HasIssue> {
 		return new Link(uri.toString());
 	}
 
-	public String checkString(Enum<E> property, String value, boolean nullable,
+	public String checkString(E property, String value, boolean nullable,
 			boolean cut) throws ValidationException {
 		if (!checkNullability(property, nullable, value)) {
 			return null;
@@ -135,8 +135,8 @@ public class Validator<E extends Enum<E> & HasIssue> {
 		return value;
 	}
 
-	public Text checkText(Enum<E> property, Text value, boolean nullable,
-			boolean cut) throws ValidationException {
+	public Text checkText(E property, Text value, boolean nullable, boolean cut)
+			throws ValidationException {
 		if (!checkNullability(property, nullable, value)) {
 			return null;
 		}
@@ -159,7 +159,7 @@ public class Validator<E extends Enum<E> & HasIssue> {
 		return value;
 	}
 
-	public String checkSelector(Enum<E> property, String value, boolean nullable)
+	public String checkSelector(E property, String value, boolean nullable)
 			throws ValidationException {
 		String selector = checkString(property, value, nullable, false);
 		if (selector == null) {
@@ -175,7 +175,7 @@ public class Validator<E extends Enum<E> & HasIssue> {
 		return selector;
 	}
 
-	public String checkLabel(Enum<E> property, String value)
+	public String checkLabel(E property, String value)
 			throws ValidationException {
 		String selector = checkString(property, value, false, false);
 		if (selector == null) {
@@ -193,7 +193,7 @@ public class Validator<E extends Enum<E> & HasIssue> {
 		return value;
 	}
 
-	public void checkUser(Enum<E> property, User user, User... users)
+	public void checkUser(E property, User user, User... users)
 			throws ValidationException {
 		if (users == null || users.length == 0) {
 			return;

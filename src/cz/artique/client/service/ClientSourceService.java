@@ -19,7 +19,8 @@ public interface ClientSourceService extends RemoteService {
 	public enum AddSource implements HasIssue {
 		SOURCE,
 		URL,
-		TYPE;
+		TYPE,
+		GENERAL;
 		public String enumName() {
 			return "AddSource";
 		}
@@ -28,7 +29,8 @@ public interface ClientSourceService extends RemoteService {
 	<E extends Source> E addSource(E source) throws ValidationException;
 
 	public enum GetRegions implements HasIssue {
-		SOURCE;
+		SOURCE,
+		GENERAL;
 		public String enumName() {
 			return "GetRegions";
 		}
@@ -46,7 +48,8 @@ public interface ClientSourceService extends RemoteService {
 		REGION,
 		REGION_NAME,
 		REGION_POSITIVE,
-		REGION_NEGATIVE;
+		REGION_NEGATIVE,
+		GENERAL;
 		public String enumName() {
 			return "AddUserSource";
 		}
@@ -64,7 +67,8 @@ public interface ClientSourceService extends RemoteService {
 		REGION,
 		REGION_NAME,
 		REGION_POSITIVE,
-		REGION_NEGATIVE;
+		REGION_NEGATIVE,
+		GENERAL;
 		public String enumName() {
 			return "UpdateUserSource";
 		}
@@ -79,7 +83,8 @@ public interface ClientSourceService extends RemoteService {
 		REGION,
 		REGION_NAME,
 		REGION_POSITIVE,
-		REGION_NEGATIVE;
+		REGION_NEGATIVE,
+		GENERAL;
 		public String enumName() {
 			return "CheckRegion";
 		}
@@ -88,7 +93,8 @@ public interface ClientSourceService extends RemoteService {
 	Region checkRegion(Region region) throws ValidationException;
 
 	public enum PlanSourceCheck implements HasIssue {
-		SOURCE;
+		SOURCE,
+		GENERAL;
 		public String enumName() {
 			return "PlanSourceCheck";
 		}

@@ -3,7 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:al="urn:import:cz.artique.client.artiqueListing"
 	xmlns:ah="urn:import:cz.artique.client.hierarchy.tree" xmlns:m="urn:import:cz.artique.client.messages">
 
-	<ui:with field='res' type='cz.artique.client.i18n.Constants' />
+	<ui:with field='res' type='cz.artique.client.ArtiqueConstants' />
 
 	<g:LayoutPanel>
 		<g:layer left="33%" right="33%" top="0px" height="100%">

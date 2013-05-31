@@ -27,15 +27,16 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 	public static final Label AND, OR;
 
 	static {
+		LabelsConstants constants = I18n.getLabelsConstants();
 		AND = new Label(ArtiqueWorld.WORLD.getUser(), "AND");
 		AND.setLabelType(LabelType.SYSTEM);
 		AND.setPriority(Integer.MAX_VALUE);
-		AND.setDisplayName(I18n.I18N.getConstants().operatorAnd());
+		AND.setDisplayName(constants.operatorAnd());
 
 		OR = new Label(ArtiqueWorld.WORLD.getUser(), "OR");
 		OR.setLabelType(LabelType.SYSTEM);
 		OR.setPriority(Integer.MAX_VALUE);
-		OR.setDisplayName(I18n.I18N.getConstants().operatorOr());
+		OR.setDisplayName(constants.operatorOr());
 	}
 
 	public static final LabelsManager MANAGER = new LabelsManager();

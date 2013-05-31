@@ -3,7 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:a="urn:import:cz.artique.client.listFilters"
 	xmlns:db="urn:import:com.google.gwt.user.datepicker.client" xmlns:c="urn:import:cz.artique.client.common">
 
-	<ui:with field='res' type='cz.artique.client.i18n.Constants' />
+	<ui:with field='res' type='cz.artique.client.listFilters.ListFiltersConstants' />
 
 	<g:Grid ui:field="grid">
 		<g:row>

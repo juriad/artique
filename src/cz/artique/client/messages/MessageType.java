@@ -5,7 +5,7 @@ public enum MessageType {
 	WARN(6000),
 	INFO(4000),
 	USER(-1),
-	SYSTEM(-1);
+	SYSTEM(Integer.MAX_VALUE);
 
 	private final int timeout;
 

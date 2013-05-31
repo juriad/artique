@@ -9,12 +9,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 
-import cz.artique.client.i18n.Constants;
-import cz.artique.client.i18n.I18n;
-import cz.artique.client.i18n.Messages;
 import cz.artique.client.manager.Managers;
-import cz.artique.client.messages.Message;
-import cz.artique.client.messages.MessageType;
 import cz.artique.shared.model.item.UserItem;
 
 public class ManualItemDialog {
@@ -46,43 +41,15 @@ public class ManualItemDialog {
 	@UiHandler("saveButton")
 	protected void saveButtonClicked(ClickEvent event) {
 		final UserItem value = editor.getValue();
-		if (value.getItemObject().getTitle() == null
-			|| value.getItemObject().getTitle().trim().isEmpty()) {
-			Messages messages = I18n.I18N.getMessages();
-			Constants constants = I18n.I18N.getConstants();
-			Managers.MESSAGES_MANAGER.addMessage(new Message(MessageType.ERROR,
-				messages.errorEmptyField(constants.title())));
-			return;
-		}
-
-		if (value.getItemObject().getUrl() == null
-			|| value.getItemObject().getUrl().getValue().trim().isEmpty()) {
-			Messages messages = I18n.I18N.getMessages();
-			Constants constants = I18n.I18N.getConstants();
-			Managers.MESSAGES_MANAGER.addMessage(new Message(MessageType.ERROR,
-				messages.errorEmptyField(constants.url())));
-			return;
-		}
-
 		Managers.ITEMS_MANAGER.addManualItem(value,
 			new AsyncCallback<UserItem>() {
 
 				public void onSuccess(UserItem result) {
-					Messages messages = I18n.I18N.getMessages();
-					Managers.MESSAGES_MANAGER.addMessage(new Message(
-						MessageType.INFO, messages.manualItemCreated(value
-							.getItemObject()
-							.getTitle())));
 					dialog.hide();
 				}
 
 				public void onFailure(Throwable caught) {
-					Messages messages = I18n.I18N.getMessages();
-					Managers.MESSAGES_MANAGER.addMessage(new Message(
-						MessageType.INFO, messages
-							.errorCreatingManualItem(value
-								.getItemObject()
-								.getTitle())));
+					// TODO 
 				}
 			});
 	}

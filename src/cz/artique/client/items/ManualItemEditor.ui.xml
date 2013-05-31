@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
-	<ui:with field='res' type='cz.artique.client.i18n.Constants' />
+	<ui:with field='res' type='cz.artique.client.items.ItemsConstants' />
 
 	<g:Grid ui:field="grid">
 		<g:row>

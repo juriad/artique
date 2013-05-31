@@ -40,23 +40,20 @@ public class HistoryWidget extends AbstractHierarchyTreeWidget<HistoryItem> {
 	public HistoryWidget(final Hierarchy<HistoryItem> hierarchy) {
 		super(hierarchy);
 
-		FlowPanel panel = new FlowPanel();
-		initWidget(panel);
-
 		if (hierarchy instanceof LeafNode) {
-			createLeafNodePanel(panel);
+			createLeafNodePanel(getPanel());
 		} else if (hierarchy instanceof InnerNode) {
 			if (hierarchy.getParent() != null) {
-				createInnerNodePanel(panel);
+				createInnerNodePanel(getPanel());
 			} else {
-				createRootPanel(panel);
+				createRootPanel(getPanel());
 			}
 		}
 	}
 
 	private void createRootPanel(FlowPanel panel) {
 		String clearTooltip =
-			I18n.I18N.getConstants().clearHistoryTooltip();
+			I18n.getHierarchyTreeConstants().clearHistoryTooltip();
 		createLabel(panel, "/", null, null);
 		createImage(panel, ArtiqueWorld.WORLD.getResources().clear(),
 			clearHandler, clearTooltip);

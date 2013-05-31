@@ -72,28 +72,25 @@ public class ListFilterWidget extends AbstractHierarchyTreeWidget<ListFilter> {
 	public ListFilterWidget(final Hierarchy<ListFilter> hierarchy) {
 		super(hierarchy);
 
-		FlowPanel panel = new FlowPanel();
-		initWidget(panel);
-
 		if (hierarchy instanceof LeafNode) {
 			LeafNode<ListFilter> leaf = (LeafNode<ListFilter>) hierarchy;
 			if (leaf.getItem().getKey() == null) {
-				createAdhocPanel(panel);
+				createAdhocPanel(getPanel());
 			} else {
-				createLeafNodePanel(panel);
+				createLeafNodePanel(getPanel());
 			}
 		} else if (hierarchy instanceof InnerNode) {
 			if (hierarchy.getParent() != null) {
-				createInnerNodePanel(panel);
+				createInnerNodePanel(getPanel());
 			} else {
-				createRootPanel(panel);
+				createRootPanel(getPanel());
 			}
 		}
 	}
 
 	private void createRootPanel(FlowPanel panel) {
 		String clearTooltip =
-			I18n.I18N.getConstants().clearListFilterTooltip();
+			I18n.getHierarchyTreeConstants().clearListFilterTooltip();
 		createAnchor(panel, "/", null, clearHandler, clearTooltip);
 		createImage(panel, ArtiqueWorld.WORLD.getResources().clear(),
 			clearHandler, clearTooltip);
@@ -107,11 +104,11 @@ public class ListFilterWidget extends AbstractHierarchyTreeWidget<ListFilter> {
 
 	private void addGeneralInnerImages(FlowPanel panel) {
 		String createNewTooltip =
-			I18n.I18N.getConstants().createNewListFilterTooltip();
+			I18n.getHierarchyTreeConstants().createNewListFilterTooltip();
 		createImage(panel, ArtiqueWorld.WORLD.getResources().createNew(),
 			createNewHandler, createNewTooltip);
 		String saveCurrentTooltip =
-			I18n.I18N.getConstants().saveCurrentListFilterTooltip();
+			I18n.getHierarchyTreeConstants().saveCurrentListFilterTooltip();
 		createImage(panel, ArtiqueWorld.WORLD.getResources().saveCurrent(),
 			saveCurrentHandler, saveCurrentTooltip);
 	}
@@ -133,7 +130,7 @@ public class ListFilterWidget extends AbstractHierarchyTreeWidget<ListFilter> {
 			}, null);
 
 		String detailTooltip =
-			I18n.I18N.getConstants().detailListFilterTooltip();
+			I18n.getHierarchyTreeConstants().detailListFilterTooltip();
 		createImage(panel, ArtiqueWorld.WORLD.getResources().detail(),
 			new ClickHandler() {
 				public void onClick(ClickEvent event) {
@@ -143,8 +140,8 @@ public class ListFilterWidget extends AbstractHierarchyTreeWidget<ListFilter> {
 	}
 
 	private void createAdhocPanel(FlowPanel panel) {
-		String adhoc = I18n.I18N.getConstants().adhoc();
-		String adhocTooltip = I18n.I18N.getConstants().adhocTooltip();
+		String adhoc = I18n.getHierarchyTreeConstants().adhoc();
+		String adhocTooltip = I18n.getHierarchyTreeConstants().adhocTooltip();
 		createAnchor(panel, adhoc, null, new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				HistoryItem lastHistoryItem =
@@ -159,7 +156,7 @@ public class ListFilterWidget extends AbstractHierarchyTreeWidget<ListFilter> {
 			}
 		}, adhocTooltip);
 		String clearTooltip =
-			I18n.I18N.getConstants().clearListFilterTooltip();
+			I18n.getHierarchyTreeConstants().clearListFilterTooltip();
 		createImage(panel, ArtiqueWorld.WORLD.getResources().clear(),
 			clearHandler, clearTooltip);
 	}

@@ -26,12 +26,13 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.ArtiqueWorld;
-import cz.artique.client.i18n.Constants;
 import cz.artique.client.i18n.I18n;
-import cz.artique.client.i18n.Messages;
 import cz.artique.client.manager.Managers;
 import cz.artique.client.messages.Message;
 import cz.artique.client.messages.MessageType;
+import cz.artique.client.messages.ValidationMessage;
+import cz.artique.client.service.ClientSourceService.AddSource;
+import cz.artique.client.service.ClientSourceService.PlanSourceCheck;
 import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.SourceType;
@@ -140,25 +141,10 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		return us;
 	}
 
-	private void notPassedValidation() {
-		urlButton.setEnabled(true);
-		url.setEnabled(true);
-		sourceType.setEnabled(true);
-		Constants constants = I18n.I18N.getConstants();
-		Managers.MESSAGES_MANAGER.addMessage(new Message(MessageType.ERROR,
-			constants.sourceCreatedError()));
-	}
-
-	private void passedValidation() {
-		Constants constants = I18n.I18N.getConstants();
-		Managers.MESSAGES_MANAGER.addMessage(new Message(MessageType.INFO,
-			constants.sourceCreated()));
-	}
-
 	private void selectRegion() {
-		Constants constants = I18n.I18N.getConstants();
+		SourcesConstants constants = I18n.getSourcesConstants();
 		Managers.MESSAGES_MANAGER.addMessage(new Message(MessageType.INFO,
-			constants.selectRegion()));
+			constants.selectRegion()), true);
 	}
 
 	@UiHandler("watchButton")
@@ -170,7 +156,7 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 	}
 
 	private void setWatch() {
-		Constants constants = I18n.I18N.getConstants();
+		SourcesConstants constants = I18n.getSourcesConstants();
 		if (watchState == null
 			|| SourceType.MANUAL.equals(sourceType.getValue())) {
 			watching.setText(constants.unavailable());
@@ -190,7 +176,7 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 	public void setValue(UserSource value) {
 		userSource = value;
 		source = userSource.getSourceObject();
-		Constants constants = I18n.I18N.getConstants();
+		SourcesConstants constants = I18n.getSourcesConstants();
 
 		// source part
 
@@ -296,19 +282,15 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		Managers.SOURCES_MANAGER.planSourceCheck(source.getKey(),
 			new AsyncCallback<Date>() {
 				public void onFailure(Throwable caught) {
-					Messages messages = I18n.I18N.getMessages();
-					Managers.MESSAGES_MANAGER.addMessage(new Message(
-						MessageType.ERROR, messages.planCheckFailed(userSource
-							.getName())));
+					new ValidationMessage<PlanSourceCheck>(
+						PlanSourceCheck.GENERAL).onFailure(caught);
 				}
 
 				public void onSuccess(Date result) {
-					userSource.getSourceObject().setNextCheck(result);
-					Messages messages = I18n.I18N.getMessages();
-					Managers.MESSAGES_MANAGER.addMessage(new Message(
-						MessageType.INFO, messages
-							.sourceCheckPlanned(userSource.getName())));
+					new ValidationMessage<PlanSourceCheck>(
+						PlanSourceCheck.GENERAL).onSuccess();
 
+					userSource.getSourceObject().setNextCheck(result);
 					DateTimeFormatRenderer renderer =
 						new DateTimeFormatRenderer(DateTimeFormat
 							.getFormat(PredefinedFormat.DATE_TIME_MEDIUM));
@@ -323,14 +305,6 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 	protected void urlButtonClicked(ClickEvent event) {
 		if (source != null) {
 			urlButton.setEnabled(false);
-			return;
-		}
-		if (url.getValue().trim().isEmpty()) {
-			Messages messages = I18n.I18N.getMessages();
-			Constants constants = I18n.I18N.getConstants();
-			Managers.MESSAGES_MANAGER.addMessage(new Message(MessageType.ERROR,
-				messages.errorEmptyField(constants.url())));
-			// ignore
 			return;
 		}
 
@@ -354,14 +328,19 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 			// ignore
 			return;
 		}
-		Managers.SOURCES_MANAGER.createSource(newSource,
+		Managers.SOURCES_MANAGER.addSource(newSource,
 			new AsyncCallback<Source>() {
 				public void onFailure(Throwable caught) {
-					notPassedValidation();
+					urlButton.setEnabled(true);
+					url.setEnabled(true);
+					sourceType.setEnabled(true);
+					new ValidationMessage<AddSource>(AddSource.GENERAL)
+						.onFailure(caught);
 				}
 
 				public void onSuccess(Source result) {
-					passedValidation();
+					new ValidationMessage<AddSource>(AddSource.GENERAL)
+						.onSuccess();
 					sourceCreated(result);
 				}
 			});

@@ -11,7 +11,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.impl.HyperlinkImpl;
 
@@ -23,8 +22,8 @@ import cz.artique.client.hierarchy.InnerNode;
 import cz.artique.client.hierarchy.LeafNode;
 import cz.artique.client.history.CachingHistoryUtils;
 import cz.artique.client.history.HistoryManager;
-import cz.artique.client.i18n.Constants;
 import cz.artique.client.i18n.I18n;
+import cz.artique.client.items.ManualItemDialog;
 import cz.artique.client.sources.UserSourceDialog;
 import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.FilterType;
@@ -62,14 +61,10 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 
 	public UserSourceWidget(Hierarchy<UserSource> hierarchy) {
 		super(hierarchy);
-
-		FlowPanel panel = new FlowPanel();
-		initWidget(panel);
-
 		filter = constructFilter();
 
 		anchor =
-			createAnchor(panel, hierarchy.getName(), null, new ClickHandler() {
+			createAnchor(getPanel(), hierarchy.getName(), null, new ClickHandler() {
 				final HyperlinkImpl impl = GWT.create(HyperlinkImpl.class);
 
 				public void onClick(ClickEvent event) {
@@ -88,8 +83,8 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 			LeafNode<UserSource> leaf = (LeafNode<UserSource>) hierarchy;
 			final UserSource item = leaf.getItem();
 			String detailTooltip =
-				I18n.I18N.getConstants().detailUserSourceTooltip();
-			createImage(panel, ArtiqueWorld.WORLD.getResources().detail(),
+				I18n.getHierarchyTreeConstants().detailUserSourceTooltip();
+			createImage(getPanel(), ArtiqueWorld.WORLD.getResources().detail(),
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						UserSourceDialog.DIALOG.showDialog(item);
@@ -99,26 +94,24 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 			if (SourceType.MANUAL.equals(leaf.getItem().getSourceType())) {
 				// manual source
 				String addManualItemTooltip =
-					I18n.I18N.getConstants().addManualItemTooltip();
-				createImage(panel, ArtiqueWorld.WORLD.getResources().add(),
+					I18n.getHierarchyTreeConstants().addManualItemTooltip();
+				createImage(getPanel(), ArtiqueWorld.WORLD.getResources().add(),
 					new ClickHandler() {
 						public void onClick(ClickEvent event) {
-							// TODO Auto-generated method stub
-
+							ManualItemDialog.DIALOG.showDialog();
 						}
 					}, addManualItemTooltip);
 			}
 		} else if (hierarchy instanceof InnerNode) {
 			String createNewTooltip =
-				I18n.I18N.getConstants().createNewUserSourceTooltip();
-			createImage(panel, ArtiqueWorld.WORLD.getResources().createNew(),
+				I18n.getHierarchyTreeConstants().createNewUserSourceTooltip();
+			createImage(getPanel(), ArtiqueWorld.WORLD.getResources().createNew(),
 				createNewHandler, createNewTooltip);
 
 			if (hierarchy.getParent() == null) {
 				// root node
 				final Image showHideDisabled = new Image();
-				showHideDisabled.setStylePrimaryName("hiddenAction");
-				panel.add(showHideDisabled);
+				getPanel().add(showHideDisabled);
 				final Tooltip tt = addTooltip("");
 				tt.attachTo(showHideDisabled);
 
@@ -132,7 +125,7 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 			}
 
 			String sourceFolderTooltip =
-				I18n.I18N.getConstants().sourceFolderTooltip();
+				I18n.getHierarchyTreeConstants().sourceFolderTooltip();
 			Tooltip folderTooltip = addTooltip(sourceFolderTooltip);
 			folderTooltip.attachTo(anchor);
 		}
@@ -140,7 +133,7 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 	}
 
 	private void setShowHideDisabled(Image image, Tooltip tt) {
-		Constants constants = I18n.I18N.getConstants();
+		HierarchyTreeConstants constants = I18n.getHierarchyTreeConstants();
 		boolean showingDisabled =
 			ArtiqueWorld.WORLD.getSourcesTree().isShowingDisabled();
 		String tooltip;
@@ -150,10 +143,11 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 			ir = ArtiqueWorld.WORLD.getResources().hideDisabled();
 		} else {
 			tooltip = constants.showDisabledSourcesTooltip();
-			ir = ArtiqueWorld.WORLD.getResources().hideDisabled();
+			ir = ArtiqueWorld.WORLD.getResources().showDisabled();
 		}
 		tt.setText(tooltip);
 		image.setResource(ir);
+		image.setStylePrimaryName("hiddenAction");
 	}
 
 	private Filter constructFilter() {

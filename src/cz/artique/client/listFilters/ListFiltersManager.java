@@ -14,12 +14,8 @@ import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyUtils;
 import cz.artique.client.hierarchy.ProvidesHierarchy;
 import cz.artique.client.history.HistoryUtils;
-import cz.artique.client.i18n.I18n;
-import cz.artique.client.i18n.Messages;
 import cz.artique.client.manager.AbstractManager;
 import cz.artique.client.manager.Managers;
-import cz.artique.client.messages.Message;
-import cz.artique.client.messages.MessageType;
 import cz.artique.client.service.ClientListFilterService;
 import cz.artique.client.service.ClientListFilterServiceAsync;
 import cz.artique.shared.model.label.ListFilter;
@@ -27,8 +23,7 @@ import cz.artique.shared.model.label.ListFilter;
 public class ListFiltersManager
 		extends AbstractManager<ClientListFilterServiceAsync>
 		implements ProvidesHierarchy<ListFilter> {
-	public static final ListFiltersManager MANAGER =
-		new ListFiltersManager();
+	public static final ListFiltersManager MANAGER = new ListFiltersManager();
 
 	private Hierarchy<ListFilter> hierarchyRoot = HierarchyUtils
 		.createRootNode();
@@ -136,10 +131,6 @@ public class ListFiltersManager
 		service.addListFilter(listFilter, new AsyncCallback<ListFilter>() {
 
 			public void onFailure(Throwable caught) {
-				Messages messages = I18n.I18N.getMessages();
-				Managers.MESSAGES_MANAGER.addMessage(new Message(
-					MessageType.ERROR, messages
-						.listFilterCreatedError(listFilter.getName())));
 				if (ping != null) {
 					ping.onFailure(caught);
 				}
@@ -148,10 +139,6 @@ public class ListFiltersManager
 			public void onSuccess(ListFilter result) {
 				listFilterByKey.put(result.getKey(), result);
 				HierarchyUtils.add(getHierarchyRoot(), result);
-				Messages messages = I18n.I18N.getMessages();
-				Managers.MESSAGES_MANAGER.addMessage(new Message(
-					MessageType.INFO, messages.listFilterCreated(result
-						.getName())));
 				String token = HistoryUtils.UTILS.serializeListFilter(result);
 				Managers.HISTORY_MANAGER.setListFilter(result, token);
 				if (ping != null) {
@@ -171,10 +158,6 @@ public class ListFiltersManager
 		service.deleteListFilter(lf, new AsyncCallback<Void>() {
 
 			public void onFailure(Throwable caught) {
-				Messages messages = I18n.I18N.getMessages();
-				Managers.MESSAGES_MANAGER.addMessage(new Message(
-					MessageType.ERROR, messages.listFilterDeletedError(lf
-						.getName())));
 				if (ping != null) {
 					ping.onFailure(caught);
 				}
@@ -183,9 +166,6 @@ public class ListFiltersManager
 			public void onSuccess(Void result) {
 				listFilterByKey.remove(lf.getKey());
 				HierarchyUtils.remove(getHierarchyRoot(), lf);
-				Messages messages = I18n.I18N.getMessages();
-				Managers.MESSAGES_MANAGER.addMessage(new Message(
-					MessageType.INFO, messages.listFilterDeleted(lf.getName())));
 				if (ping != null) {
 					ping.onSuccess(null);
 				}
@@ -198,10 +178,6 @@ public class ListFiltersManager
 		service.updateListFilter(listFilter, new AsyncCallback<ListFilter>() {
 
 			public void onFailure(Throwable caught) {
-				Messages messages = I18n.I18N.getMessages();
-				Managers.MESSAGES_MANAGER.addMessage(new Message(
-					MessageType.ERROR, messages
-						.listFilterUpdatedError(listFilter.getName())));
 				if (ping != null) {
 					ping.onFailure(caught);
 				}
@@ -212,10 +188,6 @@ public class ListFiltersManager
 					listFilterByKey.get(result.getKey()));
 				HierarchyUtils.add(hierarchyRoot, result);
 				listFilterByKey.put(result.getKey(), result);
-				Messages messages = I18n.I18N.getMessages();
-				Managers.MESSAGES_MANAGER.addMessage(new Message(
-					MessageType.INFO, messages.listFilterUpdated(result
-						.getName())));
 				String token = HistoryUtils.UTILS.serializeListFilter(result);
 				Managers.HISTORY_MANAGER.setListFilter(result, token);
 				if (ping != null) {

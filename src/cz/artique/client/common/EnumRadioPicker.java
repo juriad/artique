@@ -6,13 +6,11 @@ import java.util.Map;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.i18n.client.ConstantsWithLookup;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.RadioButton;
-
-import cz.artique.client.i18n.Constants;
-import cz.artique.client.i18n.I18n;
 
 public class EnumRadioPicker<E extends Enum<E>> extends Composite
 		implements HasEnabled, HasValue<E> {
@@ -36,11 +34,10 @@ public class EnumRadioPicker<E extends Enum<E>> extends Composite
 	private final Map<RadioButton, E> buttons = new HashMap<RadioButton, E>();
 	private final Map<E, RadioButton> enums = new HashMap<E, RadioButton>();
 
-	public EnumRadioPicker(E enu, String group) {
+	public EnumRadioPicker(E enu, String group, ConstantsWithLookup constants) {
 		panel = new InlineFlowPanel();
 		initWidget(panel);
 
-		Constants constants = I18n.I18N.getConstants();
 		Object[] enumConstants = enu.getClass().getEnumConstants();
 		for (int i = 0; i < enumConstants.length; i++) {
 			@SuppressWarnings("unchecked")
@@ -96,7 +93,7 @@ public class EnumRadioPicker<E extends Enum<E>> extends Composite
 		if (value == null) {
 			return;
 		}
-		for(RadioButton rb: enums.values()) {
+		for (RadioButton rb : enums.values()) {
 			rb.setValue(null);
 		}
 		RadioButton radioButton = enums.get(value);

@@ -38,23 +38,20 @@ public class MessageWidget extends AbstractHierarchyTreeWidget<Message> {
 	public MessageWidget(Hierarchy<Message> hierarchy) {
 		super(hierarchy);
 
-		FlowPanel panel = new FlowPanel();
-		initWidget(panel);
-
 		if (hierarchy instanceof LeafNode) {
-			createLeafNodePanel(panel);
+			createLeafNodePanel(getPanel());
 		} else if (hierarchy instanceof InnerNode) {
 			if (hierarchy.getParent() != null) {
-				createInnerNodePanel(panel);
+				createInnerNodePanel(getPanel());
 			} else {
-				createRootPanel(panel);
+				createRootPanel(getPanel());
 			}
 		}
 	}
 
 	private void createRootPanel(FlowPanel panel) {
 		String clearTooltip =
-			I18n.I18N.getConstants().clearMessagesTooltip();
+			I18n.getHierarchyTreeConstants().clearMessagesTooltip();
 		createLabel(panel, "/", null, null);
 		createImage(panel, ArtiqueWorld.WORLD.getResources().clear(),
 			clearHandler, clearTooltip);
@@ -69,7 +66,11 @@ public class MessageWidget extends AbstractHierarchyTreeWidget<Message> {
 		final Message item = leaf.getItem();
 
 		InlineLabel messageLabel =
-			createLabel(panel, item.getMessageBody(), null, null);
+			createLabel(panel, item.getMessageBody(), new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					MessagesManager.MESSENGER.addMessage(item, false);
+				}
+			}, null);
 		messageLabel.setStylePrimaryName("message");
 		messageLabel.setStyleDependentName(item.getMessageType().name(), true);
 	}

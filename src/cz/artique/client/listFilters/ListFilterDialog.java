@@ -9,12 +9,8 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 
 import cz.artique.client.history.CachingHistoryUtils;
-import cz.artique.client.i18n.Constants;
 import cz.artique.client.i18n.I18n;
-import cz.artique.client.i18n.Messages;
 import cz.artique.client.manager.Managers;
-import cz.artique.client.messages.Message;
-import cz.artique.client.messages.MessageType;
 import cz.artique.shared.model.label.ListFilter;
 
 public class ListFilterDialog {
@@ -66,15 +62,6 @@ public class ListFilterDialog {
 	protected void saveButtonClicked(ClickEvent event) {
 		final ListFilter value = editor.getValue();
 		if (proper) {
-			if (value.getName() == null) {
-				Messages messages = I18n.I18N.getMessages();
-				Constants constants = I18n.I18N.getConstants();
-				Managers.MESSAGES_MANAGER.addMessage(new Message(
-					MessageType.ERROR, messages.errorEmptyField(constants
-						.name())));
-				return;
-			}
-
 			if (value.getKey() == null) {
 				Managers.LIST_FILTERS_MANAGER.addListFilter(value, null);
 			} else {
@@ -102,7 +89,7 @@ public class ListFilterDialog {
 	}
 
 	public void setButtons(boolean justEditing) {
-		Constants constants = I18n.I18N.getConstants();
+		ListFiltersConstants constants = I18n.getListFiltersConstants();
 		if (justEditing) {
 			deleteButton.setText(constants.deleteButton());
 		} else {

@@ -80,7 +80,7 @@ public class SourcesManager
 		});
 	}
 
-	public <T extends Source> void createSource(T source,
+	public <T extends Source> void addSource(T source,
 			final AsyncCallback<T> ping) {
 		service.addSource(source, new AsyncCallback<Source>() {
 

@@ -22,6 +22,9 @@ public class AbstractHierarchyTreeWidget<E extends HasHierarchy & HasName>
 
 	public AbstractHierarchyTreeWidget(Hierarchy<E> hierarchy) {
 		this.hierarchy = hierarchy;
+		panel = new FlowPanel();
+		initWidget(getPanel());
+		setStylePrimaryName("hierarchyWidget");
 	}
 
 	public boolean refresh() {
@@ -92,6 +95,7 @@ public class AbstractHierarchyTreeWidget<E extends HasHierarchy & HasName>
 	}
 
 	protected boolean selected = false;
+	private final FlowPanel panel;
 
 	public void setSelected(boolean selected) {
 		this.selected = selected;
@@ -100,5 +104,9 @@ public class AbstractHierarchyTreeWidget<E extends HasHierarchy & HasName>
 
 	public boolean isSelected() {
 		return selected;
+	}
+
+	protected FlowPanel getPanel() {
+		return panel;
 	}
 }

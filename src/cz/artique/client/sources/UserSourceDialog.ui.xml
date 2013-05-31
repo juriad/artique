@@ -3,7 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:a="urn:import:cz.artique.client.sources"
 	xmlns:db="urn:import:com.google.gwt.user.datepicker.client">
 
-	<ui:with field='res' type='cz.artique.client.i18n.Constants' />
+	<ui:with field='res' type='cz.artique.client.sources.SourcesConstants' />
 
 	<g:DialogBox ui:field="dialog" autoHideEnabled="true"
 		modal="true" width="50%" height="50%">

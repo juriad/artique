@@ -133,3 +133,18 @@
 	background: #ff7373;
 	border: 1px solid #ff2020;
 }
+
+.message-SYSTEM {
+	background: black;
+	color: red;
+	border: 1px solid grey;
+}
+
+/* hierarchy */
+.hierarchyWidget .hiddenAction {
+	visibility: hidden;
+}
+
+.hierarchyWidget:hover .hiddenAction {
+	visibility: visible;
+}

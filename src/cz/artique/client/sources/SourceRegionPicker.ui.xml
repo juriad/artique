@@ -3,7 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:com.google.gwt.user.cellview.client"
 	xmlns:db="urn:import:com.google.gwt.user.datepicker.client">
 
-	<ui:with field='res' type='cz.artique.client.i18n.Constants' />
+	<ui:with field='res' type='cz.artique.client.sources.SourcesConstants' />
 
 	<g:DisclosurePanel ui:field="disclosure">
 		<g:customHeader>
@@ -32,7 +32,7 @@
 				</g:row>
 				<g:row>
 					<g:cell>
-						<ui:text from="{res.negativeSelectors}" />
+						<ui:text from="{res.negativeSelector}" />
 					</g:cell>
 					<g:customCell>
 						<g:TextBox ui:field="negative" />

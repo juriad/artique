@@ -59,9 +59,11 @@ public class UserItem implements Serializable, HasKey<Key> {
 		this.item = item.getKey();
 		this.added = item.getAdded();
 		this.lastChanged = added;
-		this.userSource = userSource.getKey();
-		this.labels = userSource.getDefaultLabels();
-		this.user = userSource.getUser();
+		if (userSource != null) {
+			this.userSource = userSource.getKey();
+			this.labels = userSource.getDefaultLabels();
+			this.user = userSource.getUser();
+		}
 		this.read = false;
 	}
 

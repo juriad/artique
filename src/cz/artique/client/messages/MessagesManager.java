@@ -41,15 +41,17 @@ public class MessagesManager
 
 	private final LinkedList<Message> messages = new LinkedList<Message>();
 
-	public void addMessage(Message message) {
-		messages.add(message);
-		getHierarchyRoot().addChild(
-			new TimedLeafNode<Message>(message, getHierarchyRoot()));
+	public void addMessage(Message message, boolean addToMessagesList) {
+		if (addToMessagesList) {
+			messages.add(message);
+			getHierarchyRoot().addChild(
+				new TimedLeafNode<Message>(message, getHierarchyRoot()));
 
-		while (messages.size() > getMaxItems()) {
-			Message first = messages.removeFirst();
-			if (first != null) {
-				HierarchyUtils.remove(hierarchyRoot, first);
+			while (messages.size() > getMaxItems()) {
+				Message first = messages.removeFirst();
+				if (first != null) {
+					HierarchyUtils.remove(hierarchyRoot, first);
+				}
 			}
 		}
 

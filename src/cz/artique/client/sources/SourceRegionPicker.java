@@ -25,11 +25,11 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
-import cz.artique.client.i18n.Constants;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.Managers;
-import cz.artique.client.messages.Message;
-import cz.artique.client.messages.MessageType;
+import cz.artique.client.messages.ValidationMessage;
+import cz.artique.client.service.ClientSourceService.CheckRegion;
+import cz.artique.client.service.ClientSourceService.GetRegions;
 import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.UserSource;
 
@@ -46,7 +46,7 @@ public class SourceRegionPicker extends Composite
 				return;
 			}
 
-			Constants constants = I18n.I18N.getConstants();
+			SourcesConstants constants = I18n.getSourcesConstants();
 
 			sb.appendHtmlConstant("<table><tr>");
 			sb.appendHtmlConstant("<td style='font-weight:bold;'>");
@@ -119,7 +119,7 @@ public class SourceRegionPicker extends Composite
 		negative.setEnabled(selected.getKey() == null);
 		negative.setText(selected.getNegativeSelector());
 		checkButton.setEnabled(selected.getKey() == null);
-		Constants constants = I18n.I18N.getConstants();
+		SourcesConstants constants = I18n.getSourcesConstants();
 		String headerText =
 			selected.getName() == null ? constants.customRegion() : selected
 				.getName();
@@ -139,25 +139,15 @@ public class SourceRegionPicker extends Composite
 		Managers.SOURCES_MANAGER.checkRegion(selectedObject,
 			new AsyncCallback<Region>() {
 				public void onFailure(Throwable caught) {
-					notPassedValidation();
+					new ValidationMessage<CheckRegion>(CheckRegion.GENERAL)
+						.onFailure(caught);
 				}
 
 				public void onSuccess(Region result) {
-					passedValidation();
+					new ValidationMessage<CheckRegion>(CheckRegion.GENERAL)
+						.onSuccess();
 				}
 			});
-	}
-
-	private void notPassedValidation() {
-		Constants constants = I18n.I18N.getConstants();
-		Managers.MESSAGES_MANAGER.addMessage(new Message(MessageType.ERROR,
-			constants.regionCheckError()));
-	}
-
-	private void passedValidation() {
-		Constants constants = I18n.I18N.getConstants();
-		Managers.MESSAGES_MANAGER.addMessage(new Message(MessageType.INFO,
-			constants.regionCheckPass()));
 	}
 
 	public HandlerRegistration addValueChangeHandler(
@@ -193,15 +183,9 @@ public class SourceRegionPicker extends Composite
 		}
 	}
 
-	private void failedToLoadList() {
-		Constants constants = I18n.I18N.getConstants();
-		Managers.MESSAGES_MANAGER.addMessage(new Message(MessageType.ERROR,
-			constants.failedToGetRegions()));
-	}
-
 	public void setValue(final UserSource value) {
 		this.userSource = value;
-		Constants constants = I18n.I18N.getConstants();
+		SourcesConstants constants = I18n.getSourcesConstants();
 		disclosure.setOpen(value.getKey() == null);
 
 		if (value.getSource() == null) {
@@ -223,7 +207,8 @@ public class SourceRegionPicker extends Composite
 				new AsyncCallback<List<Region>>() {
 
 					public void onFailure(Throwable caught) {
-						failedToLoadList();
+						new ValidationMessage<GetRegions>(GetRegions.GENERAL)
+							.onFailure(caught);
 						cellList.setRowData(new ArrayList<Region>());
 						Region regionObject = userSource.getRegionObject();
 						if (regionObject == null) {
