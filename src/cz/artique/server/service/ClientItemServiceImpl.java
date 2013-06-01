@@ -60,7 +60,7 @@ public class ClientItemServiceImpl implements ClientItemService {
 			item.getItemObject());
 		if (!(item.getItemObject() instanceof ManualItem)) {
 			throw new ValidationException(new Issue<AddManualItem>(
-				AddManualItem.ITEM, IssueType.WRONG_TYPE));
+				AddManualItem.ITEM, IssueType.INVALID_VALUE));
 		}
 		ManualItem mi = (ManualItem) item.getItemObject();
 		mi.setAdded(new Date());

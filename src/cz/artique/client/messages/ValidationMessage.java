@@ -24,12 +24,20 @@ public class ValidationMessage<E extends Enum<E> & HasIssue> {
 		.create(ValidationConstants.class);
 
 	public void onFailure(Throwable caught) {
+		onFailure(caught, MessageType.ERROR);
+	}
+
+	public void onFailure(Throwable caught, MessageType type) {
 		ValidationException exception =
 			new ValidationException(new Issue<E>(general, IssueType.UNKNOWN));
-		onFailure(exception);
+		onFailure(exception, type);
 	}
 
 	public void onFailure(ValidationException exception) {
+		onFailure(exception, MessageType.ERROR);
+	}
+
+	public void onFailure(ValidationException exception, MessageType type) {
 		List<Issue<? extends HasIssue>> issues = exception.getIssues();
 		for (Issue<? extends HasIssue> _issue : issues) {
 			@SuppressWarnings("unchecked")
@@ -39,30 +47,29 @@ public class ValidationMessage<E extends Enum<E> & HasIssue> {
 			String issueType = issue.getIssueType().name();
 
 			String method = enumName + "_" + property + "_" + issueType;
-			Message message;
-			try {
-				String messageContent = constants.getString(method);
-				message = new Message(MessageType.ERROR, messageContent);
-			} catch (MissingResourceException e) {
-				message =
-					new Message(MessageType.SYSTEM,
-						"Couldn't find validation resource: " + method);
-			}
-			Managers.MESSAGES_MANAGER.addMessage(message, true);
+			showMessage(method, type);
 		}
 	}
 
 	public void onSuccess() {
+		onSuccess(MessageType.INFO);
+	}
+
+	public void onSuccess(MessageType type) {
 		String enumName = general.enumName();
 		String property = general.name();
 		String method = enumName + "_" + property + "_" + "OK";
+		showMessage(method, type);
+	}
+
+	private void showMessage(String method, MessageType type) {
 		Message message;
 		try {
 			String messageContent = constants.getString(method);
-			message = new Message(MessageType.INFO, messageContent);
+			message = new Message(type, messageContent);
 		} catch (MissingResourceException e) {
 			message =
-				new Message(MessageType.SYSTEM,
+				new Message(MessageType.FAILURE,
 					"Couldn't find validation resource: " + method);
 		}
 		Managers.MESSAGES_MANAGER.addMessage(message, true);

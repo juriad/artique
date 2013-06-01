@@ -10,9 +10,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 
 import cz.artique.client.manager.Managers;
-import cz.artique.client.messages.ValidationMessage;
-import cz.artique.client.service.ClientSourceService.AddUserSource;
-import cz.artique.client.service.ClientSourceService.UpdateUserSource;
 import cz.artique.shared.model.source.UserSource;
 
 public class UserSourceDialog {
@@ -48,29 +45,19 @@ public class UserSourceDialog {
 			Managers.SOURCES_MANAGER.addUserSource(value,
 				new AsyncCallback<UserSource>() {
 					public void onSuccess(UserSource result) {
-						new ValidationMessage<AddUserSource>(
-							AddUserSource.GENERAL).onSuccess();
 						dialog.hide();
 					}
 
-					public void onFailure(Throwable caught) {
-						new ValidationMessage<AddUserSource>(
-							AddUserSource.GENERAL).onFailure(caught);
-					}
+					public void onFailure(Throwable caught) {}
 				});
 		} else {
 			Managers.SOURCES_MANAGER.updateUserSource(value,
 				new AsyncCallback<UserSource>() {
 					public void onSuccess(UserSource result) {
-						new ValidationMessage<UpdateUserSource>(
-							UpdateUserSource.GENERAL).onSuccess();
 						dialog.hide();
 					}
 
-					public void onFailure(Throwable caught) {
-						new ValidationMessage<UpdateUserSource>(
-							UpdateUserSource.GENERAL).onFailure(caught);
-					}
+					public void onFailure(Throwable caught) {}
 				});
 		}
 	}

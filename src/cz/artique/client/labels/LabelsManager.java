@@ -13,8 +13,13 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.AbstractManager;
+import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
+import cz.artique.client.messages.MessageType;
+import cz.artique.client.messages.ValidationMessage;
 import cz.artique.client.service.ClientLabelService;
+import cz.artique.client.service.ClientLabelService.AddLabel;
+import cz.artique.client.service.ClientLabelService.GetAllLabels;
 import cz.artique.client.service.ClientLabelServiceAsync;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
@@ -71,22 +76,20 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 	}
 
 	public void refresh(final AsyncCallback<Void> ping) {
+		assumeOnline();
 		service.getAllLabels(new AsyncCallback<List<Label>>() {
 			public void onFailure(Throwable caught) {
+				serviceFailed(caught);
+				new ValidationMessage<GetAllLabels>(GetAllLabels.GENERAL)
+					.onFailure(caught);
 				if (ping != null) {
 					ping.onFailure(caught);
 				}
 			}
 
 			public void onSuccess(final List<Label> list) {
-				Managers.waitForManagers(new AsyncCallback<Void>() {
-					public void onFailure(Throwable caught) {
-						if (ping != null) {
-							ping.onFailure(caught);
-						}
-					}
-
-					public void onSuccess(Void result) {
+				Managers.waitForManagers(new ManagerReady() {
+					public void onReady() {
 						Map<Key, Label> newLabelsKeys =
 							new HashMap<Key, Label>();
 						List<Label> newUserDefinedLabels =
@@ -121,6 +124,8 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 						userSourceLabels = newUserSourceLabels;
 						labelNames = newLabelNames;
 
+						new ValidationMessage<GetAllLabels>(
+							GetAllLabels.GENERAL).onSuccess(MessageType.DEBUG);
 						if (ping != null) {
 							ping.onSuccess(null);
 						}
@@ -133,8 +138,12 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 
 	public void createNewLabel(String name, final AsyncCallback<Label> ping) {
 		Label label = new Label(ArtiqueWorld.WORLD.getUser(), name);
+		assumeOnline();
 		service.addLabel(label, new AsyncCallback<Label>() {
 			public void onFailure(Throwable caught) {
+				serviceFailed(caught);
+				new ValidationMessage<AddLabel>(AddLabel.GENERAL)
+					.onFailure(caught);
 				if (ping != null) {
 					ping.onFailure(null);
 				}
@@ -148,6 +157,9 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 						result);
 					labelsKeys.put(result.getKey(), result);
 				}
+
+				new ValidationMessage<AddLabel>(AddLabel.GENERAL)
+					.onSuccess(MessageType.DEBUG);
 
 				if (ping != null) {
 					ping.onSuccess(result);

@@ -3,7 +3,6 @@ package cz.artique.client.hierarchy.tree;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Tree;
@@ -17,10 +16,11 @@ import cz.artique.client.hierarchy.HierarchyTreeWidget;
 import cz.artique.client.hierarchy.HierarchyTreeWidgetFactory;
 import cz.artique.client.hierarchy.ProvidesHierarchy;
 import cz.artique.client.manager.Manager;
+import cz.artique.client.manager.ManagerReady;
 import cz.artique.shared.utils.HasHierarchy;
 import cz.artique.shared.utils.HasName;
 
-public class AbstractHierarchyTree<E extends HasHierarchy & HasName, F extends ProvidesHierarchy<E> & Manager>
+public abstract class AbstractHierarchyTree<E extends HasHierarchy & HasName, F extends ProvidesHierarchy<E> & Manager>
 		extends Composite {
 	private final ScrollPanel scrollPanel;
 	private final Tree tree;
@@ -39,9 +39,9 @@ public class AbstractHierarchyTree<E extends HasHierarchy & HasName, F extends P
 		tree = new Tree();
 		scrollPanel.add(getTree());
 
-		manager.ready(new AsyncCallback<Void>() {
+		manager.ready(new ManagerReady() {
 
-			public void onSuccess(Void result) {
+			public void onReady() {
 				root = manager.getHierarchyRoot();
 				rootItem = createTree(getRoot());
 				getTree().addItem(rootItem);
@@ -83,10 +83,6 @@ public class AbstractHierarchyTree<E extends HasHierarchy & HasName, F extends P
 						}
 					});
 				initialized();
-			}
-
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
 			}
 		});
 	}

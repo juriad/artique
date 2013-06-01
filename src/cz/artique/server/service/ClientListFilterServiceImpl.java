@@ -11,6 +11,8 @@ import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.FilterType;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.ListFilter;
+import cz.artique.shared.validation.Issue;
+import cz.artique.shared.validation.IssueType;
 import cz.artique.shared.validation.ValidationException;
 
 public class ClientListFilterServiceImpl implements ClientListFilterService {
@@ -35,6 +37,16 @@ public class ClientListFilterServiceImpl implements ClientListFilterService {
 		listFilter.setExportAlias(validator.checkString(
 			AddListFilter.EXPORT_ALIAS, listFilter.getExportAlias(), true,
 			false));
+		if (listFilter.getExportAlias() != null) {
+			String value = listFilter.getExportAlias();
+			for (int i = 0; i < value.length(); i++) {
+				char c = value.charAt(i);
+				if (Character.isWhitespace(c)) {
+					throw new ValidationException(new Issue<AddListFilter>(
+						AddListFilter.EXPORT_ALIAS, IssueType.INVALID_VALUE));
+				}
+			}
+		}
 
 		if (listFilter.getFilterObject() != null) {
 			Filter filter = listFilter.getFilterObject();

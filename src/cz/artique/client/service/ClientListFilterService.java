@@ -12,6 +12,13 @@ import cz.artique.shared.validation.ValidationException;
 @RemoteServiceRelativePath("service.s3gwt")
 public interface ClientListFilterService extends RemoteService {
 
+	public enum GetAllListFilters implements HasIssue {
+		GENERAL;
+		public String enumName() {
+			return "GetAllListFilters";
+		}
+	}
+
 	List<ListFilter> getAllListFilters();
 
 	public enum AddListFilter implements HasIssue {
@@ -19,7 +26,8 @@ public interface ClientListFilterService extends RemoteService {
 		NAME,
 		HIERARCHY,
 		EXPORT_ALIAS,
-		FILTER_LABELS;
+		FILTER_LABELS,
+		GENERAL;
 		public String enumName() {
 			return "AddListFilter";
 		}
@@ -32,7 +40,8 @@ public interface ClientListFilterService extends RemoteService {
 		NAME,
 		HIERARCHY,
 		EXPORT_ALIAS,
-		FILTER_LABELS;
+		FILTER_LABELS,
+		GENERAL;
 		public String enumName() {
 			return "UpdateListFilter";
 		}
@@ -42,7 +51,8 @@ public interface ClientListFilterService extends RemoteService {
 			throws ValidationException;
 
 	public enum DeleteListFilter implements HasIssue {
-		LIST_FILTER;
+		LIST_FILTER,
+		GENERAL;
 		public String enumName() {
 			return "DeleteListFilter";
 		}

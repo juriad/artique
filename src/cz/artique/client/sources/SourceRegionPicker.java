@@ -27,9 +27,6 @@ import com.google.gwt.view.client.SingleSelectionModel;
 
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.Managers;
-import cz.artique.client.messages.ValidationMessage;
-import cz.artique.client.service.ClientSourceService.CheckRegion;
-import cz.artique.client.service.ClientSourceService.GetRegions;
 import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.UserSource;
 
@@ -136,18 +133,7 @@ public class SourceRegionPicker extends Composite
 			// not custom or null
 			return;
 		}
-		Managers.SOURCES_MANAGER.checkRegion(selectedObject,
-			new AsyncCallback<Region>() {
-				public void onFailure(Throwable caught) {
-					new ValidationMessage<CheckRegion>(CheckRegion.GENERAL)
-						.onFailure(caught);
-				}
-
-				public void onSuccess(Region result) {
-					new ValidationMessage<CheckRegion>(CheckRegion.GENERAL)
-						.onSuccess();
-				}
-			});
+		Managers.SOURCES_MANAGER.checkRegion(selectedObject, null);
 	}
 
 	public HandlerRegistration addValueChangeHandler(
@@ -205,10 +191,7 @@ public class SourceRegionPicker extends Composite
 
 			Managers.SOURCES_MANAGER.getRegions(userSource.getSource(),
 				new AsyncCallback<List<Region>>() {
-
 					public void onFailure(Throwable caught) {
-						new ValidationMessage<GetRegions>(GetRegions.GENERAL)
-							.onFailure(caught);
 						cellList.setRowData(new ArrayList<Region>());
 						Region regionObject = userSource.getRegionObject();
 						if (regionObject == null) {

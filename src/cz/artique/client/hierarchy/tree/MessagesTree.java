@@ -16,5 +16,4 @@ public class MessagesTree
 	protected void initialized() {
 		expand(2);
 	}
-
 }

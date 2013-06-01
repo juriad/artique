@@ -9,17 +9,19 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import cz.artique.client.manager.AbstractManager;
 import cz.artique.client.manager.Manager;
+import cz.artique.client.messages.MessageType;
+import cz.artique.client.messages.ValidationMessage;
 import cz.artique.client.service.ClientConfigService;
+import cz.artique.client.service.ClientConfigService.GetClientConfigs;
+import cz.artique.client.service.ClientConfigService.SetClientConfigs;
 import cz.artique.client.service.ClientConfigServiceAsync;
 import cz.artique.shared.model.config.ClientConfigKey;
 import cz.artique.shared.model.config.ClientConfigValue;
 
-public class ConfigManager
-		extends AbstractManager<ClientConfigServiceAsync>
+public class ConfigManager extends AbstractManager<ClientConfigServiceAsync>
 		implements Manager {
 
-	public static final ConfigManager MANAGER =
-		new ConfigManager();
+	public static final ConfigManager MANAGER = new ConfigManager();
 
 	private Map<ClientConfigKey, ClientConfigValue> configs =
 		new HashMap<ClientConfigKey, ClientConfigValue>();
@@ -30,9 +32,12 @@ public class ConfigManager
 	}
 
 	public void refresh(final AsyncCallback<Void> ping) {
+		assumeOnline();
 		service.getClientConfigs(new AsyncCallback<List<ClientConfigValue>>() {
-
 			public void onFailure(Throwable caught) {
+				serviceFailed(caught);
+				new ValidationMessage<GetClientConfigs>(
+					GetClientConfigs.GENERAL).onFailure(caught);
 				if (ping != null) {
 					ping.onFailure(null);
 				}
@@ -43,6 +48,8 @@ public class ConfigManager
 				for (ClientConfigValue value : result) {
 					configs.put(value.getKey(), value);
 				}
+				new ValidationMessage<GetClientConfigs>(
+					GetClientConfigs.GENERAL).onSuccess(MessageType.DEBUG);
 				if (ping != null) {
 					ping.onSuccess(null);
 				}
@@ -58,10 +65,14 @@ public class ConfigManager
 
 	public void updateConfigValues(List<ClientConfigValue> config,
 			final AsyncCallback<Void> ping) {
+		assumeOnline();
 		service.setClientConfigs(config,
 			new AsyncCallback<List<ClientConfigValue>>() {
 
 				public void onFailure(Throwable caught) {
+					serviceFailed(caught);
+					new ValidationMessage<SetClientConfigs>(
+						SetClientConfigs.GENERAL).onFailure(caught);
 					if (ping != null) {
 						ping.onFailure(null);
 					}
@@ -71,6 +82,8 @@ public class ConfigManager
 					for (ClientConfigValue value : result) {
 						configs.put(value.getKey(), value);
 					}
+					new ValidationMessage<SetClientConfigs>(
+						SetClientConfigs.GENERAL).onSuccess();
 					if (ping != null) {
 						ping.onSuccess(null);
 					}

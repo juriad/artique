@@ -43,14 +43,11 @@ public class ManualItemDialog {
 		final UserItem value = editor.getValue();
 		Managers.ITEMS_MANAGER.addManualItem(value,
 			new AsyncCallback<UserItem>() {
-
 				public void onSuccess(UserItem result) {
 					dialog.hide();
 				}
 
-				public void onFailure(Throwable caught) {
-					// TODO 
-				}
+				public void onFailure(Throwable caught) {}
 			});
 	}
 

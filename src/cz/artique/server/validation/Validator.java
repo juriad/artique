@@ -49,7 +49,7 @@ public class Validator<E extends Enum<E> & HasIssue> {
 					return false;
 				}
 				throw new ValidationException(new Issue<E>(property,
-					IssueType.PROPERTY_EMPTY));
+					IssueType.EMPTY_OR_NULL));
 			}
 			if (obj instanceof CharSequence) {
 				if (((CharSequence) obj).length() == 0) {
@@ -57,7 +57,7 @@ public class Validator<E extends Enum<E> & HasIssue> {
 						return false;
 					}
 					throw new ValidationException(new Issue<E>(property,
-						IssueType.PROPERTY_EMPTY));
+						IssueType.EMPTY_OR_NULL));
 				}
 				if (obj instanceof String) {
 					if (((String) obj).trim().isEmpty()) {
@@ -65,7 +65,7 @@ public class Validator<E extends Enum<E> & HasIssue> {
 							return false;
 						}
 						throw new ValidationException(new Issue<E>(property,
-							IssueType.PROPERTY_EMPTY));
+							IssueType.EMPTY_OR_NULL));
 					}
 				}
 			}
@@ -88,7 +88,7 @@ public class Validator<E extends Enum<E> & HasIssue> {
 			return new URI(url.getValue()).normalize();
 		} catch (URISyntaxException e) {
 			throw new ValidationException(new Issue<E>(property,
-				IssueType.INVALID_URL));
+				IssueType.INVALID_VALUE));
 		}
 	}
 
@@ -113,7 +113,7 @@ public class Validator<E extends Enum<E> & HasIssue> {
 			fv.testReachability(uri);
 		} catch (Exception e) {
 			throw new ValidationException(new Issue<E>(property,
-				IssueType.UNREACHABLE_URL));
+				IssueType.INVALID_VALUE));
 		}
 		return new Link(uri.toString());
 	}
@@ -130,7 +130,7 @@ public class Validator<E extends Enum<E> & HasIssue> {
 				return value.substring(0, Math.min(value.length(), 500));
 			}
 			throw new ValidationException(new Issue<E>(property,
-				IssueType.PROPERTY_TOO_LONG));
+				IssueType.TOO_LONG));
 		}
 		return value;
 	}
@@ -154,7 +154,7 @@ public class Validator<E extends Enum<E> & HasIssue> {
 					Math.min(value.getValue().length(), 1000 * 1000)));
 			}
 			throw new ValidationException(new Issue<E>(property,
-				IssueType.PROPERTY_TOO_LONG));
+				IssueType.TOO_LONG));
 		}
 		return value;
 	}
@@ -170,7 +170,7 @@ public class Validator<E extends Enum<E> & HasIssue> {
 			Selector.select(selector, new Element(Tag.valueOf("html"), ""));
 		} catch (Exception e) {
 			throw new ValidationException(new Issue<E>(property,
-				IssueType.INVALID_SELECTOR));
+				IssueType.INVALID_VALUE));
 		}
 		return selector;
 	}
@@ -187,7 +187,7 @@ public class Validator<E extends Enum<E> & HasIssue> {
 			char c = value.charAt(i);
 			if (Character.isWhitespace(c) || c == '$') {
 				throw new ValidationException(new Issue<E>(property,
-					IssueType.INVALID_LABEL));
+					IssueType.INVALID_VALUE));
 			}
 		}
 		return value;

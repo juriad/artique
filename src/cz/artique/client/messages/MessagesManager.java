@@ -13,6 +13,7 @@ import cz.artique.client.hierarchy.InnerNode;
 import cz.artique.client.hierarchy.ProvidesHierarchy;
 import cz.artique.client.hierarchy.TimedLeafNode;
 import cz.artique.client.manager.Manager;
+import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.config.ClientConfigKey;
 
@@ -21,17 +22,13 @@ public class MessagesManager
 	public static final MessagesManager MESSENGER = new MessagesManager();
 
 	private MessagesManager() {
-		Managers.waitForManagers(new AsyncCallback<Void>() {
+		Managers.waitForManagers(new ManagerReady() {
 
-			public void onSuccess(Void result) {
+			public void onReady() {
 				setMaxItems(Managers.CONFIG_MANAGER
 					.getConfig(ClientConfigKey.MESSENGER_MAX_ITEMS)
 					.get()
 					.getI());
-			}
-
-			public void onFailure(Throwable caught) {
-				// ignore
 			}
 		}, Managers.CONFIG_MANAGER);
 	}
@@ -109,8 +106,8 @@ public class MessagesManager
 		return 0;
 	}
 
-	public void ready(AsyncCallback<Void> ping) {
-		ping.onSuccess(null);
+	public void ready(ManagerReady ping) {
+		ping.onReady();
 	}
 
 	public boolean isReady() {

@@ -46,4 +46,16 @@ public interface HierarchyTreeConstants extends ConstantsWithLookup {
 	@DefaultStringValue("Show disabled sources")
 	String showDisabledSourcesTooltip();
 
+	@DefaultStringValue("Failed to load history tree because history manager failed to initialize.")
+	String failedToLoadHistoryTree();
+
+	@DefaultStringValue("Failed to load sources tree because sources manager failed to initialize.")
+	String failedToLoadSourcesTree();
+
+	@DefaultStringValue("Failed to load filters tree because filters manager failed to initialize.")
+	String failedToLoadListFiltersTree();
+
+	@DefaultStringValue("Failed to load messages tree because messages manager failed to initialize.")
+	String failedToLoadMessagesTree();
+
 }

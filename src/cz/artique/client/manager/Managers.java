@@ -5,8 +5,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
 import cz.artique.client.config.ConfigManager;
 import cz.artique.client.history.HistoryManager;
 import cz.artique.client.items.ItemsManager;
@@ -23,14 +21,10 @@ public class Managers {
 	private static List<Manager> ready = new ArrayList<Manager>();
 	private static List<WaitRequest> waiting = new LinkedList<WaitRequest>();
 
-	public static final ConfigManager CONFIG_MANAGER =
-		ConfigManager.MANAGER;
-	public static final ItemsManager ITEMS_MANAGER =
-		ItemsManager.MANAGER;
-	public static final LabelsManager LABELS_MANAGER =
-		LabelsManager.MANAGER;
-	public static final SourcesManager SOURCES_MANAGER =
-		SourcesManager.MANAGER;
+	public static final ConfigManager CONFIG_MANAGER = ConfigManager.MANAGER;
+	public static final ItemsManager ITEMS_MANAGER = ItemsManager.MANAGER;
+	public static final LabelsManager LABELS_MANAGER = LabelsManager.MANAGER;
+	public static final SourcesManager SOURCES_MANAGER = SourcesManager.MANAGER;
 	public static final ListFiltersManager LIST_FILTERS_MANAGER =
 		ListFiltersManager.MANAGER;
 	public static final HistoryManager HISTORY_MANAGER = HistoryManager.HISTORY;
@@ -48,8 +42,8 @@ public class Managers {
 
 	static {
 		for (final Manager m : MANAGERS) {
-			m.ready(new AsyncCallback<Void>() {
-				public void onSuccess(Void result) {
+			m.ready(new ManagerReady() {
+				public void onReady() {
 					ready.add(m);
 					Iterator<WaitRequest> iter = waiting.iterator();
 					while (iter.hasNext()) {
@@ -57,23 +51,14 @@ public class Managers {
 						r.managers.remove(m);
 						if (r.managers.isEmpty()) {
 							iter.remove();
-							r.ping.onSuccess(null);
+							r.ping.onReady();
 						}
 					}
 				}
-
-				public void onFailure(Throwable caught) {
-					// TODO failed manager
-				}
 			});
 		}
-		waitForManagers(new AsyncCallback<Void>() {
-
-			public void onFailure(Throwable caught) {
-				// ignore
-			}
-
-			public void onSuccess(Void result) {
+		waitForManagers(new ManagerReady() {
+			public void onReady() {
 				for (Manager m : MANAGERS) {
 					if (m instanceof AbstractManager) {
 						((AbstractManager<?>) m).setTimeout(CONFIG_MANAGER
@@ -88,16 +73,15 @@ public class Managers {
 
 	private static class WaitRequest {
 		List<Manager> managers;
-		AsyncCallback<Void> ping;
+		ManagerReady ping;
 
-		public WaitRequest(List<Manager> managers, AsyncCallback<Void> ping) {
+		public WaitRequest(List<Manager> managers, ManagerReady ping) {
 			this.managers = managers;
 			this.ping = ping;
 		}
 	}
 
-	public static void waitForManagers(AsyncCallback<Void> ping,
-			Manager... managers) {
+	public static void waitForManagers(ManagerReady ping, Manager... managers) {
 		List<Manager> managersList = new ArrayList<Manager>();
 		if (managers != null) {
 			for (Manager m : managers) {
@@ -107,7 +91,7 @@ public class Managers {
 
 		managersList.removeAll(ready);
 		if (managersList.isEmpty()) {
-			ping.onSuccess(null);
+			ping.onReady();
 		} else {
 			waiting.add(new WaitRequest(managersList, ping));
 		}

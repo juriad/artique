@@ -15,6 +15,13 @@ import cz.artique.shared.validation.ValidationException;
 
 @RemoteServiceRelativePath("service.s3gwt")
 public interface ClientItemService extends RemoteService {
+	public enum GetItems implements HasIssue {
+		GENERAL;
+		public String enumName() {
+			return "GetItems";
+		}
+	}
+
 	ListingResponse<UserItem> getItems(ListingRequest request);
 
 	public enum AddManualItem implements HasIssue {
@@ -23,7 +30,8 @@ public interface ClientItemService extends RemoteService {
 		LABELS,
 		ITEM_CONTENT,
 		ITEM_TITLE,
-		ITEM_URL;
+		ITEM_URL,
+		GENERAL;
 		public String enumName() {
 			return "AddManualItem";
 		}
@@ -33,7 +41,8 @@ public interface ClientItemService extends RemoteService {
 
 	public enum UpdateItems implements HasIssue {
 		LABELS,
-		ITEMS;
+		ITEMS,
+		GENERAL;
 		public String enumName() {
 			return "UpdateItems";
 		}

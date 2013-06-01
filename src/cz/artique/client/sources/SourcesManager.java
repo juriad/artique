@@ -16,9 +16,17 @@ import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyUtils;
 import cz.artique.client.hierarchy.ProvidesHierarchy;
 import cz.artique.client.manager.AbstractManager;
-import cz.artique.client.manager.Manager;
 import cz.artique.client.manager.Managers;
+import cz.artique.client.messages.MessageType;
+import cz.artique.client.messages.ValidationMessage;
 import cz.artique.client.service.ClientSourceService;
+import cz.artique.client.service.ClientSourceService.AddSource;
+import cz.artique.client.service.ClientSourceService.AddUserSource;
+import cz.artique.client.service.ClientSourceService.CheckRegion;
+import cz.artique.client.service.ClientSourceService.GetRegions;
+import cz.artique.client.service.ClientSourceService.GetUserSources;
+import cz.artique.client.service.ClientSourceService.PlanSourceCheck;
+import cz.artique.client.service.ClientSourceService.UpdateUserSource;
 import cz.artique.client.service.ClientSourceServiceAsync;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
@@ -26,12 +34,9 @@ import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
 
-public class SourcesManager
-		extends AbstractManager<ClientSourceServiceAsync>
-		implements Manager,
-		ProvidesHierarchy<UserSource> {
-	public static final SourcesManager MANAGER =
-		new SourcesManager();
+public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
+		implements ProvidesHierarchy<UserSource> {
+	public static final SourcesManager MANAGER = new SourcesManager();
 
 	private SourcesManager() {
 		super(GWT.<ClientSourceServiceAsync> create(ClientSourceService.class));
@@ -44,9 +49,12 @@ public class SourcesManager
 	private Map<Key, UserSource> sourcesLabels = new HashMap<Key, UserSource>();
 
 	public void refresh(final AsyncCallback<Void> ping) {
+		assumeOnline();
 		service.getUserSources(new AsyncCallback<List<UserSource>>() {
-
 			public void onFailure(Throwable caught) {
+				serviceFailed(caught);
+				new ValidationMessage<GetUserSources>(GetUserSources.GENERAL)
+					.onFailure(caught);
 				if (ping != null) {
 					ping.onFailure(caught);
 				}
@@ -71,6 +79,8 @@ public class SourcesManager
 				sourcesNames = newSourcesNames;
 				sourcesLabels = newSourcesLabels;
 
+				new ValidationMessage<GetUserSources>(GetUserSources.GENERAL)
+					.onSuccess(MessageType.DEBUG);
 				if (ping != null) {
 					ping.onSuccess(null);
 				}
@@ -82,9 +92,12 @@ public class SourcesManager
 
 	public <T extends Source> void addSource(T source,
 			final AsyncCallback<T> ping) {
+		assumeOnline();
 		service.addSource(source, new AsyncCallback<Source>() {
-
 			public void onFailure(Throwable caught) {
+				serviceFailed(caught);
+				new ValidationMessage<AddSource>(AddSource.GENERAL)
+					.onFailure(caught);
 				if (ping != null) {
 					ping.onFailure(caught);
 				}
@@ -92,6 +105,7 @@ public class SourcesManager
 
 			@SuppressWarnings("unchecked")
 			public void onSuccess(Source result) {
+				new ValidationMessage<AddSource>(AddSource.GENERAL).onSuccess();
 				if (ping != null) {
 					ping.onSuccess((T) result);
 				}
@@ -169,8 +183,12 @@ public class SourcesManager
 
 	public void addUserSource(UserSource value,
 			final AsyncCallback<UserSource> ping) {
+		assumeOnline();
 		service.addUserSource(value, new AsyncCallback<UserSource>() {
 			public void onFailure(Throwable caught) {
+				serviceFailed(caught);
+				new ValidationMessage<AddUserSource>(AddUserSource.GENERAL)
+					.onFailure(caught);
 				if (ping != null) {
 					ping.onFailure(caught);
 				}
@@ -187,6 +205,8 @@ public class SourcesManager
 
 				selectSource(result);
 
+				new ValidationMessage<AddUserSource>(AddUserSource.GENERAL)
+					.onSuccess();
 				if (ping != null) {
 					ping.onSuccess(result);
 				}
@@ -196,8 +216,12 @@ public class SourcesManager
 
 	public void updateUserSource(UserSource value,
 			final AsyncCallback<UserSource> ping) {
+		assumeOnline();
 		service.updateUserSource(value, new AsyncCallback<UserSource>() {
 			public void onFailure(Throwable caught) {
+				serviceFailed(caught);
+				new ValidationMessage<UpdateUserSource>(
+					UpdateUserSource.GENERAL).onFailure(caught);
 				if (ping != null) {
 					ping.onFailure(caught);
 				}
@@ -218,6 +242,8 @@ public class SourcesManager
 
 				selectSource(result);
 
+				new ValidationMessage<UpdateUserSource>(
+					UpdateUserSource.GENERAL).onSuccess();
 				if (ping != null) {
 					ping.onSuccess(result);
 				}
@@ -230,15 +256,20 @@ public class SourcesManager
 	}
 
 	public void getRegions(Key source, final AsyncCallback<List<Region>> ping) {
+		assumeOnline();
 		service.getRegions(source, new AsyncCallback<List<Region>>() {
-
 			public void onFailure(Throwable caught) {
+				serviceFailed(caught);
+				new ValidationMessage<GetRegions>(GetRegions.GENERAL)
+					.onFailure(caught);
 				if (ping != null) {
 					ping.onFailure(caught);
 				}
 			}
 
 			public void onSuccess(List<Region> result) {
+				new ValidationMessage<GetRegions>(GetRegions.GENERAL)
+					.onSuccess(MessageType.DEBUG);
 				if (ping != null) {
 					ping.onSuccess(result);
 				}
@@ -247,15 +278,20 @@ public class SourcesManager
 	}
 
 	public void checkRegion(Region region, final AsyncCallback<Region> ping) {
+		assumeOnline();
 		service.checkRegion(region, new AsyncCallback<Region>() {
-
 			public void onFailure(Throwable caught) {
+				serviceFailed(caught);
+				new ValidationMessage<CheckRegion>(CheckRegion.GENERAL)
+					.onFailure(caught);
 				if (ping != null) {
 					ping.onFailure(caught);
 				}
 			}
 
 			public void onSuccess(Region result) {
+				new ValidationMessage<CheckRegion>(CheckRegion.GENERAL)
+					.onSuccess();
 				if (ping != null) {
 					ping.onSuccess(result);
 				}
@@ -264,14 +300,20 @@ public class SourcesManager
 	}
 
 	public void planSourceCheck(Key source, final AsyncCallback<Date> ping) {
+		assumeOnline();
 		service.planSourceCheck(source, new AsyncCallback<Date>() {
 			public void onFailure(Throwable caught) {
+				serviceFailed(caught);
+				new ValidationMessage<PlanSourceCheck>(PlanSourceCheck.GENERAL)
+					.onFailure(caught);
 				if (ping != null) {
 					ping.onFailure(caught);
 				}
 			}
 
 			public void onSuccess(Date result) {
+				new ValidationMessage<PlanSourceCheck>(PlanSourceCheck.GENERAL)
+					.onSuccess();
 				if (ping != null) {
 					ping.onSuccess(result);
 				}

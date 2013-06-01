@@ -15,8 +15,15 @@ import cz.artique.client.hierarchy.HierarchyUtils;
 import cz.artique.client.hierarchy.ProvidesHierarchy;
 import cz.artique.client.history.HistoryUtils;
 import cz.artique.client.manager.AbstractManager;
+import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
+import cz.artique.client.messages.MessageType;
+import cz.artique.client.messages.ValidationMessage;
 import cz.artique.client.service.ClientListFilterService;
+import cz.artique.client.service.ClientListFilterService.AddListFilter;
+import cz.artique.client.service.ClientListFilterService.DeleteListFilter;
+import cz.artique.client.service.ClientListFilterService.GetAllListFilters;
+import cz.artique.client.service.ClientListFilterService.UpdateListFilter;
 import cz.artique.client.service.ClientListFilterServiceAsync;
 import cz.artique.shared.model.label.ListFilter;
 
@@ -46,9 +53,12 @@ public class ListFiltersManager
 		new HashMap<Key, ListFilter>();
 
 	public void refresh(final AsyncCallback<Void> ping) {
+		assumeOnline();
 		service.getAllListFilters(new AsyncCallback<List<ListFilter>>() {
-
 			public void onFailure(Throwable caught) {
+				serviceFailed(caught);
+				new ValidationMessage<GetAllListFilters>(
+					GetAllListFilters.GENERAL).onFailure(caught);
 				if (ping != null) {
 					ping.onFailure(caught);
 				}
@@ -63,16 +73,14 @@ public class ListFiltersManager
 
 				updateHierarchy(oldByKey, listFilterByKey);
 
+				new ValidationMessage<GetAllListFilters>(
+					GetAllListFilters.GENERAL).onSuccess(MessageType.DEBUG);
 				if (ping != null) {
 					ping.onSuccess(null);
 				}
 
-				Managers.waitForManagers(new AsyncCallback<Void>() {
-					public void onFailure(Throwable caught) {
-						// TODO Auto-generated method stub
-					}
-
-					public void onSuccess(Void result) {
+				Managers.waitForManagers(new ManagerReady() {
+					public void onReady() {
 						setReady();
 					}
 				}, Managers.LABELS_MANAGER);
@@ -128,9 +136,12 @@ public class ListFiltersManager
 
 	public void addListFilter(final ListFilter listFilter,
 			final AsyncCallback<ListFilter> ping) {
+		assumeOnline();
 		service.addListFilter(listFilter, new AsyncCallback<ListFilter>() {
-
 			public void onFailure(Throwable caught) {
+				serviceFailed(caught);
+				new ValidationMessage<AddListFilter>(AddListFilter.GENERAL)
+					.onFailure(caught);
 				if (ping != null) {
 					ping.onFailure(caught);
 				}
@@ -141,6 +152,9 @@ public class ListFiltersManager
 				HierarchyUtils.add(getHierarchyRoot(), result);
 				String token = HistoryUtils.UTILS.serializeListFilter(result);
 				Managers.HISTORY_MANAGER.setListFilter(result, token);
+				new ValidationMessage<AddListFilter>(AddListFilter.GENERAL)
+					.onSuccess();
+
 				if (ping != null) {
 					ping.onSuccess(result);
 				}
@@ -155,9 +169,12 @@ public class ListFiltersManager
 			return;
 		}
 
+		assumeOnline();
 		service.deleteListFilter(lf, new AsyncCallback<Void>() {
-
 			public void onFailure(Throwable caught) {
+				serviceFailed(caught);
+				new ValidationMessage<DeleteListFilter>(
+					DeleteListFilter.GENERAL).onFailure(caught);
 				if (ping != null) {
 					ping.onFailure(caught);
 				}
@@ -166,6 +183,8 @@ public class ListFiltersManager
 			public void onSuccess(Void result) {
 				listFilterByKey.remove(lf.getKey());
 				HierarchyUtils.remove(getHierarchyRoot(), lf);
+				new ValidationMessage<DeleteListFilter>(
+					DeleteListFilter.GENERAL).onSuccess();
 				if (ping != null) {
 					ping.onSuccess(null);
 				}
@@ -175,9 +194,12 @@ public class ListFiltersManager
 
 	public void updateListFilter(final ListFilter listFilter,
 			final AsyncCallback<ListFilter> ping) {
+		assumeOnline();
 		service.updateListFilter(listFilter, new AsyncCallback<ListFilter>() {
-
 			public void onFailure(Throwable caught) {
+				serviceFailed(caught);
+				new ValidationMessage<UpdateListFilter>(
+					UpdateListFilter.GENERAL).onFailure(caught);
 				if (ping != null) {
 					ping.onFailure(caught);
 				}
@@ -190,6 +212,9 @@ public class ListFiltersManager
 				listFilterByKey.put(result.getKey(), result);
 				String token = HistoryUtils.UTILS.serializeListFilter(result);
 				Managers.HISTORY_MANAGER.setListFilter(result, token);
+
+				new ValidationMessage<UpdateListFilter>(
+					UpdateListFilter.GENERAL).onSuccess();
 				if (ping != null) {
 					ping.onSuccess(null);
 				}

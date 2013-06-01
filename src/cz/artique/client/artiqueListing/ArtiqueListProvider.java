@@ -1,11 +1,11 @@
 package cz.artique.client.artiqueListing;
 
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import cz.artique.client.items.ModifiedEvent;
 import cz.artique.client.items.ModifiedHandler;
 import cz.artique.client.listing.InfiniteList;
+import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.items.ListingResponse;
 import cz.artique.shared.model.config.ClientConfigKey;
@@ -40,18 +40,12 @@ public class ArtiqueListProvider extends AbstractListDataProvider
 	}
 
 	protected void onStart() {
-		Managers.waitForManagers(new AsyncCallback<Void>() {
-
-			public void onSuccess(Void result) {
+		Managers.waitForManagers(new ManagerReady() {
+			public void onReady() {
 				fetch(Managers.CONFIG_MANAGER
 					.getConfig(ClientConfigKey.LIST_INIT_SIZE)
 					.get()
 					.getI());
-			}
-
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-
 			}
 		}, Managers.LABELS_MANAGER, Managers.CONFIG_MANAGER);
 	}

@@ -14,6 +14,7 @@ public class LoginPage extends Composite {
 	private Anchor signInLink = new Anchor("Sign In");
 
 	public LoginPage() {
+		// TODO login page
 		initWidget(loginPanel);
 		signInLink.setHref(ArtiqueWorld.WORLD.getUserInfo().getLoginUrl());
 		loginPanel.add(loginLabel);

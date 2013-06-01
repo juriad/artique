@@ -43,4 +43,7 @@ public interface Resources extends ClientBundle {
 
 	@Source("icons/add.png")
 	ImageResource add();
+
+	@Source("mainBackground.png")
+	ImageResource mainBackground();
 }

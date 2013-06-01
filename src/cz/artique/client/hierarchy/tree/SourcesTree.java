@@ -127,5 +127,4 @@ public class SourcesTree
 		showDisabled = !showDisabled;
 		refreshAll(getRootItem());
 	}
-
 }

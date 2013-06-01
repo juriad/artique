@@ -3,7 +3,17 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:al="urn:import:cz.artique.client.artiqueListing"
 	xmlns:ah="urn:import:cz.artique.client.hierarchy.tree" xmlns:m="urn:import:cz.artique.client.messages">
 
-	<ui:with field='res' type='cz.artique.client.ArtiqueConstants' />
+	<ui:with field='cons' type='cz.artique.client.ArtiqueConstants' />
+
+	<ui:image field="mainBackground" src='mainBackground.png'/> 
+
+	<ui:style>
+		@sprite .main {
+			gwt-image: "mainBackground";
+			background-position: center center;
+			background-repeat: no-repeat;
+		}
+	</ui:style>
 
 	<g:LayoutPanel>
 		<g:layer left="33%" right="33%" top="0px" height="100%">
@@ -24,25 +34,25 @@
 							<g:StackLayoutPanel unit="EM">
 								<g:stack>
 									<g:header size="3">
-										<ui:text from='{res.sources}' />
+										<ui:text from='{cons.sources}' />
 									</g:header>
 									<ah:SourcesTree ui:field="sources" />
 								</g:stack>
 								<g:stack>
 									<g:header size="3">
-										<ui:text from='{res.filters}' />
+										<ui:text from='{cons.filters}' />
 									</g:header>
 									<ah:ListFiltersTree ui:field="filters" />
 								</g:stack>
 								<g:stack>
 									<g:header size="3">
-										<ui:text from='{res.history}' />
+										<ui:text from='{cons.history}' />
 									</g:header>
 									<ah:HistoryTree ui:field="history" />
 								</g:stack>
 								<g:stack>
 									<g:header size="3">
-										<ui:text from='{res.messages}' />
+										<ui:text from='{cons.messages}' />
 									</g:header>
 									<ah:MessagesTree ui:field="messages" />
 								</g:stack>
@@ -51,7 +61,7 @@
 					</g:DockLayoutPanel>
 				</g:west>
 				<g:center>
-					<al:ArtiqueList ui:field="list" />
+					<al:ArtiqueList ui:field="list" styleName="{style.main}" />
 				</g:center>
 			</g:SplitLayoutPanel>
 		</g:layer>

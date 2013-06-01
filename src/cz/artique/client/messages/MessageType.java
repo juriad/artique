@@ -1,11 +1,11 @@
 package cz.artique.client.messages;
 
 public enum MessageType {
+	FAILURE(Integer.MAX_VALUE),
 	ERROR(10000),
 	WARN(6000),
 	INFO(4000),
-	USER(-1),
-	SYSTEM(Integer.MAX_VALUE);
+	DEBUG(-1);
 
 	private final int timeout;
 

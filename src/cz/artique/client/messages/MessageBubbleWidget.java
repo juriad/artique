@@ -41,6 +41,10 @@ public class MessageBubbleWidget extends Composite {
 		setStylePrimaryName("message");
 		setStyleDependentName(message.getMessageType().name(), true);
 
+		if (MessageType.FAILURE.equals(message.getMessageType())) {
+			closeButton.setEnabled(false);
+		}
+
 		if (message.getMessageType().getTimeout() > 0) {
 			new Timer() {
 				@Override

@@ -54,9 +54,8 @@ public class LabelsBar extends AbstractLabelsBar {
 		} else {
 			Managers.LABELS_MANAGER.createNewLabel(name,
 				new AsyncCallback<Label>() {
-
 					public void onFailure(Throwable caught) {
-						// TODO Auto-generated method stub
+						// already handled
 					}
 
 					public void onSuccess(Label result) {

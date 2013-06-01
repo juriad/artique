@@ -9,8 +9,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import cz.artique.client.listing.InfiniteList;
 import cz.artique.client.listing.InfiniteListDataProvider;
 import cz.artique.client.manager.Managers;
-import cz.artique.shared.items.ListingResponse;
 import cz.artique.shared.items.ListingRequest;
+import cz.artique.shared.items.ListingResponse;
 import cz.artique.shared.model.config.ClientConfigKey;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.ListFilter;
@@ -146,7 +146,6 @@ public class AbstractListDataProvider
 
 				public void onFailure(Throwable caught) {
 					lastFetchProbeDate = null;
-					// do nothing, will try later
 				}
 			});
 	}

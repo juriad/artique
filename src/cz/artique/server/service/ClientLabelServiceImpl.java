@@ -6,6 +6,7 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.artique.client.service.ClientLabelService;
+import cz.artique.server.service.LabelService;
 import cz.artique.server.validation.Validator;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;

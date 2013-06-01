@@ -68,6 +68,10 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 			userSource.getName(), false, false));
 		validator.checkNullability(AddUserSource.SOURCE_TYPE, false,
 			userSource.getSourceType());
+		if (SourceType.MANUAL.equals(userSource.getSourceType())) {
+			throw new ValidationException(new Issue<AddUserSource>(
+				AddUserSource.SOURCE_TYPE, IssueType.INVALID_VALUE));
+		}
 		userSource.setCrawlerData(null);
 		userSource.setHierarchy(validator.checkString(AddUserSource.HIERARCHY,
 			userSource.getHierarchy(), false, false));
@@ -95,7 +99,7 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 				.getHtmlSource()
 				.equals(userSource.getSource())) {
 				throw new ValidationException(new Issue<AddUserSource>(
-					AddUserSource.REGION, IssueType.SECURITY_BREACH));
+					AddUserSource.REGION, IssueType.INVALID_VALUE));
 			}
 		}
 		userSource.setRegionObject(region);
@@ -173,7 +177,7 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 				.getHtmlSource()
 				.equals(userSource.getSource())) {
 				throw new ValidationException(new Issue<UpdateUserSource>(
-					UpdateUserSource.REGION, IssueType.SECURITY_BREACH));
+					UpdateUserSource.REGION, IssueType.INVALID_VALUE));
 			}
 		}
 
@@ -222,6 +226,10 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		SourceService ss = new SourceService();
 		Source source = ss.getSourceByKey(key);
 		validator.checkNullability(PlanSourceCheck.SOURCE, false, source);
+		if (SourceType.MANUAL.equals(SourceType.get(ss.getClass()))) {
+			throw new ValidationException(new Issue<PlanSourceCheck>(
+				PlanSourceCheck.SOURCE, IssueType.INVALID_VALUE));
+		}
 		return ss.planSourceCheck(source);
 	}
 }

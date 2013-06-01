@@ -6,6 +6,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
+import cz.artique.client.login.ErrorPage;
 import cz.artique.client.login.LoginPage;
 import cz.artique.client.service.UserServiceWrapper;
 import cz.artique.client.service.UserServiceWrapperAsync;
@@ -17,7 +18,9 @@ public class Main implements EntryPoint {
 
 		userService.login(GWT.getHostPageBaseURL(),
 			new AsyncCallback<UserInfo>() {
-				public void onFailure(Throwable error) {}
+				public void onFailure(Throwable error) {
+					loadError();
+				}
 
 				public void onSuccess(UserInfo result) {
 					ArtiqueWorld.WORLD.setUserInfo(result);
@@ -37,6 +40,10 @@ public class Main implements EntryPoint {
 
 	private void loadLogin() {
 		RootPanel.get().add(new LoginPage());
+	}
+
+	private void loadError() {
+		RootPanel.get().add(new ErrorPage());
 	}
 
 }

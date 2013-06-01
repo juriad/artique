@@ -74,6 +74,8 @@
 	border: 1px solid blue;
 	background-color: orange;
 	width: 100%;
+	opacity: 0.95;
+	filter: alpha(opacity \= 90)
 }
 
 .rowHeader {
@@ -102,10 +104,16 @@
 }
 
 .message {
-	widgth: 50%;
-	height: 3em;
 	padding: 0.5em;
+}
+
+.messages .message {
+	height: 3em;
 	margin: 0.5em;
+}
+
+.hierarchyWidget .message {
+	display: inline-block;
 }
 
 .message .closeButton {
@@ -134,10 +142,15 @@
 	border: 1px solid #ff2020;
 }
 
-.message-SYSTEM {
+.message-FAILURE {
 	background: black;
 	color: red;
 	border: 1px solid grey;
+}
+
+.message-DEBUG {
+	background: white;
+	border: 1px solid lightgrey;
 }
 
 /* hierarchy */

@@ -2,6 +2,7 @@ package cz.artique.client.manager;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+
 public interface Manager {
 	void refresh(AsyncCallback<Void> ping);
 
@@ -9,7 +10,7 @@ public interface Manager {
 
 	int getTimeout();
 
-	void ready(AsyncCallback<Void> ping);
+	void ready(ManagerReady ping);
 
 	boolean isReady();
 }

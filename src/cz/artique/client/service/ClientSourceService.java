@@ -77,6 +77,13 @@ public interface ClientSourceService extends RemoteService {
 	UserSource updateUserSource(UserSource userSource)
 			throws ValidationException;
 
+	public enum GetUserSources implements HasIssue {
+		GENERAL;
+		public String enumName() {
+			return "GetUserSources";
+		}
+	}
+
 	List<UserSource> getUserSources();
 
 	public enum CheckRegion implements HasIssue {

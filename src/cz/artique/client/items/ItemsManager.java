@@ -15,8 +15,14 @@ import cz.artique.client.history.HistoryEvent;
 import cz.artique.client.history.HistoryHandler;
 import cz.artique.client.history.HistoryManager;
 import cz.artique.client.manager.AbstractManager;
+import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
+import cz.artique.client.messages.MessageType;
+import cz.artique.client.messages.ValidationMessage;
 import cz.artique.client.service.ClientItemService;
+import cz.artique.client.service.ClientItemService.AddManualItem;
+import cz.artique.client.service.ClientItemService.GetItems;
+import cz.artique.client.service.ClientItemService.UpdateItems;
 import cz.artique.client.service.ClientItemServiceAsync;
 import cz.artique.shared.items.ChangeSet;
 import cz.artique.shared.items.ListingRequest;
@@ -24,8 +30,7 @@ import cz.artique.shared.items.ListingResponse;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Label;
 
-public class ItemsManager
-		extends AbstractManager<ClientItemServiceAsync>
+public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 		implements HasModifiedHandlers {
 	public static final ItemsManager MANAGER = new ItemsManager();
 
@@ -136,40 +141,47 @@ public class ItemsManager
 			return;
 		}
 
-		GWT.log("sending change set");
-
 		final Map<Key, ChangeSet> copyChangeSets = changeSets;
 		changeSets = new HashMap<Key, ChangeSet>();
 		final Map<Key, AsyncCallback<UserItem>> copyPings = pings;
 		pings = new HashMap<Key, AsyncCallback<UserItem>>();
 
+		assumeOnline();
 		service.updateItems(copyChangeSets,
 			new AsyncCallback<Map<Key, UserItem>>() {
-
 				public void onFailure(Throwable caught) {
-					GWT.log("change set error: ", caught);
-					// TODO inform about failure
+					serviceFailed(caught);
+					new ValidationMessage<UpdateItems>(UpdateItems.GENERAL)
+						.onFailure(caught);
 					mergeFailed(copyChangeSets, copyPings);
 				}
 
 				public void onSuccess(Map<Key, UserItem> result) {
-					GWT.log("change set result");
+					boolean someFailed = false;
 					for (Key key : copyChangeSets.keySet()) {
 						AsyncCallback<UserItem> ping = pings.get(key);
 						if (ping != null) {
 							if (result.containsKey(key)) {
 								pings.get(key).onSuccess(result.get(key));
 							} else {
-								// TODO inform about failure
+								someFailed = true;
 								pings.get(key).onFailure(null);
 							}
 						}
 					}
+					if (someFailed) {
+						new ValidationMessage<UpdateItems>(UpdateItems.GENERAL)
+							.onFailure(new RuntimeException(
+								"show error even if some passed"));
+					} else {
+						new ValidationMessage<UpdateItems>(UpdateItems.GENERAL)
+							.onSuccess(MessageType.DEBUG);
+					}
+
 					if (ping != null) {
 						ping.onSuccess(null);
 					}
 					fireModifiedEvent(new ModifiedEvent(result));
-
 				}
 			});
 	}
@@ -200,21 +212,30 @@ public class ItemsManager
 
 	public void getItems(final ListingRequest request,
 			final AsyncCallback<ListingResponse<UserItem>> ping) {
-		Managers.LABELS_MANAGER.ready(new AsyncCallback<Void>() {
+		assumeOnline();
+		service.getItems(request,
+			new AsyncCallback<ListingResponse<UserItem>>() {
+				public void onFailure(Throwable caught) {
+					serviceFailed(caught);
+					new ValidationMessage<GetItems>(GetItems.GENERAL)
+						.onFailure(caught);
+					if (ping != null) {
+						ping.onFailure(caught);
+					}
+				}
 
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-			}
-
-			public void onSuccess(Void result) {
-				GWT.log("get items");
-				service.getItems(request, ping);
-			}
-		});
+				public void onSuccess(ListingResponse<UserItem> result) {
+					new ValidationMessage<GetItems>(GetItems.GENERAL)
+						.onSuccess(MessageType.DEBUG);
+					if (ping != null) {
+						ping.onSuccess(result);
+					}
+				}
+			});
 	}
 
-	public void ready(AsyncCallback<Void> ping) {
-		ping.onSuccess(null);
+	public void ready(ManagerReady ping) {
+		Managers.LABELS_MANAGER.ready(ping);
 	}
 
 	private final List<ModifiedHandler> handlers =
@@ -230,7 +251,6 @@ public class ItemsManager
 			final ModifiedHandler handler) {
 		handlers.add(handler);
 		return new HandlerRegistration() {
-
 			public void removeHandler() {
 				handlers.remove(handler);
 			}
@@ -238,15 +258,20 @@ public class ItemsManager
 	}
 
 	public void addManualItem(UserItem item, final AsyncCallback<UserItem> ping) {
+		assumeOnline();
 		service.addManualItem(item, new AsyncCallback<UserItem>() {
-
 			public void onFailure(Throwable caught) {
+				serviceFailed(caught);
+				new ValidationMessage<AddManualItem>(AddManualItem.GENERAL)
+					.onFailure(caught);
 				if (ping != null) {
 					ping.onFailure(caught);
 				}
 			}
 
 			public void onSuccess(UserItem result) {
+				new ValidationMessage<AddManualItem>(AddManualItem.GENERAL)
+					.onSuccess();
 				if (ping != null) {
 					ping.onSuccess(result);
 				}

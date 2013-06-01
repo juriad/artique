@@ -30,9 +30,6 @@ import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.Managers;
 import cz.artique.client.messages.Message;
 import cz.artique.client.messages.MessageType;
-import cz.artique.client.messages.ValidationMessage;
-import cz.artique.client.service.ClientSourceService.AddSource;
-import cz.artique.client.service.ClientSourceService.PlanSourceCheck;
 import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.SourceType;
@@ -208,7 +205,10 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		// TODO defaultLabels
 
 		region.setValue(userSource);
-
+		if (userSource.getKey() != null && type.getRegionType() != null
+			&& userSource.getRegion() == null) {
+			selectRegion();
+		}
 		// stats
 
 		if (userSource.getKey() != null && userSource.isWatching()
@@ -281,15 +281,9 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		}
 		Managers.SOURCES_MANAGER.planSourceCheck(source.getKey(),
 			new AsyncCallback<Date>() {
-				public void onFailure(Throwable caught) {
-					new ValidationMessage<PlanSourceCheck>(
-						PlanSourceCheck.GENERAL).onFailure(caught);
-				}
+				public void onFailure(Throwable caught) {}
 
 				public void onSuccess(Date result) {
-					new ValidationMessage<PlanSourceCheck>(
-						PlanSourceCheck.GENERAL).onSuccess();
-
 					userSource.getSourceObject().setNextCheck(result);
 					DateTimeFormatRenderer renderer =
 						new DateTimeFormatRenderer(DateTimeFormat
@@ -334,13 +328,9 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 					urlButton.setEnabled(true);
 					url.setEnabled(true);
 					sourceType.setEnabled(true);
-					new ValidationMessage<AddSource>(AddSource.GENERAL)
-						.onFailure(caught);
 				}
 
 				public void onSuccess(Source result) {
-					new ValidationMessage<AddSource>(AddSource.GENERAL)
-						.onSuccess();
 					sourceCreated(result);
 				}
 			});

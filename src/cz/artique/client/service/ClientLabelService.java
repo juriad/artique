@@ -12,11 +12,19 @@ import cz.artique.shared.validation.ValidationException;
 @RemoteServiceRelativePath("service.s3gwt")
 public interface ClientLabelService extends RemoteService {
 
+	public enum GetAllLabels implements HasIssue {
+		GENERAL;
+		public String enumName() {
+			return "GetAllLabels";
+		}
+	}
+
 	List<Label> getAllLabels();
 
 	public enum AddLabel implements HasIssue {
 		LABEL,
-		NAME;
+		NAME,
+		GENERAL;
 		public String enumName() {
 			return "AddLabel";
 		}
