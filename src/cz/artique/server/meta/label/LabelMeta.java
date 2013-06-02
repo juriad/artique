@@ -1,6 +1,6 @@
 package cz.artique.server.meta.label;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-01 09:51:07")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-02 12:42:59")
 /** */
 public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.label.Label> {
 
@@ -161,6 +161,8 @@ public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
         }
         writer.setNextPropertyName("priority");
         encoder0.encode(writer, m.getPriority());
+        writer.setNextPropertyName("toBeDeleted");
+        encoder0.encode(writer, m.isToBeDeleted());
         if(m.getUser() != null){
             writer.setNextPropertyName("user");
             encoder0.encode(writer, m.getUser());
@@ -191,6 +193,8 @@ public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
         m.setName(decoder0.decode(reader, m.getName()));
         reader = rootReader.newObjectReader("priority");
         m.setPriority(decoder0.decode(reader, m.getPriority()));
+        reader = rootReader.newObjectReader("toBeDeleted");
+        m.setToBeDeleted(decoder0.decode(reader, m.isToBeDeleted()));
         reader = rootReader.newObjectReader("user");
         m.setUser(decoder0.decode(reader, m.getUser()));
         reader = rootReader.newObjectReader("version");

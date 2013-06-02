@@ -1,21 +1,37 @@
 package cz.artique.shared.model.label;
 
-public interface LabelAppearance {
-	AppearanceType getApperianceType();
+import java.io.Serializable;
 
-	String getAssignedIcon();
+public class LabelAppearance implements Serializable {
 
-	String getAssignedTextBackground();
+	private static final long serialVersionUID = 1L;
 
-	String getAssignedTextColor();
+	private String foregroundColor;
 
-	String getUnAssignedIcon();
+	private String backgroundColor;
 
-	String getUnAssignedTextBackground();
+	public LabelAppearance() {}
 
-	String getUnAssignedTextColor();
+	public LabelAppearance(LabelAppearance other) {
+		if (other != null) {
+			this.backgroundColor = other.getBackgroundColor();
+			this.foregroundColor = other.getForegroundColor();
+		}
+	}
 
-	// TODO getVisibilityLevel: presunout do label
-	VisibilityLevel getVisibilityLevel();
+	public String getForegroundColor() {
+		return foregroundColor;
+	}
 
+	public void setForegroundColor(String foregroundColor) {
+		this.foregroundColor = foregroundColor;
+	}
+
+	public String getBackgroundColor() {
+		return backgroundColor;
+	}
+
+	public void setBackgroundColor(String backgroundColor) {
+		this.backgroundColor = backgroundColor;
+	}
 }

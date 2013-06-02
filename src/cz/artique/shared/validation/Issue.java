@@ -4,8 +4,10 @@ import java.io.Serializable;
 
 public class Issue<E extends Enum<E> & HasIssue> implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private final E property;
-	private final IssueType issueType;
+	private E property;
+	private IssueType issueType;
+
+	public Issue() {}
 
 	public Issue(E property, IssueType issueType) {
 		this.property = property;
@@ -19,4 +21,13 @@ public class Issue<E extends Enum<E> & HasIssue> implements Serializable {
 	public IssueType getIssueType() {
 		return issueType;
 	}
+
+	public void setProperty(E property) {
+		this.property = property;
+	}
+
+	public void setIssueType(IssueType issueType) {
+		this.issueType = issueType;
+	}
+
 }

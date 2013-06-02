@@ -1,6 +1,6 @@
 package cz.artique.server.meta.source;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-01 09:51:07")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-02 15:28:59")
 /** */
 public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.source.UserSource> {
 
@@ -8,7 +8,7 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.UserSource, com.google.appengine.api.datastore.Key> crawlerData = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.UserSource, com.google.appengine.api.datastore.Key>(this, "crawlerData", "crawlerData", com.google.appengine.api.datastore.Key.class);
 
     /** */
-    public final org.slim3.datastore.CollectionUnindexedAttributeMeta<cz.artique.shared.model.source.UserSource, java.util.List<com.google.appengine.api.datastore.Key>, com.google.appengine.api.datastore.Key> defaultLabels = new org.slim3.datastore.CollectionUnindexedAttributeMeta<cz.artique.shared.model.source.UserSource, java.util.List<com.google.appengine.api.datastore.Key>, com.google.appengine.api.datastore.Key>(this, "defaultLabels", "defaultLabels", java.util.List.class);
+    public final org.slim3.datastore.CollectionAttributeMeta<cz.artique.shared.model.source.UserSource, java.util.List<com.google.appengine.api.datastore.Key>, com.google.appengine.api.datastore.Key> defaultLabels = new org.slim3.datastore.CollectionAttributeMeta<cz.artique.shared.model.source.UserSource, java.util.List<com.google.appengine.api.datastore.Key>, com.google.appengine.api.datastore.Key>(this, "defaultLabels", "defaultLabels", java.util.List.class);
 
     /** */
     public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.source.UserSource> hierarchy = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.source.UserSource>(this, "hierarchy", "hierarchy");
@@ -82,7 +82,7 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
             entity = new com.google.appengine.api.datastore.Entity(kind);
         }
         entity.setUnindexedProperty("crawlerData", m.getCrawlerData());
-        entity.setUnindexedProperty("defaultLabels", m.getDefaultLabels());
+        entity.setProperty("defaultLabels", m.getDefaultLabels());
         entity.setProperty("hierarchy", m.getHierarchy());
         entity.setProperty("label", m.getLabel());
         entity.setProperty("name", m.getName());

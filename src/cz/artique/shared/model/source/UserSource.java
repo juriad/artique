@@ -56,7 +56,6 @@ public class UserSource
 
 	private boolean watching;
 
-	@Attribute(unindexed = true)
 	private List<Key> defaultLabels;
 
 	private Key label;

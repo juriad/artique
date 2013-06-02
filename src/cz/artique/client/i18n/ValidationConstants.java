@@ -361,6 +361,132 @@ public interface ValidationConstants extends ConstantsWithLookup {
 	String AddLabel_GENERAL_OK();
 
 	@DefaultStringValue("---")
+	String UpdateLabels_LABELS_INVALID_VALUE();
+
+	@DefaultStringValue("List of labels to update is null.")
+	String UpdateLabels_LABELS_EMPTY_OR_NULL();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_LABELS_TOO_LONG();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_LABELS_ALREADY_EXISTS();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_LABELS_SECURITY_BREACH();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_LABELS_UNKNOWN();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_LABELS_OK();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_LABEL_INVALID_VALUE();
+
+	@DefaultStringValue("Cannot update null label.")
+	String UpdateLabels_LABEL_EMPTY_OR_NULL();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_LABEL_TOO_LONG();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_LABEL_ALREADY_EXISTS();
+
+	@DefaultStringValue("Cannot update label of differend user.")
+	String UpdateLabels_LABEL_SECURITY_BREACH();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_LABEL_UNKNOWN();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_LABEL_OK();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_DELETE_SOURCE_INVALID_VALUE();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_DELETE_SOURCE_EMPTY_OR_NULL();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_DELETE_SOURCE_TOO_LONG();
+
+	@DefaultStringValue("Label cannot be deleted; it is still referenced by some source. Update of apperaince was successful.")
+	String UpdateLabels_DELETE_SOURCE_ALREADY_EXISTS();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_DELETE_SOURCE_SECURITY_BREACH();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_DELETE_SOURCE_UNKNOWN();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_DELETE_SOURCE_OK();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_DELETE_FILTER_INVALID_VALUE();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_DELETE_FILTER_EMPTY_OR_NULL();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_DELETE_FILTER_TOO_LONG();
+
+	@DefaultStringValue("Label cannot be deleted; it is still referenced by some filter. Update of apperaince was successful.")
+	String UpdateLabels_DELETE_FILTER_ALREADY_EXISTS();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_DELETE_FILTER_SECURITY_BREACH();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_DELETE_FILTER_UNKNOWN();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_DELETE_FILTER_OK();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_DELETE_ITEM_INVALID_VALUE();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_DELETE_ITEM_EMPTY_OR_NULL();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_DELETE_ITEM_TOO_LONG();
+
+	@DefaultStringValue("Label cannot be deleted; it is still referenced by some item. Update of apperaince was successful.")
+	String UpdateLabels_DELETE_ITEM_ALREADY_EXISTS();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_DELETE_ITEM_SECURITY_BREACH();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_DELETE_ITEM_UNKNOWN();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_DELETE_ITEM_OK();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_GENERAL_INVALID_VALUE();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_GENERAL_EMPTY_OR_NULL();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_GENERAL_TOO_LONG();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_GENERAL_ALREADY_EXISTS();
+
+	@DefaultStringValue("---")
+	String UpdateLabels_GENERAL_SECURITY_BREACH();
+
+	@DefaultStringValue("Failed to update and delete labels. Changes has been discarded.")
+	String UpdateLabels_GENERAL_UNKNOWN();
+
+	@DefaultStringValue("Labels has been successfuly updated and those marked to delete has been deleted.")
+	String UpdateLabels_GENERAL_OK();
+
+	@DefaultStringValue("---")
 	String GetAllListFilters_GENERAL_INVALID_VALUE();
 
 	@DefaultStringValue("---")
@@ -1026,10 +1152,10 @@ public interface ValidationConstants extends ConstantsWithLookup {
 	@DefaultStringValue("---")
 	String AddUserSource_GENERAL_SECURITY_BREACH();
 
-	@DefaultStringValue("---")
+	@DefaultStringValue("Failed to create source.")
 	String AddUserSource_GENERAL_UNKNOWN();
 
-	@DefaultStringValue("---")
+	@DefaultStringValue("Source has been successfuly created.")
 	String AddUserSource_GENERAL_OK();
 
 	@DefaultStringValue("---")

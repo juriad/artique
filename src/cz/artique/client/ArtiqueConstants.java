@@ -3,6 +3,9 @@ package cz.artique.client;
 import com.google.gwt.i18n.client.ConstantsWithLookup;
 
 public interface ArtiqueConstants extends ConstantsWithLookup {
+	@DefaultStringValue("Options")
+	String options();
+
 	@DefaultStringValue("Sources")
 	String sources();
 
@@ -29,4 +32,10 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("Connection to server has been lost.")
 	String gotOffline();
+
+	@DefaultStringValue("Logout")
+	String logout();
+
+	@DefaultStringValue("Edit labels")
+	String editLabelsButton();
 }

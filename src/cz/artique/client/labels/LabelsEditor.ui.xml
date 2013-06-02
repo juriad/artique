@@ -1,0 +1,71 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:ce="urn:import:com.google.gwt.user.cellview.client"
+	xmlns:db="urn:import:com.google.gwt.user.datepicker.client" xmlns:c="urn:import:cz.artique.client.common"
+	xmlns:l="urn:import:cz.artique.client.labels">
+
+	<ui:with field='res' type='cz.artique.client.labels.LabelsConstants' />
+
+	<g:HorizontalPanel>
+		<g:cell width="20em">
+			<g:ScrollPanel>
+				<ce:CellList ui:field="cellList" />
+			</g:ScrollPanel>
+		</g:cell>
+		<g:cell>
+			<g:Grid>
+				<g:row>
+					<g:cell>
+						<ui:text from="{res.name}" />
+					</g:cell>
+					<g:customCell>
+						<g:TextBox ui:field="name" />
+					</g:customCell>
+				</g:row>
+				<g:row>
+					<g:cell>
+						<ui:text from="{res.foregroundColor}" />
+					</g:cell>
+					<g:customCell>
+						<c:OptionalValue ui:field="foregroundColor">
+							<c:value>
+								<c:ColorInputWithEnabled />
+							</c:value>
+						</c:OptionalValue>
+					</g:customCell>
+				</g:row>
+				<g:row>
+					<g:cell>
+						<ui:text from="{res.backgroundColor}" />
+					</g:cell>
+					<g:customCell>
+						<c:OptionalValue ui:field="backgroundColor">
+							<c:value>
+								<c:ColorInputWithEnabled />
+							</c:value>
+						</c:OptionalValue>
+					</g:customCell>
+				</g:row>
+				<g:row>
+					<g:cell>
+						<ui:text from="{res.markedToDelete}" />
+					</g:cell>
+					<g:customCell>
+						<g:FlowPanel>
+							<g:InlineLabel ui:field="markedToDelete" />
+							<g:Button ui:field="deleteButton" />
+						</g:FlowPanel>
+					</g:customCell>
+				</g:row>
+				<g:row>
+					<g:cell>
+						<ui:text from="{res.backupLevel}" />
+					</g:cell>
+					<g:customCell>
+						<l:BackupLevelPicker ui:field="backupLevel" />
+					</g:customCell>
+				</g:row>
+			</g:Grid>
+		</g:cell>
+	</g:HorizontalPanel>
+</ui:UiBinder>

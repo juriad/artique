@@ -11,10 +11,17 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.api.users.User;
 
+import cz.artique.client.service.ClientLabelService.UpdateLabels;
+import cz.artique.server.meta.item.UserItemMeta;
+import cz.artique.server.meta.label.FilterMeta;
 import cz.artique.server.meta.label.LabelMeta;
+import cz.artique.server.meta.source.UserSourceMeta;
 import cz.artique.server.utils.KeyGen;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.utils.TransactionException;
+import cz.artique.shared.validation.Issue;
+import cz.artique.shared.validation.IssueType;
+import cz.artique.shared.validation.ValidationException;
 
 public class LabelService {
 
@@ -64,5 +71,47 @@ public class LabelService {
 			return null;
 		}
 		return getLabelsByKeys(Arrays.asList(labelKey)).get(0);
+	}
+
+	public void saveLabels(List<Label> labelsByKeys) {
+		Datastore.put(labelsByKeys);
+	}
+
+	public void deleteLabels(List<Key> toDelete) throws ValidationException {
+		for (Key key : toDelete) {
+			UserSourceMeta usMeta = UserSourceMeta.get();
+			List<Key> usKeys =
+				Datastore
+					.query(usMeta)
+					.filter(usMeta.defaultLabels.equal(key))
+					.asKeyList();
+			if (usKeys != null && usKeys.size() > 0) {
+				throw new ValidationException(new Issue<UpdateLabels>(
+					UpdateLabels.DELETE_SOURCE, IssueType.ALREADY_EXISTS));
+			}
+
+			FilterMeta fMeta = FilterMeta.get();
+			List<Key> fKeys =
+				Datastore
+					.query(fMeta)
+					.filter(fMeta.labels.equal(key))
+					.asKeyList();
+			if (fKeys != null && fKeys.size() > 0) {
+				throw new ValidationException(new Issue<UpdateLabels>(
+					UpdateLabels.DELETE_FILTER, IssueType.ALREADY_EXISTS));
+			}
+
+			UserItemMeta iMeta = UserItemMeta.get();
+			List<Key> iKeys =
+				Datastore
+					.query(iMeta)
+					.filter(iMeta.labels.equal(key))
+					.asKeyList();
+			if (iKeys != null && iKeys.size() > 0) {
+				throw new ValidationException(new Issue<UpdateLabels>(
+					UpdateLabels.DELETE_ITEM, IssueType.ALREADY_EXISTS));
+			}
+		}
+		Datastore.deleteAsync(toDelete);
 	}
 }

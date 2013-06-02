@@ -80,12 +80,15 @@ public abstract class AbstractHierarchyTree<E extends HasHierarchy & HasName, F 
 								parent.insertItem(index, inTree);
 								getHierarchyWidget(inTree).refresh();
 							}
+							afterUpdate();
 						}
 					});
 				initialized();
 			}
 		});
 	}
+	
+	protected void afterUpdate() {}
 
 	protected void initialized() {}
 

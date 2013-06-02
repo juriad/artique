@@ -1,13 +1,13 @@
 package cz.artique.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.StackLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.artiqueListing.ArtiqueList;
@@ -24,6 +24,7 @@ import cz.artique.client.manager.Managers;
 import cz.artique.client.messages.Message;
 import cz.artique.client.messages.MessageType;
 import cz.artique.client.messages.Messenger;
+import cz.artique.shared.model.config.ClientConfigKey;
 import cz.artique.shared.model.label.ListFilter;
 
 public class Artique extends Composite {
@@ -36,12 +37,6 @@ public class Artique extends Composite {
 	ArtiqueList list;
 
 	@UiField
-	Label userName;
-
-	@UiField
-	Anchor logout;
-
-	@UiField
 	SourcesTree sources;
 
 	@UiField
@@ -52,6 +47,9 @@ public class Artique extends Composite {
 
 	@UiField
 	Messenger messenger;
+
+	@UiField
+	StackLayoutPanel stack;
 
 	private static Resources resources;
 
@@ -68,9 +66,6 @@ public class Artique extends Composite {
 		ArtiqueWorld.WORLD.setSourcesTree(sources);
 
 		initHistory();
-
-		userName.setText(ArtiqueWorld.WORLD.getUser().getNickname());
-		logout.setHref(ArtiqueWorld.WORLD.getUserInfo().getLogoutUrl());
 	}
 
 	private void initHistory() {
@@ -108,8 +103,34 @@ public class Artique extends Composite {
 					MessageType.INFO, constants.initialized()), true);
 				timer.cancel();
 				History.fireCurrentHistoryState();
+				showPanel();
 			}
 		}, Managers.CONFIG_MANAGER, Managers.LABELS_MANAGER,
 			Managers.SOURCES_MANAGER, Managers.ITEMS_MANAGER);
+	}
+
+	protected void showPanel() {
+		Element parent = stack.getElement().getParentElement();
+		parent.addClassName("leftPanel");
+
+		String panel =
+			Managers.CONFIG_MANAGER
+				.getConfig(ClientConfigKey.SHOW_PANEL)
+				.get()
+				.getS();
+		int duration = stack.getAnimationDuration();
+		stack.setAnimationDuration(0);
+		if (panel.equals("O")) {
+			stack.showWidget(0);
+		} else if (panel.equals("S")) {
+			stack.showWidget(1);
+		} else if (panel.equals("F")) {
+			stack.showWidget(2);
+		} else if (panel.equals("M")) {
+			stack.showWidget(3);
+		} else if (panel.equals("H")) {
+			stack.showWidget(4);
+		}
+		stack.setAnimationDuration(duration);
 	}
 }

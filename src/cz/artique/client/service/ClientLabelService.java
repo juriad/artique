@@ -32,4 +32,18 @@ public interface ClientLabelService extends RemoteService {
 
 	Label addLabel(Label label) throws ValidationException;
 
+	public enum UpdateLabels implements HasIssue {
+		LABELS,
+		LABEL,
+		DELETE_SOURCE,
+		DELETE_FILTER,
+		DELETE_ITEM,
+		GENERAL;
+		public String enumName() {
+			return "UpdateLabels";
+		}
+	}
+
+	void updateLabels(List<Label> labels) throws ValidationException;
+
 }

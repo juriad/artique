@@ -11,9 +11,14 @@ public class HistoryTree
 		super(HistoryManager.HISTORY, HistoryWidgetFactory.FACTORY);
 	}
 
+	private int lastCount = 0;
+
 	@Override
-	protected void initialized() {
-		expand(2);
+	protected void afterUpdate() {
+		if (getRootItem().getChildCount() > 0 && lastCount < 1) {
+			expand(2);
+			lastCount = getRootItem().getChildCount();
+		}
 	}
 
 }

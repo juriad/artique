@@ -12,4 +12,6 @@ public interface ClientLabelServiceAsync {
 
 	void addLabel(Label label, AsyncCallback<Label> callback);
 
+	void updateLabels(List<Label> labels, AsyncCallback<Void> callback);
+
 }

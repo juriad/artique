@@ -1,0 +1,16 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+	<ui:with field='cons' type='cz.artique.client.ArtiqueConstants' />
+
+	<g:FlowPanel ui:field="panel">
+		<g:Label ui:field="userName" />
+		<g:Anchor ui:field="logout">
+			<ui:text from="{cons.logout}" />
+		</g:Anchor>
+		<g:Button ui:field="editLabelsButton">
+			<ui:text from="{cons.editLabelsButton}" />
+		</g:Button>
+	</g:FlowPanel>
+</ui:UiBinder>

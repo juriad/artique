@@ -22,6 +22,8 @@ public class OptionalValue<E extends HasValue<F> & IsWidget & HasEnabled, F>
 
 	private boolean enabled = true;
 
+	private F defaultValue;
+
 	public OptionalValue() {
 		flowPanel = new FlowPanel();
 		initWidget(flowPanel);
@@ -30,7 +32,7 @@ public class OptionalValue<E extends HasValue<F> & IsWidget & HasEnabled, F>
 
 		checkBox.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				e.setEnabled(checkBox.getValue());
+				setEEnabled(checkBox.getValue());
 				ValueChangeEvent.fire(OptionalValue.this, getValue());
 			}
 		});
@@ -41,6 +43,11 @@ public class OptionalValue<E extends HasValue<F> & IsWidget & HasEnabled, F>
 		this.e = e;
 		flowPanel.add(e);
 		setValue(null, false);
+		e.addValueChangeHandler(new ValueChangeHandler<F>() {
+			public void onValueChange(ValueChangeEvent<F> event) {
+				setValue(event.getValue());
+			}
+		});
 	}
 
 	public void setLabel(String label) {
@@ -52,9 +59,12 @@ public class OptionalValue<E extends HasValue<F> & IsWidget & HasEnabled, F>
 	}
 
 	public void setEnabled(boolean enabled) {
+		if (this.enabled == enabled) {
+			return;
+		}
 		this.enabled = enabled;
 		checkBox.setEnabled(enabled);
-		e.setEnabled(enabled);
+		setEEnabled(checkBox.getValue());
 	}
 
 	public HandlerRegistration addValueChangeHandler(
@@ -75,10 +85,30 @@ public class OptionalValue<E extends HasValue<F> & IsWidget & HasEnabled, F>
 
 	public void setValue(F value, boolean fireEvents) {
 		checkBox.setValue(value != null);
-		e.setEnabled(value != null);
+		setEEnabled(value != null);
 		e.setValue(value);
 		if (fireEvents) {
 			ValueChangeEvent.fire(this, getValue());
 		}
+	}
+
+	private void setEEnabled(boolean enabled) {
+		if (e.isEnabled() == enabled) {
+			return;
+		}
+		if (e.isEnabled() == false && enabled == true) {
+			e.setValue(defaultValue);
+		} else {
+			e.setValue(null);
+		}
+		e.setEnabled(enabled);
+	}
+
+	public F getDefaultValue() {
+		return defaultValue;
+	}
+
+	public void setDefaultValue(F defaultValue) {
+		this.defaultValue = defaultValue;
 	}
 }

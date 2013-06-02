@@ -1,5 +1,6 @@
 package cz.artique.client.labels;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.HasCloseHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -12,6 +13,7 @@ import cz.artique.client.common.InlineFlowPanel;
 import cz.artique.client.history.CachingHistoryUtils;
 import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.Label;
+import cz.artique.shared.model.label.LabelAppearance;
 
 public class LabelWidget extends Composite
 		implements HasCloseHandlers<LabelWidget>, Comparable<LabelWidget>,
@@ -53,6 +55,21 @@ public class LabelWidget extends Composite
 		String serialized =
 			CachingHistoryUtils.UTILS.serializeListFilter(filter);
 		nameLabel.setHref("#" + serialized);
+		setStyle();
+	}
+
+	private void setStyle() {
+		if (label.getAppearance() != null) {
+			LabelAppearance appearance = label.getAppearance();
+			if (appearance.getForegroundColor() != null) {
+				Style style = nameLabel.getElement().getStyle();
+				style.setColor(appearance.getForegroundColor());
+			}
+			if (appearance.getBackgroundColor() != null) {
+				Style style = this.getElement().getStyle();
+				style.setBackgroundColor(appearance.getBackgroundColor());
+			}
+		}
 	}
 
 	public HandlerRegistration addCloseHandler(CloseHandler<LabelWidget> handler) {

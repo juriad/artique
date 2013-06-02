@@ -161,3 +161,17 @@
 .hierarchyWidget:hover .hiddenAction {
 	visibility: visible;
 }
+
+/* left panels */
+.leftPanel {
+	z-index: 2;
+}
+
+.leftPanel:hover {
+	width: 30em !important;
+}
+
+/* dialogs */
+.cellList {
+	width: 15em;
+}

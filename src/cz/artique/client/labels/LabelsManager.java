@@ -11,6 +11,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import cz.artique.client.ArtiqueWorld;
+import cz.artique.client.history.HistoryItem;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.AbstractManager;
 import cz.artique.client.manager.ManagerReady;
@@ -20,12 +21,16 @@ import cz.artique.client.messages.ValidationMessage;
 import cz.artique.client.service.ClientLabelService;
 import cz.artique.client.service.ClientLabelService.AddLabel;
 import cz.artique.client.service.ClientLabelService.GetAllLabels;
+import cz.artique.client.service.ClientLabelService.UpdateLabels;
 import cz.artique.client.service.ClientLabelServiceAsync;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.utils.CatList;
 import cz.artique.shared.utils.SortedList;
+import cz.artique.shared.validation.HasIssue;
+import cz.artique.shared.validation.Issue;
+import cz.artique.shared.validation.ValidationException;
 
 public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 
@@ -239,4 +244,72 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 		return label;
 	}
 
+	public void updateLabels(final List<Label> value,
+			final AsyncCallback<Void> ping) {
+		assumeOnline();
+		service.updateLabels(value, new AsyncCallback<Void>() {
+
+			public void onFailure(Throwable caught) {
+				if (caught instanceof ValidationException) {
+					List<Issue<? extends HasIssue>> issues =
+						((ValidationException) caught).getIssues();
+					if (issues != null && issues.size() > 0) {
+						Issue<? extends HasIssue> issue = issues.get(0);
+						if (UpdateLabels.DELETE_SOURCE.equals(issue
+							.getProperty())
+							|| UpdateLabels.DELETE_FILTER.equals(issue
+								.getProperty())
+							|| UpdateLabels.DELETE_ITEM.equals(issue
+								.getProperty())) {
+							doUpdateItems();
+						}
+					}
+				}
+				serviceFailed(caught);
+				new ValidationMessage<UpdateLabels>(UpdateLabels.GENERAL)
+					.onFailure(caught);
+				if (ping != null) {
+					ping.onFailure(caught);
+				}
+			}
+
+			private void doUpdateItems() {
+				for (Label l : value) {
+					Label labelByKey = getLabelByKey(l.getKey());
+					labelByKey.setBackupLevel(l.getBackupLevel());
+					labelByKey.setAppearance(l.getAppearance());
+				}
+
+				HistoryItem lastHistoryItem =
+					Managers.HISTORY_MANAGER.getLastHistoryItem();
+				if (lastHistoryItem != null) {
+					Managers.HISTORY_MANAGER.setListFilter(
+						lastHistoryItem.getListFilter(),
+						lastHistoryItem.getToken());
+				}
+			}
+
+			public void onSuccess(Void result) {
+				doUpdateItems();
+				doDeleteItems();
+
+				new ValidationMessage<UpdateLabels>(UpdateLabels.GENERAL)
+					.onSuccess();
+				if (ping != null) {
+					ping.onSuccess(result);
+				}
+			}
+
+			private void doDeleteItems() {
+				for (Label l : value) {
+					if (l.isToBeDeleted()) {
+						Label labelByKey = getLabelByKey(l.getKey());
+						userDefinedLabels.remove(labelByKey);
+						labelsKeys.remove(l.getKey());
+						labelNames.remove(l.getName());
+					}
+				}
+			}
+		});
+	}
 }

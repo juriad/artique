@@ -28,8 +28,15 @@ public class ValidationMessage<E extends Enum<E> & HasIssue> {
 	}
 
 	public void onFailure(Throwable caught, MessageType type) {
-		ValidationException exception =
-			new ValidationException(new Issue<E>(general, IssueType.UNKNOWN));
+		ValidationException exception;
+
+		if (caught instanceof ValidationException) {
+			exception = (ValidationException) caught;
+		} else {
+			exception =
+				new ValidationException(
+					new Issue<E>(general, IssueType.UNKNOWN));
+		}
 		onFailure(exception, type);
 	}
 

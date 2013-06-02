@@ -1,11 +1,12 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:al="urn:import:cz.artique.client.artiqueListing"
-	xmlns:ah="urn:import:cz.artique.client.hierarchy.tree" xmlns:m="urn:import:cz.artique.client.messages">
+	xmlns:ah="urn:import:cz.artique.client.hierarchy.tree" xmlns:m="urn:import:cz.artique.client.messages"
+	xmlns:a="urn:import:cz.artique.client">
 
 	<ui:with field='cons' type='cz.artique.client.ArtiqueConstants' />
 
-	<ui:image field="mainBackground" src='mainBackground.png'/> 
+	<ui:image field="mainBackground" src='mainBackground.png' />
 
 	<ui:style>
 		@sprite .main {
@@ -16,54 +17,45 @@
 	</ui:style>
 
 	<g:LayoutPanel>
-		<g:layer left="33%" right="33%" top="0px" height="100%">
+		<g:layer left="33%" right="33%">
 			<m:Messenger ui:field="messenger" />
 		</g:layer>
-		<g:layer>
-			<g:SplitLayoutPanel>
-				<g:west size="120">
-					<g:DockLayoutPanel unit="EM">
-						<g:north size="5">
-							<g:FlowPanel>
-								<g:Label text="TADY BUDE LOGO S NASTAVENÍM"></g:Label>
-								<g:Label ui:field="userName" />
-								<g:Anchor ui:field="logout">Logout</g:Anchor>
-							</g:FlowPanel>
-						</g:north>
-						<g:center>
-							<g:StackLayoutPanel unit="EM">
-								<g:stack>
-									<g:header size="3">
-										<ui:text from='{cons.sources}' />
-									</g:header>
-									<ah:SourcesTree ui:field="sources" />
-								</g:stack>
-								<g:stack>
-									<g:header size="3">
-										<ui:text from='{cons.filters}' />
-									</g:header>
-									<ah:ListFiltersTree ui:field="filters" />
-								</g:stack>
-								<g:stack>
-									<g:header size="3">
-										<ui:text from='{cons.history}' />
-									</g:header>
-									<ah:HistoryTree ui:field="history" />
-								</g:stack>
-								<g:stack>
-									<g:header size="3">
-										<ui:text from='{cons.messages}' />
-									</g:header>
-									<ah:MessagesTree ui:field="messages" />
-								</g:stack>
-							</g:StackLayoutPanel>
-						</g:center>
-					</g:DockLayoutPanel>
-				</g:west>
-				<g:center>
-					<al:ArtiqueList ui:field="list" styleName="{style.main}" />
-				</g:center>
-			</g:SplitLayoutPanel>
+		<g:layer left="0px" width="3em">
+			<g:StackLayoutPanel unit="EM" ui:field="stack">
+				<g:stack>
+					<g:header size="2">
+						<ui:text from='{cons.options}' />
+					</g:header>
+					<a:OptionPanel ui:field="optionPanel" />
+				</g:stack>
+				<g:stack>
+					<g:header size="2">
+						<ui:text from='{cons.sources}' />
+					</g:header>
+					<ah:SourcesTree ui:field="sources" />
+				</g:stack>
+				<g:stack>
+					<g:header size="2">
+						<ui:text from='{cons.filters}' />
+					</g:header>
+					<ah:ListFiltersTree ui:field="filters" />
+				</g:stack>
+				<g:stack>
+					<g:header size="2">
+						<ui:text from='{cons.history}' />
+					</g:header>
+					<ah:HistoryTree ui:field="history" />
+				</g:stack>
+				<g:stack>
+					<g:header size="2">
+						<ui:text from='{cons.messages}' />
+					</g:header>
+					<ah:MessagesTree ui:field="messages" />
+				</g:stack>
+			</g:StackLayoutPanel>
+		</g:layer>
+		<g:layer left="3em" right="0px">
+			<al:ArtiqueList ui:field="list" styleName="{style.main}" />
 		</g:layer>
 	</g:LayoutPanel>
 </ui:UiBinder>

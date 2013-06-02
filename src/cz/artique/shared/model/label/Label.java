@@ -53,6 +53,9 @@ public class Label
 	@Attribute(unindexed = true)
 	private BackupLevel backupLevel;
 
+	@Attribute(persistent = false)
+	private boolean toBeDeleted;
+
 	@Attribute(unindexed = true)
 	private int priority;
 
@@ -68,8 +71,7 @@ public class Label
 		setUser(user);
 		setName(name);
 		setBackupLevel(BackupLevel.NO_BACKUP);
-		setAppearance(new LabelAppearanceImpl(VisibilityLevel.ONLY_ASSIGNED,
-			AppearanceType.TEXT));
+		setAppearance(new LabelAppearance());
 		setLabelType(LabelType.USER_DEFINED);
 		setPriority(0);
 	}
@@ -219,5 +221,13 @@ public class Label
 
 	public boolean equalsDeeply(Label e) {
 		return getName().equals(e.getName()) && getUser().equals(e.getUser());
+	}
+
+	public boolean isToBeDeleted() {
+		return toBeDeleted;
+	}
+
+	public void setToBeDeleted(boolean toBeDeleted) {
+		this.toBeDeleted = toBeDeleted;
 	}
 }

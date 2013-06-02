@@ -95,17 +95,17 @@ public class SourceRegionPicker extends Composite
 
 	public SourceRegionPicker() {
 		cellList = new CellList<Region>(new RegionCell());
+		initWidget(uiBinder.createAndBindUi(this));
 		final SingleSelectionModel<Region> selectionModel =
 			new SingleSelectionModel<Region>();
 		cellList.setSelectionModel(selectionModel);
+		cellList.setStylePrimaryName("cellList");
 		selectionModel
 			.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 				public void onSelectionChange(SelectionChangeEvent event) {
 					selectionChanged(selectionModel.getSelectedObject());
 				}
 			});
-
-		initWidget(uiBinder.createAndBindUi(this));
 	}
 
 	protected void selectionChanged(Region selected) {
