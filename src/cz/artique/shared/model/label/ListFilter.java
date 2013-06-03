@@ -3,6 +3,9 @@ package cz.artique.shared.model.label;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.slim3.datastore.Attribute;
+import org.slim3.datastore.Model;
+
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
@@ -11,9 +14,6 @@ import cz.artique.shared.utils.HasHierarchy;
 import cz.artique.shared.utils.HasKey;
 import cz.artique.shared.utils.HasName;
 import cz.artique.shared.utils.SharedUtils;
-
-import org.slim3.datastore.Attribute;
-import org.slim3.datastore.Model;
 
 @Model(schemaVersion = 1)
 public class ListFilter
@@ -214,6 +214,7 @@ public class ListFilter
 		this.exportAlias = exportAlias;
 	}
 
+	// @Override
 	public ListFilter clone() {
 		ListFilter clone = new ListFilter();
 		clone.setEndTo(endTo);

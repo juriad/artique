@@ -11,9 +11,10 @@ public enum ClientConfigKey implements GenKey, Serializable {
 	SERVICE_TIMEOUT("service.timeout", new Value(2000)),
 	LIST_INIT_SIZE("list.init_size", new Value(30)),
 	LIST_FETCH_STEP("list.fetch_step", new Value(20)),
-	LIST_FETCH_INTERVAL("list.fetch_interval", new Value(5000*100)),
+	LIST_FETCH_INTERVAL("list.fetch_interval", new Value(5000 * 100)),
 	HISTORY_MAX_ITEMS("history.max_items", new Value(100)),
-	MESSENGER_MAX_ITEMS("messanger.max_items", new Value(100)), SHOW_PANEL("ui.panel.show", new Value("S"));
+	MESSENGER_MAX_ITEMS("messanger.max_items", new Value(100)),
+	SHOW_PANEL("ui.panel.show", new Value("S"));
 
 	private final String key;
 	private final Value defaultValue;
@@ -31,7 +32,7 @@ public enum ClientConfigKey implements GenKey, Serializable {
 	public Value getDefaultValue() {
 		return defaultValue;
 	}
-	
+
 	public String getKeyName() {
 		return SharedUtils.combineStringParts(getUser().getUserId(), getKey());
 	}

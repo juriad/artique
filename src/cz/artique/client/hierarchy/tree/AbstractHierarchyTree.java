@@ -87,7 +87,7 @@ public abstract class AbstractHierarchyTree<E extends HasHierarchy & HasName, F 
 			}
 		});
 	}
-	
+
 	protected void afterUpdate() {}
 
 	protected void initialized() {}

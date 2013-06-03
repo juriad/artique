@@ -9,7 +9,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.InlineLabel;
 
 public class CloseButton<E> extends InlineLabel implements HasCloseHandlers<E> {
-	
+
 	public static final CloseButtonFactory FACTORY = new CloseButtonFactory();
 
 	public static class CloseButtonFactory {

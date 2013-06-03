@@ -1,11 +1,11 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:a="urn:import:cz.artique.client.sources"
-	xmlns:db="urn:import:com.google.gwt.user.datepicker.client">
+	xmlns:c="urn:import:cz.artique.client.common" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:a="urn:import:cz.artique.client.sources" xmlns:db="urn:import:com.google.gwt.user.datepicker.client">
 
 	<ui:with field='res' type='cz.artique.client.sources.SourcesConstants' />
 
-	<g:DialogBox ui:field="dialog" autoHideEnabled="true"
+	<c:StopDialog ui:field="dialog" autoHideEnabled="true"
 		modal="true" width="50%" height="50%">
 		<g:caption>
 			<ui:text from='{res.userSourceEditor}' />
@@ -25,5 +25,5 @@
 				</g:cell>
 			</g:HorizontalPanel>
 		</g:VerticalPanel>
-	</g:DialogBox>
+	</c:StopDialog>
 </ui:UiBinder>

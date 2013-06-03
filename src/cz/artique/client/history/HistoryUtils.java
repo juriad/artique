@@ -10,11 +10,11 @@ import com.google.appengine.api.datastore.Key;
 import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.Filter;
-import cz.artique.shared.model.label.ListFilterOrder;
 import cz.artique.shared.model.label.FilterType;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.label.ListFilter;
+import cz.artique.shared.model.label.ListFilterOrder;
 
 public class HistoryUtils {
 	public static final HistoryUtils UTILS = new HistoryUtils();

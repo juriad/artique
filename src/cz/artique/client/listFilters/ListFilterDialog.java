@@ -6,8 +6,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 
+import cz.artique.client.common.StopDialog;
 import cz.artique.client.history.CachingHistoryUtils;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.Managers;
@@ -19,12 +19,12 @@ public class ListFilterDialog {
 		.create(ListFilterDialogUiBinder.class);
 
 	interface ListFilterDialogUiBinder
-			extends UiBinder<DialogBox, ListFilterDialog> {}
+			extends UiBinder<StopDialog, ListFilterDialog> {}
 
 	public static final ListFilterDialog DIALOG = new ListFilterDialog();
 
 	@UiField
-	DialogBox dialog;
+	StopDialog dialog;
 
 	@UiField
 	ListFilterEditor editor;

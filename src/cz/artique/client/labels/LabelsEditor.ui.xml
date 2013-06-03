@@ -7,7 +7,7 @@
 	<ui:with field='res' type='cz.artique.client.labels.LabelsConstants' />
 
 	<g:HorizontalPanel>
-		<g:cell width="20em">
+		<g:cell>
 			<g:ScrollPanel>
 				<ce:CellList ui:field="cellList" />
 			</g:ScrollPanel>

@@ -64,20 +64,21 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 		filter = constructFilter();
 
 		anchor =
-			createAnchor(getPanel(), hierarchy.getName(), null, new ClickHandler() {
-				final HyperlinkImpl impl = GWT.create(HyperlinkImpl.class);
+			createAnchor(getPanel(), hierarchy.getName(), null,
+				new ClickHandler() {
+					final HyperlinkImpl impl = GWT.create(HyperlinkImpl.class);
 
-				public void onClick(ClickEvent event) {
-					if (impl.handleAsClick(Event.as(event.getNativeEvent()))) {
-						ListFilter baseListFilter =
-							HistoryManager.HISTORY.getBaseListFilter();
-						baseListFilter.setFilterObject(filter);
-						HistoryManager.HISTORY.setListFilter(baseListFilter,
-							serialized);
-						event.preventDefault();
+					public void onClick(ClickEvent event) {
+						if (impl.handleAsClick(Event.as(event.getNativeEvent()))) {
+							ListFilter baseListFilter =
+								HistoryManager.HISTORY.getBaseListFilter();
+							baseListFilter.setFilterObject(filter);
+							HistoryManager.HISTORY.setListFilter(
+								baseListFilter, serialized);
+							event.preventDefault();
+						}
 					}
-				}
-			}, null);
+				}, null);
 
 		if (hierarchy instanceof LeafNode) {
 			LeafNode<UserSource> leaf = (LeafNode<UserSource>) hierarchy;
@@ -95,7 +96,8 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 				// manual source
 				String addManualItemTooltip =
 					I18n.getHierarchyTreeConstants().addManualItemTooltip();
-				createImage(getPanel(), ArtiqueWorld.WORLD.getResources().add(),
+				createImage(getPanel(),
+					ArtiqueWorld.WORLD.getResources().add(),
 					new ClickHandler() {
 						public void onClick(ClickEvent event) {
 							ManualItemDialog.DIALOG.showDialog();
@@ -105,8 +107,9 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 		} else if (hierarchy instanceof InnerNode) {
 			String createNewTooltip =
 				I18n.getHierarchyTreeConstants().createNewUserSourceTooltip();
-			createImage(getPanel(), ArtiqueWorld.WORLD.getResources().createNew(),
-				createNewHandler, createNewTooltip);
+			createImage(getPanel(), ArtiqueWorld.WORLD
+				.getResources()
+				.createNew(), createNewHandler, createNewTooltip);
 
 			if (hierarchy.getParent() == null) {
 				// root node
@@ -170,6 +173,7 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 		return labels;
 	}
 
+	@Override
 	public boolean refresh() {
 		anchor.setName(getHierarchy().getName());
 		serialized = CachingHistoryUtils.UTILS.serializeListFilter(filter);

@@ -18,7 +18,8 @@ public interface ClientSourceServiceAsync {
 
 	void addUserSource(UserSource userSource, AsyncCallback<UserSource> callback);
 
-	void updateUserSource(UserSource userSource, AsyncCallback<UserSource> callback);
+	void updateUserSource(UserSource userSource,
+			AsyncCallback<UserSource> callback);
 
 	void getUserSources(AsyncCallback<List<UserSource>> callback);
 

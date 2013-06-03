@@ -34,8 +34,7 @@ public class Message implements HasName, HasHierarchy {
 		return "/";
 	}
 
-	public void setHierarchy(String hierarchy) {
-	}
+	public void setHierarchy(String hierarchy) {}
 
 	public String getName() {
 		return messageBody;

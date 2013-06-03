@@ -12,7 +12,7 @@ public interface Hierarchy<E extends HasHierarchy & HasName>
 	List<Hierarchy<E>> getChildren();
 
 	List<Hierarchy<E>> getSiblings();
-	
+
 	int getIndex();
 
 	Hierarchy<E> getParent();
@@ -20,6 +20,6 @@ public interface Hierarchy<E extends HasHierarchy & HasName>
 	void fireChanged();
 
 	void getAll(List<E> list);
-	
+
 	String getHierarchy();
 }

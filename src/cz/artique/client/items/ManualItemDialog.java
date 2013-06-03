@@ -7,8 +7,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 
+import cz.artique.client.common.StopDialog;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.item.UserItem;
 
@@ -18,12 +18,12 @@ public class ManualItemDialog {
 		.create(ManualItemDialogUiBinder.class);
 
 	interface ManualItemDialogUiBinder
-			extends UiBinder<DialogBox, ManualItemDialog> {}
+			extends UiBinder<StopDialog, ManualItemDialog> {}
 
 	public static final ManualItemDialog DIALOG = new ManualItemDialog();
 
 	@UiField
-	DialogBox dialog;
+	StopDialog dialog;
 
 	@UiField
 	ManualItemEditor editor;

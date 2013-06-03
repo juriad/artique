@@ -36,7 +36,7 @@ public abstract class AbstractManager<E> implements Manager {
 	private List<ManagerReady> waitingForReady = new ArrayList<ManagerReady>();
 
 	protected synchronized void setReady() {
-		if (waitingForReady == null) {
+		if (isReady()) {
 			return;
 		}
 		List<ManagerReady> pings = waitingForReady;

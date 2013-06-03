@@ -7,8 +7,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 
+import cz.artique.client.common.StopDialog;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.source.UserSource;
 
@@ -18,12 +18,12 @@ public class UserSourceDialog {
 		.create(UserSourceDialogUiBinder.class);
 
 	interface UserSourceDialogUiBinder
-			extends UiBinder<DialogBox, UserSourceDialog> {}
+			extends UiBinder<StopDialog, UserSourceDialog> {}
 
 	public static final UserSourceDialog DIALOG = new UserSourceDialog();
 
 	@UiField
-	DialogBox dialog;
+	StopDialog dialog;
 
 	@UiField
 	UserSourceEditor editor;

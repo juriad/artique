@@ -1557,4 +1557,172 @@ public interface ValidationConstants extends ConstantsWithLookup {
 	@DefaultStringValue("Check has been planned; it will be performed withing a minute.")
 	String PlanSourceCheck_GENERAL_OK();
 
+	@DefaultStringValue("---")
+	String GetAllShortcuts_GENERAL_INVALID_VALUE();
+
+	@DefaultStringValue("---")
+	String GetAllShortcuts_GENERAL_EMPTY_OR_NULL();
+
+	@DefaultStringValue("---")
+	String GetAllShortcuts_GENERAL_TOO_LONG();
+
+	@DefaultStringValue("---")
+	String GetAllShortcuts_GENERAL_ALREADY_EXISTS();
+
+	@DefaultStringValue("---")
+	String GetAllShortcuts_GENERAL_SECURITY_BREACH();
+
+	@DefaultStringValue("---")
+	String GetAllShortcuts_GENERAL_WRONG_TYPE();
+
+	@DefaultStringValue("Failed to get list of all your shortcuts.")
+	String GetAllShortcuts_GENERAL_UNKNOWN();
+
+	@DefaultStringValue("Successfuly got list of all your shortcuts.")
+	String GetAllShortcuts_GENERAL_OK();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_SHORTCUT_INVALID_VALUE();
+
+	@DefaultStringValue("Cannot create null shortcut.")
+	String CreateShortcut_SHORTCUT_EMPTY_OR_NULL();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_SHORTCUT_TOO_LONG();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_SHORTCUT_ALREADY_EXISTS();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_SHORTCUT_SECURITY_BREACH();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_SHORTCUT_WRONG_TYPE();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_SHORTCUT_UNKNOWN();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_SHORTCUT_OK();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_KEY_STROKE_INVALID_VALUE();
+
+	@DefaultStringValue("Shortcut key stroke must not be empty.")
+	String CreateShortcut_KEY_STROKE_EMPTY_OR_NULL();
+
+	@DefaultStringValue("Shortcut key stroke is too long. Maximum is 500 characters.")
+	String CreateShortcut_KEY_STROKE_TOO_LONG();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_KEY_STROKE_ALREADY_EXISTS();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_KEY_STROKE_SECURITY_BREACH();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_KEY_STROKE_WRONG_TYPE();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_KEY_STROKE_UNKNOWN();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_KEY_STROKE_OK();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_TYPE_INVALID_VALUE();
+
+	@DefaultStringValue("Shortcut type is missing.")
+	String CreateShortcut_TYPE_EMPTY_OR_NULL();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_TYPE_TOO_LONG();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_TYPE_ALREADY_EXISTS();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_TYPE_SECURITY_BREACH();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_TYPE_WRONG_TYPE();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_TYPE_UNKNOWN();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_TYPE_OK();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_GENERAL_INVALID_VALUE();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_GENERAL_EMPTY_OR_NULL();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_GENERAL_TOO_LONG();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_GENERAL_ALREADY_EXISTS();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_GENERAL_SECURITY_BREACH();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_GENERAL_WRONG_TYPE();
+
+	@DefaultStringValue("Failed to create a shorcut.")
+	String CreateShortcut_GENERAL_UNKNOWN();
+
+	@DefaultStringValue("Successfuly created a new shortcut.")
+	String CreateShortcut_GENERAL_OK();
+
+	@DefaultStringValue("---")
+	String DeleteShortcut_SHORTCUT_INVALID_VALUE();
+
+	@DefaultStringValue("Cannot delete null shortcut.")
+	String DeleteShortcut_SHORTCUT_EMPTY_OR_NULL();
+
+	@DefaultStringValue("---")
+	String DeleteShortcut_SHORTCUT_TOO_LONG();
+
+	@DefaultStringValue("---")
+	String DeleteShortcut_SHORTCUT_ALREADY_EXISTS();
+
+	@DefaultStringValue("Cannot delete shortcut of a differend user.")
+	String DeleteShortcut_SHORTCUT_SECURITY_BREACH();
+
+	@DefaultStringValue("---")
+	String DeleteShortcut_SHORTCUT_WRONG_TYPE();
+
+	@DefaultStringValue("---")
+	String DeleteShortcut_SHORTCUT_UNKNOWN();
+
+	@DefaultStringValue("---")
+	String DeleteShortcut_SHORTCUT_OK();
+
+	@DefaultStringValue("---")
+	String DeleteShortcut_GENERAL_INVALID_VALUE();
+
+	@DefaultStringValue("---")
+	String DeleteShortcut_GENERAL_EMPTY_OR_NULL();
+
+	@DefaultStringValue("---")
+	String DeleteShortcut_GENERAL_TOO_LONG();
+
+	@DefaultStringValue("---")
+	String DeleteShortcut_GENERAL_ALREADY_EXISTS();
+
+	@DefaultStringValue("---")
+	String DeleteShortcut_GENERAL_SECURITY_BREACH();
+
+	@DefaultStringValue("---")
+	String DeleteShortcut_GENERAL_WRONG_TYPE();
+
+	@DefaultStringValue("Failed to delete shortcut.")
+	String DeleteShortcut_GENERAL_UNKNOWN();
+
+	@DefaultStringValue("Shortcut has been successfuly deleted.")
+	String DeleteShortcut_GENERAL_OK();
+
 }

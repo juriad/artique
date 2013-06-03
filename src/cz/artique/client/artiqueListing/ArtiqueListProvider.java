@@ -39,6 +39,7 @@ public class ArtiqueListProvider extends AbstractListDataProvider
 			&& Managers.CONFIG_MANAGER.isReady();
 	}
 
+	@Override
 	protected void onStart() {
 		Managers.waitForManagers(new ManagerReady() {
 			public void onReady() {

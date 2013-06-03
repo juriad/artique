@@ -10,6 +10,7 @@ public class ListFilterOrderPicker extends EnumRadioPicker<ListFilterOrder> {
 
 	@UiConstructor
 	public ListFilterOrderPicker() {
-		super(ListFilterOrder.getDefault(), "listFilterOrder", I18n.getListFiltersConstants());
+		super(ListFilterOrder.getDefault(), "listFilterOrder", I18n
+			.getListFiltersConstants());
 	}
 }

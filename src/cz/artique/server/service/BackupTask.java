@@ -33,7 +33,7 @@ public class BackupTask implements DeferredTask {
 			is.setBackup(userItemKey, blobKey);
 		} catch (CrawlerException e) {
 			throw new RuntimeException("Backuping item " + userItem.getKey()
-				+ " failed.");
+				+ " failed.", e);
 		}
 	}
 }

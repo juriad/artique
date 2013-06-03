@@ -8,8 +8,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 
+import cz.artique.client.common.StopDialog;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.Label;
 
@@ -18,13 +18,12 @@ public class LabelsDialog {
 	private static LabelsDialogUiBinder uiBinder = GWT
 		.create(LabelsDialogUiBinder.class);
 
-	interface LabelsDialogUiBinder
-			extends UiBinder<DialogBox, LabelsDialog> {}
+	interface LabelsDialogUiBinder extends UiBinder<StopDialog, LabelsDialog> {}
 
 	public static final LabelsDialog DIALOG = new LabelsDialog();
 
 	@UiField
-	DialogBox dialog;
+	StopDialog dialog;
 
 	@UiField
 	LabelsEditor editor;

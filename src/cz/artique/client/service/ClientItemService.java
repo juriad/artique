@@ -7,8 +7,8 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import cz.artique.shared.items.ChangeSet;
-import cz.artique.shared.items.ListingResponse;
 import cz.artique.shared.items.ListingRequest;
+import cz.artique.shared.items.ListingResponse;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.validation.HasIssue;
 import cz.artique.shared.validation.ValidationException;

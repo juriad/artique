@@ -4,8 +4,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class HistoryEvent extends GwtEvent<HistoryHandler> {
 
-	private static final Type<HistoryHandler> TYPE =
-		new Type<HistoryHandler>();
+	private static final Type<HistoryHandler> TYPE = new Type<HistoryHandler>();
 
 	public static Type<HistoryHandler> getType() {
 		return TYPE;

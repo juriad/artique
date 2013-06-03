@@ -11,6 +11,7 @@ import cz.artique.client.items.ItemsManager;
 import cz.artique.client.labels.LabelsManager;
 import cz.artique.client.listFilters.ListFiltersManager;
 import cz.artique.client.messages.MessagesManager;
+import cz.artique.client.shortcuts.ShortcutsManager;
 import cz.artique.client.sources.SourcesManager;
 import cz.artique.shared.model.config.ClientConfigKey;
 
@@ -30,6 +31,8 @@ public class Managers {
 	public static final HistoryManager HISTORY_MANAGER = HistoryManager.HISTORY;
 	public static final MessagesManager MESSAGES_MANAGER =
 		MessagesManager.MESSENGER;
+	public static final ShortcutsManager SHORTCUTS_MANAGER =
+		ShortcutsManager.MANAGER;
 
 	public static final Manager[] MANAGERS = new Manager[] {
 		CONFIG_MANAGER,
@@ -38,7 +41,8 @@ public class Managers {
 		SOURCES_MANAGER,
 		LIST_FILTERS_MANAGER,
 		HISTORY_MANAGER,
-		MESSAGES_MANAGER };
+		MESSAGES_MANAGER,
+		SHORTCUTS_MANAGER };
 
 	static {
 		for (final Manager m : MANAGERS) {

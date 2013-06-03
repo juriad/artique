@@ -234,6 +234,7 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 			});
 	}
 
+	@Override
 	public void ready(ManagerReady ping) {
 		Managers.LABELS_MANAGER.ready(ping);
 	}

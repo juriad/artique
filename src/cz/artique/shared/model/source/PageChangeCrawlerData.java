@@ -7,8 +7,6 @@ import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Text;
 
-import cz.artique.shared.model.source.CrawlerData;
-
 @Model(schemaVersion = 1)
 public class PageChangeCrawlerData extends CrawlerData implements Serializable {
 

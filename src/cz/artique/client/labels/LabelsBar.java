@@ -6,9 +6,6 @@ import java.util.List;
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.client.labels.ClickableLabelWidget;
-import cz.artique.client.labels.LabelWidget;
-import cz.artique.client.labels.AbstractLabelsBar;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Label;

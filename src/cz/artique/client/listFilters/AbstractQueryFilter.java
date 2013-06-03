@@ -28,7 +28,7 @@ public abstract class AbstractQueryFilter extends Composite
 	class LabelCloseHandler implements CloseHandler<LabelWidget> {
 
 		public void onClose(CloseEvent<LabelWidget> e) {
-			LabelWidget source = (LabelWidget) e.getTarget();
+			LabelWidget source = e.getTarget();
 
 			int widgetIndex = panel.getWidgetIndex(source);
 			if (widgetIndex >= 0) {
