@@ -7,6 +7,7 @@ public enum ShortcutAction {
 	NEXT_ITEM,
 	PREVIOUS_ITEM,
 	OPEN_ORIGINAL,
+	ADD_LABEL,
 	CLEAR_FILTER,
 	TOTAL_CLEAR_FILTER;
 }

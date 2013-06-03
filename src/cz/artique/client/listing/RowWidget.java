@@ -80,6 +80,14 @@ public abstract class RowWidget extends Composite
 		CloseEvent.fire(this, this);
 	}
 
+	public void toggleExpanded() {
+		if (isExpanded()) {
+			collapse();
+		} else {
+			expand();
+		}
+	}
+
 	public boolean isExpanded() {
 		return expanded;
 	}
@@ -97,15 +105,18 @@ public abstract class RowWidget extends Composite
 	}
 
 	public void setValue(UserItem value) {
-		setValue(value);
+		setValue(value, true);
 	}
 
 	public void setValue(UserItem value, boolean fireEvents) {
 		this.value = value;
+		refresh();
 		if (fireEvents) {
 			ValueChangeEvent.fire(this, value);
 		}
 	}
+
+	public abstract void refresh();
 
 	public HandlerRegistration addValueChangeHandler(
 			ValueChangeHandler<UserItem> handler) {
@@ -115,4 +126,8 @@ public abstract class RowWidget extends Composite
 	public Key getKey() {
 		return getValue().getKey();
 	}
+
+	public abstract void openOriginal();
+
+	public abstract void openAddLabel();
 }

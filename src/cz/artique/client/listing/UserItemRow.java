@@ -51,15 +51,16 @@ public class UserItemRow extends RowWidget {
 		tt.attachTo(content);
 	}
 
-	private void toggleExpanded() {
-		if (isExpanded()) {
-			collapse();
-		} else {
-			expand();
-		}
+	public void refresh() {
+		// TODO Auto-generated method stub
 	}
 
-	public void refresh() {
+	public void openOriginal() {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void openAddLabel() {
 		// TODO Auto-generated method stub
 
 	}

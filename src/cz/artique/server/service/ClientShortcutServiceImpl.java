@@ -27,8 +27,11 @@ public class ClientShortcutServiceImpl implements ClientShortcutService {
 		validator.checkNullability(CreateShortcut.SHORTCUT, false, shortcut);
 		User user = UserServiceFactory.getUserService().getCurrentUser();
 		shortcut.setUser(user);
-		validator.checkNullability(CreateShortcut.KEY_STROKE, false,
-			shortcut.getKeyStroke());
+		if (shortcut.getKeyStroke() == null
+			|| shortcut.getKeyStroke().isEmpty()) {
+			throw new ValidationException(new Issue<CreateShortcut>(
+				CreateShortcut.KEY_STROKE, IssueType.EMPTY_OR_NULL));
+		}
 		if (shortcut.getKeyStroke().length() > 500) {
 			throw new ValidationException(new Issue<CreateShortcut>(
 				CreateShortcut.KEY_STROKE, IssueType.TOO_LONG));

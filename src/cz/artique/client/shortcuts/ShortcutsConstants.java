@@ -62,4 +62,13 @@ public interface ShortcutsConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("Open original")
 	String shortcutAction_OPEN_ORIGINAL();
+
+	@DefaultStringValue("Clear label filter")
+	String shortcutAction_CLEAR_FILTER();
+
+	@DefaultStringValue("Clear whole filter")
+	String shortcutAction_TOTAL_CLEAR_FILTER();
+
+	@DefaultStringValue("Add label")
+	String shortcutAction_ADD_LABEL();
 }

@@ -24,19 +24,14 @@ public class InfiniteList extends Composite
 		implements HasSelectionChangedHandlers, HasScrollEndHandlers,
 		HasNewDataHandlers {
 
-	protected OpenCloseHandler openCloseHandler = new OpenCloseHandler();
-
-	protected class OpenCloseHandler
-			implements OpenHandler<RowWidget>, CloseHandler<RowWidget> {
-
+	private class OpenCloseHander
+			implements CloseHandler<RowWidget>, OpenHandler<RowWidget> {
 		public void onClose(CloseEvent<RowWidget> event) {
-			RowWidget row = event.getTarget();
-			setSelectedKey(row.getKey(), row.isExpanded());
+			setSelectedKey(event.getTarget().getKey(), true);
 		}
 
 		public void onOpen(OpenEvent<RowWidget> event) {
-			RowWidget row = event.getTarget();
-			setSelectedKey(row.getKey(), row.isExpanded());
+			setSelectedKey(event.getTarget().getKey(), true);
 		}
 	}
 
@@ -123,9 +118,8 @@ public class InfiniteList extends Composite
 
 	private RowWidget createRow(UserItem e) {
 		RowWidget row = UserItemRow.FACTORY.createWidget(e);
-
-		row.addOpenHandler(openCloseHandler);
-		row.addCloseHandler(openCloseHandler);
+		row.addOpenHandler(new OpenCloseHander());
+		row.addCloseHandler(new OpenCloseHander());
 		return row;
 	}
 
@@ -138,38 +132,57 @@ public class InfiniteList extends Composite
 		endReached = false;
 	}
 
-	public void setSelectedKey(Key key, boolean isSelected) {
-		if (!isSelected) {
-			if (key == null) {
-				// null is not selected
-			} else if (key.equals(selected)) {
-				rows.get(selected).collapse();
-				selected = null;
-				SelectionChangeEvent.fire(this);
-			} else {
-				// key is not selected and was not selected
-			}
+	public void setSelectedKey(Key key, boolean forceExpand) {
+		if (key == null) {
+			RowWidget old = rows.get(selected);
+			old.collapse();
+			old.removeStyleDependentName("selected");
+			selected = null;
+			SelectionChangeEvent.fire(this);
+		} else if (key.equals(selected)) {
+			// was selected and is selected
 		} else {
-			if (key == null) {
-				rows.get(selected).collapse();
-				selected = null;
-				SelectionChangeEvent.fire(this);
-			} else if (key.equals(selected)) {
-				// was selected and is selected
-			} else {
-				// selected changed
-				if (selected != null) {
-					rows.get(selected).collapse();
+			boolean expand = true;
+			// selected changed
+			if (selected != null) {
+				RowWidget old = rows.get(selected);
+				if (old.isExpanded()) {
+					old.collapse();
+					old.removeStyleDependentName("selected");
+				} else {
+					expand = false;
 				}
-				rows.get(key).expand();
-				selected = key;
-				SelectionChangeEvent.fire(this);
 			}
+			RowWidget newly = rows.get(key);
+			if (expand || forceExpand) {
+				newly.expand();
+			}
+			selected = key;
+			newly.removeStyleDependentName("selected");
+			SelectionChangeEvent.fire(this);
 		}
 	}
 
 	public RowWidget getSelectedRowWidget() {
 		return selected == null ? null : rows.get(selected);
+	}
+
+	protected boolean setSelectedIndex(int index, boolean forceExpand) {
+		try {
+			RowWidget w = (RowWidget) flowPanel.getWidget(index);
+			setSelectedKey(w.getKey(), forceExpand);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	protected int getSelectedIndex() {
+		return flowPanel.getWidgetIndex(getSelectedRowWidget());
+	}
+
+	protected RowWidget getRow(int index) {
+		return (RowWidget) flowPanel.getWidget(index);
 	}
 
 	public HandlerRegistration addSelectionChangeHandler(

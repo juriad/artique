@@ -10,11 +10,8 @@ import com.google.gwt.user.client.ui.HasEnabled;
 
 import cz.artique.client.common.CloseButton;
 import cz.artique.client.common.InlineFlowPanel;
-import cz.artique.client.history.CachingHistoryUtils;
-import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelAppearance;
-import cz.artique.shared.model.label.LabelType;
 
 public class LabelWidget extends Composite
 		implements HasCloseHandlers<LabelWidget>, Comparable<LabelWidget>,
@@ -52,13 +49,6 @@ public class LabelWidget extends Composite
 		closeButton = new CloseButton<LabelWidget>(this);
 		panel.add(closeButton);
 
-		// FIXME in query filter nema mit href
-		if (!LabelType.SYSTEM.equals(label.getLabelType())) {
-			Filter filter = CachingHistoryUtils.UTILS.getFilterForLabel(label);
-			String serialized =
-				CachingHistoryUtils.UTILS.serializeListFilter(filter);
-			nameLabel.setHref("#" + serialized);
-		}
 		setStyle();
 	}
 

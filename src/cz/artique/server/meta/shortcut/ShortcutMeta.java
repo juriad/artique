@@ -1,6 +1,6 @@
 package cz.artique.server.meta.shortcut;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-03 18:01:00")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-03 18:47:29")
 /** */
 public final class ShortcutMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.shortcut.Shortcut> {
 
