@@ -17,6 +17,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineLabel;
@@ -28,13 +29,14 @@ import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.shortcut.Shortcut;
+import cz.artique.shared.model.shortcut.ShortcutAction;
 import cz.artique.shared.model.shortcut.ShortcutType;
 
 public class ShortcutsEditor extends Composite {
-	private static LabelsEditorUiBinder uiBinder = GWT
-		.create(LabelsEditorUiBinder.class);
+	private static ShortcutsEditorUiBinder uiBinder = GWT
+		.create(ShortcutsEditorUiBinder.class);
 
-	interface LabelsEditorUiBinder extends UiBinder<Widget, ShortcutsEditor> {}
+	interface ShortcutsEditorUiBinder extends UiBinder<Widget, ShortcutsEditor> {}
 
 	class ShortcutCell extends AbstractCell<Shortcut> {
 
@@ -74,6 +76,9 @@ public class ShortcutsEditor extends Composite {
 	@UiField
 	Button deleteButton;
 
+	@UiField
+	Button actionShortcutButton;
+
 	private final SingleSelectionModel<Shortcut> selectionModel;
 
 	private String shortcutTypeAsString(ShortcutType type) {
@@ -107,8 +112,21 @@ public class ShortcutsEditor extends Composite {
 		if (selected == null) {
 			return;
 		}
-		Managers.SHORTCUTS_MANAGER.deleteShortcut(selected, null);
-		setValue();
+		Managers.SHORTCUTS_MANAGER.deleteShortcut(selected,
+			new AsyncCallback<Void>() {
+				public void onSuccess(Void result) {
+					setValue();
+				}
+
+				public void onFailure(Throwable caught) {
+					setValue();
+				}
+			});
+	}
+
+	@UiHandler("actionShortcutButton")
+	protected void actionShortcutButtonClicked(ClickEvent event) {
+		ActionShortcutDialog.DIALOG.showDialog();
 	}
 
 	public void setValue() {
@@ -151,8 +169,16 @@ public class ShortcutsEditor extends Composite {
 			return selected.getReferencedLabel().getDisplayName();
 		case LIST_FILTER:
 			return selected.getReferencedListFilter().getName();
+		case ACTION:
+			return getActionString(selected.getAction());
 		default:
 			return null;
 		}
+	}
+
+	private String getActionString(ShortcutAction action) {
+		String method = "shortcutAction_" + action.name();
+		String actionName = I18n.getShortcutsConstants().getString(method);
+		return actionName;
 	}
 }

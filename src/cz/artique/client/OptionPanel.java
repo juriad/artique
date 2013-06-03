@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.labels.LabelsDialog;
+import cz.artique.client.shortcuts.ShortcutsDialog;
 
 public class OptionPanel extends Composite {
 
@@ -28,6 +29,9 @@ public class OptionPanel extends Composite {
 	@UiField
 	Button editLabelsButton;
 
+	@UiField
+	Button editShortcutsButton;
+
 	public OptionPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
 		userName.setText(ArtiqueWorld.WORLD.getUser().getNickname());
@@ -37,5 +41,10 @@ public class OptionPanel extends Composite {
 	@UiHandler("editLabelsButton")
 	protected void editLabelsButtonClicked(ClickEvent event) {
 		LabelsDialog.DIALOG.showDialog();
+	}
+
+	@UiHandler("editShortcutsButton")
+	protected void editShortcutsButtonClicked(ClickEvent event) {
+		ShortcutsDialog.DIALOG.showDialog();
 	}
 }

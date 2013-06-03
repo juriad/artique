@@ -12,5 +12,8 @@
 		<g:Button ui:field="editLabelsButton">
 			<ui:text from="{cons.editLabelsButton}" />
 		</g:Button>
+		<g:Button ui:field="editShortcutsButton">
+			<ui:text from="{cons.editShortcutsButton}" />
+		</g:Button>
 	</g:FlowPanel>
 </ui:UiBinder>

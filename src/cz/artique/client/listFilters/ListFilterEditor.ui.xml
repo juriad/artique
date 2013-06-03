@@ -3,7 +3,8 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:a="urn:import:cz.artique.client.listFilters"
 	xmlns:db="urn:import:com.google.gwt.user.datepicker.client" xmlns:c="urn:import:cz.artique.client.common">
 
-	<ui:with field='res' type='cz.artique.client.listFilters.ListFiltersConstants' />
+	<ui:with field='res'
+		type='cz.artique.client.listFilters.ListFiltersConstants' />
 
 	<g:Grid ui:field="grid">
 		<g:row>
@@ -81,6 +82,18 @@
 			</g:cell>
 			<g:customCell>
 				<a:ListFilterOrderPicker ui:field="orderPicker" />
+			</g:customCell>
+		</g:row>
+		<g:row>
+			<g:cell>
+				<ui:text from="{res.shortcut}" />
+			</g:cell>
+			<g:customCell>
+				<c:OptionalValue ui:field="shortcut">
+					<c:value>
+						<g:TextBox />
+					</c:value>
+				</c:OptionalValue>
 			</g:customCell>
 		</g:row>
 	</g:Grid>

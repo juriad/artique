@@ -65,6 +65,18 @@
 						<l:BackupLevelPicker ui:field="backupLevel" />
 					</g:customCell>
 				</g:row>
+				<g:row>
+					<g:cell>
+						<ui:text from="{res.shortcut}" />
+					</g:cell>
+					<g:customCell>
+						<c:OptionalValue ui:field="shortcut">
+							<c:value>
+								<g:TextBox />
+							</c:value>
+						</c:OptionalValue>
+					</g:customCell>
+				</g:row>
 			</g:Grid>
 		</g:cell>
 	</g:HorizontalPanel>

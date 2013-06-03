@@ -25,6 +25,8 @@ public interface ClientShortcutService extends RemoteService {
 		SHORTCUT,
 		KEY_STROKE,
 		TYPE,
+		ACTION,
+		REFERENCED,
 		GENERAL;
 		public String enumName() {
 			return "CreateShortcut";

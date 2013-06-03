@@ -54,4 +54,7 @@ public interface LabelsConstants extends ConstantsWithLookup {
 	@DefaultStringValue("HTML & CSS")
 	String backupLevel_HTML_CSS();
 
+	@DefaultStringValue("Shortcut")
+	String shortcut();
+
 }

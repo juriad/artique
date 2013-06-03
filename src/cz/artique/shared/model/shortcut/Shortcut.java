@@ -36,6 +36,8 @@ public class Shortcut implements Serializable, GenKey {
 	@Attribute(persistent = false)
 	private ListFilter referencedListFilter;
 
+	private ShortcutAction action;
+
 	private String keyStroke;
 
 	/**
@@ -158,5 +160,13 @@ public class Shortcut implements Serializable, GenKey {
 		String userId = getUser().getUserId();
 		String stroke = getKeyStroke();
 		return SharedUtils.combineStringParts(userId, stroke);
+	}
+
+	public ShortcutAction getAction() {
+		return action;
+	}
+
+	public void setAction(ShortcutAction action) {
+		this.action = action;
 	}
 }

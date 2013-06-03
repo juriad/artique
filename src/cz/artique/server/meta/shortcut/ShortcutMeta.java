@@ -1,8 +1,11 @@
 package cz.artique.server.meta.shortcut;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-03 09:49:14")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-03 15:00:38")
 /** */
 public final class ShortcutMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.shortcut.Shortcut> {
+
+    /** */
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.shortcut.Shortcut, cz.artique.shared.model.shortcut.ShortcutAction> action = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.shortcut.Shortcut, cz.artique.shared.model.shortcut.ShortcutAction>(this, "action", "action", cz.artique.shared.model.shortcut.ShortcutAction.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.shortcut.Shortcut, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.shortcut.Shortcut, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
@@ -39,6 +42,7 @@ public final class ShortcutMeta extends org.slim3.datastore.ModelMeta<cz.artique
     @Override
     public cz.artique.shared.model.shortcut.Shortcut entityToModel(com.google.appengine.api.datastore.Entity entity) {
         cz.artique.shared.model.shortcut.Shortcut model = new cz.artique.shared.model.shortcut.Shortcut();
+        model.setAction(stringToEnum(cz.artique.shared.model.shortcut.ShortcutAction.class, (java.lang.String) entity.getProperty("action")));
         model.setKey(entity.getKey());
         model.setKeyStroke((java.lang.String) entity.getProperty("keyStroke"));
         model.setReferenced((com.google.appengine.api.datastore.Key) entity.getProperty("referenced"));
@@ -57,6 +61,7 @@ public final class ShortcutMeta extends org.slim3.datastore.ModelMeta<cz.artique
         } else {
             entity = new com.google.appengine.api.datastore.Entity(kind);
         }
+        entity.setProperty("action", enumToString(m.getAction()));
         entity.setProperty("keyStroke", m.getKeyStroke());
         entity.setProperty("referenced", m.getReferenced());
         entity.setProperty("type", enumToString(m.getType()));
@@ -124,6 +129,10 @@ public final class ShortcutMeta extends org.slim3.datastore.ModelMeta<cz.artique
         cz.artique.shared.model.shortcut.Shortcut m = (cz.artique.shared.model.shortcut.Shortcut) model;
         writer.beginObject();
         org.slim3.datastore.json.Default encoder0 = new org.slim3.datastore.json.Default();
+        if(m.getAction() != null){
+            writer.setNextPropertyName("action");
+            encoder0.encode(writer, m.getAction());
+        }
         if(m.getKey() != null){
             writer.setNextPropertyName("key");
             encoder0.encode(writer, m.getKey());
@@ -164,6 +173,8 @@ public final class ShortcutMeta extends org.slim3.datastore.ModelMeta<cz.artique
         cz.artique.shared.model.shortcut.Shortcut m = new cz.artique.shared.model.shortcut.Shortcut();
         org.slim3.datastore.json.JsonReader reader = null;
         org.slim3.datastore.json.Default decoder0 = new org.slim3.datastore.json.Default();
+        reader = rootReader.newObjectReader("action");
+        m.setAction(decoder0.decode(reader, m.getAction(), cz.artique.shared.model.shortcut.ShortcutAction.class));
         reader = rootReader.newObjectReader("key");
         m.setKey(decoder0.decode(reader, m.getKey()));
         reader = rootReader.newObjectReader("keyStroke");

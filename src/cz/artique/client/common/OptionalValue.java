@@ -20,6 +20,8 @@ public class OptionalValue<E extends HasValue<F> & IsWidget & HasEnabled, F>
 	private E e;
 	private final CheckBox checkBox;
 
+	private F oldValue;
+
 	private boolean enabled = true;
 
 	private F defaultValue;
@@ -41,11 +43,12 @@ public class OptionalValue<E extends HasValue<F> & IsWidget & HasEnabled, F>
 	@UiChild(tagname = "value")
 	public void setE(E e) {
 		this.e = e;
+		oldValue = null;
 		flowPanel.add(e);
 		setValue(null, false);
 		e.addValueChangeHandler(new ValueChangeHandler<F>() {
 			public void onValueChange(ValueChangeEvent<F> event) {
-				setValue(event.getValue());
+				setInternalValue();
 			}
 		});
 	}
@@ -83,10 +86,20 @@ public class OptionalValue<E extends HasValue<F> & IsWidget & HasEnabled, F>
 		setValue(value, true);
 	}
 
+	private void setInternalValue() {
+		F value = e.getValue();
+		if (oldValue == null && value != null || oldValue != null
+			&& !oldValue.equals(value)) {
+			oldValue = value;
+			ValueChangeEvent.fire(this, getValue());
+		}
+	}
+
 	public void setValue(F value, boolean fireEvents) {
 		checkBox.setValue(value != null);
 		setEEnabled(value != null);
 		e.setValue(value);
+		oldValue = e.getValue();
 		if (fireEvents) {
 			ValueChangeEvent.fire(this, getValue());
 		}

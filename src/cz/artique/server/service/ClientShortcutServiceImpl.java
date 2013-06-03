@@ -36,6 +36,21 @@ public class ClientShortcutServiceImpl implements ClientShortcutService {
 
 		validator.checkNullability(CreateShortcut.TYPE, false,
 			shortcut.getType());
+		switch (shortcut.getType()) {
+		case ACTION:
+			validator.checkNullability(CreateShortcut.ACTION, false,
+				shortcut.getAction());
+			break;
+		case LABEL:
+		case LIST_FILTER:
+			validator.checkNullability(CreateShortcut.REFERENCED, false,
+				shortcut.getReferenced());
+			break;
+		default:
+			throw new ValidationException(new Issue<CreateShortcut>(
+				CreateShortcut.TYPE, IssueType.INVALID_VALUE));
+		}
+
 		ShortcutService ss = new ShortcutService();
 		ss.createShortcut(shortcut);
 		return shortcut;

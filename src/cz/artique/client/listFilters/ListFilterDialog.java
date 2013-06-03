@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 
 import cz.artique.client.common.StopDialog;
@@ -12,6 +13,8 @@ import cz.artique.client.history.CachingHistoryUtils;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.ListFilter;
+import cz.artique.shared.model.shortcut.Shortcut;
+import cz.artique.shared.model.shortcut.ShortcutType;
 
 public class ListFilterDialog {
 
@@ -63,9 +66,46 @@ public class ListFilterDialog {
 		final ListFilter value = editor.getValue();
 		if (proper) {
 			if (value.getKey() == null) {
-				Managers.LIST_FILTERS_MANAGER.addListFilter(value, null);
+				Managers.LIST_FILTERS_MANAGER.addListFilter(value,
+					new AsyncCallback<ListFilter>() {
+						public void onSuccess(ListFilter result) {
+							if (value.getShortcutStroke() != null
+								&& !value.getShortcutStroke().isEmpty()) {
+								Shortcut s = new Shortcut();
+								s.setKeyStroke(value.getShortcutStroke());
+								s.setType(ShortcutType.LIST_FILTER);
+								s.setReferenced(result.getKey());
+								Managers.SHORTCUTS_MANAGER.createShortcut(s,
+									null);
+							}
+						}
+
+						public void onFailure(Throwable caught) {
+							// silently discard shortcut
+						}
+					});
 			} else {
 				Managers.LIST_FILTERS_MANAGER.updateListFilter(value, null);
+				Shortcut s =
+					Managers.SHORTCUTS_MANAGER.getByReferenced(value.getKey());
+				Shortcut s2 = null;
+				if (value.getShortcutStroke() != null
+					&& !value.getShortcutStroke().isEmpty()) {
+					s2 = new Shortcut();
+					s2.setKeyStroke(value.getShortcutStroke());
+					s2.setType(ShortcutType.LIST_FILTER);
+					s2.setReferenced(value.getKey());
+				}
+				if (s == null && s2 != null) {
+					Managers.SHORTCUTS_MANAGER.createShortcut(s2, null);
+				} else if (s != null && s2 == null) {
+					Managers.SHORTCUTS_MANAGER.deleteShortcut(s, null);
+				} else if (s != null && s2 != null) {
+					if (!s.getKeyStroke().equals(s2.getKeyStroke())) {
+						Managers.SHORTCUTS_MANAGER.deleteShortcut(s, null);
+						Managers.SHORTCUTS_MANAGER.createShortcut(s2, null);
+					}
+				}
 			}
 		} else {
 			String token = CachingHistoryUtils.UTILS.serializeListFilter(value);

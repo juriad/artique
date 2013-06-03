@@ -22,7 +22,9 @@ import com.google.gwt.user.datepicker.client.DateBox;
 
 import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.common.OptionalValue;
+import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.ListFilter;
+import cz.artique.shared.model.shortcut.Shortcut;
 
 public class ListFilterEditor extends Composite
 		implements HasEnabled, HasValue<ListFilter> {
@@ -59,6 +61,9 @@ public class ListFilterEditor extends Composite
 
 	@UiField
 	ListFilterOrderPicker orderPicker;
+
+	@UiField
+	OptionalValue<TextBox, String> shortcut;
 
 	private Key listFilterKey;
 	private Key filterKey;
@@ -120,6 +125,8 @@ public class ListFilterEditor extends Composite
 		lf.setUser(ArtiqueWorld.WORLD.getUser());
 		lf.setKey(listFilterKey);
 		lf.setFilter(filterKey);
+
+		lf.setShortcutStroke(shortcut.getValue());
 		return lf;
 	}
 
@@ -136,6 +143,11 @@ public class ListFilterEditor extends Composite
 		readPicker.setValue(ReadState.get(read));
 		orderPicker.setValue(value.getOrder());
 
+		Shortcut cut =
+			Managers.SHORTCUTS_MANAGER.getByReferenced(value.getKey());
+		value.setShortcutStroke(cut != null ? cut.getKeyStroke() : null);
+		shortcut.setValue(value.getShortcutStroke());
+
 		listFilterKey = value.getKey();
 		filterKey = value.getFilter();
 	}
@@ -147,6 +159,15 @@ public class ListFilterEditor extends Composite
 	public void setProper(boolean proper) {
 		for (int i = 0; i < 3; i++) {
 			Element element = grid.getRowFormatter().getElement(i);
+			if (proper) {
+				element.getStyle().clearDisplay();
+			} else {
+				element.getStyle().setDisplay(Display.NONE);
+			}
+		}
+		{
+			Element element =
+				grid.getRowFormatter().getElement(grid.getRowCount() - 1);
 			if (proper) {
 				element.getStyle().clearDisplay();
 			} else {

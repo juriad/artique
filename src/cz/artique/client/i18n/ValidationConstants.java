@@ -1654,6 +1654,54 @@ public interface ValidationConstants extends ConstantsWithLookup {
 	String CreateShortcut_TYPE_OK();
 
 	@DefaultStringValue("---")
+	String CreateShortcut_REFERENCED_INVALID_VALUE();
+
+	@DefaultStringValue("Referenced object cannot be null for this type of shortcut.")
+	String CreateShortcut_REFERENCED_EMPTY_OR_NULL();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_REFERENCED_TOO_LONG();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_REFERENCED_ALREADY_EXISTS();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_REFERENCED_SECURITY_BREACH();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_REFERENCED_WRONG_TYPE();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_REFERENCED_UNKNOWN();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_REFERENCED_OK();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_ACTION_INVALID_VALUE();
+
+	@DefaultStringValue("Shortcut action cannot be null for this type of shortcut.")
+	String CreateShortcut_ACTION_EMPTY_OR_NULL();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_ACTION_TOO_LONG();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_ACTION_ALREADY_EXISTS();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_ACTION_SECURITY_BREACH();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_ACTION_WRONG_TYPE();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_ACTION_UNKNOWN();
+
+	@DefaultStringValue("---")
+	String CreateShortcut_ACTION_OK();
+
+	@DefaultStringValue("---")
 	String CreateShortcut_GENERAL_INVALID_VALUE();
 
 	@DefaultStringValue("---")

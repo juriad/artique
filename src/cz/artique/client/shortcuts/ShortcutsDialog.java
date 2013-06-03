@@ -42,4 +42,11 @@ public class ShortcutsDialog {
 		dialog.setWidth("100%");
 		dialog.center();
 	}
+
+	/**
+	 * Called by ActionShortcutDialog
+	 */
+	public void reload() {
+		editor.setValue();
+	}
 }

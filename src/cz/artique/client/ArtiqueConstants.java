@@ -38,4 +38,7 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("Edit labels")
 	String editLabelsButton();
+
+	@DefaultStringValue("Edit shortcuts")
+	String editShortcutsButton();
 }

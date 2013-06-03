@@ -59,6 +59,9 @@ public class Label
 	@Attribute(unindexed = true)
 	private int priority;
 
+	@Attribute(persistent = false)
+	private String shortcutStroke;
+
 	/**
 	 * Apperiance of this label
 	 */
@@ -229,5 +232,13 @@ public class Label
 
 	public void setToBeDeleted(boolean toBeDeleted) {
 		this.toBeDeleted = toBeDeleted;
+	}
+
+	public String getShortcutStroke() {
+		return shortcutStroke;
+	}
+
+	public void setShortcutStroke(String shortcutStroke) {
+		this.shortcutStroke = shortcutStroke;
 	}
 }

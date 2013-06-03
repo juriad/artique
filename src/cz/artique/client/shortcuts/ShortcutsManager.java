@@ -31,7 +31,7 @@ public class ShortcutsManager
 	public static final ShortcutsManager MANAGER = new ShortcutsManager();
 
 	private Map<String, Shortcut> keystrokes = new HashMap<String, Shortcut>();
-	private Map<Key, Shortcut> shortcuts = new HashMap<Key, Shortcut>();
+	private Map<Key, Shortcut> referenced = new HashMap<Key, Shortcut>();
 
 	public ShortcutsManager() {
 		super(GWT
@@ -95,7 +95,9 @@ public class ShortcutsManager
 						String normalized =
 							normalizeKeyStroke(cut.getKeyStroke());
 						keystrokes.put(normalized, cut);
-						shortcuts.put(cut.getKey(), cut);
+						if (cut.getReferenced() != null) {
+							referenced.put(cut.getReferenced(), cut);
+						}
 					}
 				}
 
@@ -127,7 +129,7 @@ public class ShortcutsManager
 			}
 			return listFilterByKey != null;
 		default:
-			return false;
+			return true;
 		}
 	}
 
@@ -142,6 +144,10 @@ public class ShortcutsManager
 
 	public Map<String, Shortcut> getAllShortcuts() {
 		return keystrokes;
+	}
+
+	public Shortcut getByReferenced(Key referencedKey) {
+		return referenced.get(referencedKey);
 	}
 
 	public void deleteShortcut(final Shortcut value,
@@ -160,7 +166,9 @@ public class ShortcutsManager
 			public void onSuccess(Void result) {
 				String normalized = normalizeKeyStroke(value.getKeyStroke());
 				keystrokes.remove(normalized);
-				shortcuts.remove(value.getKey());
+				if (value.getReferenced() != null) {
+					referenced.remove(value.getReferenced());
+				}
 
 				new ValidationMessage<DeleteShortcut>(DeleteShortcut.GENERAL)
 					.onSuccess();
@@ -189,7 +197,9 @@ public class ShortcutsManager
 					String normalized =
 						normalizeKeyStroke(result.getKeyStroke());
 					keystrokes.put(normalized, result);
-					shortcuts.put(value.getKey(), result);
+					if (result.getReferenced() != null) {
+						referenced.put(result.getReferenced(), result);
+					}
 				}
 
 				new ValidationMessage<CreateShortcut>(CreateShortcut.GENERAL)

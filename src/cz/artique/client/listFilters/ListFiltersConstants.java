@@ -57,4 +57,7 @@ public interface ListFiltersConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("Unread")
 	String readState_UNREAD();
+	
+	@DefaultStringValue("Shortcut")
+	String shortcut();
 }

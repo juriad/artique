@@ -54,6 +54,9 @@ public class ListFilter
 
 	private String exportAlias;
 
+	@Attribute(persistent = false)
+	private String shortcutStroke;
+
 	/**
 	 * Returns the key.
 	 * 
@@ -226,5 +229,13 @@ public class ListFilter
 		clone.setStartFrom(startFrom);
 		clone.setUser(user);
 		return clone;
+	}
+
+	public String getShortcutStroke() {
+		return shortcutStroke;
+	}
+
+	public void setShortcutStroke(String shortcutStroke) {
+		this.shortcutStroke = shortcutStroke;
 	}
 }

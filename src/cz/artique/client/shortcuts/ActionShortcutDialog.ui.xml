@@ -8,14 +8,19 @@
 	<c:StopDialog ui:field="dialog" autoHideEnabled="true"
 		modal="true" width="50%" height="50%">
 		<g:caption>
-			<ui:text from='{res.shortcutsEditor}' />
+			<ui:text from='{res.actionShortcutEditor}' />
 		</g:caption>
 		<g:VerticalPanel>
-			<a:ShortcutsEditor ui:field="editor" />
+			<a:ActionShortcutEditor ui:field="editor" />
 			<g:HorizontalPanel>
 				<g:cell horizontalAlignment="ALIGN_RIGHT" width="100%">
-					<g:Button ui:field="closeButton">
-						<ui:text from="{res.closeButton}" />
+					<g:Button ui:field="saveButton">
+						<ui:text from="{res.saveButton}" />
+					</g:Button>
+				</g:cell>
+				<g:cell horizontalAlignment="ALIGN_RIGHT">
+					<g:Button ui:field="cancelButton">
+						<ui:text from="{res.cancelButton}" />
 					</g:Button>
 				</g:cell>
 			</g:HorizontalPanel>

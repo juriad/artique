@@ -34,6 +34,7 @@ import cz.artique.shared.model.label.BackupLevel;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelAppearance;
 import cz.artique.shared.model.label.LabelType;
+import cz.artique.shared.model.shortcut.Shortcut;
 
 public class LabelsEditor extends Composite implements HasValue<List<Label>> {
 	private static LabelsEditorUiBinder uiBinder = GWT
@@ -78,6 +79,9 @@ public class LabelsEditor extends Composite implements HasValue<List<Label>> {
 
 	@UiField
 	BackupLevelPicker backupLevel;
+
+	@UiField
+	OptionalValue<TextBox, String> shortcut;
 
 	private Map<Key, Label> changes = new HashMap<Key, Label>();
 
@@ -148,6 +152,17 @@ public class LabelsEditor extends Composite implements HasValue<List<Label>> {
 		setFields();
 	}
 
+	@UiHandler("shortcut")
+	protected void shortcutChanged(ValueChangeEvent<String> event) {
+		Label selected = getLabel(selectionModel.getSelectedObject());
+		if (selected == null) {
+			return;
+		}
+		selected.setShortcutStroke(event.getValue());
+		changes.put(selected.getKey(), selected);
+		setFields();
+	}
+
 	public List<Label> getValue() {
 		List<Label> result = new ArrayList<Label>(changes.values());
 		return result;
@@ -159,6 +174,11 @@ public class LabelsEditor extends Composite implements HasValue<List<Label>> {
 		setFields();
 		List<Label> labels =
 			Managers.LABELS_MANAGER.getLabels(LabelType.USER_DEFINED);
+		for (Label l : labels) {
+			Shortcut cut =
+				Managers.SHORTCUTS_MANAGER.getByReferenced(l.getKey());
+			l.setShortcutStroke(cut != null ? cut.getKeyStroke() : null);
+		}
 		cellList.setRowData(labels);
 	}
 
@@ -176,6 +196,7 @@ public class LabelsEditor extends Composite implements HasValue<List<Label>> {
 			l.setLabelType(label.getLabelType());
 			l.setToBeDeleted(label.isToBeDeleted());
 			l.setPriority(label.getPriority());
+			l.setShortcutStroke(label.getShortcutStroke());
 		}
 		return l;
 	}
@@ -187,14 +208,16 @@ public class LabelsEditor extends Composite implements HasValue<List<Label>> {
 			name.setEnabled(false);
 			name.setText("");
 			foregroundColor.setEnabled(false);
-			foregroundColor.setValue(null);
+			foregroundColor.setValue(null, false);
 			backgroundColor.setEnabled(false);
-			backgroundColor.setValue(null);
+			backgroundColor.setValue(null, false);
 			markedToDelete.setText(constants.deleteNo());
 			deleteButton.setEnabled(false);
 			deleteButton.setText(constants.mark());
-			backupLevel.setValue(BackupLevel.NO_BACKUP);
+			backupLevel.setValue(BackupLevel.NO_BACKUP, false);
 			backupLevel.setEnabled(false);
+			shortcut.setEnabled(false);
+			shortcut.setValue(null, false);
 		} else {
 			name.setEnabled(false);
 			name.setText(selected.getDisplayName());
@@ -217,6 +240,8 @@ public class LabelsEditor extends Composite implements HasValue<List<Label>> {
 				deleteButton.setEnabled(true);
 				markedToDelete.setText(constants.deleteNo());
 			}
+			shortcut.setEnabled(true);
+			shortcut.setValue(selected.getShortcutStroke(), false);
 		}
 	}
 

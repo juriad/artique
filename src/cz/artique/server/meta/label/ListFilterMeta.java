@@ -1,6 +1,6 @@
 package cz.artique.server.meta.label;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-03 09:56:56")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-03 13:58:39")
 /** */
 public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.label.ListFilter> {
 
@@ -185,6 +185,10 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
             writer.setNextPropertyName("read");
             encoder0.encode(writer, m.getRead());
         }
+        if(m.getShortcutStroke() != null){
+            writer.setNextPropertyName("shortcutStroke");
+            encoder0.encode(writer, m.getShortcutStroke());
+        }
         if(m.getStartFrom() != null){
             writer.setNextPropertyName("startFrom");
             encoder0.encode(writer, m.getStartFrom());
@@ -223,6 +227,8 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         m.setOrder(decoder0.decode(reader, m.getOrder(), cz.artique.shared.model.label.ListFilterOrder.class));
         reader = rootReader.newObjectReader("read");
         m.setRead(decoder0.decode(reader, m.getRead()));
+        reader = rootReader.newObjectReader("shortcutStroke");
+        m.setShortcutStroke(decoder0.decode(reader, m.getShortcutStroke()));
         reader = rootReader.newObjectReader("startFrom");
         m.setStartFrom(decoder0.decode(reader, m.getStartFrom()));
         reader = rootReader.newObjectReader("user");
