@@ -1,6 +1,5 @@
-package cz.artique.client.artiqueListing;
+package cz.artique.client.listing;
 
-import com.google.appengine.api.datastore.Key;
 import com.google.code.gwteyecandy.Tooltip;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -8,22 +7,16 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 
 import cz.artique.client.labels.LabelsBar;
-import cz.artique.client.listing.AbstractRowWidget;
-import cz.artique.client.listing.RowWidget;
-import cz.artique.client.listing.RowWidgetFactory;
 import cz.artique.shared.model.item.UserItem;
 
-public class UserItemRow extends AbstractRowWidget<UserItem, Key> {
+public class UserItemRow extends RowWidget {
 
-	public static final UserItemRowFactory factory = new UserItemRowFactory();
+	public static final UserItemRowFactory FACTORY = new UserItemRowFactory();
 
-	public static class UserItemRowFactory
-			implements RowWidgetFactory<UserItem, Key> {
-
-		public RowWidget<UserItem, Key> createWidget(UserItem data) {
+	public static class UserItemRowFactory {
+		public RowWidget createWidget(UserItem data) {
 			return new UserItemRow(data);
 		}
-
 	}
 
 	private LabelsBar labels;
@@ -39,7 +32,7 @@ public class UserItemRow extends AbstractRowWidget<UserItem, Key> {
 		labels = new LabelsBar(data);
 		header.add(labels);
 
-		title = new Label(getData(false).getItemObject().getTitle());
+		title = new Label(getValue().getItemObject().getTitle());
 		title.setStylePrimaryName("rowTitle");
 		header.add(title);
 		setHeader(header);
@@ -50,12 +43,11 @@ public class UserItemRow extends AbstractRowWidget<UserItem, Key> {
 			}
 		});
 
-		content =
-			new Label(getData(false).getItemObject().getContent().getValue());
+		content = new Label(getValue().getItemObject().getContent().getValue());
 		setContent(content);
 
 		Tooltip tt = new Tooltip();
-		tt.setText(getData(false).getItemObject().getContentType().toString());
+		tt.setText(getValue().getItemObject().getContentType().toString());
 		tt.attachTo(content);
 	}
 
@@ -67,15 +59,8 @@ public class UserItemRow extends AbstractRowWidget<UserItem, Key> {
 		}
 	}
 
-	@Override
-	public void setNewData(UserItem e) {
-		e.setItemObject(getData(true).getItemObject());
-		super.setNewData(e);
-	}
+	public void refresh() {
+		// TODO Auto-generated method stub
 
-	@Override
-	protected void newDataSet() {
-		UserItem newDate = consumeNewData();
-		labels.setNewData(newDate);
 	}
 }

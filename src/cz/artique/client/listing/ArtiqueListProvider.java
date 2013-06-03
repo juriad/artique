@@ -1,10 +1,9 @@
-package cz.artique.client.artiqueListing;
+package cz.artique.client.listing;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
 import cz.artique.client.items.ModifiedEvent;
 import cz.artique.client.items.ModifiedHandler;
-import cz.artique.client.listing.InfiniteList;
 import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.items.ListingResponse;
@@ -12,13 +11,12 @@ import cz.artique.shared.model.config.ClientConfigKey;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.ListFilter;
 
-public class ArtiqueListProvider extends AbstractListDataProvider
+public class ArtiqueListProvider extends InfiniteListDataProvider
 		implements ModifiedHandler {
 
 	private HandlerRegistration addGeneralClickHandler;
 
-	public ArtiqueListProvider(ListFilter listFilter,
-			InfiniteList<UserItem> list) {
+	public ArtiqueListProvider(ListFilter listFilter, InfiniteList list) {
 		super(listFilter, list);
 		addGeneralClickHandler =
 			Managers.ITEMS_MANAGER.addGeneralClickHandler(this);

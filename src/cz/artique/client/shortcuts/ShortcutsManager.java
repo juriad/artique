@@ -1,20 +1,27 @@
 package cz.artique.client.shortcuts;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.event.dom.client.KeyCodeEvent;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 
+import cz.artique.client.history.CachingHistoryUtils;
+import cz.artique.client.history.HistoryItem;
 import cz.artique.client.manager.AbstractManager;
 import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
-import cz.artique.client.messages.Message;
 import cz.artique.client.messages.MessageType;
 import cz.artique.client.messages.ValidationMessage;
 import cz.artique.client.service.ClientShortcutService;
@@ -27,7 +34,8 @@ import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.shortcut.Shortcut;
 
 public class ShortcutsManager
-		extends AbstractManager<ClientShortcutServiceAsync> {
+		extends AbstractManager<ClientShortcutServiceAsync>
+		implements HasShortcutHandlers {
 	public static final ShortcutsManager MANAGER = new ShortcutsManager();
 
 	private Map<String, Shortcut> keystrokes = new HashMap<String, Shortcut>();
@@ -41,41 +49,83 @@ public class ShortcutsManager
 				refresh(null);
 			}
 		}, Managers.LABELS_MANAGER, Managers.LIST_FILTERS_MANAGER);
+
+		addShortcutHandler(new ShortcutHandler() {
+			public void onShortcut(ShortcutEvent e) {
+				String token = null;
+				ListFilter listFilter = null;
+
+				switch (e.getShortcut().getType()) {
+				case ACTION:
+					switch (e.getShortcut().getAction()) {
+					case CLEAR_FILTER:
+						listFilter =
+							Managers.HISTORY_MANAGER.getBaseListFilter();
+						break;
+					case TOTAL_CLEAR_FILTER:
+						listFilter = new ListFilter();
+						break;
+					case REFRESH:
+						HistoryItem lastHistoryItem =
+							Managers.HISTORY_MANAGER.getLastHistoryItem();
+						if (lastHistoryItem != null) {
+							listFilter = lastHistoryItem.getListFilter();
+							token = lastHistoryItem.getToken();
+						}
+						break;
+					default:
+						break;
+					}
+					break;
+				case LIST_FILTER:
+					listFilter = e.getShortcut().getReferencedListFilter();
+					break;
+				default:
+					break;
+				}
+				if (listFilter != null) {
+					if (token == null) {
+						token =
+							CachingHistoryUtils.UTILS
+								.serializeListFilter(listFilter);
+					}
+					Managers.HISTORY_MANAGER.setListFilter(listFilter, token);
+				}
+			}
+		});
 	}
 
-	private final KeyPressHandler handler = new KeyPressHandler() {
-		public void onKeyPress(KeyPressEvent event) {
-			String stroke = "+" + event.getCharCode();
-			if (event.isShiftKeyDown()) {
-				stroke = "S" + stroke;
-			}
-			if (event.isMetaKeyDown()) {
-				stroke = "M" + stroke;
-			}
-			if (event.isControlKeyDown()) {
-				stroke = "C" + stroke;
-			}
-			if (event.isAltKeyDown()) {
-				stroke = "A" + stroke;
-			}
-
-			Shortcut shortcut = keystrokes.get(stroke);
-			if (shortcut != null) {
-				processShortcut(shortcut);
-				event.preventDefault();
-				event.stopPropagation();
-			}
-			// XXX
-			Managers.MESSAGES_MANAGER.addMessage(new Message(MessageType.WARN,
-				stroke), false);
+	private Shortcut getShortcut(KeyEvent<?> event) {
+		String stroke;
+		if (event instanceof KeyPressEvent) {
+			stroke = "+" + ((KeyPressEvent) event).getCharCode();
+		} else if (event instanceof KeyCodeEvent) {
+			stroke = "+$" + ((KeyCodeEvent<?>) event).getNativeKeyCode();
+		} else {
+			stroke = ""; // will never happen
 		}
 
-		private void processShortcut(Shortcut shortcut) {
-			// TODO
-			Managers.MESSAGES_MANAGER.addMessage(new Message(MessageType.WARN,
-				shortcut.getKeyStroke()), false);
+		if (event.isShiftKeyDown()) {
+			stroke = "S" + stroke;
 		}
-	};
+		if (event.isMetaKeyDown()) {
+			stroke = "M" + stroke;
+		}
+		if (event.isControlKeyDown()) {
+			stroke = "C" + stroke;
+		}
+		if (event.isAltKeyDown()) {
+			stroke = "A" + stroke;
+		}
+		Shortcut shortcut = keystrokes.get(stroke);
+		return shortcut;
+	}
+
+	private void processShortcut(Shortcut shortcut) {
+		for (int i = 0; i < handlers.size(); i++) {
+			handlers.get(i).onShortcut(new ShortcutEvent(shortcut));
+		}
+	}
 
 	public void refresh(final AsyncCallback<Void> ping) {
 		assumeOnline();
@@ -138,7 +188,26 @@ public class ShortcutsManager
 		if (isReady()) {
 			return;
 		}
-		RootPanel.get().addDomHandler(handler, KeyPressEvent.getType());
+		RootPanel.get().addDomHandler(new KeyDownHandler() {
+			public void onKeyDown(KeyDownEvent event) {
+				Shortcut shortcut = getShortcut(event);
+				if (shortcut != null) {
+					processShortcut(shortcut);
+					event.preventDefault();
+					event.stopPropagation();
+				}
+			}
+		}, KeyDownEvent.getType());
+		RootPanel.get().addDomHandler(new KeyPressHandler() {
+			public void onKeyPress(KeyPressEvent event) {
+				Shortcut shortcut = getShortcut(event);
+				if (shortcut != null) {
+					processShortcut(shortcut);
+					event.preventDefault();
+					event.stopPropagation();
+				}
+			}
+		}, KeyPressEvent.getType());
 		super.setReady();
 	}
 
@@ -218,13 +287,27 @@ public class ShortcutsManager
 		String[] split = keyStroke.split("\\+", 2);
 		if (split.length < 2) {
 			// does not contain modifiers (separator is plus sign)
-			return "+" + keyStroke;
+			KeyCodesEnum byName =
+				KeyCodesEnum.getByName(keyStroke.toUpperCase());
+			if (byName == null) {
+				return "+" + keyStroke;
+			} else {
+				return "+$" + byName.getCode();
+			}
 		} else if (split[1].length() == 0) {
 			// contains plus sign but it is character not separator
 			return "+" + keyStroke;
 		} else {
 			String mod = split[0];
-			String stroke = "+" + split[1];
+			KeyCodesEnum byName =
+				KeyCodesEnum.getByName(keyStroke.toUpperCase());
+			String stroke;
+			if (byName == null) {
+				stroke = "+" + split[1];
+			} else {
+				stroke = "+$" + byName.getCode();
+			}
+
 			if (mod.contains("S") || mod.contains("s")) {
 				stroke = "S" + stroke;
 			}
@@ -239,5 +322,16 @@ public class ShortcutsManager
 			}
 			return stroke;
 		}
+	}
+
+	private List<ShortcutHandler> handlers = new ArrayList<ShortcutHandler>();
+
+	public HandlerRegistration addShortcutHandler(final ShortcutHandler handler) {
+		handlers.add(handler);
+		return new HandlerRegistration() {
+			public void removeHandler() {
+				handlers.remove(handler);
+			}
+		};
 	}
 }

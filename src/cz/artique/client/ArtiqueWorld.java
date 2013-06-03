@@ -5,9 +5,9 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.client.artiqueListing.ArtiqueList;
 import cz.artique.client.hierarchy.tree.SourcesTree;
 import cz.artique.client.i18n.I18n;
+import cz.artique.client.listing.ArtiqueList;
 import cz.artique.client.manager.Managers;
 import cz.artique.client.messages.Message;
 import cz.artique.client.messages.MessageType;

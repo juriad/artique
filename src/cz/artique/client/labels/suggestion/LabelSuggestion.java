@@ -84,6 +84,7 @@ public class LabelSuggestion extends Composite
 					tab(event);
 					break;
 				}
+				event.stopPropagation();
 			}
 		});
 
@@ -96,6 +97,13 @@ public class LabelSuggestion extends Composite
 					oldText = textBox.getText();
 					textChanged();
 				}
+				event.stopPropagation();
+			}
+		});
+
+		textBox.addKeyPressHandler(new KeyPressHandler() {
+			public void onKeyPress(KeyPressEvent event) {
+				event.stopPropagation();
 			}
 		});
 
@@ -108,12 +116,6 @@ public class LabelSuggestion extends Composite
 				if (popup.isVisible()) {
 					popup.setFocused(-1);
 				}
-			}
-		});
-
-		textBox.addKeyPressHandler(new KeyPressHandler() {
-			public void onKeyPress(KeyPressEvent event) {
-				event.stopPropagation();
 			}
 		});
 

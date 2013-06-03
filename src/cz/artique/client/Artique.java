@@ -10,15 +10,14 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.StackLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import cz.artique.client.artiqueListing.ArtiqueList;
-import cz.artique.client.artiqueListing.ArtiqueListProvider;
-import cz.artique.client.artiqueListing.UserItemRow;
 import cz.artique.client.hierarchy.tree.HistoryTree;
 import cz.artique.client.hierarchy.tree.ListFiltersTree;
 import cz.artique.client.hierarchy.tree.SourcesTree;
 import cz.artique.client.history.HistoryEvent;
 import cz.artique.client.history.HistoryHandler;
 import cz.artique.client.i18n.I18n;
+import cz.artique.client.listing.ArtiqueList;
+import cz.artique.client.listing.ArtiqueListProvider;
 import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
 import cz.artique.client.messages.Message;
@@ -60,7 +59,7 @@ public class Artique extends Composite {
 	}
 
 	public Artique() {
-		list = new ArtiqueList(UserItemRow.factory);
+		list = new ArtiqueList();
 		initWidget(uiBinder.createAndBindUi(this));
 		ArtiqueWorld.WORLD.setList(list);
 		ArtiqueWorld.WORLD.setSourcesTree(sources);

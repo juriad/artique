@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:al="urn:import:cz.artique.client.artiqueListing"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:al="urn:import:cz.artique.client.listing"
 	xmlns:ah="urn:import:cz.artique.client.hierarchy.tree" xmlns:m="urn:import:cz.artique.client.messages"
 	xmlns:a="urn:import:cz.artique.client">
 

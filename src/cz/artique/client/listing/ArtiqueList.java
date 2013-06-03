@@ -1,6 +1,5 @@
-package cz.artique.client.artiqueListing;
+package cz.artique.client.listing;
 
-import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
@@ -10,19 +9,13 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 
-import cz.artique.client.listing.RowWidget;
-import cz.artique.client.listing.RowWidgetFactory;
-import cz.artique.client.listing.ScrollEndEvent;
 import cz.artique.client.listing.ScrollEndEvent.ScrollEndType;
-import cz.artique.client.listing.ScrollEndHandler;
-import cz.artique.client.listing.WidgetList;
-import cz.artique.shared.model.item.UserItem;
 
-public class ArtiqueList extends WidgetList<UserItem, Key> {
+public class ArtiqueList extends InfiniteList {
 
 	public class SelectionHandler implements Handler {
 		public void onSelectionChange(SelectionChangeEvent event) {
-			RowWidget<UserItem, Key> selectedRowWidget = getSelectedRowWidget();
+			RowWidget selectedRowWidget = getSelectedRowWidget();
 			if (selectedRowWidget != null) {
 				int offsetTop =
 					selectedRowWidget.asWidget().getElement().getOffsetTop();
@@ -46,7 +39,7 @@ public class ArtiqueList extends WidgetList<UserItem, Key> {
 			}
 			if (ScrollEndType.NEAR_BOTTOM.equals(event.getScrollEndType())
 				|| ScrollEndType.BOTTOM.equals(event.getScrollEndType())) {
-				if (!isRowCountExact()) {
+				if (!isEndReached()) {
 					GWT.log("near bottom or bottom");
 					getProvider().fetch(-1);
 				}
@@ -54,8 +47,7 @@ public class ArtiqueList extends WidgetList<UserItem, Key> {
 		}
 	}
 
-	public ArtiqueList(RowWidgetFactory<UserItem, Key> factory) {
-		super(factory);
+	public ArtiqueList() {
 
 		scrollPanel.setWidth("100%");
 		scrollPanel.setHeight(Window.getClientHeight() + "px");
