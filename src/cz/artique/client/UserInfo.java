@@ -10,6 +10,7 @@ public class UserInfo implements Serializable {
 	private String loginUrl;
 	private String logoutUrl;
 	private User user;
+	private String clientToken;
 
 	public UserInfo() {}
 
@@ -35,5 +36,13 @@ public class UserInfo implements Serializable {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public String getClientToken() {
+		return clientToken;
+	}
+
+	public void setClientToken(String clientToken) {
+		this.clientToken = clientToken;
 	}
 }

@@ -1,7 +1,5 @@
 package cz.artique.client.hierarchy.tree;
 
-import com.google.code.gwteyecandy.Tooltip;
-import com.google.code.gwteyecandy.Tooltip.TooltipPosition;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Anchor;
@@ -47,8 +45,7 @@ public class AbstractHierarchyTreeWidget<E extends HasHierarchy & HasName>
 			anchor.addClickHandler(clickHandler);
 		}
 		if (tooltip != null) {
-			Tooltip tt = addTooltip(tooltip);
-			tt.attachTo(anchor);
+			anchor.setTitle(tooltip);
 		}
 		return anchor;
 	}
@@ -61,8 +58,7 @@ public class AbstractHierarchyTreeWidget<E extends HasHierarchy & HasName>
 			label.addClickHandler(clickHandler);
 		}
 		if (tooltip != null) {
-			Tooltip tt = addTooltip(tooltip);
-			tt.attachTo(label);
+			label.setTitle(tooltip);
 		}
 		return label;
 	}
@@ -81,17 +77,9 @@ public class AbstractHierarchyTreeWidget<E extends HasHierarchy & HasName>
 			image.addClickHandler(clickHandler);
 		}
 		if (tooltip != null) {
-			Tooltip tt = addTooltip(tooltip);
-			tt.attachTo(image);
+			image.setTitle(tooltip);
 		}
 		return image;
-	}
-
-	protected Tooltip addTooltip(String tooltip) {
-		Tooltip tt = new Tooltip();
-		tt.setPosition(TooltipPosition.RIGHT_MIDDLE);
-		tt.setText(tooltip);
-		return tt;
 	}
 
 	protected boolean selected = false;

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -121,7 +120,6 @@ public class ArtiqueList extends InfiniteList {
 			if (ScrollEndType.NEAR_BOTTOM.equals(event.getScrollEndType())
 				|| ScrollEndType.BOTTOM.equals(event.getScrollEndType())) {
 				if (!isEndReached()) {
-					GWT.log("near bottom or bottom");
 					getProvider().fetch(-1);
 				}
 			}

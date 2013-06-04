@@ -8,4 +8,7 @@ public interface ListingConstants extends ConstantsWithLookup {
 	
 	@DefaultStringValue("Published")
 	String published();
+
+	@DefaultStringValue("Content is missing.")
+	String missingContent();
 }

@@ -252,7 +252,7 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 	}
 
 	protected void selectSource(UserSource result) {
-		// TODO nice to have selected source after creating or update
+		// TODO nice to have: selected source after creating or update
 	}
 
 	public void getRegions(Key source, final AsyncCallback<List<Region>> ping) {

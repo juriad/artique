@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<datastore-indexes autoGenerate="false">
+	<!-- source check -->
+	<datastore-index kind="Source" ancestor="false">
+		<property name="enabled" direction="asc" />
+		<property name="nextCheck" direction="asc" />
+	</datastore-index>
+
+	<datastore-index kind="Source" ancestor="false">
+		<property name="enabled" direction="asc" />
+		<property name="errorSequence" direction="asc" />
+	</datastore-index>
+
+
+	<!-- descending -->
+	<datastore-index kind="UserItem" ancestor="false">
+		<property name="user" direction="asc" />
+		<property name="__key__" direction="desc" />
+	</datastore-index>
+
+	<datastore-index kind="UserItem" ancestor="false">
+		<property name="labels" direction="asc" />
+		<property name="user" direction="asc" />
+		<property name="__key__" direction="desc" />
+	</datastore-index>
+
+	<datastore-index kind="UserItem" ancestor="false">
+		<property name="labels" direction="asc" />
+		<property name="read" direction="asc" />
+		<property name="user" direction="asc" />
+		<property name="__key__" direction="desc" />
+	</datastore-index>
+
+	<datastore-index kind="UserItem" ancestor="false">
+		<property name="read" direction="asc" />
+		<property name="user" direction="asc" />
+		<property name="__key__" direction="desc" />
+	</datastore-index>
+
+
+	<!-- ascending -->
+	<datastore-index kind="UserItem" ancestor="false">
+		<property name="labels" direction="asc" />
+		<property name="user" direction="asc" />
+	</datastore-index>
+
+	<datastore-index kind="UserItem" ancestor="false">
+		<property name="labels" direction="asc" />
+		<property name="read" direction="asc" />
+		<property name="user" direction="asc" />
+	</datastore-index>
+
+</datastore-indexes>

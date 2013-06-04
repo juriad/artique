@@ -15,6 +15,7 @@ import cz.artique.client.hierarchy.tree.ListFiltersTree;
 import cz.artique.client.hierarchy.tree.SourcesTree;
 import cz.artique.client.history.HistoryEvent;
 import cz.artique.client.history.HistoryHandler;
+import cz.artique.client.history.HistoryItem;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.listing.ArtiqueList;
 import cz.artique.client.listing.ArtiqueListProvider;
@@ -65,21 +66,26 @@ public class Artique extends Composite {
 		ArtiqueWorld.WORLD.setSourcesTree(sources);
 
 		initHistory();
+		// initClient();
 	}
+
+//	private void initClient() {
+//		Element head = Document.get().getElementsByTagName("head").getItem(0);
+//		MetaElement clientMeta = Document.get().createMetaElement();
+//	}
 
 	private void initHistory() {
 		// change list provider when history changes
 		Managers.HISTORY_MANAGER.addHistoryHandler(new HistoryHandler() {
 			public void onHistoryChanged(HistoryEvent e) {
-				ListFilter listFilter =
-					Managers.HISTORY_MANAGER
-						.getLastHistoryItem()
-						.getListFilter();
-				if (listFilter != null) {
-					new ArtiqueListProvider(listFilter, list);
+				HistoryItem hi = Managers.HISTORY_MANAGER.getLastHistoryItem();
+				ListFilter listFilter;
+				if (hi == null) {
+					listFilter = new ListFilter();
 				} else {
-					// TODO log error
+					listFilter = hi.getListFilter();
 				}
+				new ArtiqueListProvider(listFilter, list);
 			}
 		});
 
@@ -111,6 +117,7 @@ public class Artique extends Composite {
 	protected void showPanel() {
 		Element parent = stack.getElement().getParentElement();
 		parent.addClassName("leftPanel");
+		stack.setStyleName("leftPanelInner", true);
 
 		String panel =
 			Managers.CONFIG_MANAGER

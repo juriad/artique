@@ -1,6 +1,9 @@
 package cz.artique.client.sources;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.google.appengine.api.datastore.Key;
 
 import cz.artique.client.labels.AbstractLabelsBar;
 import cz.artique.client.labels.LabelWidget;
@@ -60,9 +63,12 @@ public class SourceLabelsBar extends AbstractLabelsBar {
 
 	public void setNewData(UserSource userSource) {
 		this.source = userSource;
+		List<Key> defaultLabels = userSource.getDefaultLabels();
+		if (defaultLabels == null) {
+			defaultLabels = new ArrayList<Key>();
+		}
 		List<Label> newList =
-			Managers.LABELS_MANAGER
-				.getSortedList(userSource.getDefaultLabels());
+			Managers.LABELS_MANAGER.getSortedList(defaultLabels);
 
 		removeAllLabels();
 

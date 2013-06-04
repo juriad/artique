@@ -3,6 +3,7 @@ package cz.artique.client.listing.row;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import cz.artique.client.labels.AbstractLabelsBar;
@@ -78,8 +79,11 @@ public class UserItemLabelsBar extends AbstractLabelsBar {
 
 	public void setNewData(UserItem userItem) {
 		this.item = userItem;
-		List<Label> newList =
-			Managers.LABELS_MANAGER.getSortedList(userItem.getLabels());
+		List<Key> labels2 = userItem.getLabels();
+		if (labels2 == null) {
+			labels2 = new ArrayList<Key>();
+		}
+		List<Label> newList = Managers.LABELS_MANAGER.getSortedList(labels2);
 		List<Label> oldList = new ArrayList<Label>(getLabels());
 
 		List<Label> newListCopy = new ArrayList<Label>(newList);

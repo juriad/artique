@@ -5,6 +5,7 @@ public enum ContentType {
 	HTML("text/html");
 
 	private static final String HTML_REGEX = "(?i)html";
+	private static final String PLAIN_REGEX = "(?i)plain";
 
 	private final String type;
 
@@ -12,11 +13,20 @@ public enum ContentType {
 		this.type = type;
 	}
 
-	public static ContentType guess(String name) {
-		if (name.matches(HTML_REGEX)) {
-			return HTML;
+	public static ContentType guess(String name, String content) {
+		if (name != null) {
+			if (name.matches(HTML_REGEX)) {
+				return HTML;
+			}
+			if (name.matches(PLAIN_REGEX)) {
+				return PLAIN_TEXT;
+			}
 		}
-		return PLAIN_TEXT;
+		if (content.contains("<") && content.contains(">")) {
+			return HTML;
+		} else {
+			return PLAIN_TEXT;
+		}
 	}
 
 	public String getType() {

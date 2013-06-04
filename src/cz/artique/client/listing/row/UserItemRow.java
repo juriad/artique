@@ -2,16 +2,20 @@ package cz.artique.client.listing.row;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Link;
+import com.google.appengine.api.datastore.Text;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.i18n.shared.DateTimeFormat.PredefinedFormat;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.text.client.DateTimeFormatRenderer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 
@@ -19,6 +23,7 @@ import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.listing.ListingConstants;
 import cz.artique.client.manager.Managers;
+import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.source.UserSource;
@@ -37,7 +42,7 @@ public class UserItemRow extends RowWidget {
 	private FlowPanel header;
 
 	private Label title;
-	private Label content;
+	private HTMLPanel content;
 	private Label source;
 	private Label added;
 
@@ -73,7 +78,30 @@ public class UserItemRow extends RowWidget {
 
 		setHeader(header);
 
-		content = new Label(getValue().getItemObject().getContent().getValue());
+		SafeHtml contentHTML = SafeHtmlUtils.EMPTY_SAFE_HTML;
+		Text contentText = getValue().getItemObject().getContent();
+		if (contentText != null && contentText.getValue() != null) {
+			ContentType contentType =
+				getValue().getItemObject().getContentType();
+			if (contentType != null) {
+				switch (contentType) {
+				case HTML:
+					contentHTML =
+						SafeHtmlUtils.fromTrustedString(contentText.getValue());
+					break;
+				case PLAIN_TEXT:
+					contentHTML =
+						SafeHtmlUtils.fromString(contentText.getValue());
+					break;
+				default:
+					break;
+				}
+			}
+		} else {
+			I18n.getListingConstants().missingContent();
+		}
+
+		content = new HTMLPanel(contentHTML);
 		setContent(content);
 
 		addOpenHandler(new OpenHandler<RowWidget>() {
@@ -88,15 +116,16 @@ public class UserItemRow extends RowWidget {
 
 	private Anchor createLinkAnchor() {
 		Image open = new Image(ArtiqueWorld.WORLD.getResources().open());
-		open.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				openOriginal();
-			}
-		});
 		Anchor link = new Anchor();
 		link.setStylePrimaryName("itemLink");
 		link.getElement().appendChild(open.getElement());
-		link.setHref(getValue().getItemObject().getContent().getValue());
+		link.setHref(getValue().getItemObject().getUrl().getValue());
+		link.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				openOriginal();
+				event.preventDefault();
+			}
+		});
 		return link;
 	}
 

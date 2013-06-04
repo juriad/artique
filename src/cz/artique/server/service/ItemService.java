@@ -183,6 +183,7 @@ public class ItemService {
 
 	private ModelQuery<UserItem> getBaseQuery(ListFilter listFilter,
 			FilterCriterion fc, User user) {
+		// FIXME needs index
 		UserItemMeta meta = UserItemMeta.get();
 
 		ModelQuery<UserItem> query =

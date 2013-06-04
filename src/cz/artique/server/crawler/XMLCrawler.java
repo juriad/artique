@@ -13,6 +13,7 @@ import org.apache.http.client.methods.HttpGet;
 
 import com.google.appengine.api.datastore.Link;
 import com.google.appengine.api.datastore.Text;
+import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.FeedException;
@@ -105,8 +106,13 @@ public class XMLCrawler extends AbstractCrawler<XMLSource, ArticleItem> {
 	protected ArticleItem getItem(SyndEntry entry) {
 		ArticleItem a = new ArticleItem(getSource());
 		a.setTitle(entry.getTitle());
-		a.setContent(new Text(entry.getDescription().getValue()));
-		a.setContentType(ContentType.guess(entry.getDescription().getType()));
+
+		SyndContent description = entry.getDescription();
+		if (description != null) {
+			a.setContent(new Text(description.getValue()));
+			a.setContentType(ContentType.guess(description.getType(),
+				description.getValue()));
+		}
 		a.setAuthor(entry.getAuthor());
 		a.setPublished(entry.getPublishedDate());
 		a.setHash(getHash(entry));

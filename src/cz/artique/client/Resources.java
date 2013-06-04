@@ -8,7 +8,7 @@ import com.google.gwt.resources.client.ImageResource;
 public interface Resources extends ClientBundle {
 
 	@NotStrict
-	@Source("test-css.css")
+	@Source("style.css")
 	CssResource css();
 
 	@Source("icons/edit-find.png")

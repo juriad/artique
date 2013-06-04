@@ -45,18 +45,15 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 		pings = new HashMap<Key, AsyncCallback<UserItem>>();
 
 		timer = new Timer() {
-
 			@Override
 			public void run() {
 				refresh(null);
 			}
 		};
 
-		// TODO timer settings: 3 seconds
+		// TODO nice to have: configure timeout for
 		timer.scheduleRepeating(Math.max(getTimeout(), 3000));
-
 		HistoryManager.HISTORY.addHistoryHandler(new HistoryHandler() {
-
 			public void onHistoryChanged(HistoryEvent e) {
 				refresh(null);
 			}
@@ -172,10 +169,12 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 					if (someFailed) {
 						new ValidationMessage<UpdateItems>(UpdateItems.GENERAL)
 							.onFailure(new RuntimeException(
-								"show error even if some passed"));
+								"force show error even if some passed"));
 					} else {
-						new ValidationMessage<UpdateItems>(UpdateItems.GENERAL)
-							.onSuccess(MessageType.DEBUG);
+						// do not spam in messages
+						// new
+						// ValidationMessage<UpdateItems>(UpdateItems.GENERAL)
+						// .onSuccess(MessageType.DEBUG);
 					}
 
 					if (ping != null) {
@@ -195,7 +194,7 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 				changeSet = copyChangeSets.get(key);
 				changeSets.put(key, changeSet);
 			} else {
-				// XXX replay changeSet onto failed?
+				// TODO nice to have: replay changeSet when failed
 				ChangeSet failed = copyChangeSets.get(key);
 				for (Key al : failed.getLabelsAdded()) {
 					changeSet.addLabel(al);

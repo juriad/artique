@@ -124,14 +124,18 @@
 }
 
 .rowContent {
-	background-color: #dff0f8;
-	margin: 1em;
+	background-color: white;
+	padding: 1em;
 }
 
 .itemTitle {
 	font-weight: bold;
 	font-size: 110%;
 	padding-top: 0.3em;
+}
+
+.row.row-unread .itemTitle {
+	font-style: italic;
 }
 
 .row-selected .itemTitle {
@@ -142,8 +146,8 @@
 	float: left;
 	width: 24px;
 	margin: 0px 1em;
-	opacity: 0.5;
-	filter: alpha(opacity \= 50);
+	opacity: 0.3;
+	filter: alpha(opacity \= 30);
 }
 
 .itemLink:hover {
@@ -238,6 +242,10 @@
 	width: 30em !important;
 }
 
+.leftPanelInner {
+	width: 30em;
+}
+
 /* dialogs */
 .cellList {
 	width: 15em;
@@ -245,6 +253,6 @@
 
 /* main */
 .infiniteList {
-	opacity: 0.90;
-	filter: alpha(opacity \= 90)
+	opacity: 0.95;
+	filter: alpha(opacity \= 95)
 }

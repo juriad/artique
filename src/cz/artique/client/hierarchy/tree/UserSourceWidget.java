@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.code.gwteyecandy.Tooltip;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -115,27 +114,24 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 				// root node
 				final Image showHideDisabled = new Image();
 				getPanel().add(showHideDisabled);
-				final Tooltip tt = addTooltip("");
-				tt.attachTo(showHideDisabled);
 
 				showHideDisabled.addClickHandler(new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						ArtiqueWorld.WORLD.getSourcesTree().toggleDisabled();
-						setShowHideDisabled(showHideDisabled, tt);
+						setShowHideDisabled(showHideDisabled);
 					}
 				});
-				setShowHideDisabled(showHideDisabled, tt);
+				setShowHideDisabled(showHideDisabled);
 			}
 
 			String sourceFolderTooltip =
 				I18n.getHierarchyTreeConstants().sourceFolderTooltip();
-			Tooltip folderTooltip = addTooltip(sourceFolderTooltip);
-			folderTooltip.attachTo(anchor);
+			anchor.setTitle(sourceFolderTooltip);
 		}
 		refresh();
 	}
 
-	private void setShowHideDisabled(Image image, Tooltip tt) {
+	private void setShowHideDisabled(Image image) {
 		HierarchyTreeConstants constants = I18n.getHierarchyTreeConstants();
 		boolean showingDisabled =
 			ArtiqueWorld.WORLD.getSourcesTree().isShowingDisabled();
@@ -148,7 +144,7 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 			tooltip = constants.showDisabledSourcesTooltip();
 			ir = ArtiqueWorld.WORLD.getResources().showDisabled();
 		}
-		tt.setText(tooltip);
+		image.setTitle(tooltip);
 		image.setResource(ir);
 		image.setStylePrimaryName("hiddenAction");
 	}
