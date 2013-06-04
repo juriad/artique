@@ -22,7 +22,6 @@ import cz.artique.client.history.HistoryItem;
 import cz.artique.client.manager.AbstractManager;
 import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
-import cz.artique.client.messages.Message;
 import cz.artique.client.messages.MessageType;
 import cz.artique.client.messages.ValidationMessage;
 import cz.artique.client.service.ClientShortcutService;
@@ -123,8 +122,6 @@ public class ShortcutsManager
 	}
 
 	private void processShortcut(Shortcut shortcut) {
-		Managers.MESSAGES_MANAGER.addMessage(new Message(MessageType.WARN,
-			shortcut.getKeyStroke()+": "+shortcut.getAction()), false);
 		for (int i = 0; i < handlers.size(); i++) {
 			handlers.get(i).onShortcut(new ShortcutEvent(shortcut));
 		}

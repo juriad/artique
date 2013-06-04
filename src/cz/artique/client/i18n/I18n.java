@@ -6,6 +6,7 @@ import cz.artique.client.ArtiqueConstants;
 import cz.artique.client.hierarchy.tree.HierarchyTreeConstants;
 import cz.artique.client.labels.LabelsConstants;
 import cz.artique.client.listFilters.ListFiltersConstants;
+import cz.artique.client.listing.ListingConstants;
 import cz.artique.client.shortcuts.ShortcutsConstants;
 import cz.artique.client.sources.SourcesConstants;
 
@@ -30,6 +31,9 @@ public class I18n {
 	private static final ShortcutsConstants SHORTCUTS_CONSTANTS = GWT
 		.create(ShortcutsConstants.class);
 
+	private static final ListingConstants LISTING_CONSTANTS = GWT
+		.create(ListingConstants.class);
+
 	public static SourcesConstants getSourcesConstants() {
 		return SOURCES_CONSTANTS;
 	}
@@ -52,5 +56,9 @@ public class I18n {
 
 	public static ShortcutsConstants getShortcutsConstants() {
 		return SHORTCUTS_CONSTANTS;
+	}
+
+	public static ListingConstants getListingConstants() {
+		return LISTING_CONSTANTS;
 	}
 }

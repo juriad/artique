@@ -1,14 +1,21 @@
 /* panel with more */
-.panelWithMore {
+.row .panelWithMore {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	-o-text-overflow: ellipsis;
 	position: absolute;
+	line-height: 1.7em;
 }
 
-.panelWithMore-expanded,.panelWithMore:hover {
+.row .panelWithMore-expanded {
+	z-index: 15;
+	overflow: visible;
+}
+
+.panelWithMore:hover {
 	z-index: 10;
+	overflow: visible;
 }
 
 /* close button */
@@ -37,63 +44,123 @@
 }
 
 /* labels bar */
-.labelsBar {
+.row .labelsBar {
 	float: left;
 	width: 15em;
 	height: 100%;
 }
 
-.labelsBar .panelWithMore {
+.row .labelsBar .panelWithMore {
+	float: left;
 	width: 15em;
-	background-color: orange;
+	background-color: #cfe0f1;
 }
 
-.labelsBar .panelWithMore-expanded,.panelWithMore:hover {
+.row.row-unread .labelsBar .panelWithMore {
+	background-color: #eff0f8;
+}
+
+.row.row-selected .labelsBar .panelWithMore {
+	background-color: #ffffe0;
+}
+
+.row .labelsBar .panelWithMore-expanded,.panelWithMore:hover {
 	width: auto;
 }
 
-.labelsBar .addButton {
+.row .labelsBar .addButton {
 	display: none;
-	margin: 0px 0.5em;
 }
 
-.labelsBar:hover .addButton {
+.row .labelsBar:hover .addButton {
 	display: inline;
 }
 
-.label,.labels-bar-suggest-box {
+.label,.addButton,.labelSuggestionBox {
 	margin: 0px 0.5em;
 }
 
-.labels-bar-suggest-box {
-	display: inline;
+.labelSuggestion {
+	position: relative;
+	display: inline-block;
+}
+
+.labelSuggestionPopup {
+	margin-left: 0.5em;
+	position: absolute;
+	z-index: 20;
+	border: 1px solid #73c8f1;
+	line-height: 1.2em;
+	background-color: white;
+}
+
+.suggestionLabel {
+	padding: 0.1em 0.5em;
+	display: block;
+	cursor: pointer;
+}
+
+.suggestionLabel-selected {
+	background-color: #73c8f1;
 }
 
 /* row */
 .row {
-	border: 1px solid blue;
-	background-color: orange;
+	border: 1px solid #73c8f1;
+	background-color: #cfe0f1;
 	width: 100%;
-	opacity: 0.95;
-	filter: alpha(opacity \= 90)
+}
+
+.row.row-unread {
+	background-color: #eff0f8;
+}
+
+.row.row-selected {
+	background-color: #ffffe0;
 }
 
 .rowHeader {
 	height: 2em;
-	line-height: 1.9em;
 }
 
 .rowContent {
-	background-color: red;
+	background-color: #dff0f8;
 	margin: 1em;
 }
 
-.row-expanded .rowTitle {
+.itemTitle {
 	font-weight: bold;
+	font-size: 110%;
+	padding-top: 0.3em;
 }
 
-.rowTitle {
-	margin-left: 15em;
+.row-selected .itemTitle {
+	font-size: 120%;
+}
+
+.itemLink {
+	float: left;
+	width: 24px;
+	margin: 0px 1em;
+	opacity: 0.5;
+	filter: alpha(opacity \= 50);
+}
+
+.itemLink:hover {
+	opacity: 1;
+	filter: alpha(opacity \= 100);
+}
+
+.itemDate {
+	float: right;
+	width: 10em;
+	line-height: 1.7em;
+}
+
+.itemSource {
+	float: right;
+	width: 10em;
+	line-height: 1.7em;
 }
 
 /* message */
@@ -174,4 +241,10 @@
 /* dialogs */
 .cellList {
 	width: 15em;
+}
+
+/* main */
+.infiniteList {
+	opacity: 0.90;
+	filter: alpha(opacity \= 90)
 }

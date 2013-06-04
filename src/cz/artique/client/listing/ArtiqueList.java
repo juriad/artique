@@ -14,6 +14,7 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 
 import cz.artique.client.listing.ScrollEndEvent.ScrollEndType;
+import cz.artique.client.listing.row.RowWidget;
 import cz.artique.client.manager.Managers;
 import cz.artique.client.shortcuts.ShortcutEvent;
 import cz.artique.client.shortcuts.ShortcutHandler;
@@ -34,19 +35,8 @@ public class ArtiqueList extends InfiniteList {
 					}
 				}
 					break;
-				case MARK_READ_ALL: {
-					int selectedIndex = getSelectedIndex();
-					for (int i = 0; i <= selectedIndex; i++) {
-						RowWidget row = getRow(i);
-						UserItem value = row.getValue();
-						boolean read = value.isRead();
-						if (!read) {
-							value.setRead(true);
-							row.setValue(value);
-							Managers.ITEMS_MANAGER.readSet(value, true, null);
-						}
-					}
-				}
+				case MARK_READ_ALL:
+					markAllRead();
 					break;
 				case NEXT_ITEM: {
 					int selectedIndex1 =
@@ -176,6 +166,20 @@ public class ArtiqueList extends InfiniteList {
 		this.addSelectionChangeHandler(new SelectionHandler());
 		this.addScrollEndHandler(new EndHandler());
 		Managers.SHORTCUTS_MANAGER.addShortcutHandler(new MyShortcutHandler());
+	}
+
+	public void markAllRead() {
+		int selectedIndex = getSelectedIndex();
+		for (int i = 0; i <= selectedIndex; i++) {
+			RowWidget row = getRow(i);
+			UserItem value = row.getValue();
+			boolean read = value.isRead();
+			if (!read) {
+				value.setRead(true);
+				row.setValue(value);
+				Managers.ITEMS_MANAGER.readSet(value, true, null);
+			}
+		}
 	}
 
 	@Override

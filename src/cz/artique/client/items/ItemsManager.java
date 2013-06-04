@@ -122,8 +122,8 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 				ping.onSuccess(userItem);
 			}
 		} else {
-			userItem.setRead(read);
 			ChangeSet changeSet = getChangeSet(userItem);
+			userItem.setRead(read);
 			if (changeSet.setRead(read)) {
 				if (ping != null) {
 					pings.put(userItem.getKey(), ping);

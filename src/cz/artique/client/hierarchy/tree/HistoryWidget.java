@@ -80,6 +80,6 @@ public class HistoryWidget extends AbstractHierarchyTreeWidget<HistoryItem> {
 					}
 				}
 			}, null);
-		// TODO tooltip
+		// TODO nice to have: tooltip v historii
 	}
 }

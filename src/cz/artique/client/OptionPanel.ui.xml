@@ -15,5 +15,11 @@
 		<g:Button ui:field="editShortcutsButton">
 			<ui:text from="{cons.editShortcutsButton}" />
 		</g:Button>
+		<g:Button ui:field="markAllReadButton">
+			<ui:text from="{cons.markAllReadButton}" />
+		</g:Button>
+		<g:Button ui:field="refreshButton">
+			<ui:text from="{cons.refreshButton}" />
+		</g:Button>
 	</g:FlowPanel>
 </ui:UiBinder>

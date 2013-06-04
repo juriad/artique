@@ -13,7 +13,9 @@ public class LabelSuggestionFactory {
 	private final LabelRenderer renderer = new LabelRenderer(true);
 
 	public ValueLabel<Label> createLabel() {
-		return new ValueLabel<Label>(renderer);
+		ValueLabel<Label> valueLabel = new ValueLabel<Label>(renderer);
+		valueLabel.setStylePrimaryName("suggestionLabel");
+		return valueLabel;
 	}
 
 }

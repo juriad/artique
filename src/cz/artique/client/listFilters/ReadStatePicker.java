@@ -9,6 +9,6 @@ public class ReadStatePicker extends EnumRadioPicker<ReadState> {
 
 	@UiConstructor
 	public ReadStatePicker() {
-		super(ReadState.READ, "readState", I18n.getListFiltersConstants());
+		super(ReadState.UNREAD, "readState", I18n.getListFiltersConstants());
 	}
 }

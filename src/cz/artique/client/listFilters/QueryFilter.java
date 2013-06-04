@@ -11,6 +11,7 @@ import com.google.appengine.api.users.User;
 
 import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.labels.LabelWidget;
+import cz.artique.client.labels.suggestion.LabelsPool;
 import cz.artique.client.labels.suggestion.SuggestionResult;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.Filter;
@@ -19,8 +20,20 @@ import cz.artique.shared.model.label.Label;
 
 public class QueryFilter extends AbstractQueryFilter {
 
+	private static class MyLabelsPool implements LabelsPool {
+		public boolean isNewValueAllowed() {
+			return false;
+		}
+
+		public List<Label> fullTextSearch(String text) {
+			return Managers.LABELS_MANAGER.fullTextSearch(text,
+				Managers.LABELS_MANAGER.getLabels(null));
+		}
+
+	}
+
 	public QueryFilter() {
-		super(LabelWidget.FACTORY);
+		super(new MyLabelsPool());
 	}
 
 	@Override
@@ -66,13 +79,7 @@ public class QueryFilter extends AbstractQueryFilter {
 
 	@Override
 	protected Label getAddedLabel(SuggestionResult selectedItem) {
-		if (selectedItem.isHasValue()) {
-			if (selectedItem.isExisting()) {
-				return selectedItem.getExistingValue();
-			}
-		}
-		// ignore non existing
-		return null;
+		return selectedItem.getExistingValue();
 	}
 
 	@Override
@@ -126,5 +133,10 @@ public class QueryFilter extends AbstractQueryFilter {
 			keys.add(l.getKey());
 		}
 		return keys;
+	}
+
+	@Override
+	protected LabelWidget createWidget(Label l) {
+		return LabelWidget.FACTORY.createWidget(l);
 	}
 }

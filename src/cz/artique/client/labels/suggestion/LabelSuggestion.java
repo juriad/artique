@@ -21,7 +21,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
-import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.Label;
 
 public class LabelSuggestion extends Composite
@@ -31,32 +30,30 @@ public class LabelSuggestion extends Composite
 	private final SuggestionPopup popup;
 
 	private boolean complete = false;
-	private boolean allowNewValue;
-	private List<Label> allLabels;
+	private LabelsPool pool;
 
-	public LabelSuggestion(List<Label> allLabels, boolean allowNewValue) {
-		this.allLabels = allLabels;
-		this.allowNewValue = allowNewValue;
+	public LabelSuggestion(LabelsPool pool, int maxItems) {
+		this.pool = pool;
 
 		FlowPanel panel = new FlowPanel();
 		initWidget(panel);
 
 		textBox = new TextBox();
 		panel.add(textBox);
+		textBox.setStylePrimaryName("labelSuggestionBox");
 
-		// TODO settings maxItems in poput: 20
-		popup = new SuggestionPopup(20);
+		popup = new SuggestionPopup(maxItems);
 		panel.add(popup);
+		setStylePrimaryName("labelSuggestion");
 
 		textBox.addBlurHandler(new BlurHandler() {
-
 			public void onBlur(BlurEvent event) {
 				if (complete) {
 					return;
 				}
 				if (popup.isVisible() && popup.isMouseOver()) {
 					// clicked on a suggestion
-					// wait for GeneralClickEvent
+					// wait for SelectionEvent
 				} else {
 					saveNewValue();
 				}
@@ -78,18 +75,16 @@ public class LabelSuggestion extends Composite
 				case KeyCodes.KEY_ESCAPE:
 					cancel();
 					event.preventDefault();
-					event.stopPropagation();
 					break;
 				case KeyCodes.KEY_TAB:
 					tab(event);
 					break;
 				}
-				event.stopPropagation();
+				event.stopPropagation(); // disable global shortcuts
 			}
 		});
 
 		textBox.addKeyUpHandler(new KeyUpHandler() {
-
 			private String oldText = null;
 
 			public void onKeyUp(KeyUpEvent event) {
@@ -97,18 +92,17 @@ public class LabelSuggestion extends Composite
 					oldText = textBox.getText();
 					textChanged();
 				}
-				event.stopPropagation();
+				event.stopPropagation(); // disable global shortcuts
 			}
 		});
 
 		textBox.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
-				event.stopPropagation();
+				event.stopPropagation(); // disable global shortcuts
 			}
 		});
 
 		textBox.addMouseOverHandler(new MouseOverHandler() {
-
 			public void onMouseOver(MouseOverEvent event) {
 				if (complete) {
 					return;
@@ -120,7 +114,6 @@ public class LabelSuggestion extends Composite
 		});
 
 		popup.addSelectionHandler(new SelectionHandler<Label>() {
-
 			public void onSelection(SelectionEvent<Label> e) {
 				if (complete) {
 					return;
@@ -143,10 +136,10 @@ public class LabelSuggestion extends Composite
 	protected void saveNewValue() {
 		complete();
 
-		if (allowNewValue) {
-			if (textBox.getValue().trim().isEmpty()) {
+		if (pool.isNewValueAllowed()) {
+			if (textBox.getValue().trim().isEmpty()) { // no chance
 				SelectionEvent.fire(this, new SuggestionResult());
-			} else {
+			} else { // might work
 				SelectionEvent.fire(this, new SuggestionResult(textBox
 					.getValue()
 					.trim()));
@@ -170,15 +163,9 @@ public class LabelSuggestion extends Composite
 	protected void textChanged() {
 		String text = textBox.getText();
 		if (text.length() > 0) {
-			List<Label> prefixes =
-				Managers.LABELS_MANAGER.fullTextSearch(text, allLabels);
-			popup.setData(prefixes);
-
-			if (prefixes.isEmpty()) {
-				popup.setVisible(false);
-			} else {
-				popup.setVisible(true);
-			}
+			List<Label> results = pool.fullTextSearch(text);
+			popup.setData(results);
+			popup.setVisible(results.size() > 0);
 		} else {
 			popup.setVisible(false);
 		}
@@ -186,13 +173,16 @@ public class LabelSuggestion extends Composite
 
 	protected void tab(KeyDownEvent event) {
 		if (popup.isVisible()) {
-			if (popup.getSelectedValue() == null) {
-				popup.setFocused(0);
+			Label selectedValue = popup.getSelectedValue();
+			if (selectedValue == null) {
+				selectedValue = popup.getFirstAvaliable();
 			}
-			textBox.setText(popup.getSelectedValue().getDisplayName());
+			if (selectedValue == null) {
+				return;
+			}
+			textBox.setText(selectedValue.getDisplayName());
 			textChanged();
 			event.preventDefault();
-			event.stopPropagation();
 		}
 	}
 
@@ -218,10 +208,6 @@ public class LabelSuggestion extends Composite
 		return addHandler(handler, SelectionEvent.getType());
 	}
 
-	public void focus() {
-		textBox.setFocus(true);
-	}
-
 	private void complete() {
 		if (complete) {
 			return;
@@ -229,5 +215,12 @@ public class LabelSuggestion extends Composite
 		complete = true;
 		popup.setVisible(false);
 		textBox.setFocus(false);
+	}
+
+	public void focus() {
+		textBox.setValue(null);
+		textChanged();
+		complete = false;
+		textBox.setFocus(true);
 	}
 }

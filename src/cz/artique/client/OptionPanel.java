@@ -11,7 +11,9 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
+import cz.artique.client.history.HistoryItem;
 import cz.artique.client.labels.LabelsDialog;
+import cz.artique.client.manager.Managers;
 import cz.artique.client.shortcuts.ShortcutsDialog;
 
 public class OptionPanel extends Composite {
@@ -32,6 +34,12 @@ public class OptionPanel extends Composite {
 	@UiField
 	Button editShortcutsButton;
 
+	@UiField
+	Button markAllReadButton;
+
+	@UiField
+	Button refreshButton;
+
 	public OptionPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
 		userName.setText(ArtiqueWorld.WORLD.getUser().getNickname());
@@ -47,4 +55,20 @@ public class OptionPanel extends Composite {
 	protected void editShortcutsButtonClicked(ClickEvent event) {
 		ShortcutsDialog.DIALOG.showDialog();
 	}
+
+	@UiHandler("markAllReadButton")
+	protected void markAllReadButtonClicked(ClickEvent event) {
+		ArtiqueWorld.WORLD.getList().markAllRead();
+	}
+
+	@UiHandler("refreshButton")
+	protected void refreshButtonClicked(ClickEvent event) {
+		HistoryItem lastHistoryItem =
+			Managers.HISTORY_MANAGER.getLastHistoryItem();
+		if (lastHistoryItem != null) {
+			Managers.HISTORY_MANAGER.setListFilter(
+				lastHistoryItem.getListFilter(), lastHistoryItem.getToken());
+		}
+	}
+
 }

@@ -10,7 +10,6 @@ public class LabelRenderer extends AbstractRenderer<Label> {
 
 	public LabelRenderer(boolean descriptive) {
 		this.descriptive = descriptive;
-
 	}
 
 	public String render(Label object) {

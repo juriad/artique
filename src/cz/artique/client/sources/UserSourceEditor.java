@@ -1,7 +1,10 @@
 package cz.artique.client.sources;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Link;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Display;
@@ -30,6 +33,7 @@ import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.Managers;
 import cz.artique.client.messages.Message;
 import cz.artique.client.messages.MessageType;
+import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.SourceType;
@@ -60,8 +64,8 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 	@UiField
 	TextBox hierarchy;
 
-	// @UiField
-	// ArtiqueLabelsBar defaultLabels;
+	@UiField
+	SourceLabelsBar defaultLabels;
 
 	@UiField
 	InlineLabel lastCheck;
@@ -127,7 +131,13 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		us.setCrawlerData(userSource.getCrawlerData());
 		us.setLabel(userSource.getLabel());
 
-		// TODO default labels
+		List<Label> allLabels = defaultLabels.getLabels();
+		List<Key> labelKeys = new ArrayList<Key>();
+		for (Label l : allLabels) {
+			labelKeys.add(l.getKey());
+		}
+		// source label will be added to default labels on server
+		us.setDefaultLabels(labelKeys);
 
 		UserSource regUs = region.getValue();
 		if (regUs.getRegionObject() != null) {
@@ -202,7 +212,9 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		setWatch();
 		hierarchy.setValue(userSource.getHierarchy());
 
-		// TODO defaultLabels
+		UserSource us = new UserSource();
+		us.setDefaultLabels(userSource.getDefaultLabels());
+		defaultLabels.setNewData(us);
 
 		region.setValue(userSource);
 		if (userSource.getKey() != null && type.getRegionType() != null

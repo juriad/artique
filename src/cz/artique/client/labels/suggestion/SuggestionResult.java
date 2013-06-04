@@ -5,28 +5,20 @@ import cz.artique.shared.model.label.Label;
 public class SuggestionResult {
 	private final Label existingValue;
 	private final String newValue;
-	private final boolean existing;
-	private final boolean hasValue;
 
 	public SuggestionResult(Label existingValue) {
 		this.existingValue = existingValue;
-		existing = true;
 		newValue = null;
-		hasValue = true;
 	}
 
 	public SuggestionResult(String newValue) {
 		existingValue = null;
-		existing = false;
 		this.newValue = newValue;
-		hasValue = true;
 	}
 
 	public SuggestionResult() {
 		existingValue = null;
-		existing = false;
 		newValue = null;
-		hasValue = false;
 	}
 
 	public Label getExistingValue() {
@@ -38,10 +30,14 @@ public class SuggestionResult {
 	}
 
 	public boolean isExisting() {
-		return existing;
+		return existingValue != null;
 	}
 
-	public boolean isHasValue() {
-		return hasValue;
+	public boolean isNewValue() {
+		return newValue != null;
+	}
+
+	public boolean hasValue() {
+		return isExisting()|| isNewValue();
 	}
 }

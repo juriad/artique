@@ -1,4 +1,4 @@
-package cz.artique.client.listing;
+package cz.artique.client.listing.row;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.event.logical.shared.CloseEvent;

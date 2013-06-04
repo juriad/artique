@@ -17,6 +17,8 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SelectionChangeEvent.HasSelectionChangedHandlers;
 
+import cz.artique.client.listing.row.RowWidget;
+import cz.artique.client.listing.row.UserItemRow;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;
 
@@ -51,6 +53,7 @@ public class InfiniteList extends Composite
 		scrollPanel = new ScrollPanel();
 		initWidget(scrollPanel);
 		scrollPanel.add(flowPanel);
+		flowPanel.setStylePrimaryName("infiniteList");
 		clear();
 	}
 
@@ -146,9 +149,9 @@ public class InfiniteList extends Composite
 			// selected changed
 			if (selected != null) {
 				RowWidget old = rows.get(selected);
+				old.removeStyleDependentName("selected");
 				if (old.isExpanded()) {
 					old.collapse();
-					old.removeStyleDependentName("selected");
 				} else {
 					expand = false;
 				}
@@ -158,7 +161,7 @@ public class InfiniteList extends Composite
 				newly.expand();
 			}
 			selected = key;
-			newly.removeStyleDependentName("selected");
+			newly.addStyleDependentName("selected");
 			SelectionChangeEvent.fire(this);
 		}
 	}

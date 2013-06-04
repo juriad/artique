@@ -64,7 +64,6 @@ public class SuggestionPopup extends Composite
 			ValueLabel<Label> l = LabelSuggestionFactory.FACTORY.createLabel();
 			l.setVisible(false);
 			l.addDomHandler(new ClickHandler() {
-
 				public void onClick(ClickEvent event) {
 					@SuppressWarnings("unchecked")
 					ValueLabel<Label> source =
@@ -73,7 +72,6 @@ public class SuggestionPopup extends Composite
 					setSelectedValue(value);
 					SelectionEvent.fire(SuggestionPopup.this, value);
 				}
-
 			}, ClickEvent.getType());
 			l.addDomHandler(new MouseHandlers(), MouseOverEvent.getType());
 			l.addDomHandler(new MouseHandlers(), MouseOutEvent.getType());
@@ -81,10 +79,12 @@ public class SuggestionPopup extends Composite
 			valueLabels.add(l);
 			panel.add(l);
 		}
+		
+		setStylePrimaryName("labelSuggestionPopup");
 
 		moreLabels = new com.google.gwt.user.client.ui.Label();
 		moreLabels.setVisible(false);
-		moreLabels.addStyleName("more");
+		moreLabels.addStyleName("labelSuggestionMore");
 		panel.add(moreLabels);
 	}
 
@@ -102,14 +102,19 @@ public class SuggestionPopup extends Composite
 			ValueLabel<Label> valueLabel = valueLabels.get(i);
 			valueLabel.setValue(labels.get(i));
 			valueLabel.setVisible(true);
+			valueLabel.setStyleDependentName("selected", false);
 		}
 		for (int i = actualSize; i < maxItems; i++) {
 			ValueLabel<Label> valueLabel = valueLabels.get(i);
 			valueLabel.setVisible(false);
+			valueLabel.setStyleDependentName("selected", false);
 		}
 
 		if (labels.size() > maxItems) {
+			moreLabels.setVisible(true);
 			moreLabels.setText("+ " + (labels.size() - maxItems));
+		} else {
+			moreLabels.setVisible(false);
 		}
 
 		focused = -1;
@@ -170,12 +175,12 @@ public class SuggestionPopup extends Composite
 		}
 
 		if (oldFocused >= 0) {
-			valueLabels.get(oldFocused).removeStyleName("selected");
+			valueLabels.get(oldFocused).setStyleDependentName("selected", false);
 		}
 
 		if (newFocused >= 0) {
 			ValueLabel<Label> valueLabel = valueLabels.get(newFocused);
-			valueLabel.addStyleName("selected");
+			valueLabel.setStyleDependentName("selected", true);
 			selectedValue = valueLabel.getValue();
 		} else {
 			selectedValue = null;

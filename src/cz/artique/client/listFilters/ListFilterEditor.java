@@ -85,7 +85,6 @@ public class ListFilterEditor extends Composite
 		name.setEnabled(enabled);
 		hierarchy.setEnabled(enabled);
 		exported.setEnabled(enabled);
-		filter.setEnabled(enabled);
 		startFrom.setEnabled(enabled);
 		endTo.setEnabled(enabled);
 		readPicker.setEnabled(enabled);

@@ -58,10 +58,9 @@
 			<g:cell>
 				<ui:text from='{res.defaultLabels}' />
 			</g:cell>
-			<!-- <g:customCell> -->
-			<!-- TODO default labels -->
-			<!-- <b:ArtiqueLabelsBar ui:field="defaultLabels" /> -->
-			<!-- </g:customCell> -->
+			<g:customCell>
+				<a:SourceLabelsBar ui:field="defaultLabels" />
+			</g:customCell>
 		</g:row>
 		<g:row>
 			<g:cell>

@@ -3,7 +3,6 @@ package cz.artique.client.labels;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
@@ -12,17 +11,16 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HasEnabled;
+import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.common.AddButton;
 import cz.artique.client.common.PanelWithMore;
 import cz.artique.client.labels.suggestion.LabelSuggestion;
+import cz.artique.client.labels.suggestion.LabelsPool;
 import cz.artique.client.labels.suggestion.SuggestionResult;
-import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.Label;
-import cz.artique.shared.model.label.LabelType;
 
-public abstract class AbstractLabelsBar extends Composite implements HasEnabled {
+public abstract class AbstractLabelsBar extends Composite {
 
 	class LabelCloseHandler implements CloseHandler<LabelWidget> {
 		public void onClose(CloseEvent<LabelWidget> e) {
@@ -31,22 +29,52 @@ public abstract class AbstractLabelsBar extends Composite implements HasEnabled 
 		}
 	}
 
-	private AddButton<AbstractLabelsBar> addLabel;
+	class LabelOpenHandler implements OpenHandler<AbstractLabelsBar> {
 
-	private List<Label> selectedLabels;
+		private LabelSuggestion box;
+
+		public void onOpen(OpenEvent<AbstractLabelsBar> _event) {
+			box = new LabelSuggestion(pool, 20);
+			panel.setExtraWidget(box);
+			panel.setExpanded(true);
+
+			box.addSelectionHandler(new SelectionHandler<SuggestionResult>() {
+				public void onSelection(SelectionEvent<SuggestionResult> event) {
+					SuggestionResult selectedItem = event.getSelectedItem();
+					if (selectedItem.hasValue()) {
+						if (selectedItem.isExisting()) {
+							labelSelected(selectedItem.getExistingValue());
+						} else {
+							newLabelSelected(selectedItem.getNewValue());
+						}
+					}
+					end();
+				}
+			});
+			box.focus();
+		}
+
+		private void end() {
+			panel.setExtraWidget(addLabel);
+			panel.setExpanded(false);
+		}
+	}
+
+	private final AddButton<AbstractLabelsBar> addLabel;
 
 	private final PanelWithMore<LabelWidget> panel;
-
-	private LabelWidgetFactory factory;
 
 	private final CloseHandler<LabelWidget> labelCloseHandler =
 		new LabelCloseHandler();
 
-	private boolean enabled = true;
+	private final LabelsPool pool;
 
-	public AbstractLabelsBar(LabelWidgetFactory factory) {
-		this.factory = factory;
-		selectedLabels = new ArrayList<Label>();
+	private List<Label> labels = new ArrayList<Label>();
+
+	private LabelOpenHandler labelOpenHandler;
+
+	public AbstractLabelsBar(final LabelsPool pool) {
+		this.pool = pool;
 		panel = new PanelWithMore<LabelWidget>();
 		FlowPanel flowPanel = new FlowPanel();
 		initWidget(flowPanel);
@@ -56,103 +84,52 @@ public abstract class AbstractLabelsBar extends Composite implements HasEnabled 
 
 		addLabel = AddButton.FACTORY.createWidget(this);
 		panel.setExtraWidget(addLabel);
-		addLabel.addOpenHandler(new OpenHandler<AbstractLabelsBar>() {
-
-			private List<Label> allLabels;
-
-			private LabelSuggestion box;
-
-			public void onOpen(OpenEvent<AbstractLabelsBar> event) {
-				allLabels =
-					Managers.LABELS_MANAGER.getLabels(LabelType.USER_DEFINED);
-				allLabels.removeAll(getSelectedLabels());
-
-				box = new LabelSuggestion(allLabels, true);
-				box.setStylePrimaryName("labels-bar-suggest-box");
-				panel.setExtraWidget(box);
-				panel.setExpanded(true);
-
-				box
-					.addSelectionHandler(new SelectionHandler<SuggestionResult>() {
-
-						public void onSelection(
-								SelectionEvent<SuggestionResult> event) {
-							GWT.log("on selection");
-							SuggestionResult selectedItem =
-								event.getSelectedItem();
-							if (selectedItem.isHasValue()) {
-								if (selectedItem.isExisting()) {
-									labelAdded(selectedItem.getExistingValue());
-								} else {
-									newLabelAdded(selectedItem.getNewValue());
-								}
-							}
-							end();
-						}
-
-					});
-				box.focus();
-			}
-
-			private void end() {
-				panel.setExtraWidget(addLabel);
-				panel.setExpanded(false);
-			}
-
-		});
+		labelOpenHandler = new LabelOpenHandler();
+		addLabel.addOpenHandler(labelOpenHandler);
 	}
 
-	protected void addLabel(Label label) {
-		getSelectedLabels().add(label);
-		LabelWidget labelWidget = factory.createWidget(label);
+	protected abstract LabelWidget createWidget(Label label);
+
+	public void addLabel(Label label) {
+		LabelWidget labelWidget = createWidget(label);
 		panel.insert(labelWidget);
 		labelWidget.addCloseHandler(labelCloseHandler);
+		labels.add(label);
 	}
 
-	protected void removeLabel(LabelWidget labelWidget) {
-		getSelectedLabels().remove(labelWidget.getLabel());
-		panel.remove(labelWidget);
-	}
-
-	protected void removeLabel(Label label) {
-		getSelectedLabels().remove(label);
+	public void removeLabel(Label label) {
 		for (LabelWidget w : panel.getWidgets()) {
 			if (w.getLabel().equals(label)) {
 				panel.remove(w);
 				break;
 			}
 		}
+		labels.remove(label);
 	}
 
-	protected abstract void newLabelAdded(String name);
+	protected void removeLabel(LabelWidget widget) {
+		panel.remove(widget);
+		labels.remove(widget.getLabel());
+	}
 
-	protected abstract void labelAdded(Label label);
+	protected abstract void newLabelSelected(String name);
+
+	protected abstract void labelSelected(Label label);
 
 	protected abstract void labelRemoved(LabelWidget labelWidget);
 
-	public List<Label> getSelectedLabels() {
-		return selectedLabels;
+	public List<Label> getLabels() {
+		return labels;
 	}
 
-	public boolean isEnabled() {
-		return enabled;
+	protected void removeAllLabels() {
+		Widget extraWidget = panel.getExtraWidget();
+		labels = new ArrayList<Label>();
+		panel.clear();
+		panel.setExtraWidget(extraWidget);
 	}
 
-	/**
-	 * Incorrect if new label is being added
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasEnabled#setEnabled(boolean)
-	 */
-	public void setEnabled(boolean enabled) {
-		if (enabled == this.enabled) {
-			return;
-		}
-		this.enabled = enabled;
-
-		for (LabelWidget labelWidget : panel.getWidgets()) {
-			labelWidget.setEnabled(enabled);
-		}
-
-		addLabel.setVisible(enabled);
+	public void openSuggestion() {
+		labelOpenHandler.onOpen(null);
 	}
 }
