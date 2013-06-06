@@ -37,6 +37,11 @@ public class UserSource
 	private User user;
 
 	/**
+	 * Fixes problem with unstable user.userId when storing and retrieving
+	 */
+	private String userId;
+
+	/**
 	 * Source side of this relation
 	 */
 	private Key source;
@@ -80,6 +85,7 @@ public class UserSource
 
 	public UserSource(User user, Source source, String name) {
 		setUser(user);
+		setUserId(user.getUserId());
 		setSource(source.getKey());
 		setName(name);
 		setHierarchy("/");
@@ -270,5 +276,13 @@ public class UserSource
 
 	public void setLabelObject(Label labelObject) {
 		this.labelObject = labelObject;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 }

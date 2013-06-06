@@ -69,6 +69,12 @@ public class SourceService {
 		return source;
 	}
 
+	public List<Source> getSourcesByKeys(Iterable<Key> keys) {
+		SourceMeta meta = SourceMeta.get();
+		List<Source> sources = Datastore.get(meta, keys);
+		return sources;
+	}
+
 	public ManualSource ensureManualSource() {
 		User user = UserServiceFactory.getUserService().getCurrentUser();
 		ManualSource manualSource = new ManualSource(user);

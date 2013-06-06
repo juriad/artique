@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 import cz.artique.client.history.CachingHistoryUtils;
 import cz.artique.client.history.HistoryItem;
+import cz.artique.client.items.ManualItemDialog;
 import cz.artique.client.manager.AbstractManager;
 import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
@@ -73,6 +74,8 @@ public class ShortcutsManager
 							token = lastHistoryItem.getToken();
 						}
 						break;
+					case ADD_MANUAL_ITEM:
+						ManualItemDialog.DIALOG.showDialog();
 					default:
 						break;
 					}

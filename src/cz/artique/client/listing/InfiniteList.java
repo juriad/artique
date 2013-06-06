@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SelectionChangeEvent.HasSelectionChangedHandlers;
 
+import cz.artique.client.listing.NewDataEvent.NewDataType;
 import cz.artique.client.listing.row.RowWidget;
 import cz.artique.client.listing.row.UserItemRow;
 import cz.artique.shared.model.item.Item;
@@ -66,11 +67,25 @@ public class InfiniteList extends Composite
 	}
 
 	public void appendValues(List<UserItem> values) {
-		tail.addAll(values);
+		if (values.size() > 0) {
+			tail.addAll(values);
+			NewDataEvent.fire(this, NewDataType.NEW_DATA_AVAILABLE);
+		}
 	}
 
 	public void prependValues(List<UserItem> values) {
-		head.addAll(0, values);
+		if (values.size() > 0) {
+			head.addAll(0, values);
+			NewDataEvent.fire(this, NewDataType.NEW_DATA_AVAILABLE);
+		}
+	}
+
+	public int getAvailableHeadSize() {
+		return head.size();
+	}
+
+	public int getAvailableTailSize() {
+		return tail.size();
 	}
 
 	public void setValue(UserItem value) {
@@ -87,15 +102,19 @@ public class InfiniteList extends Composite
 		if (l.size() > 0) {
 			head = new ArrayList<UserItem>();
 
+			int offsetHeight = flowPanel.getOffsetHeight();
 			for (UserItem e : l) {
 				RowWidget row = createRow(e);
 				flowPanel.insert(row, 0);
 				rows.put(row.getKey(), row);
 			}
 
-			NewDataEvent.fire(this);
-			rowsAdded();
+			int deltaHeight = flowPanel.getOffsetHeight() - offsetHeight;
+			scrollPanel.setVerticalScrollPosition(scrollPanel
+				.getVerticalScrollPosition() + deltaHeight);
 
+			rowsAdded();
+			NewDataEvent.fire(this, NewDataType.NEW_DATA_SHOWN);
 		}
 		return l.size();
 	}
@@ -111,8 +130,8 @@ public class InfiniteList extends Composite
 				rows.put(row.getKey(), row);
 			}
 
-			NewDataEvent.fire(this);
 			rowsAdded();
+			NewDataEvent.fire(this, NewDataType.NEW_DATA_SHOWN);
 		}
 		return l.size();
 	}

@@ -14,7 +14,9 @@ public enum ConfigKey implements GenKey {
 	CRAWLER_CHECK_INTERVAL_MIN("crawler.check-interval.min", ConfigType.INT,
 			10 * 60 * 1000),
 	CRAWLER_CHECK_INTERVAL_MAX("crawler.check-interval.max", ConfigType.INT,
-			12 * 60 * 60 * 1000);
+			12 * 60 * 60 * 1000),
+	CRAWLER_CHECK_INTERVAL_FAILED("crawler.check-interval.failed",
+			ConfigType.INT, 5 * 60 * 1000);
 
 	private final ConfigType type;
 	private final String key;

@@ -23,6 +23,7 @@ import cz.artique.client.service.ClientSourceService;
 import cz.artique.client.service.ClientSourceService.AddSource;
 import cz.artique.client.service.ClientSourceService.AddUserSource;
 import cz.artique.client.service.ClientSourceService.CheckRegion;
+import cz.artique.client.service.ClientSourceService.GetRecommendation;
 import cz.artique.client.service.ClientSourceService.GetRegions;
 import cz.artique.client.service.ClientSourceService.GetUserSources;
 import cz.artique.client.service.ClientSourceService.PlanSourceCheck;
@@ -30,6 +31,7 @@ import cz.artique.client.service.ClientSourceService.UpdateUserSource;
 import cz.artique.client.service.ClientSourceServiceAsync;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
+import cz.artique.shared.model.recomandation.Recommendation;
 import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
@@ -314,6 +316,29 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 			public void onSuccess(Date result) {
 				new ValidationMessage<PlanSourceCheck>(PlanSourceCheck.GENERAL)
 					.onSuccess();
+				if (ping != null) {
+					ping.onSuccess(result);
+				}
+			}
+		});
+	}
+
+	public void getRecommendation(final AsyncCallback<Recommendation> ping) {
+		assumeOnline();
+		service.getRecommendation(new AsyncCallback<Recommendation>() {
+			public void onFailure(Throwable caught) {
+				serviceFailed(caught);
+				new ValidationMessage<GetRecommendation>(
+					GetRecommendation.GENERAL).onFailure(caught);
+				if (ping != null) {
+					ping.onFailure(caught);
+				}
+			}
+
+			public void onSuccess(Recommendation result) {
+				// do not spam
+				// new ValidationMessage<GetRecommandation>(
+				// GetRecommandation.GENERAL).onSuccess();
 				if (ping != null) {
 					ping.onSuccess(result);
 				}

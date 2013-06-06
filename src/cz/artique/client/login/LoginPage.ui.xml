@@ -1,0 +1,54 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
+	ui:generateLocales="default" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+	<ui:image field="mainBackground" src='../mainBackground.png' />
+
+	<ui:style>
+		@sprite .main {
+			gwt-image: "mainBackground";
+			background-position: center center;
+			background-repeat: no-repeat;
+			width: 100%;
+		}
+	</ui:style>
+
+	<g:HTMLPanel styleName="{style.main}">
+		<div class="main">
+			<div class="desc col">
+				<ui:msg description="General description">
+					Artique is an application which
+					follows
+					several internet sources and presents new article to the
+					users.
+				</ui:msg>
+			</div>
+
+			<div class="login col">
+				<div class="loginDesc">
+					<p>
+						<ui:msg description="Login text, paragraph 1">
+							This application uses Google Account to identify each user.
+							If
+							you
+							don't have one, obtain one on
+							<ui:ph name="accounts">
+								<a href="http://accounts.google.com">Google Accounts</a>
+							</ui:ph>
+							page. Otherwise, click sign-in button bellow.
+						</ui:msg>
+					</p>
+				</div>
+				<g:Anchor ui:field="signIn" styleName="signIn">
+					<ui:msg description="Login button">
+						<div>
+							Sign in
+						</div>
+					</ui:msg>
+				</g:Anchor>
+			</div>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder>

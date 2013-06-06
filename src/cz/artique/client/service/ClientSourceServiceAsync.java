@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import cz.artique.shared.model.recomandation.Recommendation;
 import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
@@ -26,4 +27,6 @@ public interface ClientSourceServiceAsync {
 	void checkRegion(Region region, AsyncCallback<Region> asyncCallback);
 
 	void planSourceCheck(Key source, AsyncCallback<Date> asyncCallback);
+
+	void getRecommendation(AsyncCallback<Recommendation> asyncCallback);
 }

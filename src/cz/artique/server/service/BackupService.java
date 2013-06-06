@@ -80,7 +80,7 @@ public class BackupService extends Fetcher {
 		FileService fileService = FileServiceFactory.getFileService();
 		AppEngineFile file = fileService.createNewBlobFile("text/html");
 		FileWriteChannel writeChannel =
-			fileService.openWriteChannel(file, false);
+			fileService.openWriteChannel(file, true);
 
 		PrintWriter out =
 			new PrintWriter(Channels.newWriter(writeChannel, "UTF8"));
@@ -121,7 +121,7 @@ public class BackupService extends Fetcher {
 			String styleSheet = getStyleSheet(url);
 			if (styleSheet != null) {
 				style.text(styleSheet);
-				link.after(link);
+				link.after(style);
 				link.remove();
 			}
 		}

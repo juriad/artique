@@ -9,7 +9,11 @@ public interface Resources extends ClientBundle {
 
 	@NotStrict
 	@Source("style.css")
-	CssResource css();
+	CssResource style();
+
+	@NotStrict
+	@Source("login/login-style.css")
+	CssResource loginStyle();
 
 	@Source("icons/edit-find.png")
 	ImageResource detail();
@@ -43,10 +47,14 @@ public interface Resources extends ClientBundle {
 
 	@Source("icons/add.png")
 	ImageResource add();
-	
+
 	@Source("icons/go-jump.png")
 	ImageResource open();
 
+	@Source("icons/lock.png")
+	ImageResource backup();
+	
 	@Source("mainBackground.png")
 	ImageResource mainBackground();
+
 }

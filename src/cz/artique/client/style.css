@@ -61,7 +61,7 @@
 }
 
 .row.row-selected .labelsBar .panelWithMore {
-	background-color: #ffffe0;
+	background-color: #ffffc0;
 }
 
 .row .labelsBar .panelWithMore-expanded,.panelWithMore:hover {
@@ -116,7 +116,7 @@
 }
 
 .row.row-selected {
-	background-color: #ffffe0;
+	background-color: #ffffc0;
 }
 
 .rowHeader {
@@ -132,6 +132,8 @@
 	font-weight: bold;
 	font-size: 110%;
 	padding-top: 0.3em;
+	margin-left: 17em;
+	margin-right: 22em;
 }
 
 .row.row-unread .itemTitle {
@@ -142,17 +144,24 @@
 	font-size: 120%;
 }
 
-.itemLink {
-	float: left;
-	width: 24px;
+.itemIcon {
 	margin: 0px 1em;
 	opacity: 0.3;
 	filter: alpha(opacity \= 30);
+	width: 24px;
 }
 
-.itemLink:hover {
+.itemIcon:hover {
 	opacity: 1;
 	filter: alpha(opacity \= 100);
+}
+
+.itemLink {
+	float: left;
+}
+
+.itemBackup {
+	float: right;
 }
 
 .itemDate {
@@ -164,6 +173,10 @@
 .itemSource {
 	float: right;
 	width: 10em;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
 	line-height: 1.7em;
 }
 

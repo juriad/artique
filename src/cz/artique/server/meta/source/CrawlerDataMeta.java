@@ -1,6 +1,6 @@
 package cz.artique.server.meta.source;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-04 19:51:56")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-06 17:38:27")
 /** */
 public final class CrawlerDataMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.source.CrawlerData> {
 

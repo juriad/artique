@@ -61,6 +61,8 @@ public class ArtiqueList extends InfiniteList {
 						selectedRowWidget.toggleExpanded();
 					}
 				}
+				case ADD_NEW_ITEMS:
+					showHead();
 					break;
 				default:
 					break;
@@ -122,6 +124,9 @@ public class ArtiqueList extends InfiniteList {
 				if (!isEndReached()) {
 					getProvider().fetch(-1);
 				}
+			}
+			if (ScrollEndType.TOP.equals(event.getScrollEndType())) {
+				showHead();
 			}
 		}
 	}

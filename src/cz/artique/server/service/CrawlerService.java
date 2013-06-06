@@ -41,8 +41,16 @@ public class CrawlerService {
 
 	private void setNextCheck(Source source, int count) {
 		// TODO nice to have: extend setNextCheck to be more intelligent
+
 		Date nextCheck;
-		if (source.getLastCheck() == null) {
+		if (count < 0) {
+			int failedInterval =
+				ConfigService.CONFIG_SERVICE.getConfig(
+					ConfigKey.CRAWLER_CHECK_INTERVAL_FAILED).<Integer> get();
+			nextCheck =
+				new Date((long) (new Date().getTime() + failedInterval
+					* source.getErrorSequence()));
+		} else if (source.getLastCheck() == null) {
 			int firstInterval =
 				ConfigService.CONFIG_SERVICE.getConfig(
 					ConfigKey.CRAWLER_CHECK_INTERVAL_FIRST).<Integer> get();
@@ -79,9 +87,6 @@ public class CrawlerService {
 			source.setErrorSequence(source.getErrorSequence() + 1);
 			setNextCheck(source, -1);
 			return false;
-		} finally {
-			SourceService ss = new SourceService();
-			ss.saveSource(source);
 		}
 	}
 }

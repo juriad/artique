@@ -1,0 +1,46 @@
+body {
+	width: 100%;
+}
+
+.main {
+	padding: 5em;
+	width: 70%;
+	margin: auto;
+}
+
+.desc {
+	float: left;
+}
+
+.login {
+	float: right;
+}
+
+.col {
+	width: 40%;
+	background-color: #ffffc0;
+	padding: 4%;
+}
+
+.loginDesc {
+	margin: 3em 0px;
+}
+
+.signIn {
+	color: black;
+	display: block;
+	width: 10em;
+	height: 3em;
+	background-color: #cfe0f1;
+	text-decoration: none;
+	font-weight: bold;
+	text-align: center;
+	line-height: 3em;
+	font-size: 200%;
+	margin: auto;
+}
+
+.error {
+	margin: auto;
+	font-weight: bold;
+}

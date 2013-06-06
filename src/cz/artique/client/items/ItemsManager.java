@@ -17,7 +17,6 @@ import cz.artique.client.history.HistoryManager;
 import cz.artique.client.manager.AbstractManager;
 import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
-import cz.artique.client.messages.MessageType;
 import cz.artique.client.messages.ValidationMessage;
 import cz.artique.client.service.ClientItemService;
 import cz.artique.client.service.ClientItemService.AddManualItem;
@@ -224,8 +223,9 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 				}
 
 				public void onSuccess(ListingResponse<UserItem> result) {
-					new ValidationMessage<GetItems>(GetItems.GENERAL)
-						.onSuccess(MessageType.DEBUG);
+					// don't spam in messages
+					// new ValidationMessage<GetItems>(GetItems.GENERAL)
+					// .onSuccess(MessageType.DEBUG);
 					if (ping != null) {
 						ping.onSuccess(result);
 					}

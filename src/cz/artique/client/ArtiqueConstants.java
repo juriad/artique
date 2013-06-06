@@ -47,4 +47,10 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("Refresh")
 	String refreshButton();
+
+	@DefaultStringValue("Add new items")
+	String addNewItems();
+
+	@DefaultStringValue("No new items")
+	String noNewItems();
 }

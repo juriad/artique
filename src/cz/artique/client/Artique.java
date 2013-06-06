@@ -55,24 +55,19 @@ public class Artique extends Composite {
 
 	static {
 		resources = GWT.create(Resources.class);
-		resources.css().ensureInjected();
+		resources.style().ensureInjected();
 		ArtiqueWorld.WORLD.setResources(resources);
 	}
 
 	public Artique() {
 		list = new ArtiqueList();
-		initWidget(uiBinder.createAndBindUi(this));
 		ArtiqueWorld.WORLD.setList(list);
+		initWidget(uiBinder.createAndBindUi(this));
 		ArtiqueWorld.WORLD.setSourcesTree(sources);
 
 		initHistory();
-		// initClient();
-	}
 
-//	private void initClient() {
-//		Element head = Document.get().getElementsByTagName("head").getItem(0);
-//		MetaElement clientMeta = Document.get().createMetaElement();
-//	}
+	}
 
 	private void initHistory() {
 		// change list provider when history changes

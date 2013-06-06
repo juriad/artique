@@ -183,7 +183,6 @@ public class ItemService {
 
 	private ModelQuery<UserItem> getBaseQuery(ListFilter listFilter,
 			FilterCriterion fc, User user) {
-		// FIXME needs index
 		UserItemMeta meta = UserItemMeta.get();
 
 		ModelQuery<UserItem> query =
@@ -357,6 +356,7 @@ public class ItemService {
 			UserItem userItem =
 				Datastore.get(tx, UserItemMeta.get(), userItemKey);
 			userItem.setBackupBlobKey(blobKey.getKeyString());
+			userItem.setLastChanged(new Date());
 			Datastore.put(tx, userItem);
 			tx.commit();
 		} catch (Exception e) {

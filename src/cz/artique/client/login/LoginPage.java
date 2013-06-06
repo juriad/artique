@@ -1,23 +1,31 @@
 package cz.artique.client.login;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.ArtiqueWorld;
+import cz.artique.client.Resources;
 
 public class LoginPage extends Composite {
-	private VerticalPanel loginPanel = new VerticalPanel();
-	private Label loginLabel = new Label(
-		"Please sign in to your Google Account to access the application.");
-	private Anchor signInLink = new Anchor("Sign In");
+
+	private static LoginUiBinder uiBinder = GWT.create(LoginUiBinder.class);
+
+	interface LoginUiBinder extends UiBinder<Widget, LoginPage> {}
+
+	static {
+		Resources resources = GWT.create(Resources.class);
+		resources.loginStyle().ensureInjected();
+	}
+
+	@UiField
+	Anchor signIn;
 
 	public LoginPage() {
-		// TODO login page
-		initWidget(loginPanel);
-		signInLink.setHref(ArtiqueWorld.WORLD.getUserInfo().getLoginUrl());
-		loginPanel.add(loginLabel);
-		loginPanel.add(signInLink);
+		initWidget(uiBinder.createAndBindUi(this));
+		signIn.setHref(ArtiqueWorld.WORLD.getUserInfo().getLoginUrl());
 	}
 }

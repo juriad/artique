@@ -1,6 +1,6 @@
 package cz.artique.server.meta.source;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-04 19:51:56")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-06 17:38:27")
 /** */
 public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.source.UserSource> {
 
@@ -35,6 +35,9 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.UserSource, com.google.appengine.api.users.User> user = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.UserSource, com.google.appengine.api.users.User>(this, "user", "user", com.google.appengine.api.users.User.class);
 
     /** */
+    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.source.UserSource> userId = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.source.UserSource>(this, "userId", "userId");
+
+    /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.UserSource, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.UserSource, java.lang.Long>(this, "version", "version", java.lang.Long.class);
 
     /** */
@@ -67,6 +70,7 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         model.setSource((com.google.appengine.api.datastore.Key) entity.getProperty("source"));
         model.setSourceType(stringToEnum(cz.artique.shared.model.source.SourceType.class, (java.lang.String) entity.getProperty("sourceType")));
         model.setUser((com.google.appengine.api.users.User) entity.getProperty("user"));
+        model.setUserId((java.lang.String) entity.getProperty("userId"));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
         model.setWatching(booleanToPrimitiveBoolean((java.lang.Boolean) entity.getProperty("watching")));
         return model;
@@ -90,6 +94,7 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         entity.setProperty("source", m.getSource());
         entity.setProperty("sourceType", enumToString(m.getSourceType()));
         entity.setProperty("user", m.getUser());
+        entity.setProperty("userId", m.getUserId());
         entity.setProperty("version", m.getVersion());
         entity.setProperty("watching", m.isWatching());
         entity.setProperty("slim3.schemaVersion", 1);
@@ -210,6 +215,10 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
             writer.setNextPropertyName("user");
             encoder0.encode(writer, m.getUser());
         }
+        if(m.getUserId() != null){
+            writer.setNextPropertyName("userId");
+            encoder0.encode(writer, m.getUserId());
+        }
         if(m.getVersion() != null){
             writer.setNextPropertyName("version");
             encoder0.encode(writer, m.getVersion());
@@ -265,6 +274,8 @@ public final class UserSourceMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         m.setSourceType(decoder0.decode(reader, m.getSourceType(), cz.artique.shared.model.source.SourceType.class));
         reader = rootReader.newObjectReader("user");
         m.setUser(decoder0.decode(reader, m.getUser()));
+        reader = rootReader.newObjectReader("userId");
+        m.setUserId(decoder0.decode(reader, m.getUserId()));
         reader = rootReader.newObjectReader("version");
         m.setVersion(decoder0.decode(reader, m.getVersion()));
         reader = rootReader.newObjectReader("watching");

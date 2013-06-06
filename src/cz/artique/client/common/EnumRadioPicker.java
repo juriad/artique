@@ -20,9 +20,10 @@ public class EnumRadioPicker<E extends Enum<E>> extends Composite
 			if (event.getValue()) {
 				RadioButton rb = (RadioButton) event.getSource();
 				E newValue = buttons.get(rb);
-				ValueChangeEvent.fireIfNotEqual(EnumRadioPicker.this, selected,
-					newValue);
+				E oldValue = selected;
 				selected = newValue;
+				ValueChangeEvent.fireIfNotEqual(EnumRadioPicker.this, oldValue,
+					newValue);
 			}
 		}
 	}

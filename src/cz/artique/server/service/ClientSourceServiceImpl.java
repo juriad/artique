@@ -15,6 +15,7 @@ import cz.artique.server.utils.KeyGen;
 import cz.artique.server.utils.ServerSourceType;
 import cz.artique.server.validation.Validator;
 import cz.artique.shared.model.label.Label;
+import cz.artique.shared.model.recomandation.Recommendation;
 import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
@@ -64,6 +65,7 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		validator
 			.checkNullability(AddUserSource.USER_SOURCE, false, userSource);
 		userSource.setUser(user);
+		userSource.setUserId(user.getUserId());
 		userSource.setName(validator.checkString(AddUserSource.NAME,
 			userSource.getName(), false, false));
 		validator.checkNullability(AddUserSource.SOURCE_TYPE, false,
@@ -94,7 +96,7 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		Region region = userSource.getRegionObject();
 		if (userSource.getRegion() != null) {
 			uss.fillRegions(userSource);
-			if (userSource
+			if (!userSource
 				.getRegionObject()
 				.getHtmlSource()
 				.equals(userSource.getSource())) {
@@ -137,6 +139,7 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		validator.checkNullability(UpdateUserSource.USER_SOURCE, false,
 			userSource.getKey());
 		userSource.setUser(user);
+		userSource.setUserId(user.getUserId());
 		validator.checkNullability(UpdateUserSource.SOURCE, false,
 			userSource.getSource());
 		validator.checkNullability(UpdateUserSource.SOURCE_TYPE, false,
@@ -153,6 +156,7 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 			userSource.getName(), false, false));
 		old.setHierarchy(validator.checkString(UpdateUserSource.HIERARCHY,
 			userSource.getHierarchy(), false, false));
+		old.setWatching(userSource.isWatching());
 
 		LabelService ls = new LabelService();
 		List<Key> defaultLabels = userSource.getDefaultLabels();
@@ -172,7 +176,7 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		Region region = userSource.getRegionObject();
 		if (userSource.getRegion() != null) {
 			uss.fillRegions(userSource);
-			if (userSource
+			if (!userSource
 				.getRegionObject()
 				.getHtmlSource()
 				.equals(userSource.getSource())) {
@@ -231,5 +235,11 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 				PlanSourceCheck.SOURCE, IssueType.INVALID_VALUE));
 		}
 		return ss.planSourceCheck(source);
+	}
+
+	public Recommendation getRecommendation() {
+		RecommendationService rs = new RecommendationService();
+		User user = UserServiceFactory.getUserService().getCurrentUser();
+		return rs.getRecommendation(user); // may return null
 	}
 }

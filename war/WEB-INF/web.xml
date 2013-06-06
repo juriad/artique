@@ -69,6 +69,13 @@
 		</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>CronRecommendationServlet</servlet-name>
+		<servlet-class>cz.artique.server.service.CronRecommendationServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
 
 	<servlet>
 		<servlet-name>UserService</servlet-name>
@@ -116,6 +123,11 @@
 	<servlet-mapping>
 		<servlet-name>CronCheckSourcesServlet</servlet-name>
 		<url-pattern>/cron/checkSources</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>CronRecommendationServlet</servlet-name>
+		<url-pattern>/cron/recommendation</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

@@ -45,6 +45,8 @@ public class UserItemRow extends RowWidget {
 	private HTMLPanel content;
 	private Label source;
 	private Label added;
+	private Anchor backup;
+	private Image backupImage;
 
 	public UserItemRow(UserItem data) {
 		super(data);
@@ -61,6 +63,9 @@ public class UserItemRow extends RowWidget {
 
 		added = createDateLabel();
 		header.add(added);
+
+		backup = createBackupAnchor();
+		header.add(backup);
 
 		title = new Label(getValue().getItemObject().getTitle());
 		title.setStylePrimaryName("itemTitle");
@@ -86,8 +91,10 @@ public class UserItemRow extends RowWidget {
 			if (contentType != null) {
 				switch (contentType) {
 				case HTML:
-					contentHTML =
-						SafeHtmlUtils.fromTrustedString(contentText.getValue());
+					String html = contentText.getValue();
+					// target all links to a new tab
+					html = html.replaceAll("<a[\\s>]", "<a target='_blank' ");
+					contentHTML = SafeHtmlUtils.fromTrustedString(html);
 					break;
 				case PLAIN_TEXT:
 					contentHTML =
@@ -120,18 +127,29 @@ public class UserItemRow extends RowWidget {
 		link.setStylePrimaryName("itemLink");
 		link.getElement().appendChild(open.getElement());
 		link.setHref(getValue().getItemObject().getUrl().getValue());
-		link.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				openOriginal();
-				event.preventDefault();
-			}
-		});
+		link.setStyleName("itemIcon", true);
+		link.setTarget("_blank");
+
 		return link;
+	}
+
+	private Anchor createBackupAnchor() {
+		Anchor backup = new Anchor();
+		backup.setStylePrimaryName("itemBackup");
+		backup.setStyleName("itemIcon", true);
+		backup.setTarget("_blank");
+		return backup;
 	}
 
 	public void refresh() {
 		labels.setNewData(getValue());
 		setReadState();
+		if (backupImage == null && getValue().getBackupBlobKey() != null) {
+			backupImage = new Image(ArtiqueWorld.WORLD.getResources().backup());
+			backup.getElement().appendChild(backupImage.getElement());
+			String blobKey = getValue().getBackupBlobKey();
+			backup.setHref("/export/backupService?backup=" + blobKey);
+		}
 	}
 
 	private void setReadState() {

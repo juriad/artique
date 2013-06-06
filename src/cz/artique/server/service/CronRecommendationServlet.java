@@ -1,4 +1,4 @@
-package cz.artique.server.test;
+package cz.artique.server.service;
 
 import java.io.IOException;
 
@@ -7,8 +7,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Deprecated
-public class Updater extends HttpServlet {
+public class CronRecommendationServlet extends HttpServlet {
+
+	/**
+	 * The servlet path.
+	 */
+	public static final String SERVLET_PATH = "/cron/recommendation";
+
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -23,7 +28,21 @@ public class Updater extends HttpServlet {
 		process(req, resp);
 	}
 
+	/**
+	 * Processes this request.
+	 * 
+	 * @param req
+	 *            the request
+	 * @param resp
+	 *            the response
+	 * @throws ServletException
+	 *             if the path is illegal
+	 * @throws IOException
+	 *             if {@link IOException} occurred
+	 */
 	protected void process(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		RecommendationService rs = new RecommendationService();
+		rs.recalc();
 	}
 }

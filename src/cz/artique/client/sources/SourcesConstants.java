@@ -19,7 +19,7 @@ public interface SourcesConstants extends ConstantsWithLookup {
 	@DefaultStringValue("URL")
 	String url();
 
-	@DefaultStringValue("Set URL")
+	@DefaultStringValue("Fix URL")
 	String setUrl();
 
 	@DefaultStringValue("Name")
@@ -64,7 +64,7 @@ public interface SourcesConstants extends ConstantsWithLookup {
 	@DefaultStringValue("No")
 	String watchingNo();
 
-	@DefaultStringValue("Strat watching")
+	@DefaultStringValue("Start watching")
 	String watchButton();
 
 	@DefaultStringValue("No check has been performed")
@@ -99,5 +99,29 @@ public interface SourcesConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("Manual")
 	String sourceType_MANUAL();
+
+	@DefaultStringValue("Recommended sources")
+	String recommendedEditor();
+
+	@DefaultStringValue("Close")
+	String closeButton();
+
+	@DefaultStringValue("Domain")
+	String domain();
+
+	@DefaultStringValue("Watch source")
+	String watchSourceButton();
+
+	@DefaultStringValue("New source")
+	String sourceSource();
+
+	@DefaultStringValue("Custom")
+	String sourceSource_CUSTOM();
+
+	@DefaultStringValue("Recommended")
+	String sourceSource_RECOMMENDED();
+
+	@DefaultStringValue("No recommendation available.")
+	String noRecommendation();
 
 }

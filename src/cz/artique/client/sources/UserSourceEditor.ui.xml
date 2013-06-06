@@ -1,101 +1,134 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:a="urn:import:cz.artique.client.sources"
-	xmlns:db="urn:import:com.google.gwt.user.datepicker.client" xmlns:b="urn:import:cz.artique.client.labels">
+	xmlns:ce="urn:import:com.google.gwt.user.cellview.client" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:a="urn:import:cz.artique.client.sources" xmlns:db="urn:import:com.google.gwt.user.datepicker.client"
+	xmlns:b="urn:import:cz.artique.client.labels">
 
 	<ui:with field='res' type='cz.artique.client.sources.SourcesConstants' />
 
-	<g:Grid ui:field="grid">
-		<g:row>
-			<g:cell>
-				<ui:text from='{res.sourceType}' />
-			</g:cell>
-			<g:customCell>
-				<a:SourceTypePicker ui:field="sourceType" />
-			</g:customCell>
-		</g:row>
-		<g:row>
-			<g:cell>
-				<ui:text from='{res.url}' />
-			</g:cell>
-			<g:customCell>
-				<g:FlowPanel>
-					<g:TextBox ui:field="url" />
-					<g:Button ui:field="urlButton">
-						<ui:text from='{res.setUrl}' />
-					</g:Button>
-				</g:FlowPanel>
-			</g:customCell>
-		</g:row>
-		<g:row>
-			<g:cell>
-				<ui:text from='{res.name}' />
-			</g:cell>
-			<g:customCell>
-				<g:TextBox ui:field="name" />
-			</g:customCell>
-		</g:row>
-		<g:row>
-			<g:cell>
-				<ui:text from='{res.watching}' />
-			</g:cell>
-			<g:customCell>
-				<g:FlowPanel>
-					<g:InlineLabel ui:field="watching" />
-					<g:Button ui:field="watchButton" /> <!-- watch or unwatch -->
-				</g:FlowPanel>
-			</g:customCell>
-		</g:row>
-		<g:row>
-			<g:cell>
-				<ui:text from='{res.hierarchy}' />
-			</g:cell>
-			<g:customCell>
-				<g:TextBox ui:field="hierarchy" />
-			</g:customCell>
-		</g:row>
-		<g:row>
-			<g:cell>
-				<ui:text from='{res.defaultLabels}' />
-			</g:cell>
-			<g:customCell>
-				<a:SourceLabelsBar ui:field="defaultLabels" />
-			</g:customCell>
-		</g:row>
-		<g:row>
-			<g:cell>
-				<ui:text from='{res.region}' />
-			</g:cell>
-			<g:customCell>
-				<a:SourceRegionPicker ui:field="region" />
-			</g:customCell>
-		</g:row>
-		<g:row>
-			<g:cell>
-				<ui:text from='{res.lastCheck}' />
-			</g:cell>
-			<g:customCell>
-				<g:InlineLabel ui:field="lastCheck" />
-			</g:customCell>
-		</g:row>
-		<g:row>
-			<g:cell>
-				<ui:text from='{res.errorSequence}' />
-			</g:cell>
-			<g:customCell>
-				<g:InlineLabel ui:field="errorSequence" />
-			</g:customCell>
-		</g:row>
-		<g:row>
-			<g:cell>
-				<ui:text from='{res.nextCheck}' />
-			</g:cell>
-			<g:customCell>
-				<g:FlowPanel>
-					<g:InlineLabel ui:field="nextCheck" />
-					<g:Button ui:field="checkNow" text="{res.checkNow}" />
-				</g:FlowPanel>
-			</g:customCell>
-		</g:row>
-	</g:Grid>
+	<g:HorizontalPanel>
+		<g:cell>
+			<g:Grid ui:field="grid">
+				<g:row>
+					<g:cell>
+						<ui:text from='{res.sourceSource}' />
+					</g:cell>
+					<g:customCell>
+						<a:SourceSourcePicker ui:field="sourceSource" />
+					</g:customCell>
+				</g:row>
+				<g:row>
+					<g:cell>
+						<ui:text from='{res.sourceType}' />
+					</g:cell>
+					<g:customCell>
+						<a:SourceTypePicker ui:field="sourceType" />
+					</g:customCell>
+				</g:row>
+				<g:row>
+					<g:cell>
+						<ui:text from='{res.url}' />
+					</g:cell>
+					<g:customCell>
+						<g:FlowPanel>
+							<g:Anchor ui:field="urlAnchor" target="_blank" />
+							<g:TextBox ui:field="urlBox" />
+						</g:FlowPanel>
+					</g:customCell>
+				</g:row>
+				<g:row>
+					<g:cell>
+						<ui:text from="{res.domain}" />
+					</g:cell>
+					<g:customCell>
+						<g:Anchor ui:field="domain" target="_blank" />
+					</g:customCell>
+				</g:row>
+				<g:row>
+					<g:cell>
+					</g:cell>
+					<g:customCell>
+						<g:Button ui:field="setUrlButton">
+							<ui:text from="{res.setUrl}" />
+						</g:Button>
+					</g:customCell>
+				</g:row>
+				<g:row>
+					<g:cell>
+						<ui:text from='{res.name}' />
+					</g:cell>
+					<g:customCell>
+						<g:TextBox ui:field="name" />
+					</g:customCell>
+				</g:row>
+				<g:row>
+					<g:cell>
+						<ui:text from='{res.watching}' />
+					</g:cell>
+					<g:customCell>
+						<g:FlowPanel>
+							<g:InlineLabel ui:field="watching" />
+							<g:Button ui:field="watchButton" /> <!-- watch or unwatch -->
+						</g:FlowPanel>
+					</g:customCell>
+				</g:row>
+				<g:row>
+					<g:cell>
+						<ui:text from='{res.hierarchy}' />
+					</g:cell>
+					<g:customCell>
+						<g:TextBox ui:field="hierarchy" />
+					</g:customCell>
+				</g:row>
+				<g:row>
+					<g:cell>
+						<ui:text from='{res.defaultLabels}' />
+					</g:cell>
+					<g:customCell>
+						<a:SourceLabelsBar ui:field="defaultLabels" />
+					</g:customCell>
+				</g:row>
+				<g:row>
+					<g:cell>
+						<ui:text from='{res.region}' />
+					</g:cell>
+					<g:customCell>
+						<a:SourceRegionPicker ui:field="region" />
+					</g:customCell>
+				</g:row>
+				<g:row>
+					<g:cell>
+						<ui:text from='{res.lastCheck}' />
+					</g:cell>
+					<g:customCell>
+						<g:InlineLabel ui:field="lastCheck" />
+					</g:customCell>
+				</g:row>
+				<g:row>
+					<g:cell>
+						<ui:text from='{res.errorSequence}' />
+					</g:cell>
+					<g:customCell>
+						<g:InlineLabel ui:field="errorSequence" />
+					</g:customCell>
+				</g:row>
+				<g:row>
+					<g:cell>
+						<ui:text from='{res.nextCheck}' />
+					</g:cell>
+					<g:customCell>
+						<g:FlowPanel>
+							<g:InlineLabel ui:field="nextCheck" />
+							<g:Button ui:field="checkNow" text="{res.checkNow}" />
+						</g:FlowPanel>
+					</g:customCell>
+				</g:row>
+			</g:Grid>
+		</g:cell>
+		<g:cell>
+			<g:ScrollPanel>
+				<ce:CellList ui:field="cellList" />
+			</g:ScrollPanel>
+		</g:cell>
+	</g:HorizontalPanel>
 </ui:UiBinder>

@@ -305,4 +305,14 @@ public class UserSourceService {
 		}
 	}
 
+	public List<UserSource> getAllUserSources() {
+		UserSourceMeta meta = UserSourceMeta.get();
+		List<UserSource> userSources =
+			Datastore
+				.query(meta)
+				.filterInMemory(meta.sourceType.notEqual(SourceType.MANUAL))
+				.sort(meta.user.asc)
+				.asList();
+		return userSources;
+	}
 }

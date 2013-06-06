@@ -24,15 +24,12 @@ public class CheckSourceTask implements DeferredTask {
 		}
 		CrawlerService cs = new CrawlerService();
 		boolean ok = cs.crawl(source);
-		try {
-			if (ok) {
-				source.setEnqued(false);
-			} else {
-				throw new RuntimeException("Crawling source "
-					+ source.getUrl().getValue() + " failed.");
-			}
-		} finally {
-			ss.saveSource(source);
+		source.setEnqued(false);
+		ss.saveSource(source);
+
+		if (!ok) {
+			throw new RuntimeException("Crawling source "
+				+ source.getUrl().getValue() + " failed.");
 		}
 	}
 }

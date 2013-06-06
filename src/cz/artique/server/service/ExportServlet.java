@@ -157,7 +157,7 @@ public class ExportServlet extends HttpServlet {
 		feed.setEntries(entries);
 
 		SyndFeedOutput output = new SyndFeedOutput();
-		output.output(feed, resp.getWriter());
+		output.output(feed, resp.getWriter(), true);
 	}
 
 	private SyndFeed createFeed(ListFilter listFilter, String type) {

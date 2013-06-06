@@ -133,7 +133,9 @@ public class SourceRegionPicker extends Composite
 			// not custom or null
 			return;
 		}
-		Managers.SOURCES_MANAGER.checkRegion(selectedObject, null);
+		
+		Region regionObject = getValue().getRegionObject();
+		Managers.SOURCES_MANAGER.checkRegion(regionObject, null);
 	}
 
 	public HandlerRegistration addValueChangeHandler(

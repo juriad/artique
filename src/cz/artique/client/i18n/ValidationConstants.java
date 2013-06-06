@@ -1558,6 +1558,27 @@ public interface ValidationConstants extends ConstantsWithLookup {
 	String PlanSourceCheck_GENERAL_OK();
 
 	@DefaultStringValue("---")
+	String GetRecommendation_GENERAL_INVALID_VALUE();
+
+	@DefaultStringValue("---")
+	String GetRecommendation_GENERAL_EMPTY_OR_NULL();
+
+	@DefaultStringValue("---")
+	String GetRecommendation_GENERAL_TOO_LONG();
+
+	@DefaultStringValue("---")
+	String GetRecommendation_GENERAL_ALREADY_EXISTS();
+
+	@DefaultStringValue("---")
+	String GetRecommendation_GENERAL_SECURITY_BREACH();
+
+	@DefaultStringValue("Failed to get list of recommended sources.")
+	String GetRecommendation_GENERAL_UNKNOWN();
+
+	@DefaultStringValue("Successfuly got list of recommended sources.")
+	String GetRecommendation_GENERAL_OK();
+
+	@DefaultStringValue("---")
 	String GetAllShortcuts_GENERAL_INVALID_VALUE();
 
 	@DefaultStringValue("---")

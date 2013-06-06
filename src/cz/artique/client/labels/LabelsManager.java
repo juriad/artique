@@ -72,7 +72,7 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 			// source has been created, therefore it does not exist
 			label = source.getLabelObject();
 
-			userDefinedLabels.add(label);
+			userSourceLabels.add(label);
 			labelNames.put(nameWithType(label.getLabelType(), label.getName()),
 				label);
 			labelsKeys.put(label.getKey(), label);

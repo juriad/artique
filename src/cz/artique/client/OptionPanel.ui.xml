@@ -21,5 +21,8 @@
 		<g:Button ui:field="refreshButton">
 			<ui:text from="{cons.refreshButton}" />
 		</g:Button>
+		<g:Button ui:field="addNewItemsButton" enabled="false">
+			<ui:text from="{cons.noNewItems}" />
+		</g:Button>
 	</g:FlowPanel>
 </ui:UiBinder>
