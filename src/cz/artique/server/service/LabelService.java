@@ -17,6 +17,7 @@ import cz.artique.server.meta.label.LabelMeta;
 import cz.artique.server.meta.source.UserSourceMeta;
 import cz.artique.server.utils.KeyGen;
 import cz.artique.shared.model.label.Label;
+import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.utils.TransactionException;
 import cz.artique.shared.validation.Issue;
 import cz.artique.shared.validation.IssueType;
@@ -26,10 +27,13 @@ public class LabelService {
 
 	public LabelService() {}
 
-	public List<Label> getAllLabels(String userId) {
+	public List<Label> getAllLabels(String userId, LabelType type) {
 		LabelMeta meta = LabelMeta.get();
 		ModelQuery<Label> query =
 			Datastore.query(meta).filter(meta.userId.equal(userId));
+		if (type != null) {
+			query = query.filter(meta.labelType.equal(type));
+		}
 		List<Label> labels = query.asList();
 		return labels;
 	}

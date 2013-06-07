@@ -16,7 +16,7 @@ public class ClientLabelServiceImpl implements ClientLabelService {
 	public List<Label> getAllLabels() {
 		String userId = UserService.getCurrentUserId();
 		LabelService ls = new LabelService();
-		return ls.getAllLabels(userId);
+		return ls.getAllLabels(userId, null);
 	}
 
 	public Label addLabel(Label label) throws ValidationException {

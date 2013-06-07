@@ -30,6 +30,10 @@ public class UserInfo implements Serializable, GenKey {
 	@Attribute(persistent = false)
 	private String logoutUrl;
 
+	// TODO nice to have: client token expiration
+
+	private String clientToken;
+
 	/**
 	 * Returns the key.
 	 * 
@@ -132,5 +136,13 @@ public class UserInfo implements Serializable, GenKey {
 
 	public void setLogoutUrl(String logoutUrl) {
 		this.logoutUrl = logoutUrl;
+	}
+
+	public String getClientToken() {
+		return clientToken;
+	}
+
+	public void setClientToken(String clientToken) {
+		this.clientToken = clientToken;
 	}
 }

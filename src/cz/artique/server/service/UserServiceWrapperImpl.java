@@ -21,16 +21,12 @@ public class UserServiceWrapperImpl extends RemoteServiceServlet
 				info = us.createUserInfo(user);
 			}
 			info.setLogoutUrl(UserService.createLogoutURL(requestUri));
-			ensureManualSource();
+			UserSourceService uss = new UserSourceService();
+			uss.getManualUserSource(user.getUserId());
 		} else {
 			info = new UserInfo();
 			info.setLoginUrl(UserService.createLoginURL(requestUri));
 		}
 		return info;
-	}
-
-	private void ensureManualSource() {
-		UserSourceService uss = new UserSourceService();
-		uss.getManualUserSource();
 	}
 }

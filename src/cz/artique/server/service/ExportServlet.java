@@ -67,7 +67,7 @@ public class ExportServlet extends HttpServlet {
 		Map<String, String[]> parameterMap = req.getParameterMap();
 		String[] users = parameterMap.get("user");
 		if (users == null || users.length <= 0) {
-			resp.sendError(500, "User has not been specified.");
+			resp.sendError(400, "User has not been specified.");
 			return;
 		}
 		String user = users[0].trim();
@@ -75,7 +75,7 @@ public class ExportServlet extends HttpServlet {
 		// export
 		String[] exports = parameterMap.get("export");
 		if (exports == null || exports.length <= 0) {
-			resp.sendError(500, "Export has not been specified.");
+			resp.sendError(400, "Export has not been specified.");
 			return;
 		}
 		String export = exports[0].trim();

@@ -239,11 +239,10 @@ public class UserSourceService {
 		return userSources;
 	}
 
-	public UserSource getManualUserSource() {
+	public UserSource getManualUserSource(String userId) {
 		SourceService ss = new SourceService();
 		ManualSource manualSource = ss.ensureManualSource();
 
-		String userId = UserService.getCurrentUserId();
 		UserSource us = new UserSource(userId, manualSource, "does_not_matter");
 		us.setKey(KeyGen.genKey(us));
 

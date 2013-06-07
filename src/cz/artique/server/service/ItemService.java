@@ -307,7 +307,7 @@ public class ItemService {
 
 	public void addManualItem(UserItem userItem) {
 		UserSourceService uss = new UserSourceService();
-		UserSource manualUserSource = uss.getManualUserSource();
+		UserSource manualUserSource = uss.getManualUserSource(userItem.getUserId());
 
 		ManualItem item = (ManualItem) userItem.getItemObject();
 		item.setSource(manualUserSource.getSource());

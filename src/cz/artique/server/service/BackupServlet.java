@@ -49,7 +49,7 @@ public class BackupServlet extends HttpServlet {
 		Map<String, String[]> parameterMap = req.getParameterMap();
 		String[] backups = parameterMap.get("backup");
 		if (backups == null || backups.length <= 0) {
-			resp.sendError(500, "Missing backup key.");
+			resp.sendError(400, "Missing backup key.");
 			return;
 		}
 		String backup = backups[0].trim();

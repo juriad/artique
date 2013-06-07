@@ -1,5 +1,6 @@
 package cz.artique.server.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.slim3.datastore.Datastore;
@@ -7,7 +8,9 @@ import org.slim3.datastore.Datastore;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.gwt.user.client.Random;
 
+import cz.artique.server.crawler.CrawlerUtils;
 import cz.artique.server.meta.user.UserInfoMeta;
 import cz.artique.server.utils.KeyGen;
 import cz.artique.shared.model.user.UserInfo;
@@ -27,8 +30,50 @@ public class UserService {
 		UserInfo ui = new UserInfo();
 		ui.setUserId(user.getUserId());
 		ui.setNickname(user.getNickname());
+		ui.setClientToken(genClientToken());
 		Datastore.put(ui);
 		return ui;
+	}
+
+	private String genClientToken() {
+		long date = new Date().getTime();
+		int i = Random.nextInt();
+		String token = date + "$" + i;
+		String sha1 = CrawlerUtils.toSHA1(token);
+
+		UserInfo existing;
+		do {
+			existing = getUserInfoByClientToken(sha1);
+		} while (existing != null);
+		return sha1;
+	}
+
+	public UserInfo getUserInfoByNickname(String nickname) {
+		UserInfoMeta meta = UserInfoMeta.get();
+		List<UserInfo> asList =
+			Datastore
+				.query(meta)
+				.filter(meta.nickname.equal(nickname))
+				.asList();
+		if (asList.isEmpty()) {
+			return null;
+		} else {
+			return asList.get(0);
+		}
+	}
+
+	public UserInfo getUserInfoByClientToken(String clientToken) {
+		UserInfoMeta meta = UserInfoMeta.get();
+		List<UserInfo> asList =
+			Datastore
+				.query(meta)
+				.filter(meta.clientToken.equal(clientToken))
+				.asList();
+		if (asList.isEmpty()) {
+			return null;
+		} else {
+			return asList.get(0);
+		}
 	}
 
 	public static User getCurrentUser() {
@@ -45,19 +90,5 @@ public class UserService {
 
 	public static String createLoginURL(String requestUri) {
 		return UserServiceFactory.getUserService().createLoginURL(requestUri);
-	}
-
-	public UserInfo getUserInfoByNickname(String nickname) {
-		UserInfoMeta meta = UserInfoMeta.get();
-		List<UserInfo> asList =
-			Datastore
-				.query(meta)
-				.filter(meta.nickname.equal(nickname))
-				.asList();
-		if (asList.isEmpty()) {
-			return null;
-		} else {
-			return asList.get(0);
-		}
 	}
 }

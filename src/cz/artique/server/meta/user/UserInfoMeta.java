@@ -1,8 +1,11 @@
 package cz.artique.server.meta.user;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-07 14:01:17")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-07 16:55:13")
 /** */
 public final class UserInfoMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.user.UserInfo> {
+
+    /** */
+    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.user.UserInfo> clientToken = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.user.UserInfo>(this, "clientToken", "clientToken");
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.UserInfo, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.user.UserInfo, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
@@ -33,6 +36,7 @@ public final class UserInfoMeta extends org.slim3.datastore.ModelMeta<cz.artique
     @Override
     public cz.artique.shared.model.user.UserInfo entityToModel(com.google.appengine.api.datastore.Entity entity) {
         cz.artique.shared.model.user.UserInfo model = new cz.artique.shared.model.user.UserInfo();
+        model.setClientToken((java.lang.String) entity.getProperty("clientToken"));
         model.setKey(entity.getKey());
         model.setNickname((java.lang.String) entity.getProperty("nickname"));
         model.setUserId((java.lang.String) entity.getProperty("userId"));
@@ -49,6 +53,7 @@ public final class UserInfoMeta extends org.slim3.datastore.ModelMeta<cz.artique
         } else {
             entity = new com.google.appengine.api.datastore.Entity(kind);
         }
+        entity.setProperty("clientToken", m.getClientToken());
         entity.setProperty("nickname", m.getNickname());
         entity.setProperty("userId", m.getUserId());
         entity.setProperty("version", m.getVersion());
@@ -114,6 +119,10 @@ public final class UserInfoMeta extends org.slim3.datastore.ModelMeta<cz.artique
         cz.artique.shared.model.user.UserInfo m = (cz.artique.shared.model.user.UserInfo) model;
         writer.beginObject();
         org.slim3.datastore.json.Default encoder0 = new org.slim3.datastore.json.Default();
+        if(m.getClientToken() != null){
+            writer.setNextPropertyName("clientToken");
+            encoder0.encode(writer, m.getClientToken());
+        }
         if(m.getKey() != null){
             writer.setNextPropertyName("key");
             encoder0.encode(writer, m.getKey());
@@ -146,6 +155,8 @@ public final class UserInfoMeta extends org.slim3.datastore.ModelMeta<cz.artique
         cz.artique.shared.model.user.UserInfo m = new cz.artique.shared.model.user.UserInfo();
         org.slim3.datastore.json.JsonReader reader = null;
         org.slim3.datastore.json.Default decoder0 = new org.slim3.datastore.json.Default();
+        reader = rootReader.newObjectReader("clientToken");
+        m.setClientToken(decoder0.decode(reader, m.getClientToken()));
         reader = rootReader.newObjectReader("key");
         m.setKey(decoder0.decode(reader, m.getKey()));
         reader = rootReader.newObjectReader("loginUrl");
