@@ -19,7 +19,6 @@ import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-import cz.artique.client.ArtiqueWorld;
 import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.item.UserItem;
@@ -74,10 +73,7 @@ public class ManualItemEditor extends Composite implements HasValue<UserItem> {
 			labelKeys.add(l.getKey());
 		}
 		userItem.setLabels(labelKeys);
-
 		userItem.setItemObject(item);
-		userItem.setUser(ArtiqueWorld.WORLD.getUser());
-
 		return userItem;
 	}
 

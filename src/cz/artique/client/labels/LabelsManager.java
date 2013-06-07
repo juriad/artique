@@ -10,7 +10,6 @@ import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.history.HistoryItem;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.AbstractManager;
@@ -38,12 +37,12 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 
 	static {
 		LabelsConstants constants = I18n.getLabelsConstants();
-		AND = new Label(ArtiqueWorld.WORLD.getUser(), "AND");
+		AND = new Label("__not_null__", "AND");
 		AND.setLabelType(LabelType.SYSTEM);
 		AND.setPriority(Integer.MAX_VALUE);
 		AND.setDisplayName(constants.operatorAnd());
 
-		OR = new Label(ArtiqueWorld.WORLD.getUser(), "OR");
+		OR = new Label("__not_null__", "OR");
 		OR.setLabelType(LabelType.SYSTEM);
 		OR.setPriority(Integer.MAX_VALUE);
 		OR.setDisplayName(constants.operatorOr());
@@ -142,7 +141,7 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 	}
 
 	public void createNewLabel(String name, final AsyncCallback<Label> ping) {
-		Label label = new Label(ArtiqueWorld.WORLD.getUser(), name);
+		Label label = new Label(null, name);
 		assumeOnline();
 		service.addLabel(label, new AsyncCallback<Label>() {
 			public void onFailure(Throwable caught) {

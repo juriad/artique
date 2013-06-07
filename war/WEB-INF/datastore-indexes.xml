@@ -14,26 +14,26 @@
 
 	<!-- descending -->
 	<datastore-index kind="UserItem" ancestor="false">
-		<property name="user" direction="asc" />
+		<property name="userId" direction="asc" />
 		<property name="__key__" direction="desc" />
 	</datastore-index>
 
 	<datastore-index kind="UserItem" ancestor="false">
 		<property name="labels" direction="asc" />
-		<property name="user" direction="asc" />
+		<property name="userId" direction="asc" />
 		<property name="__key__" direction="desc" />
 	</datastore-index>
 
 	<datastore-index kind="UserItem" ancestor="false">
 		<property name="labels" direction="asc" />
 		<property name="read" direction="asc" />
-		<property name="user" direction="asc" />
+		<property name="userId" direction="asc" />
 		<property name="__key__" direction="desc" />
 	</datastore-index>
 
 	<datastore-index kind="UserItem" ancestor="false">
 		<property name="read" direction="asc" />
-		<property name="user" direction="asc" />
+		<property name="userId" direction="asc" />
 		<property name="__key__" direction="desc" />
 	</datastore-index>
 
@@ -41,13 +41,13 @@
 	<!-- ascending -->
 	<datastore-index kind="UserItem" ancestor="false">
 		<property name="labels" direction="asc" />
-		<property name="user" direction="asc" />
+		<property name="userId" direction="asc" />
 	</datastore-index>
 
 	<datastore-index kind="UserItem" ancestor="false">
 		<property name="labels" direction="asc" />
 		<property name="read" direction="asc" />
-		<property name="user" direction="asc" />
+		<property name="userId" direction="asc" />
 	</datastore-index>
 
 </datastore-indexes>

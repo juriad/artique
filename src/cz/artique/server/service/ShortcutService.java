@@ -5,17 +5,16 @@ import java.util.List;
 import org.slim3.datastore.Datastore;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.users.User;
 
 import cz.artique.server.meta.shortcut.ShortcutMeta;
 import cz.artique.server.utils.KeyGen;
 import cz.artique.shared.model.shortcut.Shortcut;
 
 public class ShortcutService {
-	public List<Shortcut> getAllShortcuts(User user) {
+	public List<Shortcut> getAllShortcuts(String userId) {
 		ShortcutMeta meta = ShortcutMeta.get();
 		List<Shortcut> listOfShortcuts =
-			Datastore.query(meta).filter(meta.user.equal(user)).asList();
+			Datastore.query(meta).filter(meta.userId.equal(userId)).asList();
 		return listOfShortcuts;
 	}
 

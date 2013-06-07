@@ -6,7 +6,6 @@ import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.users.User;
 
 import cz.artique.shared.utils.GenKey;
 import cz.artique.shared.utils.HasDeepEquals;
@@ -31,7 +30,7 @@ public class Label
 	/**
 	 * Owner of this label
 	 */
-	private User user;
+	private String userId;
 
 	/**
 	 * Name of this label
@@ -70,8 +69,8 @@ public class Label
 
 	public Label() {}
 
-	public Label(User user, String name) {
-		setUser(user);
+	public Label(String userId, String name) {
+		setUserId(userId);
 		setName(name);
 		setBackupLevel(BackupLevel.NO_BACKUP);
 		setAppearance(new LabelAppearance());
@@ -126,8 +125,8 @@ public class Label
 		return name;
 	}
 
-	public User getUser() {
-		return user;
+	public String getUserId() {
+		return userId;
 	}
 
 	/**
@@ -169,8 +168,8 @@ public class Label
 		this.name = name;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	/**
@@ -185,7 +184,7 @@ public class Label
 
 	public String getKeyName() {
 		String type = getLabelType().name();
-		String userId = getUser().getUserId();
+		String userId = getUserId();
 		String name = getName();
 		return SharedUtils.combineStringParts(type, userId, name);
 	}
@@ -223,7 +222,8 @@ public class Label
 	}
 
 	public boolean equalsDeeply(Label e) {
-		return getName().equals(e.getName()) && getUser().equals(e.getUser());
+		return getName().equals(e.getName())
+			&& getUserId().equals(e.getUserId());
 	}
 
 	public boolean isToBeDeleted() {

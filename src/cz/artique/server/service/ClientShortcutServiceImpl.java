@@ -3,8 +3,6 @@ package cz.artique.server.service;
 import java.util.List;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.artique.client.service.ClientShortcutService;
 import cz.artique.server.validation.Validator;
@@ -16,17 +14,17 @@ import cz.artique.shared.validation.ValidationException;
 public class ClientShortcutServiceImpl implements ClientShortcutService {
 
 	public List<Shortcut> getAllShortcuts() {
-		User user = UserServiceFactory.getUserService().getCurrentUser();
+		String userId = UserService.getCurrentUserId();
 		ShortcutService ss = new ShortcutService();
-		return ss.getAllShortcuts(user);
+		return ss.getAllShortcuts(userId);
 	}
 
 	public Shortcut createShortcut(Shortcut shortcut)
 			throws ValidationException {
 		Validator<CreateShortcut> validator = new Validator<CreateShortcut>();
 		validator.checkNullability(CreateShortcut.SHORTCUT, false, shortcut);
-		User user = UserServiceFactory.getUserService().getCurrentUser();
-		shortcut.setUser(user);
+		String userId = UserService.getCurrentUserId();
+		shortcut.setUserId(userId);
 		if (shortcut.getKeyStroke() == null
 			|| shortcut.getKeyStroke().isEmpty()) {
 			throw new ValidationException(new Issue<CreateShortcut>(
@@ -66,9 +64,9 @@ public class ClientShortcutServiceImpl implements ClientShortcutService {
 		Shortcut shortcutByKey = ss.getShortcutByKey(shortcutKey);
 		validator.checkNullability(CreateShortcut.SHORTCUT, false,
 			shortcutByKey);
-		User user = UserServiceFactory.getUserService().getCurrentUser();
-		validator.checkUser(CreateShortcut.SHORTCUT, user,
-			shortcutByKey.getUser());
+		String userId = UserService.getCurrentUserId();
+		validator.checkUser(CreateShortcut.SHORTCUT, userId,
+			shortcutByKey.getUserId());
 		ss.deleteShortcut(shortcutKey);
 	}
 

@@ -74,7 +74,7 @@ public abstract class AbstractCrawler<E extends Source, F extends Item>
 		ui.setAdded(item.getAdded());
 		ui.setItem(item.getKey());
 		ui.setRead(false);
-		ui.setUser(us.getUser());
+		ui.setUserId(us.getUserId());
 		ui.setUserSource(us.getKey());
 		ui.setLabels(us.getDefaultLabels());
 		return ui;

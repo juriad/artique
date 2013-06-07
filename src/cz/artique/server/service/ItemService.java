@@ -17,7 +17,6 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Transaction;
-import com.google.appengine.api.users.User;
 
 import cz.artique.server.meta.item.ArticleItemMeta;
 import cz.artique.server.meta.item.ItemMeta;
@@ -63,7 +62,7 @@ public class ItemService {
 		fillItems(Arrays.asList(userItems));
 	}
 
-	public ListingResponse<UserItem> getItems(User user, ListingRequest request) {
+	public ListingResponse<UserItem> getItems(String userId, ListingRequest request) {
 		UserItemMeta meta = UserItemMeta.get();
 		Date date = new Date();
 
@@ -117,7 +116,7 @@ public class ItemService {
 			// tail
 			if (request.getFetchCount() > 0) {
 				ModelQuery<UserItem> ascQuery =
-					getBaseQuery(listFilter, fc, user);
+					getBaseQuery(listFilter, fc, userId);
 				ascQuery =
 					ascQuery.filter(
 						meta.key.greaterThan(max(firstCut, lastHave))).filter(
@@ -143,7 +142,7 @@ public class ItemService {
 			if (listFilter.getEndTo() == null) {
 				if (request.getLastKey() != null) {
 					ModelQuery<UserItem> headQuery =
-						getBaseQuery(listFilter, fc, user);
+						getBaseQuery(listFilter, fc, userId);
 					headQuery =
 						headQuery.filter(meta.key.greaterThan(lastHave));
 					head = headQuery.sort(meta.key.desc).asList();
@@ -158,7 +157,7 @@ public class ItemService {
 			// tail
 			if (request.getFetchCount() > 0) {
 				ModelQuery<UserItem> tailQuery =
-					getBaseQuery(listFilter, fc, user);
+					getBaseQuery(listFilter, fc, userId);
 				tailQuery =
 					tailQuery.filter(meta.key.greaterThan(firstCut)).filter(
 						meta.key.lessThan(min(firstHave, lastCut)));
@@ -182,11 +181,11 @@ public class ItemService {
 	}
 
 	private ModelQuery<UserItem> getBaseQuery(ListFilter listFilter,
-			FilterCriterion fc, User user) {
+			FilterCriterion fc, String userId) {
 		UserItemMeta meta = UserItemMeta.get();
 
 		ModelQuery<UserItem> query =
-			Datastore.query(meta).filter(meta.user.equal(user));
+			Datastore.query(meta).filter(meta.userId.equal(userId));
 		if (fc != null) {
 			query = query.filter(fc);
 		}
@@ -328,10 +327,10 @@ public class ItemService {
 	}
 
 	public Map<Key, UserItem> updateItems(List<UserItem> userItems,
-			Map<Key, ChangeSet> changeSets, User user) {
+			Map<Key, ChangeSet> changeSets, String userId) {
 		Map<Key, UserItem> result = new HashMap<Key, UserItem>();
 		for (UserItem userItem : userItems) {
-			if (!userItem.getUser().equals(user)) {
+			if (!userItem.getUserId().equals(userId)) {
 				// error, ignore this item
 				continue;
 			}

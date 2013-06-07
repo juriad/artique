@@ -8,8 +8,6 @@ import org.slim3.datastore.ModelMeta;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Transaction;
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.artique.server.meta.source.ManualSourceMeta;
 import cz.artique.server.meta.source.RegionMeta;
@@ -76,8 +74,8 @@ public class SourceService {
 	}
 
 	public ManualSource ensureManualSource() {
-		User user = UserServiceFactory.getUserService().getCurrentUser();
-		ManualSource manualSource = new ManualSource(user);
+		String userId = UserService.getCurrentUserId();
+		ManualSource manualSource = new ManualSource(userId);
 		manualSource.setKey(KeyGen.genKey(manualSource));
 		manualSource.setEnabled(false);
 		manualSource.setUsage(0);

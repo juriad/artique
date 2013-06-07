@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.artique.client.service.ClientLabelService;
 import cz.artique.server.validation.Validator;
@@ -16,16 +14,16 @@ import cz.artique.shared.validation.ValidationException;
 public class ClientLabelServiceImpl implements ClientLabelService {
 
 	public List<Label> getAllLabels() {
-		User user = UserServiceFactory.getUserService().getCurrentUser();
+		String userId = UserService.getCurrentUserId();
 		LabelService ls = new LabelService();
-		return ls.getAllLabels(user);
+		return ls.getAllLabels(userId);
 	}
 
 	public Label addLabel(Label label) throws ValidationException {
 		Validator<AddLabel> validator = new Validator<AddLabel>();
 		validator.checkNullability(AddLabel.LABEL, false, label);
-		User user = UserServiceFactory.getUserService().getCurrentUser();
-		label.setUser(user);
+		String userId = UserService.getCurrentUserId();
+		label.setUserId(userId);
 		label.setLabelType(LabelType.USER_DEFINED);
 		label.setName(validator.checkLabel(AddLabel.NAME, label.getName()));
 
@@ -43,14 +41,15 @@ public class ClientLabelServiceImpl implements ClientLabelService {
 			keys.add(key);
 		}
 
-		User user = UserServiceFactory.getUserService().getCurrentUser();
+		String userId = UserService.getCurrentUserId();
 		LabelService ls = new LabelService();
 		List<Label> labelsByKeys = ls.getLabelsByKeys(keys);
 		List<Key> toDelete = new ArrayList<Key>();
 		int i = 0;
 		for (Label labelByKey : labelsByKeys) {
 			Label label = labels.get(i);
-			validator.checkUser(UpdateLabels.LABEL, user, labelByKey.getUser());
+			validator.checkUser(UpdateLabels.LABEL, userId,
+				labelByKey.getUserId());
 			labelByKey.setBackupLevel(label.getBackupLevel());
 			labelByKey.setAppearance(label.getAppearance());
 

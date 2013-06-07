@@ -8,7 +8,6 @@ import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.users.User;
 
 import cz.artique.shared.utils.HasDeepEquals;
 import cz.artique.shared.utils.SharedUtils;
@@ -27,7 +26,7 @@ public class Filter implements Serializable, HasDeepEquals<Filter> {
 	/**
 	 * Owner of this filter
 	 */
-	private User user;
+	private String userId;
 
 	/**
 	 * Filter composition
@@ -80,8 +79,8 @@ public class Filter implements Serializable, HasDeepEquals<Filter> {
 		return labels;
 	}
 
-	public User getUser() {
-		return user;
+	public String getUserId() {
+		return userId;
 	}
 
 	/**
@@ -115,8 +114,8 @@ public class Filter implements Serializable, HasDeepEquals<Filter> {
 		this.labels = labels;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	/**
@@ -156,7 +155,7 @@ public class Filter implements Serializable, HasDeepEquals<Filter> {
 	public boolean equalsDeeply(Filter e) {
 		return SharedUtils.eq(getLabels(), e.getLabels())
 			&& SharedUtils.eq(getType(), e.getType())
-			&& SharedUtils.eq(getUser(), e.getUser())
+			&& SharedUtils.eq(getUserId(), e.getUserId())
 			&& SharedUtils.deepEq(getFilterObjects(), e.getFilterObjects());
 	}
 

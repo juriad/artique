@@ -1,6 +1,6 @@
 package cz.artique.server.meta.label;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-06 17:38:27")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-07 13:29:42")
 /** */
 public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.label.Label> {
 
@@ -23,7 +23,7 @@ public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Label, java.lang.Integer> priority = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Label, java.lang.Integer>(this, "priority", "priority", int.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Label, com.google.appengine.api.users.User> user = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Label, com.google.appengine.api.users.User>(this, "user", "user", com.google.appengine.api.users.User.class);
+    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.label.Label> userId = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.label.Label>(this, "userId", "userId");
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Label, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.Label, java.lang.Long>(this, "version", "version", java.lang.Long.class);
@@ -52,7 +52,7 @@ public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
         model.setLabelType(stringToEnum(cz.artique.shared.model.label.LabelType.class, (java.lang.String) entity.getProperty("labelType")));
         model.setName((java.lang.String) entity.getProperty("name"));
         model.setPriority(longToPrimitiveInt((java.lang.Long) entity.getProperty("priority")));
-        model.setUser((com.google.appengine.api.users.User) entity.getProperty("user"));
+        model.setUserId((java.lang.String) entity.getProperty("userId"));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
         return model;
     }
@@ -71,7 +71,7 @@ public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
         entity.setProperty("labelType", enumToString(m.getLabelType()));
         entity.setProperty("name", m.getName());
         entity.setUnindexedProperty("priority", m.getPriority());
-        entity.setProperty("user", m.getUser());
+        entity.setProperty("userId", m.getUserId());
         entity.setProperty("version", m.getVersion());
         entity.setProperty("slim3.schemaVersion", 1);
         return entity;
@@ -167,9 +167,9 @@ public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
         }
         writer.setNextPropertyName("toBeDeleted");
         encoder0.encode(writer, m.isToBeDeleted());
-        if(m.getUser() != null){
-            writer.setNextPropertyName("user");
-            encoder0.encode(writer, m.getUser());
+        if(m.getUserId() != null){
+            writer.setNextPropertyName("userId");
+            encoder0.encode(writer, m.getUserId());
         }
         if(m.getVersion() != null){
             writer.setNextPropertyName("version");
@@ -201,8 +201,8 @@ public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
         m.setShortcutStroke(decoder0.decode(reader, m.getShortcutStroke()));
         reader = rootReader.newObjectReader("toBeDeleted");
         m.setToBeDeleted(decoder0.decode(reader, m.isToBeDeleted()));
-        reader = rootReader.newObjectReader("user");
-        m.setUser(decoder0.decode(reader, m.getUser()));
+        reader = rootReader.newObjectReader("userId");
+        m.setUserId(decoder0.decode(reader, m.getUserId()));
         reader = rootReader.newObjectReader("version");
         m.setVersion(decoder0.decode(reader, m.getVersion()));
         return m;

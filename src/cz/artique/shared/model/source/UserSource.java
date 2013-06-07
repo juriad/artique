@@ -8,7 +8,6 @@ import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.users.User;
 
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.utils.GenKey;
@@ -33,11 +32,6 @@ public class UserSource
 
 	/**
 	 * User side of this relation
-	 */
-	private User user;
-
-	/**
-	 * Fixes problem with unstable user.userId when storing and retrieving
 	 */
 	private String userId;
 
@@ -83,9 +77,8 @@ public class UserSource
 
 	public UserSource() {}
 
-	public UserSource(User user, Source source, String name) {
-		setUser(user);
-		setUserId(user.getUserId());
+	public UserSource(String userId, Source source, String name) {
+		setUserId(userId);
 		setSource(source.getKey());
 		setName(name);
 		setHierarchy("/");
@@ -134,10 +127,6 @@ public class UserSource
 		return source;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
 	/**
 	 * Returns the version.
 	 * 
@@ -177,10 +166,6 @@ public class UserSource
 		this.source = source;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
-	}
-
 	/**
 	 * Sets the version.
 	 * 
@@ -200,7 +185,7 @@ public class UserSource
 	}
 
 	public String getKeyName() {
-		String userId = getUser().getUserId();
+		String userId = getUserId();
 		String sourceId = KeyFactory.keyToString(getSource());
 		return SharedUtils.combineStringParts(userId, sourceId);
 	}
@@ -230,7 +215,7 @@ public class UserSource
 	}
 
 	public boolean equalsDeeply(UserSource o) {
-		return this.equals(o) && SharedUtils.eq(getUser(), o.getUser())
+		return this.equals(o) && SharedUtils.eq(getUserId(), o.getUserId())
 			&& SharedUtils.eq(getDefaultLabels(), o.getDefaultLabels())
 			&& SharedUtils.eq(getHierarchy(), o.getHierarchy())
 			&& SharedUtils.eq(getLabel(), o.getLabel())

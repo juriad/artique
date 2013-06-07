@@ -8,8 +8,6 @@ import java.util.Map;
 import org.slim3.datastore.Datastore;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.artique.client.service.ClientConfigService;
 import cz.artique.server.meta.config.ClientConfigMeta;
@@ -22,7 +20,7 @@ import cz.artique.shared.model.config.Value;
 public class ClientConfigServiceImpl implements ClientConfigService {
 
 	public List<ClientConfigValue> getClientConfigs() {
-		User user = UserServiceFactory.getUserService().getCurrentUser();
+		String userId = UserService.getCurrentUserId();
 
 		Map<ClientConfigKey, ClientConfigValue> configs =
 			new HashMap<ClientConfigKey, ClientConfigValue>();
@@ -35,7 +33,7 @@ public class ClientConfigServiceImpl implements ClientConfigService {
 
 		ClientConfigMeta meta = ClientConfigMeta.get();
 		List<ClientConfig> list =
-			Datastore.query(meta).filter(meta.user.equal(user)).asList();
+			Datastore.query(meta).filter(meta.userId.equal(userId)).asList();
 
 		for (ClientConfig config : list) {
 			ClientConfigKey configKey = map.get(config.getConfigKey());
@@ -93,16 +91,16 @@ public class ClientConfigServiceImpl implements ClientConfigService {
 
 	public List<ClientConfigValue> setClientConfigs(
 			List<ClientConfigValue> configs) {
-		User user = UserServiceFactory.getUserService().getCurrentUser();
+		String userId = UserService.getCurrentUserId();
 
 		Map<Key, ClientConfigValue> keysToChange =
 			new HashMap<Key, ClientConfigValue>();
 		List<Key> keysToDelete = new ArrayList<Key>();
 		for (ClientConfigValue config : configs) {
 			ClientConfigKey configKey = config.getKey();
-			configKey.setUser(user);
+			configKey.setUserId(userId);
 			Key key = KeyGen.genKey(configKey);
-			configKey.setUser(null);
+			configKey.setUserId(null);
 			if (config.getDefaultValue().equals(config.getValue())
 				|| config.getValue() == null) {
 				keysToDelete.add(key);
@@ -134,7 +132,7 @@ public class ClientConfigServiceImpl implements ClientConfigService {
 		for (Key key : keysToChange.keySet()) {
 			ClientConfigValue value = keysToChange.get(key);
 			ClientConfig config =
-				new ClientConfig(user, value.getKey().getKey());
+				new ClientConfig(userId, value.getKey().getKey());
 			config.setKey(key);
 			setValue(value, config);
 		}

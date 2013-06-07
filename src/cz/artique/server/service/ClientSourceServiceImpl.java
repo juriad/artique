@@ -7,8 +7,6 @@ import java.util.List;
 import org.slim3.datastore.ModelMeta;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.artique.client.service.ClientSourceService;
 import cz.artique.server.utils.KeyGen;
@@ -60,12 +58,11 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 
 	public UserSource addUserSource(UserSource userSource)
 			throws ValidationException {
-		User user = UserServiceFactory.getUserService().getCurrentUser();
+		String userId = UserService.getCurrentUserId();
 		Validator<AddUserSource> validator = new Validator<AddUserSource>();
 		validator
 			.checkNullability(AddUserSource.USER_SOURCE, false, userSource);
-		userSource.setUser(user);
-		userSource.setUserId(user.getUserId());
+		userSource.setUserId(userId);
 		userSource.setName(validator.checkString(AddUserSource.NAME,
 			userSource.getName(), false, false));
 		validator.checkNullability(AddUserSource.SOURCE_TYPE, false,
@@ -90,7 +87,7 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 			ls.getLabelsByKeys(userSource.getDefaultLabels());
 		for (Label l : labelsByKeys) {
 			validator
-				.checkUser(AddUserSource.DEFAULT_LABELS, user, l.getUser());
+				.checkUser(AddUserSource.DEFAULT_LABELS, userId, l.getUserId());
 		}
 
 		Region region = userSource.getRegionObject();
@@ -131,15 +128,14 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 
 	public UserSource updateUserSource(UserSource userSource)
 			throws ValidationException {
-		User user = UserServiceFactory.getUserService().getCurrentUser();
+		String userId = UserService.getCurrentUserId();
 		Validator<UpdateUserSource> validator =
 			new Validator<UpdateUserSource>();
 		validator.checkNullability(UpdateUserSource.USER_SOURCE, false,
 			userSource);
 		validator.checkNullability(UpdateUserSource.USER_SOURCE, false,
 			userSource.getKey());
-		userSource.setUser(user);
-		userSource.setUserId(user.getUserId());
+		userSource.setUserId(userId);
 		validator.checkNullability(UpdateUserSource.SOURCE, false,
 			userSource.getSource());
 		validator.checkNullability(UpdateUserSource.SOURCE_TYPE, false,
@@ -162,8 +158,8 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		List<Key> defaultLabels = userSource.getDefaultLabels();
 		List<Label> labelsByKeys = ls.getLabelsByKeys(defaultLabels);
 		for (Label l : labelsByKeys) {
-			validator.checkUser(UpdateUserSource.DEFAULT_LABELS, user,
-				l.getUser());
+			validator.checkUser(UpdateUserSource.DEFAULT_LABELS, userId,
+				l.getUserId());
 		}
 		if (defaultLabels == null) {
 			defaultLabels = new ArrayList<Key>();
@@ -204,8 +200,8 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 
 	public List<UserSource> getUserSources() {
 		UserSourceService uss = new UserSourceService();
-		User user = UserServiceFactory.getUserService().getCurrentUser();
-		return uss.getUserSources(user);
+		String userId = UserService.getCurrentUserId();
+		return uss.getUserSources(userId);
 	}
 
 	public Region checkRegion(Region region) throws ValidationException {
@@ -239,7 +235,7 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 
 	public Recommendation getRecommendation() {
 		RecommendationService rs = new RecommendationService();
-		User user = UserServiceFactory.getUserService().getCurrentUser();
-		return rs.getRecommendation(user); // may return null
+		String userId = UserService.getCurrentUserId();
+		return rs.getRecommendation(userId); // may return null
 	}
 }

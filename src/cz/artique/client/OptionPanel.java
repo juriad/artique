@@ -49,7 +49,7 @@ public class OptionPanel extends Composite {
 
 	public OptionPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
-		userName.setText(ArtiqueWorld.WORLD.getUser().getNickname());
+		userName.setText(ArtiqueWorld.WORLD.getUserInfo().getNickname());
 		logout.setHref(ArtiqueWorld.WORLD.getUserInfo().getLogoutUrl());
 
 		final ArtiqueList list = ArtiqueWorld.WORLD.getList();

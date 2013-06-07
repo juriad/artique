@@ -20,7 +20,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 
-import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.common.OptionalValue;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.ListFilter;
@@ -121,7 +120,6 @@ public class ListFilterEditor extends Composite
 			.isState());
 		lf.setOrder(orderPicker.getValue());
 
-		lf.setUser(ArtiqueWorld.WORLD.getUser());
 		lf.setKey(listFilterKey);
 		lf.setFilter(filterKey);
 

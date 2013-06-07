@@ -10,7 +10,6 @@ import org.jsoup.select.Selector;
 
 import com.google.appengine.api.datastore.Link;
 import com.google.appengine.api.datastore.Text;
-import com.google.appengine.api.users.User;
 
 import cz.artique.server.crawler.CrawlerException;
 import cz.artique.server.crawler.Fetcher;
@@ -193,13 +192,13 @@ public class Validator<E extends Enum<E> & HasIssue> {
 		return value;
 	}
 
-	public void checkUser(E property, User user, User... users)
+	public void checkUser(E property, String userId, String... userIds)
 			throws ValidationException {
-		if (users == null || users.length == 0) {
+		if (userIds == null || userIds.length == 0) {
 			return;
 		}
-		for (User u : users) {
-			if (!user.equals(u)) {
+		for (String u : userIds) {
+			if (!userId.equals(u)) {
 				throw new ValidationException(new Issue<E>(property,
 					IssueType.SECURITY_BREACH));
 			}

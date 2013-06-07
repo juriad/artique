@@ -12,8 +12,6 @@ import org.slim3.datastore.ModelQuery;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Transaction;
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.artique.server.meta.source.PageChangeCrawlerDataMeta;
 import cz.artique.server.meta.source.RegionMeta;
@@ -147,7 +145,7 @@ public class UserSourceService {
 	private Label createLabelForUserSource(UserSource userSource) {
 		Key labelKey;
 		String labelName = KeyFactory.keyToString(userSource.getSource());
-		final Label l = new Label(userSource.getUser(), labelName);
+		final Label l = new Label(userSource.getUserId(), labelName);
 		l.setLabelType(LabelType.USER_SOURCE);
 		labelKey = KeyGen.genKey(l);
 		l.setKey(labelKey);
@@ -231,10 +229,10 @@ public class UserSourceService {
 		}
 	}
 
-	public List<UserSource> getUserSources(User user) {
+	public List<UserSource> getUserSources(String userId) {
 		UserSourceMeta meta = UserSourceMeta.get();
 		ModelQuery<UserSource> query =
-			Datastore.query(meta).filter(meta.user.equal(user));
+			Datastore.query(meta).filter(meta.userId.equal(userId));
 		List<UserSource> userSources = query.asList();
 		fillSources(userSources);
 		fillRegions(userSources);
@@ -245,8 +243,8 @@ public class UserSourceService {
 		SourceService ss = new SourceService();
 		ManualSource manualSource = ss.ensureManualSource();
 
-		User user = UserServiceFactory.getUserService().getCurrentUser();
-		UserSource us = new UserSource(user, manualSource, "does_not_matter");
+		String userId = UserService.getCurrentUserId();
+		UserSource us = new UserSource(userId, manualSource, "does_not_matter");
 		us.setKey(KeyGen.genKey(us));
 
 		UserSource userSource =
@@ -311,7 +309,7 @@ public class UserSourceService {
 			Datastore
 				.query(meta)
 				.filterInMemory(meta.sourceType.notEqual(SourceType.MANUAL))
-				.sort(meta.user.asc)
+				.sort(meta.userId.asc)
 				.asList();
 		return userSources;
 	}

@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.api.users.User;
 import com.sun.syndication.feed.synd.SyndContentImpl;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndEntryImpl;
@@ -26,6 +25,7 @@ import cz.artique.shared.model.item.ArticleItem;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.ListFilter;
+import cz.artique.shared.model.user.UserInfo;
 
 public class ExportServlet extends HttpServlet {
 
@@ -127,7 +127,7 @@ public class ExportServlet extends HttpServlet {
 		ListingRequest request =
 			new ListingRequest(listFilter, null, null, fetchCount);
 		ListingResponse<UserItem> items =
-			is.getItems(listFilter.getUser(), request);
+			is.getItems(listFilter.getUserId(), request);
 
 		List<SyndEntry> entries = new ArrayList<SyndEntry>();
 		for (UserItem item : items.getTail()) {
@@ -161,31 +161,28 @@ public class ExportServlet extends HttpServlet {
 	}
 
 	private SyndFeed createFeed(ListFilter listFilter, String type) {
+		UserService us = new UserService();
+		UserInfo userInfo = us.getUserInfo(listFilter.getUserId());
 		SyndFeed feed = new SyndFeedImpl();
 		feed.setFeedType(type);
 		feed.setTitle(listFilter.getExportAlias());
 		feed.setDescription("This feed contains items which Artique user "
-			+ listFilter.getUser().getNickname()
+			+ userInfo.getNickname()
 			+ " marked to be exported via RSS/Atom feed.");
 
-		feed.setAuthor(listFilter.getUser().getNickname());
+		feed.setAuthor(userInfo.getNickname());
 		return feed;
 	}
 
 	private ListFilter findBestListFilter(String user, String export) {
+		UserService us = new UserService();
+		UserInfo userInfo = us.getUserInfoByNickname(user);
+		if (userInfo == null)
+			return null;
+
 		ListFilterService lfs = new ListFilterService();
-		List<ListFilter> exportsByAlias = lfs.getExportsByAlias(export);
-
-		ListFilter best = null;
-		for (ListFilter lf : exportsByAlias) {
-			User user2 = lf.getUser();
-			if (user2.getNickname().equalsIgnoreCase(user)
-				|| user2.getEmail().equalsIgnoreCase(user)) {
-				best = lf;
-				break;
-			}
-		}
-
-		return best;
+		ListFilter exportByAlias =
+			lfs.getExportByAlias(export, userInfo.getUserId());
+		return exportByAlias;
 	}
 }

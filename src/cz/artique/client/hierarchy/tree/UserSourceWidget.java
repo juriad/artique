@@ -151,7 +151,6 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 
 	private Filter constructFilter() {
 		Filter f = new Filter();
-		f.setUser(ArtiqueWorld.WORLD.getUser());
 		f.setType(FilterType.TOP_LEVEL_FILTER);
 		if (getHierarchy().getParent() != null) {
 			f.setLabels(getListOfLabels());

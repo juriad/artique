@@ -34,7 +34,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
-import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.Managers;
 import cz.artique.client.messages.Message;
@@ -249,8 +248,9 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 								recommandation
 									.setRecommendedSourcesObjects(new ArrayList<Source>());
 							} else {
-								if(result.getRecommendedSourcesObjects()==null) {
-									result.setRecommendedSourcesObjects(new ArrayList<Source>());
+								if (result.getRecommendedSourcesObjects() == null) {
+									result
+										.setRecommendedSourcesObjects(new ArrayList<Source>());
 								}
 								recommandation = result;
 							}
@@ -284,7 +284,6 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		}
 
 		us.setKey(userSource.getKey());
-		us.setUser(ArtiqueWorld.WORLD.getUser());
 		us.setName(name.getValue());
 		us.setHierarchy(hierarchy.getValue());
 		us.setWatching(watchState == null ? true : watchState);
@@ -612,7 +611,6 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 			UserSource us = new UserSource();
 			us.setSourceObject(source);
 			us.setSource(source.getKey());
-			us.setUser(ArtiqueWorld.WORLD.getUser());
 			region.setValue(us);
 			selectRegion();
 			element.getStyle().clearDisplay();

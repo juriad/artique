@@ -190,7 +190,7 @@ public class LabelsEditor extends Composite implements HasValue<List<Label>> {
 		}
 		Label l = changes.get(label.getKey());
 		if (l == null) {
-			l = new Label(label.getUser(), label.getName());
+			l = new Label(null, label.getName());
 			l.setAppearance(new LabelAppearance(label.getAppearance()));
 			l.setBackupLevel(label.getBackupLevel());
 			l.setDisplayName(label.getDisplayName());

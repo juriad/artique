@@ -1,4 +1,4 @@
-package cz.artique.shared.model.shortcut;
+package cz.artique.shared.model.user;
 
 import java.io.Serializable;
 
@@ -7,13 +7,10 @@ import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
 
-import cz.artique.shared.model.label.Label;
-import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.utils.GenKey;
-import cz.artique.shared.utils.SharedUtils;
 
 @Model(schemaVersion = 1)
-public class Shortcut implements Serializable, GenKey {
+public class UserInfo implements Serializable, GenKey {
 
 	private static final long serialVersionUID = 1L;
 
@@ -23,21 +20,15 @@ public class Shortcut implements Serializable, GenKey {
 	@Attribute(version = true)
 	private Long version;
 
-	private Key referenced;
+	private String nickname;
 
 	private String userId;
 
-	private ShortcutType type;
+	@Attribute(persistent = false)
+	private String loginUrl;
 
 	@Attribute(persistent = false)
-	private Label referencedLabel;
-
-	@Attribute(persistent = false)
-	private ListFilter referencedListFilter;
-
-	private ShortcutAction action;
-
-	private String keyStroke;
+	private String logoutUrl;
 
 	/**
 	 * Returns the key.
@@ -96,7 +87,7 @@ public class Shortcut implements Serializable, GenKey {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		Shortcut other = (Shortcut) obj;
+		UserInfo other = (UserInfo) obj;
 		if (key == null) {
 			if (other.key != null) {
 				return false;
@@ -107,12 +98,16 @@ public class Shortcut implements Serializable, GenKey {
 		return true;
 	}
 
-	public Key getReferenced() {
-		return referenced;
+	public String getKeyName() {
+		return getUserId();
 	}
 
-	public void setReferenced(Key referenced) {
-		this.referenced = referenced;
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 	public String getUserId() {
@@ -123,49 +118,19 @@ public class Shortcut implements Serializable, GenKey {
 		this.userId = userId;
 	}
 
-	public ShortcutType getType() {
-		return type;
+	public String getLoginUrl() {
+		return loginUrl;
 	}
 
-	public void setType(ShortcutType type) {
-		this.type = type;
+	public void setLoginUrl(String loginUrl) {
+		this.loginUrl = loginUrl;
 	}
 
-	public String getKeyStroke() {
-		return keyStroke;
+	public String getLogoutUrl() {
+		return logoutUrl;
 	}
 
-	public void setKeyStroke(String keyStroke) {
-		this.keyStroke = keyStroke;
-	}
-
-	public Label getReferencedLabel() {
-		return referencedLabel;
-	}
-
-	public void setReferencedLabel(Label referencedLabel) {
-		this.referencedLabel = referencedLabel;
-	}
-
-	public ListFilter getReferencedListFilter() {
-		return referencedListFilter;
-	}
-
-	public void setReferencedListFilter(ListFilter referencedListFilter) {
-		this.referencedListFilter = referencedListFilter;
-	}
-
-	public String getKeyName() {
-		String userId = getUserId();
-		String stroke = getKeyStroke();
-		return SharedUtils.combineStringParts(userId, stroke);
-	}
-
-	public ShortcutAction getAction() {
-		return action;
-	}
-
-	public void setAction(ShortcutAction action) {
-		this.action = action;
+	public void setLogoutUrl(String logoutUrl) {
+		this.logoutUrl = logoutUrl;
 	}
 }

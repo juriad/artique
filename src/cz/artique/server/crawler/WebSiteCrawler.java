@@ -13,7 +13,6 @@ import org.jsoup.select.Elements;
 
 import com.google.appengine.api.datastore.Link;
 import com.google.appengine.api.datastore.Text;
-import com.google.appengine.api.users.User;
 
 import cz.artique.server.service.ItemService;
 import cz.artique.shared.model.item.ContentType;
@@ -108,10 +107,10 @@ public class WebSiteCrawler extends HTMLCrawler<WebSiteSource, LinkItem> {
 				item = duplicate;
 			}
 
-			Set<User> usersAlreadyHavingItem = getUsersAlreadyHavingItem(item);
+			Set<String> usersAlreadyHavingItem = getUsersAlreadyHavingItem(item);
 			List<UserItem> userItems = new ArrayList<UserItem>();
 			for (UserSource us : sources) {
-				if (usersAlreadyHavingItem.contains(us.getUser())) {
+				if (usersAlreadyHavingItem.contains(us.getUserId())) {
 					continue;
 				}
 				UserItem userItem = createUserItem(us, item);

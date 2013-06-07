@@ -1,6 +1,5 @@
 package cz.artique.client;
 
-import com.google.appengine.api.users.User;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -13,6 +12,7 @@ import cz.artique.client.messages.Message;
 import cz.artique.client.messages.MessageType;
 import cz.artique.client.service.ClientPingService;
 import cz.artique.client.service.ClientPingServiceAsync;
+import cz.artique.shared.model.user.UserInfo;
 
 public enum ArtiqueWorld {
 	WORLD;
@@ -34,10 +34,6 @@ public enum ArtiqueWorld {
 
 	public void setUserInfo(UserInfo userInfo) {
 		this.userInfo = userInfo;
-	}
-
-	public User getUser() {
-		return getUserInfo().getUser();
 	}
 
 	public ArtiqueList getList() {

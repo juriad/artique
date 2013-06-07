@@ -8,7 +8,6 @@ import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.users.User;
 
 import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.utils.HasKey;
@@ -27,7 +26,7 @@ public class UserItem implements Serializable, HasKey<Key> {
 	/**
 	 * Owner of this item
 	 */
-	private User user;
+	private String userId;
 
 	/**
 	 * Item
@@ -62,7 +61,7 @@ public class UserItem implements Serializable, HasKey<Key> {
 		if (userSource != null) {
 			this.userSource = userSource.getKey();
 			this.labels = userSource.getDefaultLabels();
-			this.user = userSource.getUser();
+			this.userId = userSource.getUserId();
 		}
 		this.read = false;
 	}
@@ -143,12 +142,12 @@ public class UserItem implements Serializable, HasKey<Key> {
 		this.item = item;
 	}
 
-	public User getUser() {
-		return user;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public List<Key> getLabels() {

@@ -1,6 +1,6 @@
 package cz.artique.server.meta.item;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-06 17:38:27")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-07 13:29:42")
 /** */
 public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.item.UserItem> {
 
@@ -26,7 +26,7 @@ public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.UserItem, java.lang.Boolean> read = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.UserItem, java.lang.Boolean>(this, "read", "read", boolean.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.UserItem, com.google.appengine.api.users.User> user = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.UserItem, com.google.appengine.api.users.User>(this, "user", "user", com.google.appengine.api.users.User.class);
+    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.item.UserItem> userId = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.item.UserItem>(this, "userId", "userId");
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.UserItem, com.google.appengine.api.datastore.Key> userSource = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.item.UserItem, com.google.appengine.api.datastore.Key>(this, "userSource", "userSource", com.google.appengine.api.datastore.Key.class);
@@ -58,7 +58,7 @@ public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique
         model.setLabels(toList(com.google.appengine.api.datastore.Key.class, entity.getProperty("labels")));
         model.setLastChanged((java.util.Date) entity.getProperty("lastChanged"));
         model.setRead(booleanToPrimitiveBoolean((java.lang.Boolean) entity.getProperty("read")));
-        model.setUser((com.google.appengine.api.users.User) entity.getProperty("user"));
+        model.setUserId((java.lang.String) entity.getProperty("userId"));
         model.setUserSource((com.google.appengine.api.datastore.Key) entity.getProperty("userSource"));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
         return model;
@@ -79,7 +79,7 @@ public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique
         entity.setProperty("labels", m.getLabels());
         entity.setProperty("lastChanged", m.getLastChanged());
         entity.setProperty("read", m.isRead());
-        entity.setProperty("user", m.getUser());
+        entity.setProperty("userId", m.getUserId());
         entity.setProperty("userSource", m.getUserSource());
         entity.setProperty("version", m.getVersion());
         entity.setProperty("slim3.schemaVersion", 1);
@@ -178,9 +178,9 @@ public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique
         }
         writer.setNextPropertyName("read");
         encoder0.encode(writer, m.isRead());
-        if(m.getUser() != null){
-            writer.setNextPropertyName("user");
-            encoder0.encode(writer, m.getUser());
+        if(m.getUserId() != null){
+            writer.setNextPropertyName("userId");
+            encoder0.encode(writer, m.getUserId());
         }
         if(m.getUserSource() != null){
             writer.setNextPropertyName("userSource");
@@ -229,8 +229,8 @@ public final class UserItemMeta extends org.slim3.datastore.ModelMeta<cz.artique
         m.setLastChanged(decoder0.decode(reader, m.getLastChanged()));
         reader = rootReader.newObjectReader("read");
         m.setRead(decoder0.decode(reader, m.isRead()));
-        reader = rootReader.newObjectReader("user");
-        m.setUser(decoder0.decode(reader, m.getUser()));
+        reader = rootReader.newObjectReader("userId");
+        m.setUserId(decoder0.decode(reader, m.getUserId()));
         reader = rootReader.newObjectReader("userSource");
         m.setUserSource(decoder0.decode(reader, m.getUserSource()));
         reader = rootReader.newObjectReader("version");

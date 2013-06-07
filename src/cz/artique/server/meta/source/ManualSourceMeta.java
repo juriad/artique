@@ -1,11 +1,11 @@
 package cz.artique.server.meta.source;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-06 17:38:27")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-07 13:29:41")
 /** */
 public final class ManualSourceMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.source.ManualSource> {
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, com.google.appengine.api.users.User> user = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, com.google.appengine.api.users.User>(this, "user", "user", com.google.appengine.api.users.User.class);
+    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.source.ManualSource> userId = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.source.ManualSource>(this, "userId", "userId");
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, java.lang.Boolean> enabled = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.ManualSource, java.lang.Boolean>(this, "enabled", "enabled", boolean.class);
@@ -51,7 +51,7 @@ public final class ManualSourceMeta extends org.slim3.datastore.ModelMeta<cz.art
     @Override
     public cz.artique.shared.model.source.ManualSource entityToModel(com.google.appengine.api.datastore.Entity entity) {
         cz.artique.shared.model.source.ManualSource model = new cz.artique.shared.model.source.ManualSource();
-        model.setUser((com.google.appengine.api.users.User) entity.getProperty("user"));
+        model.setUserId((java.lang.String) entity.getProperty("userId"));
         model.setEnabled(booleanToPrimitiveBoolean((java.lang.Boolean) entity.getProperty("enabled")));
         model.setEnqued(booleanToPrimitiveBoolean((java.lang.Boolean) entity.getProperty("enqued")));
         model.setErrorSequence(longToPrimitiveInt((java.lang.Long) entity.getProperty("errorSequence")));
@@ -73,7 +73,7 @@ public final class ManualSourceMeta extends org.slim3.datastore.ModelMeta<cz.art
         } else {
             entity = new com.google.appengine.api.datastore.Entity(kind);
         }
-        entity.setProperty("user", m.getUser());
+        entity.setProperty("userId", m.getUserId());
         entity.setProperty("enabled", m.isEnabled());
         entity.setProperty("enqued", m.isEnqued());
         entity.setProperty("errorSequence", m.getErrorSequence());
@@ -145,9 +145,9 @@ public final class ManualSourceMeta extends org.slim3.datastore.ModelMeta<cz.art
         cz.artique.shared.model.source.ManualSource m = (cz.artique.shared.model.source.ManualSource) model;
         writer.beginObject();
         org.slim3.datastore.json.Default encoder0 = new org.slim3.datastore.json.Default();
-        if(m.getUser() != null){
-            writer.setNextPropertyName("user");
-            encoder0.encode(writer, m.getUser());
+        if(m.getUserId() != null){
+            writer.setNextPropertyName("userId");
+            encoder0.encode(writer, m.getUserId());
         }
         writer.setNextPropertyName("enabled");
         encoder0.encode(writer, m.isEnabled());
@@ -185,8 +185,8 @@ public final class ManualSourceMeta extends org.slim3.datastore.ModelMeta<cz.art
         cz.artique.shared.model.source.ManualSource m = new cz.artique.shared.model.source.ManualSource();
         org.slim3.datastore.json.JsonReader reader = null;
         org.slim3.datastore.json.Default decoder0 = new org.slim3.datastore.json.Default();
-        reader = rootReader.newObjectReader("user");
-        m.setUser(decoder0.decode(reader, m.getUser()));
+        reader = rootReader.newObjectReader("userId");
+        m.setUserId(decoder0.decode(reader, m.getUserId()));
         reader = rootReader.newObjectReader("enabled");
         m.setEnabled(decoder0.decode(reader, m.isEnabled()));
         reader = rootReader.newObjectReader("enqued");

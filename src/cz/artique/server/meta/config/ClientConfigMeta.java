@@ -1,6 +1,6 @@
 package cz.artique.server.meta.config;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-06 17:38:27")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-07 13:29:42")
 /** */
 public final class ClientConfigMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.config.ClientConfig> {
 
@@ -20,7 +20,7 @@ public final class ClientConfigMeta extends org.slim3.datastore.ModelMeta<cz.art
     public final org.slim3.datastore.StringUnindexedAttributeMeta<cz.artique.shared.model.config.ClientConfig> stringValue = new org.slim3.datastore.StringUnindexedAttributeMeta<cz.artique.shared.model.config.ClientConfig>(this, "stringValue", "stringValue");
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.config.ClientConfig, com.google.appengine.api.users.User> user = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.config.ClientConfig, com.google.appengine.api.users.User>(this, "user", "user", com.google.appengine.api.users.User.class);
+    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.config.ClientConfig> userId = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.config.ClientConfig>(this, "userId", "userId");
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.config.ClientConfig, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.config.ClientConfig, java.lang.Long>(this, "version", "version", java.lang.Long.class);
@@ -47,7 +47,7 @@ public final class ClientConfigMeta extends org.slim3.datastore.ModelMeta<cz.art
         model.setIntValue(longToPrimitiveInt((java.lang.Long) entity.getProperty("intValue")));
         model.setKey(entity.getKey());
         model.setStringValue((java.lang.String) entity.getProperty("stringValue"));
-        model.setUser((com.google.appengine.api.users.User) entity.getProperty("user"));
+        model.setUserId((java.lang.String) entity.getProperty("userId"));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
         return model;
     }
@@ -65,7 +65,7 @@ public final class ClientConfigMeta extends org.slim3.datastore.ModelMeta<cz.art
         entity.setUnindexedProperty("doubleValue", m.getDoubleValue());
         entity.setUnindexedProperty("intValue", m.getIntValue());
         entity.setUnindexedProperty("stringValue", m.getStringValue());
-        entity.setProperty("user", m.getUser());
+        entity.setProperty("userId", m.getUserId());
         entity.setProperty("version", m.getVersion());
         entity.setProperty("slim3.schemaVersion", 1);
         return entity;
@@ -145,9 +145,9 @@ public final class ClientConfigMeta extends org.slim3.datastore.ModelMeta<cz.art
             writer.setNextPropertyName("stringValue");
             encoder0.encode(writer, m.getStringValue());
         }
-        if(m.getUser() != null){
-            writer.setNextPropertyName("user");
-            encoder0.encode(writer, m.getUser());
+        if(m.getUserId() != null){
+            writer.setNextPropertyName("userId");
+            encoder0.encode(writer, m.getUserId());
         }
         if(m.getVersion() != null){
             writer.setNextPropertyName("version");
@@ -171,8 +171,8 @@ public final class ClientConfigMeta extends org.slim3.datastore.ModelMeta<cz.art
         m.setKey(decoder0.decode(reader, m.getKey()));
         reader = rootReader.newObjectReader("stringValue");
         m.setStringValue(decoder0.decode(reader, m.getStringValue()));
-        reader = rootReader.newObjectReader("user");
-        m.setUser(decoder0.decode(reader, m.getUser()));
+        reader = rootReader.newObjectReader("userId");
+        m.setUserId(decoder0.decode(reader, m.getUserId()));
         reader = rootReader.newObjectReader("version");
         m.setVersion(decoder0.decode(reader, m.getVersion()));
         return m;

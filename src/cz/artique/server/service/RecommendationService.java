@@ -17,7 +17,6 @@ import org.jscience.mathematics.vector.Vector;
 import org.slim3.datastore.Datastore;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.users.User;
 
 import cz.artique.server.meta.recomandation.RecommendationMeta;
 import cz.artique.server.utils.KeyGen;
@@ -255,8 +254,8 @@ public class RecommendationService {
 		return new Mapping(usersList, sourcesList, SparseMatrix.valueOf(matrix));
 	}
 
-	public Recommendation getRecommendation(User user) {
-		Recommendation rec = new Recommendation(user.getUserId());
+	public Recommendation getRecommendation(String userId) {
+		Recommendation rec = new Recommendation(userId);
 		Key key = KeyGen.genKey(rec);
 
 		Recommendation recommadation =

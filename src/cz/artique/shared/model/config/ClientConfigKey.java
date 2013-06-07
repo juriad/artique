@@ -2,8 +2,6 @@ package cz.artique.shared.model.config;
 
 import java.io.Serializable;
 
-import com.google.appengine.api.users.User;
-
 import cz.artique.shared.utils.GenKey;
 import cz.artique.shared.utils.SharedUtils;
 
@@ -18,7 +16,7 @@ public enum ClientConfigKey implements GenKey, Serializable {
 
 	private final String key;
 	private final Value defaultValue;
-	private transient User user;
+	private transient String userId;
 
 	private ClientConfigKey(String key, Value defaultValue) {
 		this.key = key;
@@ -34,15 +32,15 @@ public enum ClientConfigKey implements GenKey, Serializable {
 	}
 
 	public String getKeyName() {
-		return SharedUtils.combineStringParts(getUser().getUserId(), getKey());
+		return SharedUtils.combineStringParts(getUserId(), getKey());
 	}
 
-	public User getUser() {
-		return user;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public ConfigType getType() {

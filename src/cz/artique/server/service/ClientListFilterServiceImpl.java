@@ -2,9 +2,6 @@ package cz.artique.server.service;
 
 import java.util.List;
 
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserServiceFactory;
-
 import cz.artique.client.service.ClientListFilterService;
 import cz.artique.server.validation.Validator;
 import cz.artique.shared.model.label.Filter;
@@ -18,9 +15,9 @@ import cz.artique.shared.validation.ValidationException;
 public class ClientListFilterServiceImpl implements ClientListFilterService {
 
 	public List<ListFilter> getAllListFilters() {
-		User user = UserServiceFactory.getUserService().getCurrentUser();
+		String userId = UserService.getCurrentUserId();
 		ListFilterService lfs = new ListFilterService();
-		return lfs.getAllListFilters(user);
+		return lfs.getAllListFilters(userId);
 	}
 
 	public ListFilter addListFilter(ListFilter listFilter)
@@ -28,8 +25,8 @@ public class ClientListFilterServiceImpl implements ClientListFilterService {
 		Validator<AddListFilter> validator = new Validator<AddListFilter>();
 		validator
 			.checkNullability(AddListFilter.LIST_FILTER, false, listFilter);
-		User user = UserServiceFactory.getUserService().getCurrentUser();
-		listFilter.setUser(user);
+		String userId = UserService.getCurrentUserId();
+		listFilter.setUserId(userId);
 		listFilter.setName(validator.checkString(AddListFilter.NAME,
 			listFilter.getName(), false, false));
 		listFilter.setHierarchy(validator.checkString(AddListFilter.HIERARCHY,
@@ -50,28 +47,28 @@ public class ClientListFilterServiceImpl implements ClientListFilterService {
 
 		if (listFilter.getFilterObject() != null) {
 			Filter filter = listFilter.getFilterObject();
-			filter.setUser(user);
+			filter.setUserId(userId);
 			filter.setType(FilterType.TOP_LEVEL_FILTER);
 			LabelService ls = new LabelService();
 			if (filter.getLabels() != null) {
 				List<Label> labelsByKeys =
 					ls.getLabelsByKeys(filter.getLabels());
 				for (Label l : labelsByKeys) {
-					validator.checkUser(AddListFilter.FILTER_LABELS, user,
-						l.getUser());
+					validator.checkUser(AddListFilter.FILTER_LABELS, userId,
+						l.getUserId());
 				}
 			}
 
 			if (filter.getFilterObjects() != null) {
 				for (Filter sub : filter.getFilterObjects()) {
-					sub.setUser(user);
+					sub.setUserId(userId);
 					sub.setType(FilterType.SECOND_LEVEL_FILTER);
 					if (sub.getLabels() != null) {
 						List<Label> labelsByKeys =
 							ls.getLabelsByKeys(filter.getLabels());
 						for (Label l : labelsByKeys) {
 							validator.checkUser(AddListFilter.FILTER_LABELS,
-								user, l.getUser());
+								userId, l.getUserId());
 						}
 					}
 				}
@@ -84,7 +81,7 @@ public class ClientListFilterServiceImpl implements ClientListFilterService {
 
 	public ListFilter updateListFilter(ListFilter listFilter)
 			throws ValidationException {
-		User user = UserServiceFactory.getUserService().getCurrentUser();
+		String userId = UserService.getCurrentUserId();
 		Validator<UpdateListFilter> validator =
 			new Validator<UpdateListFilter>();
 		validator.checkNullability(UpdateListFilter.LIST_FILTER, false,
@@ -95,10 +92,10 @@ public class ClientListFilterServiceImpl implements ClientListFilterService {
 		ListFilterService lfs = new ListFilterService();
 		ListFilter listFilterByKey =
 			lfs.getListFilterByKey(listFilter.getKey());
-		validator.checkUser(UpdateListFilter.LIST_FILTER, user,
-			listFilterByKey.getUser());
+		validator.checkUser(UpdateListFilter.LIST_FILTER, userId,
+			listFilterByKey.getUserId());
 
-		listFilter.setUser(user);
+		listFilter.setUserId(userId);
 		listFilter.setName(validator.checkString(UpdateListFilter.NAME,
 			listFilter.getName(), false, false));
 		listFilter
@@ -110,28 +107,28 @@ public class ClientListFilterServiceImpl implements ClientListFilterService {
 
 		if (listFilter.getFilterObject() != null) {
 			Filter filter = listFilter.getFilterObject();
-			filter.setUser(user);
+			filter.setUserId(userId);
 			filter.setType(FilterType.TOP_LEVEL_FILTER);
 			LabelService ls = new LabelService();
 			if (filter.getLabels() != null) {
 				List<Label> labelsByKeys =
 					ls.getLabelsByKeys(filter.getLabels());
 				for (Label l : labelsByKeys) {
-					validator.checkUser(UpdateListFilter.FILTER_LABELS, user,
-						l.getUser());
+					validator.checkUser(UpdateListFilter.FILTER_LABELS, userId,
+						l.getUserId());
 				}
 			}
 
 			if (filter.getFilterObjects() != null) {
 				for (Filter sub : filter.getFilterObjects()) {
-					sub.setUser(user);
+					sub.setUserId(userId);
 					sub.setType(FilterType.SECOND_LEVEL_FILTER);
 					if (sub.getLabels() != null) {
 						List<Label> labelsByKeys =
 							ls.getLabelsByKeys(filter.getLabels());
 						for (Label l : labelsByKeys) {
 							validator.checkUser(UpdateListFilter.FILTER_LABELS,
-								user, l.getUser());
+								userId, l.getUserId());
 						}
 					}
 				}
@@ -144,7 +141,7 @@ public class ClientListFilterServiceImpl implements ClientListFilterService {
 
 	public void deleteListFilter(ListFilter listFilter)
 			throws ValidationException {
-		User user = UserServiceFactory.getUserService().getCurrentUser();
+		String userId = UserService.getCurrentUserId();
 		Validator<DeleteListFilter> validator =
 			new Validator<DeleteListFilter>();
 		validator.checkNullability(DeleteListFilter.LIST_FILTER, false,
@@ -155,8 +152,8 @@ public class ClientListFilterServiceImpl implements ClientListFilterService {
 		ListFilterService lfs = new ListFilterService();
 		ListFilter listFilterByKey =
 			lfs.getListFilterByKey(listFilter.getKey());
-		validator.checkUser(DeleteListFilter.LIST_FILTER, user,
-			listFilterByKey.getUser());
+		validator.checkUser(DeleteListFilter.LIST_FILTER, userId,
+			listFilterByKey.getUserId());
 
 		lfs.deleteListFilter(listFilter);
 	}

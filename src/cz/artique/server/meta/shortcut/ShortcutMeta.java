@@ -1,6 +1,6 @@
 package cz.artique.server.meta.shortcut;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-06 17:38:27")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-07 13:29:42")
 /** */
 public final class ShortcutMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.shortcut.Shortcut> {
 
@@ -20,7 +20,7 @@ public final class ShortcutMeta extends org.slim3.datastore.ModelMeta<cz.artique
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.shortcut.Shortcut, cz.artique.shared.model.shortcut.ShortcutType> type = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.shortcut.Shortcut, cz.artique.shared.model.shortcut.ShortcutType>(this, "type", "type", cz.artique.shared.model.shortcut.ShortcutType.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.shortcut.Shortcut, com.google.appengine.api.users.User> user = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.shortcut.Shortcut, com.google.appengine.api.users.User>(this, "user", "user", com.google.appengine.api.users.User.class);
+    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.shortcut.Shortcut> userId = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.shortcut.Shortcut>(this, "userId", "userId");
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.shortcut.Shortcut, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.shortcut.Shortcut, java.lang.Long>(this, "version", "version", java.lang.Long.class);
@@ -47,7 +47,7 @@ public final class ShortcutMeta extends org.slim3.datastore.ModelMeta<cz.artique
         model.setKeyStroke((java.lang.String) entity.getProperty("keyStroke"));
         model.setReferenced((com.google.appengine.api.datastore.Key) entity.getProperty("referenced"));
         model.setType(stringToEnum(cz.artique.shared.model.shortcut.ShortcutType.class, (java.lang.String) entity.getProperty("type")));
-        model.setUser((com.google.appengine.api.users.User) entity.getProperty("user"));
+        model.setUserId((java.lang.String) entity.getProperty("userId"));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
         return model;
     }
@@ -65,7 +65,7 @@ public final class ShortcutMeta extends org.slim3.datastore.ModelMeta<cz.artique
         entity.setProperty("keyStroke", m.getKeyStroke());
         entity.setProperty("referenced", m.getReferenced());
         entity.setProperty("type", enumToString(m.getType()));
-        entity.setProperty("user", m.getUser());
+        entity.setProperty("userId", m.getUserId());
         entity.setProperty("version", m.getVersion());
         entity.setProperty("slim3.schemaVersion", 1);
         return entity;
@@ -157,9 +157,9 @@ public final class ShortcutMeta extends org.slim3.datastore.ModelMeta<cz.artique
             writer.setNextPropertyName("type");
             encoder0.encode(writer, m.getType());
         }
-        if(m.getUser() != null){
-            writer.setNextPropertyName("user");
-            encoder0.encode(writer, m.getUser());
+        if(m.getUserId() != null){
+            writer.setNextPropertyName("userId");
+            encoder0.encode(writer, m.getUserId());
         }
         if(m.getVersion() != null){
             writer.setNextPropertyName("version");
@@ -187,8 +187,8 @@ public final class ShortcutMeta extends org.slim3.datastore.ModelMeta<cz.artique
         m.setReferencedListFilter(decoder0.decode(reader, m.getReferencedListFilter(), cz.artique.shared.model.label.ListFilter.class));
         reader = rootReader.newObjectReader("type");
         m.setType(decoder0.decode(reader, m.getType(), cz.artique.shared.model.shortcut.ShortcutType.class));
-        reader = rootReader.newObjectReader("user");
-        m.setUser(decoder0.decode(reader, m.getUser()));
+        reader = rootReader.newObjectReader("userId");
+        m.setUserId(decoder0.decode(reader, m.getUserId()));
         reader = rootReader.newObjectReader("version");
         m.setVersion(decoder0.decode(reader, m.getVersion()));
         return m;

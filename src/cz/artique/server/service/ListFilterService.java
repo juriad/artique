@@ -9,7 +9,6 @@ import java.util.Map;
 import org.slim3.datastore.Datastore;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.users.User;
 
 import cz.artique.server.meta.label.FilterMeta;
 import cz.artique.server.meta.label.ListFilterMeta;
@@ -52,10 +51,10 @@ public class ListFilterService {
 		fillFilters(Arrays.asList(listFilters));
 	}
 
-	public List<ListFilter> getAllListFilters(User user) {
+	public List<ListFilter> getAllListFilters(String userId) {
 		ListFilterMeta meta = ListFilterMeta.get();
 		List<ListFilter> listFilters =
-			Datastore.query(meta).filter(meta.user.equal(user)).asList();
+			Datastore.query(meta).filter(meta.userId.equal(userId)).asList();
 		fillFilters(listFilters);
 		return listFilters;
 	}
@@ -121,17 +120,20 @@ public class ListFilterService {
 		Datastore.delete(listFilter.getKey());
 	}
 
-	public List<ListFilter> getExportsByAlias(String alias) {
+	public ListFilter getExportByAlias(String alias, String userId) {
 		ListFilterMeta meta = ListFilterMeta.get();
 		List<ListFilter> exports =
 			Datastore
 				.query(meta)
 				.filter(meta.exportAlias.equal(alias))
+				.filter(meta.userId.equal(userId))
 				.asList();
-		if (exports.size() > 0) {
+		if (exports.isEmpty()) {
+			return null;
+		} else {
 			fillFilters(exports);
+			return exports.get(0);
 		}
-		return exports;
 	}
 
 	public ListFilter getListFilterByKey(Key key) {

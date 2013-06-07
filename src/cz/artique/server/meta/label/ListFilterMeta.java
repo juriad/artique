@@ -1,6 +1,6 @@
 package cz.artique.server.meta.label;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-06 17:38:27")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-07 13:29:42")
 /** */
 public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.label.ListFilter> {
 
@@ -32,7 +32,7 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
     public final org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.label.ListFilter, java.util.Date> startFrom = new org.slim3.datastore.CoreUnindexedAttributeMeta<cz.artique.shared.model.label.ListFilter, java.util.Date>(this, "startFrom", "startFrom", java.util.Date.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, com.google.appengine.api.users.User> user = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, com.google.appengine.api.users.User>(this, "user", "user", com.google.appengine.api.users.User.class);
+    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.label.ListFilter> userId = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.label.ListFilter>(this, "userId", "userId");
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.label.ListFilter, java.lang.Long>(this, "version", "version", java.lang.Long.class);
@@ -63,7 +63,7 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         model.setOrder(stringToEnum(cz.artique.shared.model.label.ListFilterOrder.class, (java.lang.String) entity.getProperty("order")));
         model.setRead((java.lang.Boolean) entity.getProperty("read"));
         model.setStartFrom((java.util.Date) entity.getProperty("startFrom"));
-        model.setUser((com.google.appengine.api.users.User) entity.getProperty("user"));
+        model.setUserId((java.lang.String) entity.getProperty("userId"));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
         return model;
     }
@@ -85,7 +85,7 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         entity.setUnindexedProperty("order", enumToString(m.getOrder()));
         entity.setUnindexedProperty("read", m.getRead());
         entity.setUnindexedProperty("startFrom", m.getStartFrom());
-        entity.setProperty("user", m.getUser());
+        entity.setProperty("userId", m.getUserId());
         entity.setProperty("version", m.getVersion());
         entity.setProperty("slim3.schemaVersion", 1);
         return entity;
@@ -193,9 +193,9 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
             writer.setNextPropertyName("startFrom");
             encoder0.encode(writer, m.getStartFrom());
         }
-        if(m.getUser() != null){
-            writer.setNextPropertyName("user");
-            encoder0.encode(writer, m.getUser());
+        if(m.getUserId() != null){
+            writer.setNextPropertyName("userId");
+            encoder0.encode(writer, m.getUserId());
         }
         if(m.getVersion() != null){
             writer.setNextPropertyName("version");
@@ -231,8 +231,8 @@ public final class ListFilterMeta extends org.slim3.datastore.ModelMeta<cz.artiq
         m.setShortcutStroke(decoder0.decode(reader, m.getShortcutStroke()));
         reader = rootReader.newObjectReader("startFrom");
         m.setStartFrom(decoder0.decode(reader, m.getStartFrom()));
-        reader = rootReader.newObjectReader("user");
-        m.setUser(decoder0.decode(reader, m.getUser()));
+        reader = rootReader.newObjectReader("userId");
+        m.setUserId(decoder0.decode(reader, m.getUserId()));
         reader = rootReader.newObjectReader("version");
         m.setVersion(decoder0.decode(reader, m.getVersion()));
         return m;

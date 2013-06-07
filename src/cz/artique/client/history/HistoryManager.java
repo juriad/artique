@@ -11,7 +11,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyUtils;
 import cz.artique.client.hierarchy.InnerNode;
@@ -135,7 +134,6 @@ public class HistoryManager
 
 	public ListFilter getBaseListFilter() {
 		ListFilter lf = new ListFilter();
-		lf.setUser(ArtiqueWorld.WORLD.getUser());
 		if (historyItems.size() > 0) {
 			ListFilter last = historyItems.getLast().getListFilter();
 			lf.setOrder(last.getOrder());

@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.artique.client.service.ClientItemService;
 import cz.artique.server.validation.Validator;
@@ -33,15 +31,15 @@ public class ClientItemServiceImpl implements ClientItemService {
 			request = new ListingRequest();
 		}
 		ItemService is = new ItemService();
-		User user = UserServiceFactory.getUserService().getCurrentUser();
-		return is.getItems(user, request);
+		String userId = UserService.getCurrentUserId();
+		return is.getItems(userId, request);
 	}
 
 	public UserItem addManualItem(UserItem item) throws ValidationException {
 		Validator<AddManualItem> validator = new Validator<AddManualItem>();
 		validator.checkNullability(AddManualItem.USER_ITEM, false, item);
-		User user = UserServiceFactory.getUserService().getCurrentUser();
-		item.setUser(user);
+		String userId = UserService.getCurrentUserId();
+		item.setUserId(userId);
 		item.setBackupBlobKey(null);
 		item.setAdded(new Date());
 
@@ -49,7 +47,7 @@ public class ClientItemServiceImpl implements ClientItemService {
 		List<Label> labelsByKeys = ls.getLabelsByKeys(item.getLabels());
 		Label backupLabel = null;
 		for (Label l : labelsByKeys) {
-			validator.checkUser(AddManualItem.LABELS, user, l.getUser());
+			validator.checkUser(AddManualItem.LABELS, userId, l.getUserId());
 			if (l.getBackupLevel() != null
 				|| !BackupLevel.NO_BACKUP.equals(l.getBackupLevel())) {
 				backupLabel = l;
@@ -91,7 +89,7 @@ public class ClientItemServiceImpl implements ClientItemService {
 		}
 
 		Validator<UpdateItems> validator = new Validator<UpdateItems>();
-		User user = UserServiceFactory.getUserService().getCurrentUser();
+		String userId = UserService.getCurrentUserId();
 		Set<Key> labelKeys = new HashSet<Key>();
 		for (Key key : changeSets.keySet()) {
 			ChangeSet change = changeSets.get(key);
@@ -103,7 +101,7 @@ public class ClientItemServiceImpl implements ClientItemService {
 
 		Map<Key, Label> backupLabels = new HashMap<Key, Label>();
 		for (Label l : labels) {
-			validator.checkUser(UpdateItems.LABELS, user, l.getUser());
+			validator.checkUser(UpdateItems.LABELS, userId, l.getUserId());
 			if (l.getBackupLevel() != null
 				&& !BackupLevel.NO_BACKUP.equals(l.getBackupLevel())) {
 				backupLabels.put(l.getKey(), l);
@@ -137,6 +135,6 @@ public class ClientItemServiceImpl implements ClientItemService {
 			}
 		}
 
-		return is.updateItems(userItemsByKeys, changeSets, user);
+		return is.updateItems(userItemsByKeys, changeSets, userId);
 	}
 }

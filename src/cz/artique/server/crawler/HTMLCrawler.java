@@ -8,8 +8,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.google.appengine.api.users.User;
-
 import cz.artique.server.service.ItemService;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;
@@ -56,12 +54,12 @@ public abstract class HTMLCrawler<E extends HTMLSource, F extends Item>
 		return simplified;
 	}
 
-	protected Set<User> getUsersAlreadyHavingItem(F item) {
+	protected Set<String> getUsersAlreadyHavingItem(F item) {
 		ItemService is = new ItemService();
 		List<UserItem> userItemsForItem = is.getUserItemsForItem(item.getKey());
-		Set<User> users = new HashSet<User>();
+		Set<String> users = new HashSet<String>();
 		for (UserItem ui : userItemsForItem) {
-			users.add(ui.getUser());
+			users.add(ui.getUserId());
 		}
 		return users;
 	}

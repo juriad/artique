@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.google.appengine.api.datastore.Key;
 
-import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.FilterType;
@@ -90,7 +89,6 @@ public class HistoryUtils {
 	public ListFilter deserializeListFilter(String token) {
 		token = token.trim();
 		ListFilter lf = new ListFilter();
-		lf.setUser(ArtiqueWorld.WORLD.getUser());
 		while (!token.isEmpty()) {
 			if (token.startsWith("read=")) {
 				Boolean read = null;
@@ -270,7 +268,6 @@ public class HistoryUtils {
 		}
 
 		Filter filter = new Filter();
-		filter.setUser(ArtiqueWorld.WORLD.getUser());
 		filter.setType(FilterType.TOP_LEVEL_FILTER);
 
 		List<Key> labels = new ArrayList<Key>();
@@ -291,7 +288,6 @@ public class HistoryUtils {
 				}
 				if (keys.size() > 1) {
 					Filter second = new Filter();
-					second.setUser(ArtiqueWorld.WORLD.getUser());
 					second.setType(FilterType.SECOND_LEVEL_FILTER);
 					second.setLabels(keys);
 					filterObjects.add(second);

@@ -1,33 +1,32 @@
 package cz.artique.server.service;
 
 import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-import cz.artique.client.UserInfo;
 import cz.artique.client.service.UserServiceWrapper;
+import cz.artique.shared.model.user.UserInfo;
 
 public class UserServiceWrapperImpl extends RemoteServiceServlet
 		implements UserServiceWrapper {
 
 	private static final long serialVersionUID = 1L;
-	final static public UserService userService = UserServiceFactory
-		.getUserService();
 
 	public UserInfo login(String requestUri) {
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
-		UserInfo userInfo = new UserInfo();
-
+		UserService us = new UserService();
+		User user = UserService.getCurrentUser();
+		UserInfo info;
 		if (user != null) {
-			userInfo.setUser(user);
-			userInfo.setLogoutUrl(userService.createLogoutURL(requestUri));
+			info = us.getUserInfo(user.getUserId());
+			if (info == null) {
+				info = us.createUserInfo(user);
+			}
+			info.setLogoutUrl(UserService.createLogoutURL(requestUri));
 			ensureManualSource();
 		} else {
-			userInfo.setLoginUrl(userService.createLoginURL(requestUri));
+			info = new UserInfo();
+			info.setLoginUrl(UserService.createLoginURL(requestUri));
 		}
-		return userInfo;
+		return info;
 	}
 
 	private void ensureManualSource() {

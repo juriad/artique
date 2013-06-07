@@ -9,7 +9,6 @@ import org.slim3.datastore.ModelQuery;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Transaction;
-import com.google.appengine.api.users.User;
 
 import cz.artique.client.service.ClientLabelService.UpdateLabels;
 import cz.artique.server.meta.item.UserItemMeta;
@@ -27,10 +26,10 @@ public class LabelService {
 
 	public LabelService() {}
 
-	public List<Label> getAllLabels(User user) {
+	public List<Label> getAllLabels(String userId) {
 		LabelMeta meta = LabelMeta.get();
 		ModelQuery<Label> query =
-			Datastore.query(meta).filter(meta.user.equal(user));
+			Datastore.query(meta).filter(meta.userId.equal(userId));
 		List<Label> labels = query.asList();
 		return labels;
 	}

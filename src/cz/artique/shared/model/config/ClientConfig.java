@@ -6,7 +6,6 @@ import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.users.User;
 
 import cz.artique.shared.utils.GenKey;
 import cz.artique.shared.utils.HasKey;
@@ -34,12 +33,12 @@ public class ClientConfig implements Serializable, GenKey, HasKey<Key> {
 	@Attribute(unindexed = true)
 	private String stringValue;
 
-	private User user;
+	private String userId;
 
 	public ClientConfig() {}
 
-	public ClientConfig(User user, String configKey) {
-		this.user = user;
+	public ClientConfig(String userId, String configKey) {
+		this.userId = userId;
 		this.configKey = configKey;
 	}
 
@@ -144,16 +143,15 @@ public class ClientConfig implements Serializable, GenKey, HasKey<Key> {
 	}
 
 	public String getKeyName() {
-		return SharedUtils.combineStringParts(getUser().getUserId(),
-			getConfigKey());
+		return SharedUtils.combineStringParts(getUserId(), getConfigKey());
 	}
 
-	public User getUser() {
-		return user;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 }

@@ -7,9 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.users.User;
 
-import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.labels.LabelWidget;
 import cz.artique.client.labels.suggestion.LabelsPool;
 import cz.artique.client.labels.suggestion.SuggestionResult;
@@ -98,8 +96,6 @@ public class QueryFilter extends AbstractQueryFilter {
 		}
 		topListFilter.add(secondaryListFilter);
 
-		User user = ArtiqueWorld.WORLD.getUser();
-
 		List<Key> topLabels = new ArrayList<Key>();
 		List<Filter> topFilters = new ArrayList<Filter>();
 		for (List<Label> sub : topListFilter) {
@@ -109,14 +105,12 @@ public class QueryFilter extends AbstractQueryFilter {
 				topLabels.add(sub.get(0).getKey());
 			} else {
 				Filter subFilter = new Filter();
-				subFilter.setUser(user);
 				subFilter.setType(FilterType.SECOND_LEVEL_FILTER);
 				subFilter.setLabels(labelsToKeys(sub));
 				topFilters.add(subFilter);
 			}
 		}
 		Filter filter = new Filter();
-		filter.setUser(user);
 		filter.setType(FilterType.TOP_LEVEL_FILTER);
 		if (!topFilters.isEmpty()) {
 			filter.setFilterObjects(topFilters);

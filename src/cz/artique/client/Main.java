@@ -10,6 +10,7 @@ import cz.artique.client.login.ErrorPage;
 import cz.artique.client.login.LoginPage;
 import cz.artique.client.service.UserServiceWrapper;
 import cz.artique.client.service.UserServiceWrapperAsync;
+import cz.artique.shared.model.user.UserInfo;
 
 public class Main implements EntryPoint {
 	public void onModuleLoad() {
@@ -24,7 +25,7 @@ public class Main implements EntryPoint {
 
 				public void onSuccess(UserInfo result) {
 					ArtiqueWorld.WORLD.setUserInfo(result);
-					if (result.getUser() != null) {
+					if (result.getUserId() != null) {
 						loadArtique();
 					} else {
 						loadLogin();

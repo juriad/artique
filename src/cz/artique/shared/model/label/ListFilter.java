@@ -7,7 +7,6 @@ import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.users.User;
 
 import cz.artique.shared.utils.HasDeepEquals;
 import cz.artique.shared.utils.HasHierarchy;
@@ -50,7 +49,7 @@ public class ListFilter
 
 	private String hierarchy;
 
-	private User user;
+	private String userId;
 
 	private String exportAlias;
 
@@ -190,7 +189,7 @@ public class ListFilter
 	}
 
 	public boolean equalsDeeply(ListFilter e) {
-		return SharedUtils.eq(getUser(), e.getUser())
+		return SharedUtils.eq(getUserId(), e.getUserId())
 			&& SharedUtils.eq(getRead(), e.getRead())
 			&& SharedUtils.eq(getEndTo(), e.getEndTo())
 			&& SharedUtils.eq(getHierarchy(), e.getHierarchy())
@@ -201,12 +200,12 @@ public class ListFilter
 			&& SharedUtils.deepEq(getFilterObject(), e.getFilterObject());
 	}
 
-	public User getUser() {
-		return user;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getExportAlias() {
@@ -227,7 +226,7 @@ public class ListFilter
 		clone.setOrder(order);
 		clone.setRead(read);
 		clone.setStartFrom(startFrom);
-		clone.setUser(user);
+		clone.setUserId(userId);
 		return clone;
 	}
 
