@@ -11,4 +11,16 @@ public interface ListingConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("Content is missing.")
 	String missingContent();
+
+	@DefaultStringValue("Author")
+	String author();
+	
+	@DefaultStringValue("New content")
+	String newContent();
+
+	@DefaultStringValue("Difference")
+	String diffContent();
+
+	@DefaultStringValue("Compared to")
+	String comparedTo();
 }

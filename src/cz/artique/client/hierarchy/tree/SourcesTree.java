@@ -7,6 +7,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.ui.TreeItem;
 
 import cz.artique.client.hierarchy.Hierarchy;
+import cz.artique.client.hierarchy.HierarchyChangeEvent;
 import cz.artique.client.hierarchy.HierarchyTreeWidget;
 import cz.artique.client.hierarchy.HierarchyUtils;
 import cz.artique.client.hierarchy.tree.UserSourceWidget.UserSourceWidgetFactory;
@@ -41,6 +42,11 @@ public class SourcesTree
 				select(getAllSourcesWidgets());
 			}
 		});
+	}
+	
+	@Override
+	protected void afterUpdate(HierarchyChangeEvent<UserSource> event) {
+		refreshAll(getRootItem());
 	}
 
 	@SuppressWarnings("unchecked")

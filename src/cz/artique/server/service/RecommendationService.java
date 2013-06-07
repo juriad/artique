@@ -21,6 +21,7 @@ import com.google.appengine.api.users.User;
 
 import cz.artique.server.meta.recomandation.RecommendationMeta;
 import cz.artique.server.utils.KeyGen;
+import cz.artique.shared.model.config.ConfigKey;
 import cz.artique.shared.model.recomandation.Recommendation;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
@@ -109,7 +110,9 @@ public class RecommendationService {
 		SparseMatrix<Float64> PR = null;
 		SparseMatrix<Float64> CR = CR0;
 
-		int iterations = 10; // TODO const
+		int iterations =
+			ConfigService.CONFIG_SERVICE.getConfig(
+				ConfigKey.RECOMMENDATION_ITERATIONS).get();
 		for (int i = 0; i < iterations; i++) {
 			PR = CR.times(B);
 			CR = PR.times(Ct).plus(CR0);
@@ -156,7 +159,9 @@ public class RecommendationService {
 
 	private List<Key> getBestRecommendations(List<Result> results,
 			List<Key> sourceKeys) {
-		int recommendations = 10; // TODO const
+		int recommendations =
+			ConfigService.CONFIG_SERVICE.getConfig(
+				ConfigKey.RECOMMENDATION_COUNT).get();
 
 		Collections.sort(results, new Comparator<Result>() {
 			public int compare(Result o1, Result o2) {

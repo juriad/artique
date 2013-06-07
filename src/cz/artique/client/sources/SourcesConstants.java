@@ -19,7 +19,7 @@ public interface SourcesConstants extends ConstantsWithLookup {
 	@DefaultStringValue("URL")
 	String url();
 
-	@DefaultStringValue("Fix URL")
+	@DefaultStringValue("Fix URL and continue")
 	String setUrl();
 
 	@DefaultStringValue("Name")

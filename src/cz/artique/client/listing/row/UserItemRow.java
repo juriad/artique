@@ -1,8 +1,12 @@
 package cz.artique.client.listing.row;
 
+import java.util.Date;
+
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Link;
 import com.google.appengine.api.datastore.Text;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
@@ -12,23 +16,35 @@ import com.google.gwt.i18n.shared.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.text.client.DateTimeFormatRenderer;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TabLayoutPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.listing.ListingConstants;
 import cz.artique.client.manager.Managers;
+import cz.artique.shared.model.item.ArticleItem;
 import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.Item;
+import cz.artique.shared.model.item.PageChangeItem;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.source.UserSource;
 
 public class UserItemRow extends RowWidget {
+
+	private static UserItemRowUiBinder uiBinder = GWT
+		.create(UserItemRowUiBinder.class);
+
+	interface UserItemRowUiBinder extends UiBinder<Widget, UserItemRow> {}
 
 	public static final UserItemRowFactory FACTORY = new UserItemRowFactory();
 
@@ -38,38 +54,135 @@ public class UserItemRow extends RowWidget {
 		}
 	}
 
-	private UserItemLabelsBar labels;
-	private FlowPanel header;
+	@UiField
+	VerticalPanel row;
 
-	private Label title;
-	private HTMLPanel content;
-	private Label source;
-	private Label added;
-	private Anchor backup;
+	@UiField
+	FlowPanel header;
+
+	@UiField
+	UserItemLabelsBar labels;
+
+	@UiField
+	Anchor link;
+
+	@UiField
+	Label source;
+
+	@UiField
+	Label added;
+
+	@UiField
+	Anchor backup;
+
+	@UiField
+	Label title;
+
+	@UiField
+	FlowPanel content;
+
 	private Image backupImage;
 
 	public UserItemRow(UserItem data) {
 		super(data);
 
-		header = new FlowPanel();
-		labels = new UserItemLabelsBar();
-		header.add(labels);
+		initWidget(uiBinder.createAndBindUi(this));
 
-		Anchor link = createLinkAnchor();
-		header.add(link);
+		fillLinkAnchor();
+		fillSourceLabel();
+		fillDateLabel();
+		fillBackupAnchor();
 
-		source = createSourceLabel();
-		header.add(source);
+		fillTitle();
 
-		added = createDateLabel();
-		header.add(added);
+		fillContent();
+		setContent(content);
 
-		backup = createBackupAnchor();
-		header.add(backup);
+		addOpenHandler(new OpenHandler<RowWidget>() {
+			public void onOpen(OpenEvent<RowWidget> event) {
+				Managers.ITEMS_MANAGER.readSet(getValue(), true, null);
+				setReadState();
+			}
+		});
 
-		title = new Label(getValue().getItemObject().getTitle());
-		title.setStylePrimaryName("itemTitle");
-		header.add(title);
+		refresh();
+	}
+
+	private void fillLinkAnchor() {
+		Image open = new Image(ArtiqueWorld.WORLD.getResources().open());
+		link.getElement().appendChild(open.getElement());
+		link.setHref(getValue().getItemObject().getUrl().getValue());
+		link.setStyleName("itemIcon", true);
+	}
+
+	private void fillSourceLabel() {
+		Key userSourceKey = getValue().getUserSource();
+		UserSource userSource =
+			Managers.SOURCES_MANAGER.getSourceByKey(userSourceKey);
+		source.setText(userSource.getName());
+
+		Link url = userSource.getSourceObject().getUrl();
+		if (url != null && url.getValue() != null) {
+			source.setTitle(url.getValue());
+		}
+	}
+
+	private void fillDateLabel() {
+		ListingConstants constants = I18n.getListingConstants();
+
+		DateTimeFormatRenderer shortRenderer =
+			new DateTimeFormatRenderer(
+				DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_SHORT));
+
+		Item itemObject = getValue().getItemObject();
+		String simple;
+		if (itemObject.getPublished() != null) {
+			simple = shortRenderer.render(itemObject.getPublished());
+		} else {
+			simple = shortRenderer.render(itemObject.getAdded());
+		}
+		added.setText(simple);
+
+		DateTimeFormatRenderer longRenderer =
+			new DateTimeFormatRenderer(
+				DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_LONG));
+
+		// TODO nice to have: universal line separator in tooltip
+		String full = "";
+		full +=
+			constants.added() + ": "
+				+ longRenderer.render(itemObject.getAdded());
+		if (itemObject.getPublished() != null) {
+			full +=
+				"\n" + constants.published() + ": "
+					+ longRenderer.render(itemObject.getPublished());
+		}
+		if (itemObject instanceof PageChangeItem) {
+			Date comparedTo = ((PageChangeItem) itemObject).getComparedTo();
+			if (comparedTo != null) {
+				full +=
+					"\n" + constants.comparedTo() + ": "
+						+ longRenderer.render(comparedTo);
+			}
+		}
+		added.setTitle(full);
+	}
+
+	private void fillBackupAnchor() {
+		backup.setStyleName("itemIcon", true);
+	}
+
+	private void fillTitle() {
+		Item itemObject = getValue().getItemObject();
+		title.setText(itemObject.getTitle());
+
+		if (itemObject instanceof ArticleItem) {
+			String author = ((ArticleItem) itemObject).getAuthor();
+			if (author != null && !author.trim().isEmpty()) {
+				ListingConstants constants = I18n.getListingConstants();
+				title.setTitle(constants.author() + ": " + author);
+			}
+		}
 
 		title.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -80,21 +193,24 @@ public class UserItemRow extends RowWidget {
 				}
 			}
 		});
+	}
 
-		setHeader(header);
+	private void fillContent() {
+		Item itemObject = getValue().getItemObject();
 
 		SafeHtml contentHTML = SafeHtmlUtils.EMPTY_SAFE_HTML;
-		Text contentText = getValue().getItemObject().getContent();
+		Text contentText = itemObject.getContent();
 		if (contentText != null && contentText.getValue() != null) {
 			ContentType contentType =
 				getValue().getItemObject().getContentType();
 			if (contentType != null) {
 				switch (contentType) {
 				case HTML:
-					String html = contentText.getValue();
+					String htmlValue = contentText.getValue();
 					// target all links to a new tab
-					html = html.replaceAll("<a[\\s>]", "<a target='_blank' ");
-					contentHTML = SafeHtmlUtils.fromTrustedString(html);
+					htmlValue =
+						htmlValue.replaceAll("<a[\\s>]", "<a target='_blank' ");
+					contentHTML = SafeHtmlUtils.fromTrustedString(htmlValue);
 					break;
 				case PLAIN_TEXT:
 					contentHTML =
@@ -108,37 +224,42 @@ public class UserItemRow extends RowWidget {
 			I18n.getListingConstants().missingContent();
 		}
 
-		content = new HTMLPanel(contentHTML);
-		setContent(content);
-
-		addOpenHandler(new OpenHandler<RowWidget>() {
-			public void onOpen(OpenEvent<RowWidget> event) {
-				Managers.ITEMS_MANAGER.readSet(getValue(), true, null);
-				setReadState();
+		if (itemObject instanceof PageChangeItem) {
+			PageChangeItem change = (PageChangeItem) itemObject;
+			SafeHtml diffHTML = SafeHtmlUtils.EMPTY_SAFE_HTML;
+			Text diffText = change.getDiff();
+			if (diffText != null && diffText.getValue() != null) {
+				ContentType contentType =
+					getValue().getItemObject().getContentType();
+				if (contentType != null) {
+					switch (contentType) {
+					case HTML:
+						String htmlValue = diffText.getValue();
+						// target all links to a new tab
+						htmlValue =
+							htmlValue.replaceAll("<a[\\s>]",
+								"<a target='_blank' ");
+						diffHTML = SafeHtmlUtils.fromTrustedString(htmlValue);
+						break;
+					case PLAIN_TEXT:
+						diffHTML =
+							SafeHtmlUtils.fromString(diffText.getValue());
+						break;
+					default:
+						break;
+					}
+				}
+			} else {
+				I18n.getListingConstants().missingContent();
 			}
-		});
 
-		refresh();
-	}
-
-	private Anchor createLinkAnchor() {
-		Image open = new Image(ArtiqueWorld.WORLD.getResources().open());
-		Anchor link = new Anchor();
-		link.setStylePrimaryName("itemLink");
-		link.getElement().appendChild(open.getElement());
-		link.setHref(getValue().getItemObject().getUrl().getValue());
-		link.setStyleName("itemIcon", true);
-		link.setTarget("_blank");
-
-		return link;
-	}
-
-	private Anchor createBackupAnchor() {
-		Anchor backup = new Anchor();
-		backup.setStylePrimaryName("itemBackup");
-		backup.setStyleName("itemIcon", true);
-		backup.setTarget("_blank");
-		return backup;
+			ListingConstants constants = I18n.getListingConstants();
+			TabLayoutPanel p = new TabLayoutPanel(1.5, Unit.EM);
+			p.add(new HTML(contentHTML), constants.newContent());
+			p.add(new HTML(diffHTML), constants.diffContent());
+		} else {
+			content.add(new HTML(contentHTML));
+		}
 	}
 
 	public void refresh() {
@@ -165,53 +286,5 @@ public class UserItemRow extends RowWidget {
 
 	public void openAddLabel() {
 		labels.openSuggestion();
-	}
-
-	private Label createDateLabel() {
-		ListingConstants constants = I18n.getListingConstants();
-
-		DateTimeFormatRenderer shortRenderer =
-			new DateTimeFormatRenderer(
-				DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_SHORT));
-
-		Item itemObject = getValue().getItemObject();
-		String simple;
-		if (itemObject.getPublished() != null) {
-			simple = shortRenderer.render(itemObject.getPublished());
-		} else {
-			simple = shortRenderer.render(itemObject.getAdded());
-		}
-		Label label = new Label(simple);
-
-		DateTimeFormatRenderer longRenderer =
-			new DateTimeFormatRenderer(
-				DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_LONG));
-		String full = "";
-		full +=
-			constants.added() + ": "
-				+ longRenderer.render(itemObject.getAdded());
-		if (itemObject.getPublished() != null) {
-			full +=
-				"\n" + constants.published() + ": "
-					+ longRenderer.render(itemObject.getPublished());
-		}
-		label.setTitle(full);
-
-		label.setStylePrimaryName("itemDate");
-		return label;
-	}
-
-	private Label createSourceLabel() {
-		Key userSourceKey = getValue().getUserSource();
-		UserSource userSource =
-			Managers.SOURCES_MANAGER.getSourceByKey(userSourceKey);
-		Label label = new Label(userSource.getName());
-		label.setStylePrimaryName("itemSource");
-
-		Link url = userSource.getSourceObject().getUrl();
-		if (url != null && url.getValue() != null) {
-			label.setTitle(url.getValue());
-		}
-		return label;
 	}
 }

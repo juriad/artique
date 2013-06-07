@@ -71,10 +71,13 @@ public interface ShortcutsConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("Add label")
 	String shortcutAction_ADD_LABEL();
-	
+
 	@DefaultStringValue("Add new items")
 	String shortcutAction_ADD_NEW_ITEMS();
-	
+
 	@DefaultStringValue("Add manual item")
 	String shortcutAction_ADD_MANUAL_ITEM();
+
+	@DefaultStringValue("No defined shortcut.")
+	String noDefinedShortcut();
 }

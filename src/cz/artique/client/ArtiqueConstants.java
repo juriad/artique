@@ -3,7 +3,7 @@ package cz.artique.client;
 import com.google.gwt.i18n.client.ConstantsWithLookup;
 
 public interface ArtiqueConstants extends ConstantsWithLookup {
-	@DefaultStringValue("Options")
+	@DefaultStringValue("General")
 	String options();
 
 	@DefaultStringValue("Sources")

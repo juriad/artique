@@ -178,9 +178,8 @@ public class ArtiqueList extends InfiniteList {
 			UserItem value = row.getValue();
 			boolean read = value.isRead();
 			if (!read) {
-				value.setRead(true);
-				row.setValue(value);
 				Managers.ITEMS_MANAGER.readSet(value, true, null);
+				row.setValue(value);
 			}
 		}
 	}

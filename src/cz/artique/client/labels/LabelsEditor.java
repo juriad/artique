@@ -91,6 +91,8 @@ public class LabelsEditor extends Composite implements HasValue<List<Label>> {
 		cellList = new CellList<Label>(new LabelCell());
 		initWidget(uiBinder.createAndBindUi(this));
 		selectionModel = new SingleSelectionModel<Label>();
+		LabelsConstants constants = I18n.getLabelsConstants();
+		cellList.setEmptyListWidget(new InlineLabel(constants.noLabelExists()));
 		cellList.setSelectionModel(selectionModel);
 		cellList.setStylePrimaryName("cellList");
 		selectionModel

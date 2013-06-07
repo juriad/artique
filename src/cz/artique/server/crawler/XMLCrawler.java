@@ -5,6 +5,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -50,6 +53,17 @@ public class XMLCrawler extends AbstractCrawler<XMLSource, ArticleItem> {
 		}
 
 		List<ArticleItem> items = getItems(feed);
+		Collections.sort(items, new Comparator<ArticleItem>() {
+			public int compare(ArticleItem o1, ArticleItem o2) {
+				Date p1 = o1.getPublished();
+				Date p2 = o2.getPublished();
+				if (p1 != null && p2 != null) {
+					return p1.compareTo(p2);
+				}
+				return 0;
+			}
+		});
+
 		List<ArticleItem> items2 = createNonDuplicateItems(items);
 		createUserItems(items2);
 

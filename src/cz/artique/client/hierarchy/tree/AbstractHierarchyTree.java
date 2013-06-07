@@ -80,7 +80,7 @@ public abstract class AbstractHierarchyTree<E extends HasHierarchy & HasName, F 
 								parent.insertItem(index, inTree);
 								getHierarchyWidget(inTree).refresh();
 							}
-							afterUpdate();
+							afterUpdate(event);
 						}
 					});
 				initialized();
@@ -88,7 +88,7 @@ public abstract class AbstractHierarchyTree<E extends HasHierarchy & HasName, F 
 		});
 	}
 
-	protected void afterUpdate() {}
+	protected void afterUpdate(HierarchyChangeEvent<E> event) {}
 
 	protected void initialized() {}
 

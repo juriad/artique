@@ -12,7 +12,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.shared.model.item.UserItem;
@@ -25,37 +24,17 @@ public abstract class RowWidget extends Composite
 
 	private boolean expanded;
 
-	private Widget header;
-
 	private Widget content;
-
-	private VerticalPanel panel;
 
 	public RowWidget(UserItem value) {
 		this.value = value;
-		panel = new VerticalPanel();
-		initWidget(panel);
-		this.setStylePrimaryName("row");
 	}
 
 	protected void setContent(Widget content) {
-		if (this.content != null) {
-			panel.remove(this.content);
-		}
 		this.content = content;
-		panel.add(content);
 		content.setVisible(false);
 		content.setStylePrimaryName("rowContent");
 		collapse();
-	}
-
-	protected void setHeader(Widget header) {
-		if (this.header != null) {
-			panel.remove(this.header);
-		}
-		this.header = header;
-		header.setStylePrimaryName("rowHeader");
-		panel.insert(header, 0);
 	}
 
 	public void expand() {

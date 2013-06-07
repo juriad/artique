@@ -57,4 +57,7 @@ public interface LabelsConstants extends ConstantsWithLookup {
 	@DefaultStringValue("Shortcut")
 	String shortcut();
 
+	@DefaultStringValue("No label exists.")
+	String noLabelExists();
+
 }

@@ -337,4 +337,9 @@ public class ShortcutsManager
 			}
 		};
 	}
+
+	public boolean isColliding(KeyEvent<?> event) {
+		return getShortcut(event) != null;
+	}
+
 }

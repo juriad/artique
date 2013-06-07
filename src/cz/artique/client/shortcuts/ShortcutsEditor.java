@@ -91,6 +91,8 @@ public class ShortcutsEditor extends Composite {
 		cellList = new CellList<Shortcut>(new ShortcutCell());
 		initWidget(uiBinder.createAndBindUi(this));
 		selectionModel = new SingleSelectionModel<Shortcut>();
+		ShortcutsConstants constants = I18n.getShortcutsConstants();
+		cellList.setEmptyListWidget(new InlineLabel(constants.noDefinedShortcut()));
 		cellList.setSelectionModel(selectionModel);
 		cellList.setStylePrimaryName("cellList");
 		selectionModel

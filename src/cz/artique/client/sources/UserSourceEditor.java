@@ -161,12 +161,12 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 				}
 			});
 
-		selectionModel = new SingleSelectionModel<Source>();
-		cellList.setSelectionModel(selectionModel);
-		cellList.setStylePrimaryName("cellList");
 		SourcesConstants constants = I18n.getSourcesConstants();
 		cellList.setEmptyListWidget(new InlineLabel(constants
 			.noRecommendation()));
+		selectionModel = new SingleSelectionModel<Source>();
+		cellList.setSelectionModel(selectionModel);
+		cellList.setStylePrimaryName("cellList");
 		selectionModel
 			.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 				public void onSelectionChange(SelectionChangeEvent event) {
@@ -249,6 +249,9 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 								recommandation
 									.setRecommendedSourcesObjects(new ArrayList<Source>());
 							} else {
+								if(result.getRecommendedSourcesObjects()==null) {
+									result.setRecommendedSourcesObjects(new ArrayList<Source>());
+								}
 								recommandation = result;
 							}
 							cellList.setRowData(recommandation
