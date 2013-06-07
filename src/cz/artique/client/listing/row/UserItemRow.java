@@ -221,7 +221,10 @@ public class UserItemRow extends RowWidget {
 				}
 			}
 		} else {
-			I18n.getListingConstants().missingContent();
+			contentHTML =
+				SafeHtmlUtils.fromString(I18n
+					.getListingConstants()
+					.missingContent());
 		}
 
 		if (itemObject instanceof PageChangeItem) {
@@ -250,7 +253,10 @@ public class UserItemRow extends RowWidget {
 					}
 				}
 			} else {
-				I18n.getListingConstants().missingContent();
+				diffHTML =
+					SafeHtmlUtils.fromString(I18n
+						.getListingConstants()
+						.missingContent());
 			}
 
 			ListingConstants constants = I18n.getListingConstants();

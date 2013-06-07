@@ -73,8 +73,7 @@ public class SourceService {
 		return sources;
 	}
 
-	public ManualSource ensureManualSource() {
-		String userId = UserService.getCurrentUserId();
+	public ManualSource ensureManualSource(String userId) {
 		ManualSource manualSource = new ManualSource(userId);
 		manualSource.setKey(KeyGen.genKey(manualSource));
 		manualSource.setEnabled(false);

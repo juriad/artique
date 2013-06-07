@@ -25,5 +25,6 @@ public class Updater extends HttpServlet {
 
 	protected void process(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+
 	}
 }

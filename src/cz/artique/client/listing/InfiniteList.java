@@ -2,8 +2,10 @@ package cz.artique.client.listing;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -11,6 +13,7 @@ import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -20,6 +23,7 @@ import com.google.gwt.view.client.SelectionChangeEvent.HasSelectionChangedHandle
 import cz.artique.client.listing.NewDataEvent.NewDataType;
 import cz.artique.client.listing.row.RowWidget;
 import cz.artique.client.listing.row.UserItemRow;
+import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;
 
@@ -88,7 +92,21 @@ public class InfiniteList extends Composite
 		return tail.size();
 	}
 
-	public void setValue(UserItem value) {
+	public void setValue(final UserItem value) {
+		if (!hasAllLabels(value.getLabels())) {
+			Managers.LABELS_MANAGER.refresh(new AsyncCallback<Void>() {
+				public void onSuccess(Void result) {
+					doSetValue(value);
+				}
+
+				public void onFailure(Throwable caught) {}
+			});
+		} else {
+			doSetValue(value);
+		}
+	}
+
+	private void doSetValue(UserItem value) {
 		RowWidget row = rows.get(value.getKey());
 		if (row != null) {
 			Item itemObject = row.getValue().getItemObject();
@@ -97,7 +115,25 @@ public class InfiniteList extends Composite
 		}
 	}
 
-	public int showHead() {
+	public void showHead() {
+		Set<Key> labels = new HashSet<Key>();
+		for (UserItem ui : head) {
+			labels.addAll(ui.getLabels());
+		}
+		if (!hasAllLabels(labels)) {
+			Managers.LABELS_MANAGER.refresh(new AsyncCallback<Void>() {
+				public void onSuccess(Void result) {
+					addHead();
+				}
+
+				public void onFailure(Throwable caught) {}
+			});
+		} else {
+			addHead();
+		}
+	}
+
+	private void addHead() {
 		List<UserItem> l = head;
 		if (l.size() > 0) {
 			head = new ArrayList<UserItem>();
@@ -116,10 +152,27 @@ public class InfiniteList extends Composite
 			rowsAdded();
 			NewDataEvent.fire(this, NewDataType.NEW_DATA_SHOWN);
 		}
-		return l.size();
 	}
 
-	public int showTail() {
+	public void showTail() {
+		Set<Key> labels = new HashSet<Key>();
+		for (UserItem ui : tail) {
+			labels.addAll(ui.getLabels());
+		}
+		if (!hasAllLabels(labels)) {
+			Managers.LABELS_MANAGER.refresh(new AsyncCallback<Void>() {
+				public void onSuccess(Void result) {
+					addTail();
+				}
+
+				public void onFailure(Throwable caught) {}
+			});
+		} else {
+			addTail();
+		}
+	}
+
+	public void addTail() {
 		List<UserItem> l = tail;
 		if (l.size() > 0) {
 			tail = new ArrayList<UserItem>();
@@ -133,7 +186,6 @@ public class InfiniteList extends Composite
 			rowsAdded();
 			NewDataEvent.fire(this, NewDataType.NEW_DATA_SHOWN);
 		}
-		return l.size();
 	}
 
 	protected void rowsAdded() {}
@@ -231,5 +283,15 @@ public class InfiniteList extends Composite
 
 	public HandlerRegistration addNewDataHandler(NewDataHandler handler) {
 		return addHandler(handler, NewDataEvent.getType());
+	}
+
+	protected boolean hasAllLabels(Iterable<Key> keys) {
+		boolean hasAll = true;
+		for (Key key : keys) {
+			if (Managers.LABELS_MANAGER.getLabelByKey(key) == null) {
+				hasAll = false;
+			}
+		}
+		return hasAll;
 	}
 }

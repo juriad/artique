@@ -241,7 +241,7 @@ public class UserSourceService {
 
 	public UserSource getManualUserSource(String userId) {
 		SourceService ss = new SourceService();
-		ManualSource manualSource = ss.ensureManualSource();
+		ManualSource manualSource = ss.ensureManualSource(userId);
 
 		UserSource us = new UserSource(userId, manualSource, "does_not_matter");
 		us.setKey(KeyGen.genKey(us));

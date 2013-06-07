@@ -69,7 +69,7 @@
 		</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
-	
+
 	<servlet>
 		<servlet-name>CronRecommendationServlet</servlet-name>
 		<servlet-class>cz.artique.server.service.CronRecommendationServlet
@@ -94,6 +94,13 @@
 	<servlet>
 		<servlet-name>BackupServlet</servlet-name>
 		<servlet-class>cz.artique.server.service.BackupServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>ClientServlet</servlet-name>
+		<servlet-class>cz.artique.server.service.ClientServlet
 		</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
@@ -143,6 +150,11 @@
 	<servlet-mapping>
 		<servlet-name>BackupServlet</servlet-name>
 		<url-pattern>/export/backupService</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ClientServlet</servlet-name>
+		<url-pattern>/export/clientService</url-pattern>
 	</servlet-mapping>
 
 	<!-- TODO odstranit v produkci -->

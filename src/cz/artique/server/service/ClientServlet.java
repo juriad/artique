@@ -276,6 +276,11 @@ public class ClientServlet extends HttpServlet {
 		LabelService ls = new LabelService();
 		List<Label> allLabels =
 			ls.getAllLabels(userInfo.getUserId(), LabelType.USER_DEFINED);
-		JSONValue.writeJSONString(allLabels, resp.getWriter());
+		List<String> labels = new ArrayList<String>();
+		for (Label l : allLabels) {
+			labels.add(l.getName());
+		}
+
+		JSONValue.writeJSONString(labels, resp.getWriter());
 	}
 }

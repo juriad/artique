@@ -2,13 +2,13 @@ package cz.artique.server.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.slim3.datastore.Datastore;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gwt.user.client.Random;
 
 import cz.artique.server.crawler.CrawlerUtils;
 import cz.artique.server.meta.user.UserInfoMeta;
@@ -31,13 +31,14 @@ public class UserService {
 		ui.setUserId(user.getUserId());
 		ui.setNickname(user.getNickname());
 		ui.setClientToken(genClientToken());
+		ui.setKey(KeyGen.genKey(ui));
 		Datastore.put(ui);
 		return ui;
 	}
 
 	private String genClientToken() {
 		long date = new Date().getTime();
-		int i = Random.nextInt();
+		int i = new Random().nextInt();
 		String token = date + "$" + i;
 		String sha1 = CrawlerUtils.toSHA1(token);
 

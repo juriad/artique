@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -62,7 +63,8 @@ public class ItemService {
 		fillItems(Arrays.asList(userItems));
 	}
 
-	public ListingResponse<UserItem> getItems(String userId, ListingRequest request) {
+	public ListingResponse<UserItem> getItems(String userId,
+			ListingRequest request) {
 		UserItemMeta meta = UserItemMeta.get();
 		Date date = new Date();
 
@@ -307,7 +309,8 @@ public class ItemService {
 
 	public void addManualItem(UserItem userItem) {
 		UserSourceService uss = new UserSourceService();
-		UserSource manualUserSource = uss.getManualUserSource(userItem.getUserId());
+		UserSource manualUserSource =
+			uss.getManualUserSource(userItem.getUserId());
 
 		ManualItem item = (ManualItem) userItem.getItemObject();
 		item.setSource(manualUserSource.getSource());
@@ -315,12 +318,13 @@ public class ItemService {
 		item.setKey(itemKey);
 
 		userItem.setItem(item.getKey());
-		List<Key> labels = userItem.getLabels();
-		if (labels == null) {
-			labels = new ArrayList<Key>();
+		Set<Key> labels = new HashSet<Key>();
+		if (userItem.getLabels() != null) {
+			labels.addAll(userItem.getLabels());
 		}
 		labels.addAll(manualUserSource.getDefaultLabels());
-		userItem.setLabels(labels);
+		userItem.setLabels(new ArrayList<Key>(labels));
+		userItem.setUserSource(manualUserSource.getKey());
 
 		Key userItemKey = Datastore.put(userItem);
 		userItem.setKey(userItemKey);

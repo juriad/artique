@@ -79,16 +79,23 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 		label.setDisplayName(source.getName());
 	}
 
+	private List<AsyncCallback<Void>> pingsWaiting =
+		new ArrayList<AsyncCallback<Void>>();
+
 	public void refresh(final AsyncCallback<Void> ping) {
+		pingsWaiting.add(ping);
 		assumeOnline();
 		service.getAllLabels(new AsyncCallback<List<Label>>() {
 			public void onFailure(Throwable caught) {
 				serviceFailed(caught);
 				new ValidationMessage<GetAllLabels>(GetAllLabels.GENERAL)
 					.onFailure(caught);
-				if (ping != null) {
-					ping.onFailure(caught);
+				for (AsyncCallback<Void> p : pingsWaiting) {
+					if (p != null) {
+						p.onFailure(caught);
+					}
 				}
+				pingsWaiting.clear();
 			}
 
 			public void onSuccess(final List<Label> list) {
@@ -130,9 +137,12 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 
 						new ValidationMessage<GetAllLabels>(
 							GetAllLabels.GENERAL).onSuccess(MessageType.DEBUG);
-						if (ping != null) {
-							ping.onSuccess(null);
+						for (AsyncCallback<Void> p : pingsWaiting) {
+							if (p != null) {
+								p.onSuccess(null);
+							}
 						}
+						pingsWaiting.clear();
 						setReady();
 					}
 				}, Managers.SOURCES_MANAGER);
