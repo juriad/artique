@@ -44,6 +44,9 @@ public class InfiniteList extends Composite
 
 	private final FlowPanel flowPanel;
 	private Map<Key, RowWidget> rows;
+	private Set<Key> headKeys = new HashSet<Key>();
+	private Set<Key> tailKeys = new HashSet<Key>();
+
 	private Key selected = null;
 
 	private List<UserItem> head;
@@ -72,15 +75,65 @@ public class InfiniteList extends Composite
 
 	public void appendValues(List<UserItem> values) {
 		if (values.size() > 0) {
-			tail.addAll(values);
-			NewDataEvent.fire(this, NewDataType.NEW_DATA_AVAILABLE);
+			List<UserItem> newItems = new ArrayList<UserItem>();
+			Set<Key> newKeys = new HashSet<Key>();
+			for (UserItem ui : values) {
+				RowWidget rowWidget = rows.get(ui.getKey());
+				boolean add = true;
+				if (rowWidget != null) {
+					setValue(ui);
+					add = false;
+				}
+				if (add) {
+					if (tailKeys.contains(ui.getKey())) {
+						add = false;
+						int index = tail.indexOf(ui);
+						tail.set(index, ui);
+					}
+				}
+				if (add) {
+					newItems.add(ui);
+					newKeys.add(ui.getKey());
+				}
+			}
+
+			if (!newItems.isEmpty()) {
+				tail.addAll(0, newItems);
+				tailKeys.addAll(newKeys);
+				NewDataEvent.fire(this, NewDataType.NEW_DATA_AVAILABLE);
+			}
 		}
 	}
 
 	public void prependValues(List<UserItem> values) {
 		if (values.size() > 0) {
-			head.addAll(0, values);
-			NewDataEvent.fire(this, NewDataType.NEW_DATA_AVAILABLE);
+			List<UserItem> newItems = new ArrayList<UserItem>();
+			Set<Key> newKeys = new HashSet<Key>();
+			for (UserItem ui : values) {
+				RowWidget rowWidget = rows.get(ui.getKey());
+				boolean add = true;
+				if (rowWidget != null) {
+					setValue(ui);
+					add = false;
+				}
+				if (add) {
+					if (headKeys.contains(ui.getKey())) {
+						add = false;
+						int index = head.indexOf(ui);
+						head.set(index, ui);
+					}
+				}
+				if (add) {
+					newItems.add(ui);
+					newKeys.add(ui.getKey());
+				}
+			}
+
+			if (!newItems.isEmpty()) {
+				head.addAll(0, newItems);
+				headKeys.addAll(newKeys);
+				NewDataEvent.fire(this, NewDataType.NEW_DATA_AVAILABLE);
+			}
 		}
 	}
 
@@ -137,6 +190,7 @@ public class InfiniteList extends Composite
 		List<UserItem> l = head;
 		if (l.size() > 0) {
 			head = new ArrayList<UserItem>();
+			headKeys = new HashSet<Key>();
 
 			int offsetHeight = flowPanel.getOffsetHeight();
 			for (UserItem e : l) {
@@ -176,6 +230,7 @@ public class InfiniteList extends Composite
 		List<UserItem> l = tail;
 		if (l.size() > 0) {
 			tail = new ArrayList<UserItem>();
+			tailKeys = new HashSet<Key>();
 
 			for (UserItem e : l) {
 				RowWidget row = createRow(e);
@@ -202,6 +257,8 @@ public class InfiniteList extends Composite
 		rows = new HashMap<Key, RowWidget>();
 		head = new ArrayList<UserItem>();
 		tail = new ArrayList<UserItem>();
+		headKeys = new HashSet<Key>();
+		tailKeys = new HashSet<Key>();
 		selected = null;
 		endReached = false;
 	}

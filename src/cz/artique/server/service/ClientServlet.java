@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +24,10 @@ import com.google.appengine.api.datastore.Text;
 import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.item.UserItem;
+import cz.artique.shared.model.label.BackupLevel;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
+import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.model.user.UserInfo;
 
 public class ClientServlet extends HttpServlet {
@@ -143,8 +146,12 @@ public class ClientServlet extends HttpServlet {
 			return;
 		}
 		UserItem userItem;
+		Label backupLabel;
 		try {
-			userItem = createUserItem(map, item, userInfo.getUserId());
+			Object[] createUserItem =
+				createUserItem(map, item, userInfo.getUserId());
+			userItem = (UserItem) createUserItem[0];
+			backupLabel = (Label) createUserItem[1];
 		} catch (Exception e) {
 			resp.sendError(400, e.getLocalizedMessage());
 			return;
@@ -153,14 +160,20 @@ public class ClientServlet extends HttpServlet {
 		ItemService is = new ItemService();
 		is.addManualItem(userItem);
 
+		if (backupLabel != null) {
+			BackupService bs = new BackupService();
+			bs.doPlanForBackup(userItem, backupLabel);
+		}
+
 		JSONValue.writeJSONString("OK", resp.getWriter());
 	}
 
-	private UserItem createUserItem(Map<?, ?> map, ManualItem item,
+	private Object[] createUserItem(Map<?, ?> map, ManualItem item,
 			String userId) {
 		UserItem userItem = new UserItem();
 		userItem.setAdded(item.getAdded());
 		userItem.setItemObject(item);
+		Label backupLabel = null;
 		{
 			Object labelsObj = map.get("labels");
 			if (labelsObj != null) {
@@ -188,24 +201,24 @@ public class ClientServlet extends HttpServlet {
 					throw new RuntimeException("Invalid labels type");
 				}
 
-				List<Key> labelKeys = getLabelKeys(labels, userId);
+				List<Key> labelKeys = new ArrayList<Key>();
+				LabelService ls = new LabelService();
+				for (String l : labels) {
+					Label fake = new Label(userId, l);
+					Label existing = ls.creatIfNotExist(fake);
+					labelKeys.add(existing.getKey());
+					if (existing.getBackupLevel() != null
+						&& !BackupLevel.NO_BACKUP.equals(existing
+							.getBackupLevel()) && backupLabel == null) {
+						backupLabel = existing;
+					}
+				}
 				userItem.setLabels(labelKeys);
 			}
 		}
 		userItem.setRead(false);
 		userItem.setUserId(userId);
-		return userItem;
-	}
-
-	private List<Key> getLabelKeys(Set<String> labels, String userId) {
-		List<Key> keys = new ArrayList<Key>();
-		LabelService ls = new LabelService();
-		for (String l : labels) {
-			Label label = new Label(userId, l);
-			Label creatIfNotExist = ls.creatIfNotExist(label);
-			keys.add(creatIfNotExist.getKey());
-		}
-		return keys;
+		return new Object[] { userItem, backupLabel };
 	}
 
 	private String checkLabel(String label) {
@@ -281,6 +294,22 @@ public class ClientServlet extends HttpServlet {
 			labels.add(l.getName());
 		}
 
-		JSONValue.writeJSONString(labels, resp.getWriter());
+		UserSourceService uss = new UserSourceService();
+		UserSource manualUserSource =
+			uss.getManualUserSource(userInfo.getUserId());
+		List<Key> defaultLabelKeys = manualUserSource.getDefaultLabels();
+		List<String> defs = new ArrayList<String>();
+		List<Label> defaultLabels = ls.getLabelsByKeys(defaultLabelKeys);
+		for (Label l : defaultLabels) {
+			if (LabelType.USER_DEFINED.equals(l.getLabelType())) {
+				defs.add(l.getName());
+			}
+		}
+
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("labels", labels);
+		response.put("defs", defs);
+
+		JSONValue.writeJSONString(response, resp.getWriter());
 	}
 }

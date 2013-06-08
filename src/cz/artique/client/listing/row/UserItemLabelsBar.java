@@ -77,7 +77,17 @@ public class UserItemLabelsBar extends AbstractLabelsBar {
 		return item;
 	}
 
-	public void setNewData(UserItem userItem) {
+	public void setNewData(final UserItem userItem) {
+		onSuggestionClosed(new AsyncCallback<Void>() {
+			public void onFailure(Throwable caught) {}
+
+			public void onSuccess(Void result) {
+				doSetNewData(userItem);
+			}
+		});
+	}
+
+	private void doSetNewData(UserItem userItem) {
 		this.item = userItem;
 		List<Key> labels2 = userItem.getLabels();
 		if (labels2 == null) {

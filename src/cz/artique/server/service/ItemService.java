@@ -322,7 +322,7 @@ public class ItemService {
 		if (userItem.getLabels() != null) {
 			labels.addAll(userItem.getLabels());
 		}
-		labels.addAll(manualUserSource.getDefaultLabels());
+		labels.add(manualUserSource.getLabel());
 		userItem.setLabels(new ArrayList<Key>(labels));
 		userItem.setUserSource(manualUserSource.getKey());
 

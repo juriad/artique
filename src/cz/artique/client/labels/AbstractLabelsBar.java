@@ -9,6 +9,7 @@ import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -32,6 +33,9 @@ public abstract class AbstractLabelsBar extends Composite {
 	class LabelOpenHandler implements OpenHandler<AbstractLabelsBar> {
 
 		private LabelSuggestion box;
+
+		private List<AsyncCallback<Void>> pingsWaitingForSuggestionClose =
+			new ArrayList<AsyncCallback<Void>>();
 
 		public void onOpen(OpenEvent<AbstractLabelsBar> _event) {
 			box = new LabelSuggestion(pool, 20);
@@ -57,6 +61,24 @@ public abstract class AbstractLabelsBar extends Composite {
 		private void end() {
 			panel.setExtraWidget(addLabel);
 			panel.setExpanded(false);
+			box = null;
+			for (AsyncCallback<Void> p : pingsWaitingForSuggestionClose) {
+				p.onSuccess(null);
+			}
+			pingsWaitingForSuggestionClose =
+				new ArrayList<AsyncCallback<Void>>();
+		}
+
+		private boolean isSuggestionOpen() {
+			return box != null;
+		}
+
+		public void onSuggestionClosed(AsyncCallback<Void> ping) {
+			if (labelOpenHandler.isSuggestionOpen()) {
+				labelOpenHandler.pingsWaitingForSuggestionClose.add(ping);
+			} else {
+				ping.onSuccess(null);
+			}
 		}
 	}
 
@@ -86,6 +108,10 @@ public abstract class AbstractLabelsBar extends Composite {
 		panel.setExtraWidget(addLabel);
 		labelOpenHandler = new LabelOpenHandler();
 		addLabel.addOpenHandler(labelOpenHandler);
+	}
+
+	protected void onSuggestionClosed(AsyncCallback<Void> ping) {
+		labelOpenHandler.onSuggestionClosed(ping);
 	}
 
 	protected abstract LabelWidget createWidget(Label label);

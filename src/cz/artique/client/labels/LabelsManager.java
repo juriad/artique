@@ -84,6 +84,9 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 
 	public void refresh(final AsyncCallback<Void> ping) {
 		pingsWaiting.add(ping);
+		if (pingsWaiting.size() > 2) {
+			return;
+		}
 		assumeOnline();
 		service.getAllLabels(new AsyncCallback<List<Label>>() {
 			public void onFailure(Throwable caught) {

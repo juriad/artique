@@ -1,7 +1,9 @@
 package cz.artique.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.MetaElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.History;
@@ -66,7 +68,15 @@ public class Artique extends Composite {
 		ArtiqueWorld.WORLD.setSourcesTree(sources);
 
 		initHistory();
+		initTokenForClient();
+	}
 
+	private void initTokenForClient() {
+		Element head = Document.get().getElementsByTagName("head").getItem(0);
+		MetaElement meta = Document.get().createMetaElement();
+		meta.setName("clientToken");
+		meta.setContent(ArtiqueWorld.WORLD.getUserInfo().getClientToken());
+		head.appendChild(meta);
 	}
 
 	private void initHistory() {

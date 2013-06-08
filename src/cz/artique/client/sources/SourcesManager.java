@@ -34,6 +34,7 @@ import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.recomandation.Recommendation;
 import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
+import cz.artique.shared.model.source.SourceType;
 import cz.artique.shared.model.source.UserSource;
 
 public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
@@ -49,6 +50,7 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 	private Map<String, UserSource> sourcesNames =
 		new HashMap<String, UserSource>();
 	private Map<Key, UserSource> sourcesLabels = new HashMap<Key, UserSource>();
+	private UserSource manualSource;
 
 	public void refresh(final AsyncCallback<Void> ping) {
 		assumeOnline();
@@ -73,6 +75,9 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 					newSourcesKeys.put(us.getKey(), us);
 					newSourcesNames.put(us.getName(), us);
 					newSourcesLabels.put(us.getLabel(), us);
+					if (SourceType.MANUAL.equals(us.getSourceType())) {
+						manualSource = us;
+					}
 				}
 
 				updateHierarchy(sourcesKeys, newSourcesKeys);
@@ -344,6 +349,10 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 				}
 			}
 		});
+	}
+
+	public UserSource getManualSource() {
+		return manualSource;
 	}
 
 }

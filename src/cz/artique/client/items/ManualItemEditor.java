@@ -19,10 +19,12 @@ import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
+import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Label;
+import cz.artique.shared.model.source.UserSource;
 
 public class ManualItemEditor extends Composite implements HasValue<UserItem> {
 	private static ManualItemEditorUiBinder uiBinder = GWT
@@ -81,7 +83,10 @@ public class ManualItemEditor extends Composite implements HasValue<UserItem> {
 		title.setValue("");
 		url.setValue("");
 		content.setValue("");
-		labels.setNewData(new UserItem());
+		UserItem userItem = new UserItem();
+		UserSource manualSource = Managers.SOURCES_MANAGER.getManualSource();
+		userItem.setLabels(manualSource.getDefaultLabels());
+		labels.setNewData(userItem);
 	}
 
 	public void setValue(UserItem value, boolean fireEvents) {
