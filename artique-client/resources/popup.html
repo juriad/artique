@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- This meta tag is relevant only for IE -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<script type="text/javascript">
+	function crossriderMain($) {
+		eval(appAPI.resources.get('textext.js'));
+
+		$('#form').submit(function() {
+			var labelsStr = $('#labels').textext()[0].hiddenInput().val();
+			var labels = appAPI.JSON.parse(labelsStr);
+			appAPI.message.toBackground({
+				message : 'item',
+				url : $('#url').val(),
+				title : $('#title').val(),
+				content : $('#content').val(),
+				labels : labels,
+			});
+			event.preventDefault();
+		});
+
+		appAPI.message
+				.addListener(function(msg) {
+					if (msg.message == "page") {
+						$('#url').val(msg.url);
+						$('#title').val(msg.title);
+						$('#content').val(msg.content);
+					} else if (msg.message == "labels") {
+						var defs = msg.labels.defs;
+						var labels = msg.labels.labels;
+						$('#labels')
+								.textext(
+										{
+											plugins : 'tags prompt suggestions autocomplete arrow',
+											tags : {
+												items : defs,
+											},
+											suggestions : labels,
+											prompt : '+',
+											autocomplete : {
+												dropdown : {
+													position : 'above'
+												}
+											}
+										});
+					} else if (msg.message == "item") {
+						$('#message').remove();
+						if (msg.status == "OK") {
+							$('#form').remove();
+							$('body')
+									.prepend(
+											"<div id='message' class='message-ok'>Successfuly added item.</div>");
+							window.setTimeout(function() {
+								appAPI.browserAction.closePopup();
+							}, 1000);
+						} else {
+							$('body')
+									.prepend(
+											"<div id='message' class='message-fail'>Failed to add item.</div>");
+						}
+					}
+				});
+
+		appAPI.message.toBackground({
+			message : 'labels',
+		});
+
+		appAPI.message.toActiveTab({
+			message : 'page',
+		});
+	}
+</script>
+
+<style>
+/* form */
+input[type="text"],textarea#content {
+	width: 100%;
+}
+
+table {
+	width: 100%;
+}
+
+/* labels */
+textarea#labels {
+	width: 420px;
+}
+
+.text-core .text-wrap .text-prompt {
+	font-weight: bold !important;
+	color: grey !important;
+}
+
+/* message */
+#message {
+	font-weight: bold;
+	font-size: 150%;
+	text-align: center;
+}
+
+.message-ok {
+	padding: 2em;
+}
+
+.message-fail {
+	color: red;
+}
+</style>
+
+</head>
+<body>
+	<form id="form">
+		<table>
+			<tr>
+				<td>URL</td>
+				<td><input type="text" name="url" id="url"></td>
+			</tr>
+			<tr>
+				<td>Title</td>
+				<td><input type="text" name="title" id="title"></td>
+			</tr>
+			<tr>
+				<td>Content</td>
+				<td><textarea rows="5" cols="40" name="content" id="content"></textarea></td>
+			</tr>
+			<tr>
+				<td>Labels</td>
+				<td><textarea id="labels" rows="1"></textarea></td>
+			</tr>
+			<tr>
+				<td><input type="submit" name="submit" value="Submit"
+					id="submit"></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
