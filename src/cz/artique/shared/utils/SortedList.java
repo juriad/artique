@@ -6,10 +6,28 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+/**
+ * Sorted list is {@link List} any type of objects which can be compared.
+ * All operations maintain order of the stored elements therefore it does not
+ * exactly follow specification. For example method {@link #add(Comparable)}
+ * inserts a new element inside to satisfy the order instead of appending the
+ * element to the end of list.
+ * 
+ * SortedList is implemented as a simple and transparent wrapper around
+ * {@link ArrayList}.
+ * 
+ * @author Adam Juraszek
+ * 
+ * @param <E>
+ *            type of objects stored in this list
+ */
 public class SortedList<E extends Comparable<E>> implements List<E> {
 
 	private final ArrayList<E> list;
 
+	/**
+	 * Creates an empty sorted list.
+	 */
 	public SortedList() {
 		list = new ArrayList<E>();
 	}

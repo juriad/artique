@@ -3,10 +3,9 @@ package cz.artique.client.hierarchy;
 import java.util.List;
 
 import cz.artique.shared.utils.HasHierarchy;
-import cz.artique.shared.utils.HasName;
 
-public interface Hierarchy<E extends HasHierarchy & HasName>
-		extends HasName, HasHierarchyChangeHandlers<E>,
+public interface Hierarchy<E extends HasHierarchy>
+		extends HasHierarchy, HasHierarchyChangeHandlers<E>,
 		Comparable<Hierarchy<E>> {
 
 	List<Hierarchy<E>> getChildren();

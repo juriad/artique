@@ -10,14 +10,11 @@ import com.google.appengine.api.datastore.Key;
 
 import cz.artique.shared.utils.HasDeepEquals;
 import cz.artique.shared.utils.HasHierarchy;
-import cz.artique.shared.utils.HasKey;
-import cz.artique.shared.utils.HasName;
 import cz.artique.shared.utils.SharedUtils;
 
 @Model(schemaVersion = 1)
 public class ListFilter
-		implements Serializable, HasKey<Key>, HasName, HasHierarchy,
-		HasDeepEquals<ListFilter> {
+		implements Serializable, HasHierarchy, HasDeepEquals<ListFilter> {
 
 	private static final long serialVersionUID = 1L;
 

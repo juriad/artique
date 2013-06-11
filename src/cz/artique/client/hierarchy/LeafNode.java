@@ -7,9 +7,8 @@ import java.util.List;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 import cz.artique.shared.utils.HasHierarchy;
-import cz.artique.shared.utils.HasName;
 
-public class LeafNode<E extends HasName & HasHierarchy> implements Hierarchy<E> {
+public class LeafNode<E extends HasHierarchy> implements Hierarchy<E> {
 
 	private final Hierarchy<E> parent;
 	private final E item;

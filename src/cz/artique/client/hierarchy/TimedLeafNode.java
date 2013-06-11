@@ -1,10 +1,8 @@
 package cz.artique.client.hierarchy;
 
 import cz.artique.shared.utils.HasHierarchy;
-import cz.artique.shared.utils.HasName;
 
-public class TimedLeafNode<E extends HasName & HasHierarchy>
-		extends LeafNode<E> {
+public class TimedLeafNode<E extends HasHierarchy> extends LeafNode<E> {
 	private long time;
 
 	public TimedLeafNode(E item, Hierarchy<E> parent) {

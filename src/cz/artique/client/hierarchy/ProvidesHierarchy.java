@@ -1,9 +1,8 @@
 package cz.artique.client.hierarchy;
 
 import cz.artique.shared.utils.HasHierarchy;
-import cz.artique.shared.utils.HasName;
 
-public interface ProvidesHierarchy<E extends HasName & HasHierarchy> {
+public interface ProvidesHierarchy<E extends HasHierarchy> {
 	Hierarchy<E> getHierarchyRoot();
 
 	Hierarchy<E> getAdhocItem();

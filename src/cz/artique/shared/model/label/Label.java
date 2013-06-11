@@ -9,15 +9,12 @@ import com.google.appengine.api.datastore.Key;
 
 import cz.artique.shared.utils.GenKey;
 import cz.artique.shared.utils.HasDeepEquals;
-import cz.artique.shared.utils.HasDisplayName;
-import cz.artique.shared.utils.HasKey;
-import cz.artique.shared.utils.HasName;
 import cz.artique.shared.utils.SharedUtils;
 
 @Model(schemaVersion = 1)
 public class Label
-		implements Serializable, GenKey, HasName, HasDisplayName, HasKey<Key>,
-		Comparable<Label>, HasDeepEquals<Label> {
+		implements Serializable, GenKey, Comparable<Label>,
+		HasDeepEquals<Label> {
 
 	private static final long serialVersionUID = 1L;
 

@@ -3,11 +3,24 @@ package cz.artique.shared.utils;
 import java.util.Collection;
 import java.util.Iterator;
 
+/**
+ * Contains bunch of common functions used in model = shared code.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class SharedUtils {
 	private SharedUtils() {}
 
+	/**
+	 * Combines all tokens into one string joining them by dollar sign.
+	 * 
+	 * @param strings
+	 *            vararg list of tokens
+	 * @return one string which contains all tokens separated by dollar sign
+	 */
 	public static String combineStringParts(String... strings) {
-		if (strings.length == 0) {
+		if (strings == null || strings.length == 0) {
 			throw new IllegalArgumentException(
 				"there must be at least one part");
 		} else if (strings.length == 1) {
@@ -21,6 +34,17 @@ public class SharedUtils {
 		return s.toString();
 	}
 
+	/**
+	 * Tests two objects of the same type for equality by
+	 * {@link Object#equals(Object)} method.
+	 * Both of them may be null.
+	 * 
+	 * @param e1
+	 *            the first object
+	 * @param e2
+	 *            the other object
+	 * @return true if they are equal, false otherwise
+	 */
 	public static <E> boolean eq(E e1, E e2) {
 		if (e1 == null) {
 			return e1 == e2;
@@ -29,6 +53,17 @@ public class SharedUtils {
 		}
 	}
 
+	/**
+	 * Tests two objects of the same type implementing {@link HasDeepEquals} for
+	 * equality by {@link HasDeepEquals#equalsDeeply(Object)} method.
+	 * Both of them may be null.
+	 * 
+	 * @param e1
+	 *            the first object
+	 * @param e2
+	 *            the other object
+	 * @return true if they are equal, false otherwise
+	 */
 	public static <E extends HasDeepEquals<E>> boolean deepEq(E e1, E e2) {
 		if (e1 == null) {
 			return e1 == e2;
@@ -37,6 +72,18 @@ public class SharedUtils {
 		}
 	}
 
+	/**
+	 * Tests two collections of objects of the same type implementing
+	 * {@link HasDeepEquals} for equality one-by-one by
+	 * {@link HasDeepEquals#equalsDeeply(Object)} method.
+	 * Both of them may be null.
+	 * 
+	 * @param e1
+	 *            the first collection
+	 * @param e2
+	 *            the other collection
+	 * @return true if they are equal, false otherwise
+	 */
 	public static <E extends HasDeepEquals<E>> boolean deepEq(
 			Collection<E> es1, Collection<E> es2) {
 		if (es1 == null) {

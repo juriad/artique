@@ -18,9 +18,8 @@ import cz.artique.client.hierarchy.ProvidesHierarchy;
 import cz.artique.client.manager.Manager;
 import cz.artique.client.manager.ManagerReady;
 import cz.artique.shared.utils.HasHierarchy;
-import cz.artique.shared.utils.HasName;
 
-public abstract class AbstractHierarchyTree<E extends HasHierarchy & HasName, F extends ProvidesHierarchy<E> & Manager>
+public abstract class AbstractHierarchyTree<E extends HasHierarchy, F extends ProvidesHierarchy<E> & Manager>
 		extends Composite {
 	private final ScrollPanel scrollPanel;
 	private final Tree tree;

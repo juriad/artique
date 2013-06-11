@@ -13,13 +13,11 @@ import cz.artique.shared.model.label.Label;
 import cz.artique.shared.utils.GenKey;
 import cz.artique.shared.utils.HasDeepEquals;
 import cz.artique.shared.utils.HasHierarchy;
-import cz.artique.shared.utils.HasKey;
-import cz.artique.shared.utils.HasName;
 import cz.artique.shared.utils.SharedUtils;
 
 @Model(schemaVersion = 1)
 public class UserSource
-		implements Serializable, GenKey, HasName, HasKey<Key>, HasHierarchy,
+		implements Serializable, GenKey, HasHierarchy,
 		HasDeepEquals<UserSource> {
 
 	private static final long serialVersionUID = 1L;

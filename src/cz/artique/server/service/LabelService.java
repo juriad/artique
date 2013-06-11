@@ -18,7 +18,6 @@ import cz.artique.server.meta.source.UserSourceMeta;
 import cz.artique.server.utils.KeyGen;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
-import cz.artique.shared.utils.TransactionException;
 import cz.artique.shared.validation.Issue;
 import cz.artique.shared.validation.IssueType;
 import cz.artique.shared.validation.ValidationException;
@@ -51,8 +50,6 @@ public class LabelService {
 				theLabel = label;
 			}
 			tx.commit();
-		} catch (Exception e) {
-			throw new TransactionException();
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();

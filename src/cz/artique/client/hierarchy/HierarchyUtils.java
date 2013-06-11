@@ -3,14 +3,13 @@ package cz.artique.client.hierarchy;
 import java.util.List;
 
 import cz.artique.shared.utils.HasHierarchy;
-import cz.artique.shared.utils.HasName;
 
 public class HierarchyUtils {
 	public static final String splitSign = "/";
 
 	private HierarchyUtils() {}
 
-	public static <E extends HasName & HasHierarchy> Hierarchy<E> buildHierarchy(
+	public static <E extends HasHierarchy> Hierarchy<E> buildHierarchy(
 			List<E> list) {
 		Hierarchy<E> root = createRootNode();
 		for (E e : list) {
@@ -19,12 +18,11 @@ public class HierarchyUtils {
 		return root;
 	}
 
-	public static <E extends HasName & HasHierarchy> InnerNode<E> createRootNode() {
+	public static <E extends HasHierarchy> InnerNode<E> createRootNode() {
 		return new InnerNode<E>(splitSign, null);
 	}
 
-	public static <E extends HasName & HasHierarchy> boolean add(
-			Hierarchy<E> root, E e) {
+	public static <E extends HasHierarchy> boolean add(Hierarchy<E> root, E e) {
 		if (!(root instanceof InnerNode)) {
 			return false;
 		}
@@ -60,7 +58,7 @@ public class HierarchyUtils {
 		return true;
 	}
 
-	public static <E extends HasName & HasHierarchy> Hierarchy<E> findInTree(
+	public static <E extends HasHierarchy> Hierarchy<E> findInTree(
 			Hierarchy<E> root, E e) {
 		if (!(root instanceof InnerNode)) {
 			return null;
@@ -100,8 +98,7 @@ public class HierarchyUtils {
 		return null;
 	}
 
-	public static <E extends HasName & HasHierarchy> boolean remove(
-			Hierarchy<E> root, E e) {
+	public static <E extends HasHierarchy> boolean remove(Hierarchy<E> root, E e) {
 		Hierarchy<E> inTree = findInTree(root, e);
 		if (inTree == null) {
 			return false;

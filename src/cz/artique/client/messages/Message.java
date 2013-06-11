@@ -1,9 +1,8 @@
 package cz.artique.client.messages;
 
 import cz.artique.shared.utils.HasHierarchy;
-import cz.artique.shared.utils.HasName;
 
-public class Message implements HasName, HasHierarchy {
+public class Message implements HasHierarchy {
 	private MessageType messageType;
 
 	private String messageBody;

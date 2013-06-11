@@ -3,15 +3,14 @@ package cz.artique.client.hierarchy;
 import com.google.gwt.event.shared.GwtEvent;
 
 import cz.artique.shared.utils.HasHierarchy;
-import cz.artique.shared.utils.HasName;
 
-public class HierarchyChangeEvent<E extends HasHierarchy & HasName>
+public class HierarchyChangeEvent<E extends HasHierarchy>
 		extends GwtEvent<HierarchyChangeHandler<E>> {
 
 	private final Type<HierarchyChangeHandler<E>> TYPE =
 		new Type<HierarchyChangeHandler<E>>();
 
-	public <T extends HasHierarchy & HasName> Type<HierarchyChangeHandler<T>> getType() {
+	public <T extends HasHierarchy> Type<HierarchyChangeHandler<T>> getType() {
 		return new Type<HierarchyChangeHandler<T>>();
 	}
 

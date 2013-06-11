@@ -11,9 +11,8 @@ import com.google.gwt.user.client.ui.InlineLabel;
 import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyTreeWidget;
 import cz.artique.shared.utils.HasHierarchy;
-import cz.artique.shared.utils.HasName;
 
-public class AbstractHierarchyTreeWidget<E extends HasHierarchy & HasName>
+public class AbstractHierarchyTreeWidget<E extends HasHierarchy>
 		extends Composite implements HierarchyTreeWidget<E> {
 
 	private Hierarchy<E> hierarchy;

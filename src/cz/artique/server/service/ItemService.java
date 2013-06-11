@@ -35,7 +35,6 @@ import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.label.ListFilterOrder;
 import cz.artique.shared.model.source.UserSource;
-import cz.artique.shared.utils.TransactionException;
 
 public class ItemService {
 	public void fillItems(Iterable<UserItem> userItems) {
@@ -362,8 +361,6 @@ public class ItemService {
 			userItem.setLastChanged(new Date());
 			Datastore.put(tx, userItem);
 			tx.commit();
-		} catch (Exception e) {
-			throw new TransactionException();
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();

@@ -8,10 +8,9 @@ import org.slim3.datastore.Model;
 import com.google.appengine.api.datastore.Key;
 
 import cz.artique.shared.utils.GenKey;
-import cz.artique.shared.utils.HasKey;
 
 @Model(schemaVersion = 1)
-public class Config implements Serializable, GenKey, HasKey<Key> {
+public class Config implements Serializable, GenKey {
 
 	private static final long serialVersionUID = 1L;
 

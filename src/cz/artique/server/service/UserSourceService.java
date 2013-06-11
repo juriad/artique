@@ -27,7 +27,6 @@ import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.SourceType;
 import cz.artique.shared.model.source.UserSource;
-import cz.artique.shared.utils.TransactionException;
 
 public class UserSourceService {
 
@@ -132,8 +131,6 @@ public class UserSourceService {
 				Datastore.put(tx, userSource);
 			}
 			tx.commit();
-		} catch (Exception e) {
-			throw new TransactionException();
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();
@@ -172,8 +169,6 @@ public class UserSourceService {
 
 			Datastore.put(tx, userSource);
 			tx.commit();
-		} catch (Exception e) {
-			throw new TransactionException();
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();
@@ -220,8 +215,6 @@ public class UserSourceService {
 			}
 			Datastore.put(tx, source);
 			tx.commit();
-		} catch (Exception e) {
-			throw new TransactionException();
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();
@@ -293,8 +286,6 @@ public class UserSourceService {
 				us.setCrawlerData(crawlerDataKey);
 			}
 			Datastore.put(tx, list);
-		} catch (Exception e) {
-			throw new TransactionException();
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();

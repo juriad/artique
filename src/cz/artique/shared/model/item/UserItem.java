@@ -10,10 +10,9 @@ import org.slim3.datastore.Model;
 import com.google.appengine.api.datastore.Key;
 
 import cz.artique.shared.model.source.UserSource;
-import cz.artique.shared.utils.HasKey;
 
 @Model(schemaVersion = 1)
-public class UserItem implements Serializable, HasKey<Key> {
+public class UserItem implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

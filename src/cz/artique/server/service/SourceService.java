@@ -20,7 +20,6 @@ import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.Stats;
 import cz.artique.shared.model.source.UserSource;
-import cz.artique.shared.utils.TransactionException;
 
 public class SourceService {
 	public List<Region> getAllRegions(Key source) {
@@ -46,8 +45,6 @@ public class SourceService {
 				theSource = source;
 			}
 			tx.commit();
-		} catch (Exception e) {
-			throw new TransactionException();
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();

@@ -2,9 +2,8 @@ package cz.artique.client.history;
 
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.utils.HasHierarchy;
-import cz.artique.shared.utils.HasName;
 
-public class HistoryItem implements HasHierarchy, HasName {
+public class HistoryItem implements HasHierarchy {
 	private final ListFilter listFilter;
 	private final String token;
 
