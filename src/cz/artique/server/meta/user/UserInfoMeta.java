@@ -1,6 +1,6 @@
 package cz.artique.server.meta.user;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-11 12:49:25")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-11 22:06:22")
 /** */
 public final class UserInfoMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.user.UserInfo> {
 

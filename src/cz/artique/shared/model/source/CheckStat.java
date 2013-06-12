@@ -8,8 +8,21 @@ import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
 
+/**
+ * Contains information about all checks performed for each source.
+ * Persistent attributes are:
+ * <ul>
+ * <li>Source - reference to source key
+ * <li>ProbeDate - date of check
+ * <li>ItemsAcquired - number of items successfully acquired during this check
+ * <li>Error - error message describing cause of check failure
+ * </ul>
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 @Model(schemaVersion = 1)
-public class Stats implements Serializable {
+public class CheckStat implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -50,29 +63,23 @@ public class Stats implements Serializable {
 	}
 
 	/**
-	 * Sets the key.
-	 * 
 	 * @param key
-	 *            the key
+	 *            key
 	 */
 	public void setKey(Key key) {
 		this.key = key;
 	}
 
 	/**
-	 * Returns the version.
-	 * 
-	 * @return the version
+	 * @return version
 	 */
 	public Long getVersion() {
 		return version;
 	}
 
 	/**
-	 * Sets the version.
-	 * 
 	 * @param version
-	 *            the version
+	 *            version
 	 */
 	public void setVersion(Long version) {
 		this.version = version;
@@ -97,7 +104,7 @@ public class Stats implements Serializable {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		Stats other = (Stats) obj;
+		CheckStat other = (CheckStat) obj;
 		if (key == null) {
 			if (other.key != null) {
 				return false;
@@ -108,34 +115,69 @@ public class Stats implements Serializable {
 		return true;
 	}
 
+	/**
+	 * @return key of source which this stat belongs to
+	 */
 	public Key getSource() {
 		return source;
 	}
 
+	/**
+	 * @param source
+	 *            key of source which this stat belongs to
+	 */
 	public void setSource(Key source) {
 		this.source = source;
 	}
 
+	/**
+	 * @return date when check has been performed
+	 */
 	public Date getProbeDate() {
 		return probeDate;
 	}
 
+	/**
+	 * @param probeDate
+	 *            date when check has been performed
+	 */
 	public void setProbeDate(Date probeDate) {
 		this.probeDate = probeDate;
 	}
 
+	/**
+	 * Number of items is negative if an error occurred.
+	 * 
+	 * @return number of items acquired during this check
+	 */
 	public int getItemsAcquired() {
 		return itemsAcquired;
 	}
 
+	/**
+	 * @param itemsAcquired
+	 *            number of items acquired during this check
+	 */
 	public void setItemsAcquired(int itemsAcquired) {
 		this.itemsAcquired = itemsAcquired;
 	}
 
+	/**
+	 * Number of items is negative if an error occurred. If check was
+	 * successful, the error is null.
+	 * 
+	 * @return error message if check failed
+	 */
 	public String getError() {
 		return error;
 	}
 
+	/**
+	 * Sets error message in case of check failure.
+	 * 
+	 * @param error
+	 *            error message
+	 */
 	public void setError(String error) {
 		this.error = error;
 	}

@@ -18,7 +18,7 @@ import cz.artique.shared.model.config.ConfigKey;
 import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
-import cz.artique.shared.model.source.Stats;
+import cz.artique.shared.model.source.CheckStat;
 import cz.artique.shared.model.source.UserSource;
 
 public class SourceService {
@@ -124,7 +124,7 @@ public class SourceService {
 		Datastore.put(source);
 	}
 
-	public void addStat(Stats stat) {
+	public void addStat(CheckStat stat) {
 		Datastore.put(stat);
 	}
 

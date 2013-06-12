@@ -7,6 +7,18 @@ import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
 
+import cz.artique.server.crawler.Crawler;
+import cz.artique.shared.model.item.Item;
+
+/**
+ * Auxiliary data used by some {@link Crawler}s while checking {@link Source}s
+ * for new {@link Item}s. This class does not provide any attributes, it is only
+ * a general ancestor for crawler-specific data. Currently only a single
+ * descendant exists, the {@link PageChangeCrawlerData}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 @Model(schemaVersion = 1)
 public class CrawlerData implements Serializable {
 
@@ -21,38 +33,30 @@ public class CrawlerData implements Serializable {
 	// TODO nice to have: attribute usage
 
 	/**
-	 * Returns the key.
-	 * 
-	 * @return the key
+	 * @return key
 	 */
 	public Key getKey() {
 		return key;
 	}
 
 	/**
-	 * Sets the key.
-	 * 
 	 * @param key
-	 *            the key
+	 *            key
 	 */
 	public void setKey(Key key) {
 		this.key = key;
 	}
 
 	/**
-	 * Returns the version.
-	 * 
-	 * @return the version
+	 * @return version
 	 */
 	public Long getVersion() {
 		return version;
 	}
 
 	/**
-	 * Sets the version.
-	 * 
 	 * @param version
-	 *            the version
+	 *            version
 	 */
 	public void setVersion(Long version) {
 		this.version = version;

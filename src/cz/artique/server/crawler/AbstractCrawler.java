@@ -10,7 +10,7 @@ import cz.artique.server.service.SourceService;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.source.Source;
-import cz.artique.shared.model.source.Stats;
+import cz.artique.shared.model.source.CheckStat;
 import cz.artique.shared.model.source.UserSource;
 
 public abstract class AbstractCrawler<E extends Source, F extends Item>
@@ -26,7 +26,7 @@ public abstract class AbstractCrawler<E extends Source, F extends Item>
 	}
 
 	protected void writeStat(int items) {
-		Stats s = new Stats();
+		CheckStat s = new CheckStat();
 		s.setProbeDate(new Date());
 		s.setSource(getSource().getKey());
 		s.setItemsAcquired(items);
@@ -35,7 +35,7 @@ public abstract class AbstractCrawler<E extends Source, F extends Item>
 	}
 
 	protected void writeStat(Throwable t) {
-		Stats s = new Stats();
+		CheckStat s = new CheckStat();
 		s.setProbeDate(new Date());
 		s.setSource(getSource().getKey());
 		s.setItemsAcquired(0);

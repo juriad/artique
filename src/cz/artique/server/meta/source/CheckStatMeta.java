@@ -1,44 +1,44 @@
 package cz.artique.server.meta.source;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-11 12:49:25")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-12 19:33:29")
 /** */
-public final class StatsMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.source.Stats> {
+public final class CheckStatMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.source.CheckStat> {
 
     /** */
-    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.source.Stats> error = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.source.Stats>(this, "error", "error");
+    public final org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.source.CheckStat> error = new org.slim3.datastore.StringAttributeMeta<cz.artique.shared.model.source.CheckStat>(this, "error", "error");
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Stats, java.lang.Integer> itemsAcquired = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Stats, java.lang.Integer>(this, "itemsAcquired", "itemsAcquired", int.class);
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.CheckStat, java.lang.Integer> itemsAcquired = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.CheckStat, java.lang.Integer>(this, "itemsAcquired", "itemsAcquired", int.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Stats, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Stats, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.CheckStat, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.CheckStat, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Stats, java.util.Date> probeDate = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Stats, java.util.Date>(this, "probeDate", "probeDate", java.util.Date.class);
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.CheckStat, java.util.Date> probeDate = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.CheckStat, java.util.Date>(this, "probeDate", "probeDate", java.util.Date.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Stats, com.google.appengine.api.datastore.Key> source = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Stats, com.google.appengine.api.datastore.Key>(this, "source", "source", com.google.appengine.api.datastore.Key.class);
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.CheckStat, com.google.appengine.api.datastore.Key> source = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.CheckStat, com.google.appengine.api.datastore.Key>(this, "source", "source", com.google.appengine.api.datastore.Key.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Stats, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.Stats, java.lang.Long>(this, "version", "version", java.lang.Long.class);
+    public final org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.CheckStat, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<cz.artique.shared.model.source.CheckStat, java.lang.Long>(this, "version", "version", java.lang.Long.class);
 
-    private static final StatsMeta slim3_singleton = new StatsMeta();
+    private static final CheckStatMeta slim3_singleton = new CheckStatMeta();
 
     /**
      * @return the singleton
      */
-    public static StatsMeta get() {
+    public static CheckStatMeta get() {
        return slim3_singleton;
     }
 
     /** */
-    public StatsMeta() {
-        super("Stats", cz.artique.shared.model.source.Stats.class);
+    public CheckStatMeta() {
+        super("CheckStat", cz.artique.shared.model.source.CheckStat.class);
     }
 
     @Override
-    public cz.artique.shared.model.source.Stats entityToModel(com.google.appengine.api.datastore.Entity entity) {
-        cz.artique.shared.model.source.Stats model = new cz.artique.shared.model.source.Stats();
+    public cz.artique.shared.model.source.CheckStat entityToModel(com.google.appengine.api.datastore.Entity entity) {
+        cz.artique.shared.model.source.CheckStat model = new cz.artique.shared.model.source.CheckStat();
         model.setError((java.lang.String) entity.getProperty("error"));
         model.setItemsAcquired(longToPrimitiveInt((java.lang.Long) entity.getProperty("itemsAcquired")));
         model.setKey(entity.getKey());
@@ -50,7 +50,7 @@ public final class StatsMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
 
     @Override
     public com.google.appengine.api.datastore.Entity modelToEntity(java.lang.Object model) {
-        cz.artique.shared.model.source.Stats m = (cz.artique.shared.model.source.Stats) model;
+        cz.artique.shared.model.source.CheckStat m = (cz.artique.shared.model.source.CheckStat) model;
         com.google.appengine.api.datastore.Entity entity = null;
         if (m.getKey() != null) {
             entity = new com.google.appengine.api.datastore.Entity(m.getKey());
@@ -68,20 +68,20 @@ public final class StatsMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
 
     @Override
     protected com.google.appengine.api.datastore.Key getKey(Object model) {
-        cz.artique.shared.model.source.Stats m = (cz.artique.shared.model.source.Stats) model;
+        cz.artique.shared.model.source.CheckStat m = (cz.artique.shared.model.source.CheckStat) model;
         return m.getKey();
     }
 
     @Override
     protected void setKey(Object model, com.google.appengine.api.datastore.Key key) {
         validateKey(key);
-        cz.artique.shared.model.source.Stats m = (cz.artique.shared.model.source.Stats) model;
+        cz.artique.shared.model.source.CheckStat m = (cz.artique.shared.model.source.CheckStat) model;
         m.setKey(key);
     }
 
     @Override
     protected long getVersion(Object model) {
-        cz.artique.shared.model.source.Stats m = (cz.artique.shared.model.source.Stats) model;
+        cz.artique.shared.model.source.CheckStat m = (cz.artique.shared.model.source.CheckStat) model;
         return m.getVersion() != null ? m.getVersion().longValue() : 0L;
     }
 
@@ -91,7 +91,7 @@ public final class StatsMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
 
     @Override
     protected void incrementVersion(Object model) {
-        cz.artique.shared.model.source.Stats m = (cz.artique.shared.model.source.Stats) model;
+        cz.artique.shared.model.source.CheckStat m = (cz.artique.shared.model.source.CheckStat) model;
         long version = m.getVersion() != null ? m.getVersion().longValue() : 0L;
         m.setVersion(Long.valueOf(version + 1L));
     }
@@ -121,7 +121,7 @@ public final class StatsMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
 
     @Override
     protected void modelToJson(org.slim3.datastore.json.JsonWriter writer, java.lang.Object model, int maxDepth, int currentDepth) {
-        cz.artique.shared.model.source.Stats m = (cz.artique.shared.model.source.Stats) model;
+        cz.artique.shared.model.source.CheckStat m = (cz.artique.shared.model.source.CheckStat) model;
         writer.beginObject();
         org.slim3.datastore.json.Default encoder0 = new org.slim3.datastore.json.Default();
         if(m.getError() != null){
@@ -150,8 +150,8 @@ public final class StatsMeta extends org.slim3.datastore.ModelMeta<cz.artique.sh
     }
 
     @Override
-    protected cz.artique.shared.model.source.Stats jsonToModel(org.slim3.datastore.json.JsonRootReader rootReader, int maxDepth, int currentDepth) {
-        cz.artique.shared.model.source.Stats m = new cz.artique.shared.model.source.Stats();
+    protected cz.artique.shared.model.source.CheckStat jsonToModel(org.slim3.datastore.json.JsonRootReader rootReader, int maxDepth, int currentDepth) {
+        cz.artique.shared.model.source.CheckStat m = new cz.artique.shared.model.source.CheckStat();
         org.slim3.datastore.json.JsonReader reader = null;
         org.slim3.datastore.json.Default decoder0 = new org.slim3.datastore.json.Default();
         reader = rootReader.newObjectReader("error");

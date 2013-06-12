@@ -1,21 +1,60 @@
 package cz.artique.shared.model.source;
 
+import com.google.appengine.api.datastore.Key;
+
+import cz.artique.shared.model.item.ArticleItem;
+import cz.artique.shared.model.item.LinkItem;
+import cz.artique.shared.model.item.ManualItem;
+import cz.artique.shared.model.item.PageChangeItem;
+
+/**
+ * Categorize source to types. This enum is often used as a lookup table for
+ * source class. Because of nature of datastore, there is no easy way how to
+ * determine class of referenced object from datastore {@link Key}, therefore
+ * attribute of type SourceType exists in {@link UserSource} to provide this
+ * information.
+ * 
+ * <p>
+ * The only other information this enum provides is whether this source type
+ * supports regions: only HTML based sources do.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public enum SourceType {
-	RSS_ATOM(XMLSource.class, true, null),
-	PAGE_CHANGE(PageChangeSource.class, true, RegionType.PAGE_CHANGE),
-	WEB_SITE(WebSiteSource.class, true, RegionType.WEB_SITE),
-	MANUAL(ManualSource.class, false, null);
+	/**
+	 * RSS/Atom based source, produces {@link ArticleItem}s
+	 */
+	RSS_ATOM(XMLSource.class, false),
+
+	/**
+	 * HTML based source, produces {@link PageChangeItem}s
+	 */
+	PAGE_CHANGE(PageChangeSource.class, true),
+
+	/**
+	 * HTML based source, produces {@link LinkItem}s
+	 */
+	WEB_SITE(WebSiteSource.class, true),
+
+	/**
+	 * Manual source, only user add new items of type {@link ManualItem}
+	 */
+	MANUAL(ManualSource.class, false);
 
 	private final Class<?> clazz;
-	private final boolean editable;
-	private final RegionType regionType;
+	private final boolean supportRegion;
 
-	private SourceType(Class<?> clazz, boolean editable, RegionType regionType) {
+	private SourceType(Class<?> clazz, boolean supportRegion) {
 		this.clazz = clazz;
-		this.editable = editable;
-		this.regionType = regionType;
+		this.supportRegion = supportRegion;
 	}
 
+	/**
+	 * 
+	 * @param clazz
+	 * @return SourceType if clazz is class of some descendant of {@link Source}
+	 */
 	public static SourceType get(Class<?> clazz) {
 		for (SourceType st : values()) {
 			if (st.clazz.equals(clazz)) {
@@ -25,16 +64,19 @@ public enum SourceType {
 		return null;
 	}
 
+	/**
+	 * @return class of source with this type
+	 */
 	public Class<?> getClazz() {
 		return clazz;
 	}
 
-	public boolean isEditable() {
-		return editable;
-	}
-
-	public RegionType getRegionType() {
-		return regionType;
+	/**
+	 * @return region type of this source, null if source does not support
+	 *         regions
+	 */
+	public boolean isSupportRegion() {
+		return supportRegion;
 	}
 
 }

@@ -7,6 +7,7 @@ package cz.artique.shared.validation;
  * constant returned by {@link #enumName()} method. This constant is used by
  * message system on client to identify appropriate message to show.
  * 
+ * <p>
  * All validation enums has the same name as the service method they belong to,
  * except the first capital letter. There always exists exactly one enum for
  * each service method.

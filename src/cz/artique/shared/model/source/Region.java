@@ -7,8 +7,23 @@ import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
 
+import cz.artique.server.crawler.Crawler;
 import cz.artique.shared.utils.HasDeepEquals;
 
+/**
+ * Region represents area on a web-page defined by CSS selectors used by
+ * {@link Crawler} while checking {@link Source}.
+ * CSS selectors are positive - the area included in result, and negative - the
+ * area excluded from result. Negative selector is relative to result of
+ * positive selector. Any valid CSS selector (or none) may be specified.
+ * 
+ * <p>
+ * Each region belongs to some {@link HTMLSource} and has its uneditable name
+ * and may have positive selector, negative selector or both of them.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 @Model(schemaVersion = 1)
 public class Region implements Serializable, HasDeepEquals<Region> {
 
@@ -21,7 +36,7 @@ public class Region implements Serializable, HasDeepEquals<Region> {
 	private Long version;
 
 	/**
-	 * Name of this region, not personalizable
+	 * Name of this region, not personalizable not editable
 	 */
 	@Attribute(unindexed = true)
 	private String name;
@@ -46,8 +61,17 @@ public class Region implements Serializable, HasDeepEquals<Region> {
 	// TODO nice to have: attribute last used
 	// TODO nice to have: attribute usage
 
+	/**
+	 * Default constructor
+	 */
 	public Region() {}
 
+	/**
+	 * Constructs region and sets the {@link HTMLSource} the region belongs to.
+	 * 
+	 * @param htmlSource
+	 *            owner of this region
+	 */
 	public Region(Key htmlSource) {
 		this.htmlSource = htmlSource;
 	}
@@ -74,35 +98,43 @@ public class Region implements Serializable, HasDeepEquals<Region> {
 		return true;
 	}
 
+	/**
+	 * @return the source this region belongs to
+	 */
 	public Key getHtmlSource() {
 		return htmlSource;
 	}
 
 	/**
-	 * Returns the key.
-	 * 
-	 * @return the key
+	 * @return key
 	 */
 	public Key getKey() {
 		return key;
 	}
 
+	/**
+	 * @return name of region
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * @return negative CSS selector or null if it does not exist
+	 */
 	public String getNegativeSelector() {
 		return negativeSelector;
 	}
 
+	/**
+	 * @return positive CSS selector or null if it does not exist
+	 */
 	public String getPositiveSelector() {
 		return positiveSelector;
 	}
 
 	/**
-	 * Returns the version.
-	 * 
-	 * @return the version
+	 * @return version
 	 */
 	public Long getVersion() {
 		return version;
@@ -116,10 +148,20 @@ public class Region implements Serializable, HasDeepEquals<Region> {
 		return result;
 	}
 
+	/**
+	 * @param htmlSource
+	 *            the source this region belongs to
+	 */
 	public void setHtmlSource(Key htmlSource) {
 		this.htmlSource = htmlSource;
 	}
 
+	/**
+	 * Tests equality of regions by equality of selectors and the source they
+	 * belong to.
+	 * 
+	 * @see cz.artique.shared.utils.HasDeepEquals#equalsDeeply(java.lang.Object)
+	 */
 	public boolean equalsDeeply(Region other) {
 		if (this == other)
 			return true;
@@ -144,32 +186,42 @@ public class Region implements Serializable, HasDeepEquals<Region> {
 	}
 
 	/**
-	 * Sets the key.
-	 * 
 	 * @param key
-	 *            the key
+	 *            key
 	 */
 	public void setKey(Key key) {
 		this.key = key;
 	}
 
+	/**
+	 * Change of name by user is not supported.
+	 * 
+	 * @param name
+	 *            name of this source
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * @param negativeSelector
+	 *            negative CSS selector or null
+	 */
 	public void setNegativeSelector(String negativeSelector) {
 		this.negativeSelector = negativeSelector;
 	}
 
+	/**
+	 * @param positiveSelector
+	 *            positive CSS selector or null
+	 */
 	public void setPositiveSelector(String positiveSelector) {
 		this.positiveSelector = positiveSelector;
 	}
 
 	/**
-	 * Sets the version.
-	 * 
 	 * @param version
-	 *            the version
+	 *            version
 	 */
 	public void setVersion(Long version) {
 		this.version = version;

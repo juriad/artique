@@ -2,13 +2,15 @@
  * Validation package contains all classes which are used both during
  * server-side validation and client-side validation message processing.
  * 
+ * <p>
  * It consists of {@link cz.artique.shared.validation.ValidationException} class
  * which is thrown on server side if validation fails. Exception as list of
- * {@link cz.artique.shared.validation.Issue}s, which caused the exception.
- * Each Issue consists of enum field property which carries the information
- * about property which whose value is invalid and type of issue (
+ * {@link cz.artique.shared.validation.Issue}s, which caused the exception. Each
+ * Issue consists of enum field property which carries the information about
+ * property which whose value is invalid and type of issue (
  * {@link cz.artique.shared.validation.IssueType}).
  * 
+ * <p>
  * There are more validation-related classes in this application. Some are on
  * the server-side:
  * <ul>

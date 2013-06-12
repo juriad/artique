@@ -7,8 +7,8 @@ import java.util.Map;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
+import cz.artique.client.utils.SortedList;
 import cz.artique.shared.utils.HasHierarchy;
-import cz.artique.shared.utils.SortedList;
 
 public class InnerNode<E extends HasHierarchy>
 		implements Hierarchy<E> {

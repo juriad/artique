@@ -414,7 +414,7 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		defaultLabels.setNewData(us);
 
 		region.setValue(userSource);
-		if (userSource.getKey() != null && type.getRegionType() != null
+		if (userSource.getKey() != null && type.isSupportRegion()
 			&& userSource.getRegion() == null) {
 			selectRegion();
 		}
@@ -470,7 +470,7 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		// DANGER, constant number
 		Element regionRow = grid.getRowFormatter().getElement(9);
 		if (userSource.getSourceType() != null
-			&& userSource.getSourceType().getRegionType() != null) {
+			&& userSource.getSourceType().isSupportRegion()) {
 			regionRow.getStyle().clearDisplay();
 		} else {
 			regionRow.getStyle().setDisplay(Display.NONE);
@@ -607,7 +607,7 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		}
 
 		Element element = grid.getRowFormatter().getElement(9);
-		if (sourceType.getValue().getRegionType() != null) {
+		if (sourceType.getValue().isSupportRegion()) {
 			UserSource us = new UserSource();
 			us.setSourceObject(source);
 			us.setSource(source.getKey());
