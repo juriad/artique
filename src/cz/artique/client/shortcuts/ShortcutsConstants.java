@@ -22,13 +22,13 @@ public interface ShortcutsConstants extends ConstantsWithLookup {
 	String deleteButton();
 
 	@DefaultStringValue("Switch to filter")
-	String shortcut_LIST_FILTER();
+	String shortcutType_LIST_FILTER();
 
 	@DefaultStringValue("Toggle label")
-	String shortcut_LABEL();
+	String shortcutType_LABEL();
 
 	@DefaultStringValue("Action")
-	String shortcut_ACTION();
+	String shortcutType_ACTION();
 
 	@DefaultStringValue("Add action shortcut")
 	String addActionShortcut();

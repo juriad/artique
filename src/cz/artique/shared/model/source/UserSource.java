@@ -125,7 +125,7 @@ public class UserSource
 	private Key crawlerData;
 
 	/**
-	 * Default constructor
+	 * Default constructor for slim3 framework.
 	 */
 	public UserSource() {}
 

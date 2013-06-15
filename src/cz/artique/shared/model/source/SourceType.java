@@ -2,6 +2,8 @@ package cz.artique.shared.model.source;
 
 import com.google.appengine.api.datastore.Key;
 
+import cz.artique.client.sources.SourceTypePicker;
+import cz.artique.client.sources.SourcesConstants;
 import cz.artique.shared.model.item.ArticleItem;
 import cz.artique.shared.model.item.LinkItem;
 import cz.artique.shared.model.item.ManualItem;
@@ -17,6 +19,10 @@ import cz.artique.shared.model.item.PageChangeItem;
  * <p>
  * The only other information this enum provides is whether this source type
  * supports regions: only HTML based sources do.
+ * 
+ * This enum also lists all possible states of {@link SourceTypePicker}. And
+ * also provides (method {@link #name()}) part of name for internationalization
+ * in {@link SourcesConstants}.
  * 
  * @author Adam Juraszek
  * 

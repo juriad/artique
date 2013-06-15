@@ -136,13 +136,15 @@ public class ExportServlet extends HttpServlet {
 			entry.setLink(object.getUrl().getValue());
 			entry.setTitle(object.getTitle());
 			entry.setUri(object.getUrl().getValue());
-			entry.setPublishedDate(object.getPublished() == null ? object
-				.getAdded() : object.getPublished());
 			if (object instanceof ArticleItem) {
 				ArticleItem ai = (ArticleItem) object;
+				entry.setPublishedDate(ai.getPublished() != null ? ai
+					.getPublished() : ai.getAdded());
 				if (ai.getAuthor() != null) {
 					entry.setAuthor(ai.getAuthor());
 				}
+			} else {
+				entry.setPublishedDate(object.getAdded());
 			}
 			// read difference between description and content
 			// TODO export: content

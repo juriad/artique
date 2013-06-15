@@ -136,8 +136,10 @@ public class UserItemRow extends RowWidget {
 
 		Item itemObject = getValue().getItemObject();
 		String simple;
-		if (itemObject.getPublished() != null) {
-			simple = shortRenderer.render(itemObject.getPublished());
+		if (itemObject instanceof ArticleItem
+			&& ((ArticleItem) itemObject).getPublished() != null) {
+			simple =
+				shortRenderer.render(((ArticleItem) itemObject).getPublished());
 		} else {
 			simple = shortRenderer.render(itemObject.getAdded());
 		}
@@ -152,10 +154,14 @@ public class UserItemRow extends RowWidget {
 		full +=
 			constants.added() + ": "
 				+ longRenderer.render(itemObject.getAdded());
-		if (itemObject.getPublished() != null) {
+		if (itemObject instanceof ArticleItem
+			&& ((ArticleItem) itemObject).getPublished() != null) {
 			full +=
-				"\n" + constants.published() + ": "
-					+ longRenderer.render(itemObject.getPublished());
+				"\n"
+					+ constants.published()
+					+ ": "
+					+ longRenderer.render(((ArticleItem) itemObject)
+						.getPublished());
 		}
 		if (itemObject instanceof PageChangeItem) {
 			Date comparedTo = ((PageChangeItem) itemObject).getComparedTo();

@@ -47,8 +47,8 @@ public class WebSiteCrawler extends HTMLCrawler<WebSiteSource, LinkItem> {
 		String linkHref = link.attr("href");
 		String linkText = link.text();
 
-		item.setContent(new Text(link.parent().outerHtml()));
-		item.setContentType(ContentType.HTML);
+		item.setContent(new Text(link.parent().text()));
+		item.setContentType(ContentType.PLAIN_TEXT);
 		item.setTitle(linkText);
 		item.setUrl(new Link(linkHref));
 		item.setHash(getHash(item));
@@ -107,7 +107,8 @@ public class WebSiteCrawler extends HTMLCrawler<WebSiteSource, LinkItem> {
 				item = duplicate;
 			}
 
-			Set<String> usersAlreadyHavingItem = getUsersAlreadyHavingItem(item);
+			Set<String> usersAlreadyHavingItem =
+				getUsersAlreadyHavingItem(item);
 			List<UserItem> userItems = new ArrayList<UserItem>();
 			for (UserSource us : sources) {
 				if (usersAlreadyHavingItem.contains(us.getUserId())) {

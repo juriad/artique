@@ -78,9 +78,9 @@ public class SharedUtils {
 	 * {@link HasDeepEquals#equalsDeeply(Object)} method.
 	 * Both of them may be null.
 	 * 
-	 * @param e1
+	 * @param es1
 	 *            the first collection
-	 * @param e2
+	 * @param es2
 	 *            the other collection
 	 * @return true if they are equal, false otherwise
 	 */

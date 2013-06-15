@@ -83,7 +83,7 @@ public class ShortcutsEditor extends Composite {
 
 	private String shortcutTypeAsString(ShortcutType type) {
 		ShortcutsConstants constants = I18n.getShortcutsConstants();
-		String method = "shortcut_" + type.name();
+		String method = "shortcutType_" + type.name();
 		return constants.getString(method);
 	}
 
@@ -92,7 +92,8 @@ public class ShortcutsEditor extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 		selectionModel = new SingleSelectionModel<Shortcut>();
 		ShortcutsConstants constants = I18n.getShortcutsConstants();
-		cellList.setEmptyListWidget(new InlineLabel(constants.noDefinedShortcut()));
+		cellList.setEmptyListWidget(new InlineLabel(constants
+			.noDefinedShortcut()));
 		cellList.setSelectionModel(selectionModel);
 		cellList.setStylePrimaryName("cellList");
 		selectionModel

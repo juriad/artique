@@ -65,7 +65,6 @@ public class ClientItemServiceImpl implements ClientItemService {
 		mi.setContent(validator.checkText(AddManualItem.ITEM_CONTENT,
 			mi.getContent(), true, true));
 		mi.setHash(null);
-		mi.setPublished(null);
 		mi.setTitle(validator.checkString(AddManualItem.ITEM_TITLE,
 			mi.getTitle(), false, false));
 		mi

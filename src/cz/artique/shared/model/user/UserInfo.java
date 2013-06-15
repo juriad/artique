@@ -164,8 +164,8 @@ public class UserInfo implements Serializable, GenKey {
 	}
 
 	/**
-	 * @param user
-	 *            id user id, stable user identifier
+	 * @param userId
+	 *            user id, stable user identifier
 	 */
 	public void setUserId(String userId) {
 		this.userId = userId;

@@ -9,7 +9,8 @@ import cz.artique.shared.utils.SharedUtils;
 
 /**
  * Non-trivial extension of {@link Source}. Adds attribute user to
- * ManualSource to support queries for ManualSource of concrete user.
+ * ManualSource to support queries for ManualSource of concrete user. Each user
+ * has his own manual source; they are never shared.
  * 
  * @author Adam Juraszek
  * 
@@ -35,14 +36,14 @@ public class ManualSource extends Source implements Serializable, GenKey {
 	 * Gets id of user which this manual source belongs to. This user is never
 	 * null.
 	 * 
-	 * @return user
+	 * @return user id
 	 */
 	public String getUserId() {
 		return userId;
 	}
 
 	/**
-	 * @param user
+	 * @param userId
 	 *            id of user this source belongs to
 	 */
 	public void setUserId(String userId) {
