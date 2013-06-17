@@ -1,4 +1,4 @@
-package cz.artique.shared.model.config;
+package cz.artique.shared.model.config.server;
 
 import java.io.Serializable;
 
@@ -8,10 +8,16 @@ import org.slim3.datastore.Model;
 import com.google.appengine.api.datastore.Key;
 
 import cz.artique.shared.utils.GenKey;
-import cz.artique.shared.utils.SharedUtils;
 
+/**
+ * Configuration option which contains server configuration.
+ * 
+ * @author Adam Juraszek
+ * @see cz.artique.shared.model.config
+ * 
+ */
 @Model(schemaVersion = 1)
-public class ClientConfig implements Serializable, GenKey {
+public class ServerConfig implements Serializable, GenKey {
 
 	private static final long serialVersionUID = 1L;
 
@@ -32,48 +38,46 @@ public class ClientConfig implements Serializable, GenKey {
 	@Attribute(unindexed = true)
 	private String stringValue;
 
-	private String userId;
+	/**
+	 * Default constructor
+	 */
+	public ServerConfig() {}
 
-	public ClientConfig() {}
-
-	public ClientConfig(String userId, String configKey) {
-		this.userId = userId;
+	/**
+	 * Constructor setting config key
+	 * 
+	 * @param configKey
+	 *            configuration key
+	 */
+	public ServerConfig(String configKey) {
 		this.configKey = configKey;
 	}
 
 	/**
-	 * Returns the key.
-	 * 
-	 * @return the key
+	 * @return key
 	 */
 	public Key getKey() {
 		return key;
 	}
 
 	/**
-	 * Sets the key.
-	 * 
 	 * @param key
-	 *            the key
+	 *            key
 	 */
 	public void setKey(Key key) {
 		this.key = key;
 	}
 
 	/**
-	 * Returns the version.
-	 * 
-	 * @return the version
+	 * @return version
 	 */
 	public Long getVersion() {
 		return version;
 	}
 
 	/**
-	 * Sets the version.
-	 * 
 	 * @param version
-	 *            the version
+	 *            version
 	 */
 	public void setVersion(Long version) {
 		this.version = version;
@@ -98,7 +102,7 @@ public class ClientConfig implements Serializable, GenKey {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		ClientConfig other = (ClientConfig) obj;
+		ServerConfig other = (ServerConfig) obj;
 		if (key == null) {
 			if (other.key != null) {
 				return false;
@@ -109,48 +113,67 @@ public class ClientConfig implements Serializable, GenKey {
 		return true;
 	}
 
+	/**
+	 * @return configuration key
+	 */
 	public String getConfigKey() {
 		return configKey;
 	}
 
+	/**
+	 * @param configKey
+	 *            configuration key
+	 */
 	public void setConfigKey(String configKey) {
 		this.configKey = configKey;
 	}
 
+	/**
+	 * @return integer value
+	 */
 	public int getIntValue() {
 		return intValue;
 	}
 
+	/**
+	 * @param intValue
+	 *            integer value
+	 */
 	public void setIntValue(int intValue) {
 		this.intValue = intValue;
 	}
 
+	/**
+	 * @return double value
+	 */
 	public double getDoubleValue() {
 		return doubleValue;
 	}
 
+	/**
+	 * @param doubleValue
+	 *            double value
+	 */
 	public void setDoubleValue(double doubleValue) {
 		this.doubleValue = doubleValue;
 	}
 
+	/**
+	 * @return string value
+	 */
 	public String getStringValue() {
 		return stringValue;
 	}
 
+	/**
+	 * @param stringValue
+	 *            string value
+	 */
 	public void setStringValue(String stringValue) {
 		this.stringValue = stringValue;
 	}
 
 	public String getKeyName() {
-		return SharedUtils.combineStringParts(getUserId(), getConfigKey());
+		return getConfigKey();
 	}
-
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
 }

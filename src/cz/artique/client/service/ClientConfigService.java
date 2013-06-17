@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-import cz.artique.shared.model.config.ClientConfigValue;
+import cz.artique.shared.model.config.client.ClientConfigValue;
 import cz.artique.shared.validation.HasIssue;
 
 @RemoteServiceRelativePath("service.s3gwt")

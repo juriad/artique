@@ -32,7 +32,7 @@ public enum ContentType {
 	 * 
 	 * @param name
 	 * @param content
-	 * @return
+	 * @return guessed content type
 	 */
 	public static ContentType guess(String name, String content) {
 		if (name != null) {

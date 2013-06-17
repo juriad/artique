@@ -8,7 +8,7 @@ import cz.artique.server.crawler.ManualCrawler;
 import cz.artique.server.crawler.PageChangeCrawler;
 import cz.artique.server.crawler.WebSiteCrawler;
 import cz.artique.server.crawler.XMLCrawler;
-import cz.artique.shared.model.config.ConfigKey;
+import cz.artique.shared.model.config.server.ServerConfigKey;
 import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Source;
@@ -46,24 +46,24 @@ public class CrawlerService {
 		if (count < 0) {
 			int failedInterval =
 				ConfigService.CONFIG_SERVICE.getConfig(
-					ConfigKey.CRAWLER_CHECK_INTERVAL_FAILED).<Integer> get();
+					ServerConfigKey.CRAWLER_CHECK_INTERVAL_FAILED).<Integer> get();
 			nextCheck =
 				new Date((long) (new Date().getTime() + failedInterval
 					* source.getErrorSequence()));
 		} else if (source.getLastCheck() == null) {
 			int firstInterval =
 				ConfigService.CONFIG_SERVICE.getConfig(
-					ConfigKey.CRAWLER_CHECK_INTERVAL_FIRST).<Integer> get();
+					ServerConfigKey.CRAWLER_CHECK_INTERVAL_FIRST).<Integer> get();
 			nextCheck =
 				new Date((long) (new Date().getTime() + firstInterval
 					* calcInterval(count)));
 		} else {
 			int minInterval =
 				ConfigService.CONFIG_SERVICE.getConfig(
-					ConfigKey.CRAWLER_CHECK_INTERVAL_MIN).<Integer> get();
+					ServerConfigKey.CRAWLER_CHECK_INTERVAL_MIN).<Integer> get();
 			int maxInterval =
 				ConfigService.CONFIG_SERVICE.getConfig(
-					ConfigKey.CRAWLER_CHECK_INTERVAL_MAX).<Integer> get();
+					ServerConfigKey.CRAWLER_CHECK_INTERVAL_MAX).<Integer> get();
 
 			long lastInterval =
 				source.getLastCheck().getTime() - new Date().getTime();

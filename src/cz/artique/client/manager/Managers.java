@@ -13,7 +13,7 @@ import cz.artique.client.listFilters.ListFiltersManager;
 import cz.artique.client.messages.MessagesManager;
 import cz.artique.client.shortcuts.ShortcutsManager;
 import cz.artique.client.sources.SourcesManager;
-import cz.artique.shared.model.config.ClientConfigKey;
+import cz.artique.shared.model.config.client.ClientConfigKey;
 
 public class Managers {
 	private Managers() {}

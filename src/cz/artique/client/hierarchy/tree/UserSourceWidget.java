@@ -25,7 +25,7 @@ import cz.artique.client.i18n.I18n;
 import cz.artique.client.items.ManualItemDialog;
 import cz.artique.client.sources.UserSourceDialog;
 import cz.artique.shared.model.label.Filter;
-import cz.artique.shared.model.label.FilterType;
+import cz.artique.shared.model.label.FilterLevel;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.source.SourceType;
 import cz.artique.shared.model.source.UserSource;
@@ -151,7 +151,7 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 
 	private Filter constructFilter() {
 		Filter f = new Filter();
-		f.setType(FilterType.TOP_LEVEL_FILTER);
+		f.setLevel(FilterLevel.TOP_LEVEL_FILTER);
 		if (getHierarchy().getParent() != null) {
 			f.setLabels(getListOfLabels());
 		}

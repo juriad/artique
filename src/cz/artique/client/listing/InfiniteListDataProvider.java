@@ -9,7 +9,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.items.ListingRequest;
 import cz.artique.shared.items.ListingResponse;
-import cz.artique.shared.model.config.ClientConfigKey;
+import cz.artique.shared.model.config.client.ClientConfigKey;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.label.ListFilterOrder;

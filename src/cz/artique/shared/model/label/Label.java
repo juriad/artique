@@ -7,10 +7,54 @@ import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
 
+import cz.artique.client.labels.LabelsDialog;
+import cz.artique.shared.model.item.UserItem;
+import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.utils.GenKey;
 import cz.artique.shared.utils.HasDeepEquals;
 import cz.artique.shared.utils.SharedUtils;
 
+/**
+ * Label is the smallest possible information the user may add to a
+ * {@link UserItem}. User can add {@link Label}s to {@link UserItem}s
+ * to categorize interesting UserItems in order to find them easier later or to
+ * backup the UserItem.
+ * Label always belongs to a user; there exists policy restricting label's name:
+ * name must not contain white-spaces or dollar sign.
+ * This applies to labels of type {@link LabelType#USER_DEFINED}.
+ * 
+ * <p>
+ * There also exists {@link Label}s of type {@link LabelType#USER_SOURCE}. Each
+ * {@link UserSource} has each own {@link Label}. This label is used to mark
+ * {@link UserItem}s belonging to the {@link UserSource}. Name of this type of
+ * labels is string representation of key of the {@link UserSource}, that makes
+ * the name stable. Nonpersistent attribute displayName solves the issue with
+ * human unreadable name of USER_SOURCE labels.
+ * 
+ * <p>
+ * Labels have following persistent attributes:
+ * <ul>
+ * <li>UserId - id of user who owns this label
+ * <li>Name - name of label, see above for more information
+ * <li>LabelType - type of label, value of {@link LabelType} enum
+ * <li>BackupLevel - level of backup to be performed when the label is added
+ * <li>Priority - priority of label when it is shown in list; labels with the
+ * same priority are sorted alphabetically; priority is available to user
+ * <li>Appearance - object controlling view of label when it is shown
+ * </ul>
+ * 
+ * There are also many nonpersistent attributes:
+ * <ul>
+ * <li>DisplayName - shown instead of name, display name is human readable
+ * <li>ToBeDeleted - set to true on client in dialog {@link LabelsDialog} when
+ * label is marked to be deleted when labels are updated
+ * <li>ShortcutStroke - key combination triggering addition or removal of this
+ * label
+ * </ul>
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 @Model(schemaVersion = 1)
 public class Label
 		implements Serializable, GenKey, Comparable<Label>,
@@ -59,7 +103,7 @@ public class Label
 	private String shortcutStroke;
 
 	/**
-	 * Apperiance of this label
+	 * Appearance of this label
 	 */
 	@Attribute(lob = true)
 	private LabelAppearance appearance;

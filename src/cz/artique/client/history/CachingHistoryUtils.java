@@ -7,7 +7,7 @@ import java.util.Map;
 import com.google.appengine.api.datastore.Key;
 
 import cz.artique.shared.model.label.Filter;
-import cz.artique.shared.model.label.FilterType;
+import cz.artique.shared.model.label.FilterLevel;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.ListFilter;
 
@@ -32,7 +32,7 @@ public class CachingHistoryUtils extends HistoryUtils {
 		Filter f = filterForLabel.get(label);
 		if (f == null) {
 			f = new Filter();
-			f.setType(FilterType.TOP_LEVEL_FILTER);
+			f.setLevel(FilterLevel.TOP_LEVEL_FILTER);
 			f.setLabels(Arrays.asList(label.getKey()));
 			filterForLabel.put(label, f);
 		}

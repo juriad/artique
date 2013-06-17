@@ -7,7 +7,7 @@ import cz.artique.client.items.ModifiedHandler;
 import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.items.ListingResponse;
-import cz.artique.shared.model.config.ClientConfigKey;
+import cz.artique.shared.model.config.client.ClientConfigKey;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.ListFilter;
 

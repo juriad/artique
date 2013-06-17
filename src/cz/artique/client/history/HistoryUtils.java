@@ -9,7 +9,7 @@ import com.google.appengine.api.datastore.Key;
 
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.Filter;
-import cz.artique.shared.model.label.FilterType;
+import cz.artique.shared.model.label.FilterLevel;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.label.ListFilter;
@@ -222,7 +222,7 @@ public class HistoryUtils {
 			return "";
 		}
 
-		if (FilterType.TOP_LEVEL_FILTER.equals(filter.getType())) {
+		if (FilterLevel.TOP_LEVEL_FILTER.equals(filter.getLevel())) {
 			if (filter.getFilterObjects() != null
 				&& !filter.getFilterObjects().isEmpty()) {
 				for (int i = 0; i < filter.getFilterObjects().size(); i++) {
@@ -243,7 +243,7 @@ public class HistoryUtils {
 				String l = serializeLabel(label);
 
 				if (sb.length() > 0) {
-					if (FilterType.TOP_LEVEL_FILTER.equals(filter.getType())
+					if (FilterLevel.TOP_LEVEL_FILTER.equals(filter.getLevel())
 						|| i == 0) {
 						sb.append(" OR ");
 					} else {
@@ -268,7 +268,7 @@ public class HistoryUtils {
 		}
 
 		Filter filter = new Filter();
-		filter.setType(FilterType.TOP_LEVEL_FILTER);
+		filter.setLevel(FilterLevel.TOP_LEVEL_FILTER);
 
 		List<Key> labels = new ArrayList<Key>();
 		List<Filter> filterObjects = new ArrayList<Filter>();
@@ -288,7 +288,7 @@ public class HistoryUtils {
 				}
 				if (keys.size() > 1) {
 					Filter second = new Filter();
-					second.setType(FilterType.SECOND_LEVEL_FILTER);
+					second.setLevel(FilterLevel.SECOND_LEVEL_FILTER);
 					second.setLabels(keys);
 					filterObjects.add(second);
 				} else if (keys.size() == 1) {

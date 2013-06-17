@@ -5,7 +5,7 @@ import java.util.List;
 import cz.artique.client.service.ClientListFilterService;
 import cz.artique.server.validation.Validator;
 import cz.artique.shared.model.label.Filter;
-import cz.artique.shared.model.label.FilterType;
+import cz.artique.shared.model.label.FilterLevel;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.validation.Issue;
@@ -48,7 +48,7 @@ public class ClientListFilterServiceImpl implements ClientListFilterService {
 		if (listFilter.getFilterObject() != null) {
 			Filter filter = listFilter.getFilterObject();
 			filter.setUserId(userId);
-			filter.setType(FilterType.TOP_LEVEL_FILTER);
+			filter.setLevel(FilterLevel.TOP_LEVEL_FILTER);
 			LabelService ls = new LabelService();
 			if (filter.getLabels() != null) {
 				List<Label> labelsByKeys =
@@ -62,7 +62,7 @@ public class ClientListFilterServiceImpl implements ClientListFilterService {
 			if (filter.getFilterObjects() != null) {
 				for (Filter sub : filter.getFilterObjects()) {
 					sub.setUserId(userId);
-					sub.setType(FilterType.SECOND_LEVEL_FILTER);
+					sub.setLevel(FilterLevel.SECOND_LEVEL_FILTER);
 					if (sub.getLabels() != null) {
 						List<Label> labelsByKeys =
 							ls.getLabelsByKeys(filter.getLabels());
@@ -108,7 +108,7 @@ public class ClientListFilterServiceImpl implements ClientListFilterService {
 		if (listFilter.getFilterObject() != null) {
 			Filter filter = listFilter.getFilterObject();
 			filter.setUserId(userId);
-			filter.setType(FilterType.TOP_LEVEL_FILTER);
+			filter.setLevel(FilterLevel.TOP_LEVEL_FILTER);
 			LabelService ls = new LabelService();
 			if (filter.getLabels() != null) {
 				List<Label> labelsByKeys =
@@ -122,7 +122,7 @@ public class ClientListFilterServiceImpl implements ClientListFilterService {
 			if (filter.getFilterObjects() != null) {
 				for (Filter sub : filter.getFilterObjects()) {
 					sub.setUserId(userId);
-					sub.setType(FilterType.SECOND_LEVEL_FILTER);
+					sub.setLevel(FilterLevel.SECOND_LEVEL_FILTER);
 					if (sub.getLabels() != null) {
 						List<Label> labelsByKeys =
 							ls.getLabelsByKeys(filter.getLabels());

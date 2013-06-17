@@ -353,6 +353,7 @@ public class ItemService {
 	}
 
 	public void setBackup(Key userItemKey, BlobKey blobKey) {
+		// TODO nice to have: delete old backup if current backupBlobKey != null
 		Transaction tx = Datastore.beginTransaction();
 		try {
 			UserItem userItem =

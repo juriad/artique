@@ -15,7 +15,7 @@ import cz.artique.client.hierarchy.TimedLeafNode;
 import cz.artique.client.manager.Manager;
 import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
-import cz.artique.shared.model.config.ClientConfigKey;
+import cz.artique.shared.model.config.client.ClientConfigKey;
 
 public class MessagesManager
 		implements ProvidesHierarchy<Message>, HasMessageHandlers, Manager {

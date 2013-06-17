@@ -26,7 +26,7 @@ import cz.artique.client.manager.Managers;
 import cz.artique.client.messages.Message;
 import cz.artique.client.messages.MessageType;
 import cz.artique.client.messages.Messenger;
-import cz.artique.shared.model.config.ClientConfigKey;
+import cz.artique.shared.model.config.client.ClientConfigKey;
 import cz.artique.shared.model.label.ListFilter;
 
 public class Artique extends Composite {

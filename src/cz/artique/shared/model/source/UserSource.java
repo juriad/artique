@@ -14,7 +14,7 @@ import cz.artique.client.items.ManualItemLabelsBar;
 import cz.artique.server.crawler.Crawler;
 import cz.artique.server.crawler.PageChangeCrawler;
 import cz.artique.server.service.CrawlerService;
-import cz.artique.shared.model.config.ConfigKey;
+import cz.artique.shared.model.config.server.ServerConfigKey;
 import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Label;
@@ -54,7 +54,7 @@ import cz.artique.shared.utils.SharedUtils;
  * There are attributes which define state of {@link UserSource}:
  * <ul>
  * <li>Name - the name assigned by user; {@link ManualSource} has default name
- * {@link ConfigKey#MANUAL_SOURCE_NAME}.
+ * {@link ServerConfigKey#MANUAL_SOURCE_NAME}.
  * <li>Hierarchy - path to the root of sources tree; defined by
  * {@link HasHierarchy#getHierarchy()}
  * <li>Watching - boolean flag indicating whether user wants to be informed
@@ -182,7 +182,7 @@ public class UserSource
 	/**
 	 * Name of this {@link UserSource} assigned by user during its creation. For
 	 * {@link ManualSource}, the default name is
-	 * {@link ConfigKey#MANUAL_SOURCE_NAME}.
+	 * {@link ServerConfigKey#MANUAL_SOURCE_NAME}.
 	 * 
 	 * @see cz.artique.shared.utils.HasHierarchy#getName()
 	 */

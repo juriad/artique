@@ -16,6 +16,7 @@ import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.WebSiteSource;
 import cz.artique.shared.model.source.XMLSource;
+import cz.artique.shared.model.user.UserInfo;
 
 /**
  * Item represents one item shown in {@link ArtiqueList}, this item has no

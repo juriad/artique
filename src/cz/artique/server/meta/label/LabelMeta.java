@@ -1,6 +1,6 @@
 package cz.artique.server.meta.label;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-14 13:32:13")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-06-17 13:54:13")
 /** */
 public final class LabelMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.label.Label> {
 

@@ -1,50 +1,109 @@
 package cz.artique.shared.model.config;
 
-public class ConfigValue<E> {
-	private E value;
-	private ConfigKey key;
-	private E originalValue;
+import java.io.Serializable;
 
-	public ConfigValue(ConfigKey key, E value) {
-		this.setKey(key);
-		this.value = value;
-		this.originalValue = value;
+/**
+ * Stores config value of all types together with its type.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
+public class ConfigValue implements Serializable {
+	private static final long serialVersionUID = 1L;
+	private Integer i;
+	private Double d;
+	private String s;
+	private ConfigType type;
+
+	/**
+	 * Constructor for deserialization.
+	 */
+	public ConfigValue() {}
+
+	/**
+	 * @param i
+	 *            value of type INT
+	 */
+	public ConfigValue(Integer i) {
+		this.setI(i);
+		setType(ConfigType.INT);
 	}
 
-	public E getValue() {
-		return value;
+	/**
+	 * @param d
+	 *            value fo type DOUBLE
+	 */
+	public ConfigValue(Double d) {
+		this.setD(d);
+		setType(ConfigType.DOUBLE);
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T> T get() {
-		if (value != null) {
-			return (T) value;
-		} else {
-			return getDefaultValue();
-		}
+	/**
+	 * @param s
+	 *            value of type STRING
+	 */
+	public ConfigValue(String s) {
+		this.setS(s);
+		setType(ConfigType.STRING);
 	}
 
-	public <T> T getDefaultValue() {
-		return getKey().getDefaultValue();
+	/**
+	 * @return integer value
+	 */
+	public Integer getI() {
+		return i;
 	}
 
-	public void setValue(E value) {
-		this.value = value;
+	/**
+	 * @param i
+	 *            integer value
+	 */
+	public void setI(Integer i) {
+		this.i = i;
 	}
 
-	public E getOriginalValue() {
-		return originalValue;
+	/**
+	 * @return double value
+	 */
+	public Double getD() {
+		return d;
 	}
 
-	public void setOriginalValue(E originalValue) {
-		this.originalValue = originalValue;
+	/**
+	 * @param d
+	 *            double value
+	 */
+	public void setD(Double d) {
+		this.d = d;
 	}
 
-	public ConfigKey getKey() {
-		return key;
+	/**
+	 * @return string value
+	 */
+	public String getS() {
+		return s;
 	}
 
-	public void setKey(ConfigKey key) {
-		this.key = key;
+	/**
+	 * @param s
+	 *            string value
+	 */
+	public void setS(String s) {
+		this.s = s;
+	}
+
+	/**
+	 * @return type of value
+	 */
+	public ConfigType getType() {
+		return type;
+	}
+
+	/**
+	 * @param type
+	 *            type of value
+	 */
+	public void setType(ConfigType type) {
+		this.type = type;
 	}
 }

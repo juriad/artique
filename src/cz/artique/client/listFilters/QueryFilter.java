@@ -13,7 +13,7 @@ import cz.artique.client.labels.suggestion.LabelsPool;
 import cz.artique.client.labels.suggestion.SuggestionResult;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.Filter;
-import cz.artique.shared.model.label.FilterType;
+import cz.artique.shared.model.label.FilterLevel;
 import cz.artique.shared.model.label.Label;
 
 public class QueryFilter extends AbstractQueryFilter {
@@ -105,13 +105,13 @@ public class QueryFilter extends AbstractQueryFilter {
 				topLabels.add(sub.get(0).getKey());
 			} else {
 				Filter subFilter = new Filter();
-				subFilter.setType(FilterType.SECOND_LEVEL_FILTER);
+				subFilter.setLevel(FilterLevel.SECOND_LEVEL_FILTER);
 				subFilter.setLabels(labelsToKeys(sub));
 				topFilters.add(subFilter);
 			}
 		}
 		Filter filter = new Filter();
-		filter.setType(FilterType.TOP_LEVEL_FILTER);
+		filter.setLevel(FilterLevel.TOP_LEVEL_FILTER);
 		if (!topFilters.isEmpty()) {
 			filter.setFilterObjects(topFilters);
 		}

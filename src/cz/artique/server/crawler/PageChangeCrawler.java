@@ -15,7 +15,7 @@ import com.google.appengine.api.datastore.Text;
 import cz.artique.server.crawler.DiffMatchPatch.Diff;
 import cz.artique.server.service.ConfigService;
 import cz.artique.server.service.UserSourceService;
-import cz.artique.shared.model.config.ConfigKey;
+import cz.artique.shared.model.config.server.ServerConfigKey;
 import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.PageChangeItem;
 import cz.artique.shared.model.item.UserItem;
@@ -149,12 +149,12 @@ public class PageChangeCrawler
 		DiffMatchPatch dmp = new DiffMatchPatch();
 		dmp.Diff_EditCost =
 			ConfigService.CONFIG_SERVICE
-				.getConfig(ConfigKey.DIFF_EDIT_COST)
+				.getConfig(ServerConfigKey.DIFF_EDIT_COST)
 				.<Long> get()
 				.shortValue();
 		dmp.Diff_Timeout =
 			ConfigService.CONFIG_SERVICE
-				.getConfig(ConfigKey.DIFF_TIMEOUT)
+				.getConfig(ServerConfigKey.DIFF_TIMEOUT)
 				.<Double> get()
 				.floatValue();
 

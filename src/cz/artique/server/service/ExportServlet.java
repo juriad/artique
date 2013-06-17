@@ -20,7 +20,7 @@ import com.sun.syndication.io.SyndFeedOutput;
 
 import cz.artique.shared.items.ListingRequest;
 import cz.artique.shared.items.ListingResponse;
-import cz.artique.shared.model.config.ConfigKey;
+import cz.artique.shared.model.config.server.ServerConfigKey;
 import cz.artique.shared.model.item.ArticleItem;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;
@@ -122,7 +122,7 @@ public class ExportServlet extends HttpServlet {
 		ItemService is = new ItemService();
 		int fetchCount =
 			ConfigService.CONFIG_SERVICE
-				.getConfig(ConfigKey.EXPORT_FETCH_COUNT)
+				.getConfig(ServerConfigKey.EXPORT_FETCH_COUNT)
 				.<Integer> get();
 		ListingRequest request =
 			new ListingRequest(listFilter, null, null, fetchCount);

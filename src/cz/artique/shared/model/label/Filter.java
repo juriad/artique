@@ -12,6 +12,23 @@ import com.google.appengine.api.datastore.Key;
 import cz.artique.shared.utils.HasDeepEquals;
 import cz.artique.shared.utils.SharedUtils;
 
+/**
+ * Filter represents composition of several {@link Label}s combined by AND or OR
+ * operator. Each filter belongs to a user and is part of {@link ListFilter}.
+ * 
+ * <p>
+ * A filter consists of two levels:
+ * <ul>
+ * <li>TOP_LEVEL_FILTER - contains filters of level SECOND_LEVEL_FILTER and
+ * {@link Label}s combined by operator OR
+ * <li>SECONF_LEVEL_FILTER - contains {@link Label}s combined by operator AND.
+ * If this filter contains only one {@link Label}, it is discarded and replaced
+ * by label on top level.
+ * </ul>
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 @Model(schemaVersion = 1)
 public class Filter implements Serializable, HasDeepEquals<Filter> {
 
@@ -42,7 +59,7 @@ public class Filter implements Serializable, HasDeepEquals<Filter> {
 	 */
 	private List<Key> labels;
 
-	private FilterType type;
+	private FilterLevel level;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -67,26 +84,28 @@ public class Filter implements Serializable, HasDeepEquals<Filter> {
 	}
 
 	/**
-	 * Returns the key.
-	 * 
-	 * @return the key
+	 * @return key
 	 */
 	public Key getKey() {
 		return key;
 	}
 
+	/**
+	 * @return list of labels
+	 */
 	public List<Key> getLabels() {
 		return labels;
 	}
 
+	/**
+	 * @return owner of the filter
+	 */
 	public String getUserId() {
 		return userId;
 	}
 
 	/**
-	 * Returns the version.
-	 * 
-	 * @return the version
+	 * @return version
 	 */
 	public Long getVersion() {
 		return version;
@@ -101,64 +120,97 @@ public class Filter implements Serializable, HasDeepEquals<Filter> {
 	}
 
 	/**
-	 * Sets the key.
-	 * 
 	 * @param key
-	 *            the key
+	 *            key
 	 */
 	public void setKey(Key key) {
 		this.key = key;
 	}
 
+	/**
+	 * @param labels
+	 *            list of labels
+	 */
 	public void setLabels(List<Key> labels) {
 		this.labels = labels;
 	}
 
+	/**
+	 * @param userId
+	 *            owner of the filter
+	 */
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
 	/**
-	 * Sets the version.
-	 * 
 	 * @param version
-	 *            the version
+	 *            version
 	 */
 	public void setVersion(Long version) {
 		this.version = version;
 	}
 
+	/**
+	 * @return list of filters
+	 */
 	public List<Key> getFilters() {
 		return filters;
 	}
 
+	/**
+	 * @param filters
+	 *            list of filters
+	 */
 	public void setFilters(List<Key> filters) {
 		this.filters = filters;
 	}
 
+	/**
+	 * @return list of filter objects
+	 */
 	public List<Filter> getFilterObjects() {
 		return filterObjects;
 	}
 
+	/**
+	 * @param filterObjects
+	 *            list of filter objects
+	 */
 	public void setFilterObjects(List<Filter> filterObjects) {
 		this.filterObjects = filterObjects;
 	}
 
-	public FilterType getType() {
-		return type;
+	/**
+	 * @return level of filter
+	 */
+	public FilterLevel getLevel() {
+		return level;
 	}
 
-	public void setType(FilterType type) {
-		this.type = type;
+	/**
+	 * @param level
+	 *            level of filter
+	 */
+	public void setLevel(FilterLevel level) {
+		this.level = level;
 	}
 
+	/**
+	 * Compares equality of filters by its attributes.
+	 * 
+	 * @see cz.artique.shared.utils.HasDeepEquals#equalsDeeply(java.lang.Object)
+	 */
 	public boolean equalsDeeply(Filter e) {
 		return SharedUtils.eq(getLabels(), e.getLabels())
-			&& SharedUtils.eq(getType(), e.getType())
+			&& SharedUtils.eq(getLevel(), e.getLevel())
 			&& SharedUtils.eq(getUserId(), e.getUserId())
 			&& SharedUtils.deepEq(getFilterObjects(), e.getFilterObjects());
 	}
 
+	/**
+	 * @return list of all labels referenced by this filter and all sub-filters
+	 */
 	public List<Key> flat() {
 		List<Key> keys = new ArrayList<Key>();
 		if (getLabels() != null) {

@@ -9,35 +9,36 @@ import org.slim3.datastore.Datastore;
 
 import com.google.appengine.api.datastore.Key;
 
-import cz.artique.server.meta.config.ConfigMeta;
+import cz.artique.server.meta.config.server.ServerConfigMeta;
 import cz.artique.server.utils.KeyGen;
-import cz.artique.shared.model.config.Config;
-import cz.artique.shared.model.config.ConfigKey;
-import cz.artique.shared.model.config.ConfigValue;
+import cz.artique.shared.model.config.server.ServerConfig;
+import cz.artique.shared.model.config.server.ServerConfigKey;
+import cz.artique.shared.model.config.server.ServerConfigValue;
 
 public enum ConfigService {
 	CONFIG_SERVICE;
 
-	private Map<ConfigKey, ConfigValue<?>> configs =
-		new HashMap<ConfigKey, ConfigValue<?>>();
+	private Map<ServerConfigKey, ServerConfigValue<?>> configs =
+		new HashMap<ServerConfigKey, ServerConfigValue<?>>();
 
 	private void refresh() {
 		configs.clear();
-		Map<String, ConfigKey> map = new HashMap<String, ConfigKey>();
-		for (ConfigKey k : ConfigKey.values()) {
+		Map<String, ServerConfigKey> map =
+			new HashMap<String, ServerConfigKey>();
+		for (ServerConfigKey k : ServerConfigKey.values()) {
 			map.put(k.getKey(), k);
 		}
 
-		ConfigMeta meta = ConfigMeta.get();
-		List<Config> list = Datastore.query(meta).asList();
+		ServerConfigMeta meta = ServerConfigMeta.get();
+		List<ServerConfig> list = Datastore.query(meta).asList();
 
-		for (Config config : list) {
-			ConfigKey configKey = map.get(config.getConfigKey());
+		for (ServerConfig config : list) {
+			ServerConfigKey configKey = map.get(config.getConfigKey());
 			if (configKey == null) {
 				continue;
 			}
 
-			final ConfigValue<?> value = getValue(configKey, config);
+			final ServerConfigValue<?> value = getValue(configKey, config);
 			if (value == null) {
 				continue;
 			}
@@ -45,32 +46,33 @@ public enum ConfigService {
 		}
 
 		// add those with default value
-		for (ConfigKey configKey : ConfigKey.values()) {
+		for (ServerConfigKey configKey : ServerConfigKey.values()) {
 			if (!configs.containsKey(configKey)) {
-				final ConfigValue<?> value = getValue(configKey, null);
+				final ServerConfigValue<?> value = getValue(configKey, null);
 				configs.put(configKey, value);
 			}
 		}
 	}
 
-	private ConfigValue<?> getValue(ConfigKey configKey, Config config) {
-		final ConfigValue<?> value;
+	private ServerConfigValue<?> getValue(ServerConfigKey configKey,
+			ServerConfig config) {
+		final ServerConfigValue<?> value;
 		switch (configKey.getType()) {
 		case DOUBLE:
 			value =
-				new ConfigValue<Double>(configKey, config == null
+				new ServerConfigValue<Double>(configKey, config == null
 					? null
 					: config.getDoubleValue());
 			break;
 		case INT:
 			value =
-				new ConfigValue<Integer>(configKey, config == null
+				new ServerConfigValue<Integer>(configKey, config == null
 					? null
 					: config.getIntValue());
 			break;
 		case STRING:
 			value =
-				new ConfigValue<String>(configKey, config == null
+				new ServerConfigValue<String>(configKey, config == null
 					? null
 					: config.getStringValue());
 			break;
@@ -82,8 +84,8 @@ public enum ConfigService {
 		return value;
 	}
 
-	public ConfigValue<?> getConfig(ConfigKey key) {
-		ConfigValue<?> configValue = configs.get(key);
+	public ServerConfigValue<?> getConfig(ServerConfigKey key) {
+		ServerConfigValue<?> configValue = configs.get(key);
 		if (configValue == null) {
 			refresh();
 			configValue = configs.get(key);
@@ -91,11 +93,11 @@ public enum ConfigService {
 		return configValue;
 	}
 
-	public void setConfigs(List<ConfigValue<?>> changedConfigs) {
-		Map<Key, ConfigValue<?>> keysToChange =
-			new HashMap<Key, ConfigValue<?>>();
+	public void setConfigs(List<ServerConfigValue<?>> changedConfigs) {
+		Map<Key, ServerConfigValue<?>> keysToChange =
+			new HashMap<Key, ServerConfigValue<?>>();
 		List<Key> keysToDelete = new ArrayList<Key>();
-		for (ConfigValue<?> config : changedConfigs) {
+		for (ServerConfigValue<?> config : changedConfigs) {
 			Key key = KeyGen.genKey(config.getKey());
 			if (config.getDefaultValue().equals(config.getValue())
 				|| config.getValue() == null) {
@@ -109,24 +111,25 @@ public enum ConfigService {
 			Datastore.delete(keysToDelete);
 		}
 
-		List<Config> changed = new ArrayList<Config>();
+		List<ServerConfig> changed = new ArrayList<ServerConfig>();
 
-		ConfigMeta meta = ConfigMeta.get();
-		Map<Key, Config> map = Datastore.getAsMap(meta, keysToChange.keySet());
+		ServerConfigMeta meta = ServerConfigMeta.get();
+		Map<Key, ServerConfig> map =
+			Datastore.getAsMap(meta, keysToChange.keySet());
 		for (Key key : map.keySet()) {
-			Config config = map.get(key);
+			ServerConfig config = map.get(key);
 			if (config == null) {
 				// processed in the next round
 				continue;
 			}
-			ConfigValue<?> value = keysToChange.remove(key);
+			ServerConfigValue<?> value = keysToChange.remove(key);
 			setValue(value, config);
 			changed.add(config);
 		}
 
 		for (Key key : keysToChange.keySet()) {
-			ConfigValue<?> value = keysToChange.get(key);
-			Config config = new Config(value.getKey().getKey());
+			ServerConfigValue<?> value = keysToChange.get(key);
+			ServerConfig config = new ServerConfig(value.getKey().getKey());
 			config.setKey(key);
 			setValue(value, config);
 		}
@@ -135,7 +138,7 @@ public enum ConfigService {
 		}
 	}
 
-	private void setValue(ConfigValue<?> value, Config config) {
+	private void setValue(ServerConfigValue<?> value, ServerConfig config) {
 		switch (value.getKey().getType()) {
 		case DOUBLE:
 			config.setDoubleValue(value.<Double> get());

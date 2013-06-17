@@ -20,7 +20,7 @@ import cz.artique.client.manager.Manager;
 import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
 import cz.artique.client.utils.SortedList;
-import cz.artique.shared.model.config.ClientConfigKey;
+import cz.artique.shared.model.config.client.ClientConfigKey;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.label.ListFilterOrder;
 

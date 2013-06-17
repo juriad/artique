@@ -10,12 +10,12 @@ import org.slim3.datastore.Datastore;
 import com.google.appengine.api.datastore.Key;
 
 import cz.artique.client.service.ClientConfigService;
-import cz.artique.server.meta.config.ClientConfigMeta;
+import cz.artique.server.meta.config.client.ClientConfigMeta;
 import cz.artique.server.utils.KeyGen;
-import cz.artique.shared.model.config.ClientConfig;
-import cz.artique.shared.model.config.ClientConfigKey;
-import cz.artique.shared.model.config.ClientConfigValue;
-import cz.artique.shared.model.config.Value;
+import cz.artique.shared.model.config.ConfigValue;
+import cz.artique.shared.model.config.client.ClientConfig;
+import cz.artique.shared.model.config.client.ClientConfigKey;
+import cz.artique.shared.model.config.client.ClientConfigValue;
 
 public class ClientConfigServiceImpl implements ClientConfigService {
 
@@ -67,19 +67,19 @@ public class ClientConfigServiceImpl implements ClientConfigService {
 			value =
 				new ClientConfigValue(configKey, config == null
 					? null
-					: new Value(config.getDoubleValue()));
+					: new ConfigValue(config.getDoubleValue()));
 			break;
 		case INT:
 			value =
 				new ClientConfigValue(configKey, config == null
 					? null
-					: new Value(config.getIntValue()));
+					: new ConfigValue(config.getIntValue()));
 			break;
 		case STRING:
 			value =
 				new ClientConfigValue(configKey, config == null
 					? null
-					: new Value(config.getStringValue()));
+					: new ConfigValue(config.getStringValue()));
 			break;
 		default:
 			// no other type is supported

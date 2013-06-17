@@ -18,7 +18,7 @@ import cz.artique.server.meta.source.RegionMeta;
 import cz.artique.server.meta.source.SourceMeta;
 import cz.artique.server.meta.source.UserSourceMeta;
 import cz.artique.server.utils.KeyGen;
-import cz.artique.shared.model.config.ConfigKey;
+import cz.artique.shared.model.config.server.ServerConfigKey;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.source.ManualSource;
@@ -244,7 +244,7 @@ public class UserSourceService {
 		if (userSource == null) {
 			String name =
 				ConfigService.CONFIG_SERVICE.getConfig(
-					ConfigKey.MANUAL_SOURCE_NAME).<String> get();
+					ServerConfigKey.MANUAL_SOURCE_NAME).<String> get();
 			us.setName(name);
 			us.setWatching(true);
 			us.setSourceType(SourceType.MANUAL);
