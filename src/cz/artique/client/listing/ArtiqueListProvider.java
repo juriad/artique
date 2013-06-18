@@ -23,7 +23,7 @@ public class ArtiqueListProvider extends InfiniteListDataProvider
 	}
 
 	@Override
-	protected void applyFetchedData(ListingResponse<UserItem> result) {
+	protected void applyFetchedData(ListingResponse result) {
 		super.applyFetchedData(result);
 		if (canceled) {
 			return;

@@ -7,6 +7,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Template of servlet which is used ad-hoc during development to slightly
+ * modify values in datastore.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 @Deprecated
 public class Updater extends HttpServlet {
 	private static final long serialVersionUID = 1L;

@@ -26,7 +26,7 @@ import cz.artique.shared.validation.ValidationException;
 
 public class ClientItemServiceImpl implements ClientItemService {
 
-	public ListingResponse<UserItem> getItems(ListingRequest request) {
+	public ListingResponse getItems(ListingRequest request) {
 		if (request == null) {
 			request = new ListingRequest();
 		}

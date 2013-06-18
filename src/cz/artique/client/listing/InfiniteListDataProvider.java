@@ -10,7 +10,6 @@ import cz.artique.client.manager.Managers;
 import cz.artique.shared.items.ListingRequest;
 import cz.artique.shared.items.ListingResponse;
 import cz.artique.shared.model.config.client.ClientConfigKey;
-import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.label.ListFilterOrder;
 
@@ -128,9 +127,9 @@ public class InfiniteListDataProvider {
 		ListingRequest request =
 			new ListingRequest(listFilter, first, last, count);
 		Managers.ITEMS_MANAGER.getItems(request,
-			new AsyncCallback<ListingResponse<UserItem>>() {
+			new AsyncCallback<ListingResponse>() {
 
-				public void onSuccess(ListingResponse<UserItem> result) {
+				public void onSuccess(ListingResponse result) {
 					lastFetch = result.getFetched();
 					if (!endReached) {
 						endReached = result.isEndReached();
@@ -146,7 +145,7 @@ public class InfiniteListDataProvider {
 			});
 	}
 
-	protected void applyFetchedData(ListingResponse<UserItem> result) {
+	protected void applyFetchedData(ListingResponse result) {
 		if (canceled) {
 			return;
 		}

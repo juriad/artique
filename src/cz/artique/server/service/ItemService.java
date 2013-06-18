@@ -62,8 +62,7 @@ public class ItemService {
 		fillItems(Arrays.asList(userItems));
 	}
 
-	public ListingResponse<UserItem> getItems(String userId,
-			ListingRequest request) {
+	public ListingResponse getItems(String userId, ListingRequest request) {
 		UserItemMeta meta = UserItemMeta.get();
 		Date date = new Date();
 
@@ -178,7 +177,7 @@ public class ItemService {
 				endReached = false;
 			}
 		}
-		return new ListingResponse<UserItem>(head, tail, date, endReached);
+		return new ListingResponse(head, tail, date, endReached);
 	}
 
 	private ModelQuery<UserItem> getBaseQuery(ListFilter listFilter,

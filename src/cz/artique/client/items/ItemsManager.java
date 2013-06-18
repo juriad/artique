@@ -209,28 +209,27 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 	}
 
 	public void getItems(final ListingRequest request,
-			final AsyncCallback<ListingResponse<UserItem>> ping) {
+			final AsyncCallback<ListingResponse> ping) {
 		assumeOnline();
-		service.getItems(request,
-			new AsyncCallback<ListingResponse<UserItem>>() {
-				public void onFailure(Throwable caught) {
-					serviceFailed(caught);
-					new ValidationMessage<GetItems>(GetItems.GENERAL)
-						.onFailure(caught);
-					if (ping != null) {
-						ping.onFailure(caught);
-					}
+		service.getItems(request, new AsyncCallback<ListingResponse>() {
+			public void onFailure(Throwable caught) {
+				serviceFailed(caught);
+				new ValidationMessage<GetItems>(GetItems.GENERAL)
+					.onFailure(caught);
+				if (ping != null) {
+					ping.onFailure(caught);
 				}
+			}
 
-				public void onSuccess(ListingResponse<UserItem> result) {
-					// don't spam in messages
-					// new ValidationMessage<GetItems>(GetItems.GENERAL)
-					// .onSuccess(MessageType.DEBUG);
-					if (ping != null) {
-						ping.onSuccess(result);
-					}
+			public void onSuccess(ListingResponse result) {
+				// don't spam in messages
+				// new ValidationMessage<GetItems>(GetItems.GENERAL)
+				// .onSuccess(MessageType.DEBUG);
+				if (ping != null) {
+					ping.onSuccess(result);
 				}
-			});
+			}
+		});
 	}
 
 	@Override

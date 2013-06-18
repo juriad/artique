@@ -121,13 +121,11 @@ public class ExportServlet extends HttpServlet {
 			throws IOException, FeedException {
 		ItemService is = new ItemService();
 		int fetchCount =
-			ConfigService.CONFIG_SERVICE
-				.getConfig(ServerConfigKey.EXPORT_FETCH_COUNT)
-				.<Integer> get();
+			ConfigService.CONFIG_SERVICE.getConfig(
+				ServerConfigKey.EXPORT_FETCH_COUNT).<Integer> get();
 		ListingRequest request =
 			new ListingRequest(listFilter, null, null, fetchCount);
-		ListingResponse<UserItem> items =
-			is.getItems(listFilter.getUserId(), request);
+		ListingResponse items = is.getItems(listFilter.getUserId(), request);
 
 		List<SyndEntry> entries = new ArrayList<SyndEntry>();
 		for (UserItem item : items.getTail()) {

@@ -4,52 +4,108 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class ListingResponse<E> implements Serializable {
+import cz.artique.shared.model.item.UserItem;
+import cz.artique.shared.model.label.ListFilterOrder;
+
+/**
+ * Represents response to {@link ListingRequest}. Contains list of newly added
+ * {@link UserItem}s in case when {@link ListFilterOrder} was DESCENDING in
+ * {@link #getHead()} and list of more {@link UserItem}s at the end in
+ * {@link #getTail()}. The flag attribute EndReached tells weather the listing
+ * contains more {@link UserItem}s.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
+public class ListingResponse implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private List<E> head;
-	private List<E> tail;
+	private List<UserItem> head;
+	private List<UserItem> tail;
 	private Date fetched;
 	private boolean endReached;
 
+	/**
+	 * Default constructor for deserialization.
+	 */
 	public ListingResponse() {}
 
-	public ListingResponse(List<E> head, List<E> tail, Date fetched,
-			boolean endReached) {
+	/**
+	 * Constructor filling all attributes.
+	 * 
+	 * @param head
+	 *            new UserItems at the top of listing
+	 * @param tail
+	 *            more UserItems fetched when scrolled to bottom
+	 * @param fetched
+	 *            time-stamp of last fetch
+	 * @param endReached
+	 *            true if the are no more items, false otherwise
+	 */
+	public ListingResponse(List<UserItem> head, List<UserItem> tail,
+			Date fetched, boolean endReached) {
 		this.setHead(head);
 		this.setTail(tail);
 		this.setFetched(fetched);
 		this.setEndReached(endReached);
 	}
 
-	public List<E> getHead() {
+	/**
+	 * @return new UserItems at the top of listing
+	 */
+	public List<UserItem> getHead() {
 		return head;
 	}
 
-	public List<E> getTail() {
+	/**
+	 * @return more UserItems fetched when scrolled to bottom
+	 */
+	public List<UserItem> getTail() {
 		return tail;
 	}
 
+	/**
+	 * @return time-stamp of last fetch
+	 */
 	public Date getFetched() {
 		return fetched;
 	}
 
+	/**
+	 * @return true if the are no more items, false otherwise
+	 */
 	public boolean isEndReached() {
 		return endReached;
 	}
 
-	public void setHead(List<E> head) {
+	/**
+	 * @param head
+	 *            new UserItems at the top of listing
+	 */
+	public void setHead(List<UserItem> head) {
 		this.head = head;
 	}
 
-	public void setTail(List<E> tail) {
+	/**
+	 * @param tail
+	 *            more UserItems fetched when scrolled to bottom
+	 */
+	public void setTail(List<UserItem> tail) {
 		this.tail = tail;
 	}
 
+	/**
+	 * @param fetched
+	 *            time-stamp of last fetch
+	 */
 	public void setFetched(Date fetched) {
 		this.fetched = fetched;
 	}
 
+	/**
+	 * @param endReached
+	 *            true if the are no more items, false otherwise
+	 */
 	public void setEndReached(boolean endReached) {
 		this.endReached = endReached;
 	}

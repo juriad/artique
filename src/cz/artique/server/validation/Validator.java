@@ -13,13 +13,35 @@ import com.google.appengine.api.datastore.Text;
 
 import cz.artique.server.crawler.CrawlerException;
 import cz.artique.server.crawler.Fetcher;
+import cz.artique.shared.model.label.Label;
 import cz.artique.shared.validation.HasIssue;
 import cz.artique.shared.validation.Issue;
 import cz.artique.shared.validation.IssueType;
 import cz.artique.shared.validation.ValidationException;
 
+/**
+ * Used to validate data received through client services. This class can check
+ * following types:
+ * <ul>
+ * <li>if property is null or empty in case of String property
+ * <li>if URL is well formed and/or accessible
+ * <li>if String is too long (limit of Datastore is 500 characters)
+ * <li>if Text is too long (limit of Datastore is 10^6 characters)
+ * <li>if CSS selector is valid
+ * <li>if {@link Label} name does not contain whitespaces or dollar sign
+ * <li>if user equals to assumed user
+ * </ul>
+ * 
+ * @author Adam Juraszek
+ * 
+ * @param <E>
+ *            enum listing all properties which are validated
+ */
 public class Validator<E extends Enum<E> & HasIssue> {
 
+	/**
+	 * Default constructor; this class is state-less.
+	 */
 	public Validator() {}
 
 	private static final class FetcherValidator extends Fetcher {
@@ -32,8 +54,12 @@ public class Validator<E extends Enum<E> & HasIssue> {
 	}
 
 	/**
+	 * @param property
+	 *            name of property to be checked
 	 * @param nullable
+	 *            if null value is allowed
 	 * @param objs
+	 *            values to be check
 	 * @return true=not null, false=good null, exception=bad null
 	 * @throws ValidationException
 	 */
@@ -72,6 +98,17 @@ public class Validator<E extends Enum<E> & HasIssue> {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @param property
+	 *            name of property to be checked
+	 * @param url
+	 *            URL value to be check
+	 * @param nullable
+	 *            if null value is allowed
+	 * @return normalized URI
+	 * @throws ValidationException
+	 */
 	private URI checkUri(E property, Link url, boolean nullable)
 			throws ValidationException {
 		if (!checkNullability(property, nullable, url)) {
@@ -91,6 +128,16 @@ public class Validator<E extends Enum<E> & HasIssue> {
 		}
 	}
 
+	/**
+	 * @param property
+	 *            name of property to be checked
+	 * @param url
+	 *            URL value to be check
+	 * @param nullable
+	 *            if null value is allowed
+	 * @return normalized Link
+	 * @throws ValidationException
+	 */
 	public Link checkUrl(E property, Link url, boolean nullable)
 			throws ValidationException {
 		URI uri = checkUri(property, url, nullable);
@@ -100,6 +147,16 @@ public class Validator<E extends Enum<E> & HasIssue> {
 		return new Link(uri.toString());
 	}
 
+	/**
+	 * @param property
+	 *            name of property to be checked
+	 * @param url
+	 *            URL value to be check
+	 * @param nullable
+	 *            if null value is allowed
+	 * @return normalized Link
+	 * @throws ValidationException
+	 */
 	public Link checkReachability(E property, Link url, boolean nullable)
 			throws ValidationException {
 		FetcherValidator fv = new FetcherValidator();
@@ -117,6 +174,19 @@ public class Validator<E extends Enum<E> & HasIssue> {
 		return new Link(uri.toString());
 	}
 
+	/**
+	 * @param property
+	 *            name of property to be checked
+	 * @param value
+	 *            string value to be check
+	 * @param nullable
+	 *            if null value is allowed
+	 * @param cut
+	 *            whether too long value shall be cut instead of throwing
+	 *            exception
+	 * @return trimmed string
+	 * @throws ValidationException
+	 */
 	public String checkString(E property, String value, boolean nullable,
 			boolean cut) throws ValidationException {
 		if (!checkNullability(property, nullable, value)) {
@@ -134,6 +204,19 @@ public class Validator<E extends Enum<E> & HasIssue> {
 		return value;
 	}
 
+	/**
+	 * @param property
+	 *            name of property to be checked
+	 * @param value
+	 *            text value to be check
+	 * @param nullable
+	 *            if null value is allowed
+	 * @param cut
+	 *            whether too long value shall be cut instead of throwing
+	 *            exception
+	 * @return trimmed text
+	 * @throws ValidationException
+	 */
 	public Text checkText(E property, Text value, boolean nullable, boolean cut)
 			throws ValidationException {
 		if (!checkNullability(property, nullable, value)) {
@@ -158,6 +241,16 @@ public class Validator<E extends Enum<E> & HasIssue> {
 		return value;
 	}
 
+	/**
+	 * @param property
+	 *            name of property to be checked
+	 * @param value
+	 *            selector value to be check
+	 * @param nullable
+	 *            if null value is allowed
+	 * @return normalized selector
+	 * @throws ValidationException
+	 */
 	public String checkSelector(E property, String value, boolean nullable)
 			throws ValidationException {
 		String selector = checkString(property, value, nullable, false);
@@ -174,6 +267,14 @@ public class Validator<E extends Enum<E> & HasIssue> {
 		return selector;
 	}
 
+	/**
+	 * @param property
+	 *            name of property to be checked
+	 * @param value
+	 *            label name to be check
+	 * @return normalized label name
+	 * @throws ValidationException
+	 */
 	public String checkLabel(E property, String value)
 			throws ValidationException {
 		String selector = checkString(property, value, false, false);
@@ -192,6 +293,15 @@ public class Validator<E extends Enum<E> & HasIssue> {
 		return value;
 	}
 
+	/**
+	 * @param property
+	 *            name of property to be checked
+	 * @param userId
+	 *            assumed user
+	 * @param userIds
+	 *            real userIds which shall be equal to userId
+	 * @throws ValidationException
+	 */
 	public void checkUser(E property, String userId, String... userIds)
 			throws ValidationException {
 		if (userIds == null || userIds.length == 0) {

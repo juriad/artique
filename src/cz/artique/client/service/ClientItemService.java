@@ -22,7 +22,7 @@ public interface ClientItemService extends RemoteService {
 		}
 	}
 
-	ListingResponse<UserItem> getItems(ListingRequest request);
+	ListingResponse getItems(ListingRequest request);
 
 	public enum AddManualItem implements HasIssue {
 		USER_ITEM,
