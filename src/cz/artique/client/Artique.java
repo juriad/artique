@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.StackLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import cz.artique.client.hierarchy.tree.HistoryTree;
+//import cz.artique.client.hierarchy.tree.HistoryTree;
 import cz.artique.client.hierarchy.tree.ListFiltersTree;
 import cz.artique.client.hierarchy.tree.SourcesTree;
 import cz.artique.client.history.HistoryEvent;
@@ -41,8 +41,8 @@ public class Artique extends Composite {
 	@UiField
 	SourcesTree sources;
 
-	@UiField
-	HistoryTree history;
+//	@UiField
+//	HistoryTree history;
 
 	@UiField
 	ListFiltersTree filters;
@@ -137,10 +137,11 @@ public class Artique extends Composite {
 			stack.showWidget(1);
 		} else if (panel.equals("F")) {
 			stack.showWidget(2);
+		//} else if (panel.equals("H")) {
+		//	stack.showWidget(3);
 		} else if (panel.equals("M")) {
+		//	stack.showWidget(4);
 			stack.showWidget(3);
-		} else if (panel.equals("H")) {
-			stack.showWidget(4);
 		}
 		stack.setAnimationDuration(duration);
 	}

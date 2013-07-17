@@ -5,7 +5,7 @@
 	text-overflow: ellipsis;
 	-o-text-overflow: ellipsis;
 	position: absolute;
-	line-height: 1.7em;
+	line-height: 2em;
 }
 
 .row .panelWithMore-expanded {
@@ -23,9 +23,10 @@
 	font-size: x-small;
 	position: relative;
 	top: -0.5em;
-	color: grey;
+	color: #ddd;
 	font-weight: bold;
 	cursor: pointer;
+	display: inline-block;
 }
 
 .closeButton:hover {
@@ -64,7 +65,8 @@
 	background-color: #ffffc0;
 }
 
-.row .labelsBar .panelWithMore-expanded,.panelWithMore:hover {
+.row .labelsBar .panelWithMore-expanded,.row .labelsBar .panelWithMore:hover
+	{
 	width: auto;
 }
 
@@ -78,6 +80,32 @@
 
 .label,.addButton,.labelSuggestionBox {
 	margin: 0px 0.5em;
+}
+
+.label,.addButton {
+	border: 1px solid transparent;
+	border-radius: 2px;
+}
+
+.label a,.addButton {
+	padding: 0.1em 0.5em;
+	text-decoration: none;
+}
+
+.label a {
+	padding-right: 0.1em;
+}
+
+.label:hover,.addButton:hover {
+	border: 1px solid grey;
+}
+
+.label:hover .closeButton {
+	color: grey;
+}
+
+.label:hover .closeButton:hover {
+	color: red;
 }
 
 .labelSuggestion {
@@ -106,7 +134,7 @@
 
 /* row */
 .row {
-	border: 1px solid #73c8f1;
+	border-bottom: 1px solid #73c8f1;
 	background-color: #cfe0f1;
 	width: 100%;
 }
@@ -129,20 +157,20 @@
 }
 
 .itemTitle {
-	font-weight: bold;
 	font-size: 110%;
 	padding-top: 0.3em;
-	margin-left: 17em;
-	margin-right: 22em;
+	margin-left: 22em;
+	margin-right: 12em;
 	cursor: pointer;
 }
 
 .row.row-unread .itemTitle {
-	font-style: italic;
+	font-weight: bold;
 }
 
 .row-selected .itemTitle {
 	font-size: 120%;
+	font-weight: bold;
 }
 
 .itemIcon {
@@ -168,17 +196,17 @@
 .itemDate {
 	float: right;
 	width: 10em;
-	line-height: 1.7em;
+	line-height: 2em;
 }
 
 .itemSource {
-	float: right;
-	width: 10em;
+	float: left;
+	width: 6em;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	-o-text-overflow: ellipsis;
-	line-height: 1.7em;
+	line-height: 2em;
 }
 
 /* message */
@@ -234,17 +262,73 @@
 }
 
 .message-DEBUG {
-	background: white;
+	background: #ddd;
 	border: 1px solid lightgrey;
 }
 
 /* hierarchy */
 .hierarchyWidget .hiddenAction {
 	visibility: hidden;
+	vertical-align: middle;
+	margin-left: 1em;
+	cursor: pointer;
 }
 
 .hierarchyWidget:hover .hiddenAction {
 	visibility: visible;
+}
+
+.hierarchyWidget,.hierarchyWidget a {
+	color: white;
+	text-decoration: none;
+}
+
+.hierarchyWidget a {
+	display: inline-block;
+}
+
+.hierarchyWidget a:hover {
+	color: red;
+}
+
+.hierarchyWidget:hover {
+	background: #444;
+}
+
+.hierarchyWidget:hover {
+	border-left: 2000px solid #444;
+	margin-left: -2000px;
+}
+
+.hierarchyWidget .message {
+	color: black;
+	margin-top: 0.5em;
+	cursor: pointer;
+}
+
+.gwt-Tree table {
+	width: 100%;
+	table-layout: fixed;
+	border-spacing: 0px;
+}
+
+.gwt-Tree div {
+	padding-right: 0px !IMPORTANT;
+	padding-top: 0px !IMPORTANT;
+	padding-bottom: 0px !IMPORTANT;
+}
+
+.gwt-Tree table td {
+	padding: 0px;
+}
+
+.gwt-Tree table td:first-child {
+	width: 16px;
+}
+
+.gwt-Tree .gwt-TreeItem {
+	cursor: default;
+	padding: 0px;
 }
 
 /* left panels */
@@ -258,6 +342,34 @@
 
 .leftPanelInner {
 	width: 30em;
+}
+
+.gwt-StackLayoutPanel .gwt-StackLayoutPanelHeader {
+	background: #222;
+	color: #ddd;
+}
+
+.gwt-StackLayoutPanel .gwt-StackLayoutPanelHeader {
+	border-color: grey;
+	border-width: 0px;
+	border-top-color: grey;
+	border-top-width: 1px;
+	border-right-color: #222;
+	border-right-width: 2px;
+}
+
+.gwt-StackLayoutPanel .gwt-StackLayoutPanelHeader-hovering {
+	color: red;
+	background: grey;
+}
+
+.gwt-StackLayoutPanel .gwt-StackLayoutPanelContent {
+	border-width: 0px;
+	border-top-color: grey;
+	border-top-width: 1px;
+	border-right-color: #222;
+	border-right-width: 2px;
+	background: #666;
 }
 
 /* dialogs */

@@ -9,7 +9,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
 import cz.artique.server.service.ClientServlet;
-import cz.artique.server.service.UserServiceWrapperImpl;
+import cz.artique.server.service.ClientUserServiceImpl;
 import cz.artique.shared.model.item.ManualItem;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.source.ManualSource;
@@ -174,7 +174,7 @@ public class UserInfo implements Serializable, GenKey {
 	/**
 	 * 
 	 * Login URL is not part of persistent state of UserInfo. It is filled by
-	 * {@link UserServiceWrapperImpl} only if user <b>is not</b> signed in.
+	 * {@link ClientUserServiceImpl} only if user <b>is not</b> signed in.
 	 * 
 	 * @return login URL or null if not set
 	 */
@@ -183,7 +183,7 @@ public class UserInfo implements Serializable, GenKey {
 	}
 
 	/**
-	 * Set by {@link UserServiceWrapperImpl} only if user <b>is not</b> signed
+	 * Set by {@link ClientUserServiceImpl} only if user <b>is not</b> signed
 	 * in.
 	 * 
 	 * @param loginUrl
@@ -195,7 +195,7 @@ public class UserInfo implements Serializable, GenKey {
 
 	/**
 	 * Logout URL is not part of persistent state of UserInfo. It is filled by
-	 * {@link UserServiceWrapperImpl} only if user <b>is</b> signed in.
+	 * {@link ClientUserServiceImpl} only if user <b>is</b> signed in.
 	 * 
 	 * @return logout URL or null if not set
 	 */
@@ -204,7 +204,7 @@ public class UserInfo implements Serializable, GenKey {
 	}
 
 	/**
-	 * Set by {@link UserServiceWrapperImpl} only if user <b>is</b> signed in.
+	 * Set by {@link ClientUserServiceImpl} only if user <b>is</b> signed in.
 	 * 
 	 * @param logoutUrl
 	 *            logout URL

@@ -10,8 +10,8 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
-import cz.artique.server.crawler.CrawlerUtils;
 import cz.artique.server.meta.user.UserInfoMeta;
+import cz.artique.server.utils.ServerUtils;
 import cz.artique.server.utils.KeyGen;
 import cz.artique.shared.model.user.UserInfo;
 
@@ -40,7 +40,7 @@ public class UserService {
 		long date = new Date().getTime();
 		int i = new Random().nextInt();
 		String token = date + "$" + i;
-		String sha1 = CrawlerUtils.toSHA1(token);
+		String sha1 = ServerUtils.toSHA1(token);
 
 		UserInfo existing;
 		do {

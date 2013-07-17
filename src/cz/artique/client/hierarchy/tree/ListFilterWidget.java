@@ -91,7 +91,7 @@ public class ListFilterWidget extends AbstractHierarchyTreeWidget<ListFilter> {
 	private void createRootPanel(FlowPanel panel) {
 		String clearTooltip =
 			I18n.getHierarchyTreeConstants().clearListFilterTooltip();
-		createAnchor(panel, "/", null, clearHandler, clearTooltip);
+		createAnchor(panel, I18n.getHierarchyTreeConstants().listFilterRootText(), null, clearHandler, clearTooltip);
 		createImage(panel, ArtiqueWorld.WORLD.getResources().clear(),
 			clearHandler, clearTooltip);
 		addGeneralInnerImages(panel);

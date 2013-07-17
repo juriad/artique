@@ -13,20 +13,21 @@ import cz.artique.shared.model.source.UserSource;
 
 public interface ClientSourceServiceAsync {
 
-	void addSource(Source source, AsyncCallback<Source> callback);
+	<E extends Source> void addSource(E source, AsyncCallback<E> callback);
+
+	void addUserSource(UserSource userSource, AsyncCallback<UserSource> callback);
+
+	void checkRegion(Region region, AsyncCallback<Region> callback);
+
+	void getRecommendation(AsyncCallback<Recommendation> callback);
 
 	void getRegions(Key source, AsyncCallback<List<Region>> callback);
 
-	void addUserSource(UserSource userSource, AsyncCallback<UserSource> callback);
+	void getUserSources(AsyncCallback<List<UserSource>> callback);
+
+	void planSourceCheck(Key source, AsyncCallback<Date> callback);
 
 	void updateUserSource(UserSource userSource,
 			AsyncCallback<UserSource> callback);
 
-	void getUserSources(AsyncCallback<List<UserSource>> callback);
-
-	void checkRegion(Region region, AsyncCallback<Region> asyncCallback);
-
-	void planSourceCheck(Key source, AsyncCallback<Date> asyncCallback);
-
-	void getRecommendation(AsyncCallback<Recommendation> asyncCallback);
 }

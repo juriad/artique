@@ -19,7 +19,7 @@ public class ArtiqueListProvider extends InfiniteListDataProvider
 	public ArtiqueListProvider(ListFilter listFilter, InfiniteList list) {
 		super(listFilter, list);
 		addGeneralClickHandler =
-			Managers.ITEMS_MANAGER.addGeneralClickHandler(this);
+			Managers.ITEMS_MANAGER.addModifiedHandler(this);
 	}
 
 	@Override

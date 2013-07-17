@@ -14,6 +14,15 @@ import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.source.HTMLSource;
 import cz.artique.shared.model.source.Region;
 
+/**
+ * Abstract base for crawlers of {@link HTMLSource}s. Contains methods which are
+ * used by all subclasses.
+ * 
+ * @author Adam Juraszek
+ * 
+ * @param <E>
+ * @param <F>
+ */
 public abstract class HTMLCrawler<E extends HTMLSource, F extends Item>
 		extends AbstractCrawler<E, F> {
 
@@ -21,6 +30,15 @@ public abstract class HTMLCrawler<E extends HTMLSource, F extends Item>
 		super(source);
 	}
 
+	/**
+	 * Filters document doc by region and returns only matched elements.
+	 * 
+	 * @param region
+	 *            filter to be performed on document
+	 * @param doc
+	 *            document to filter
+	 * @return matched elements
+	 */
 	protected Elements filterPage(Region region, Document doc) {
 		String positive = region.getPositiveSelector();
 		String negative = region.getNegativeSelector();
@@ -54,6 +72,11 @@ public abstract class HTMLCrawler<E extends HTMLSource, F extends Item>
 		return simplified;
 	}
 
+	/**
+	 * @param item
+	 *            item
+	 * @return list of users who already have the item
+	 */
 	protected Set<String> getUsersAlreadyHavingItem(F item) {
 		ItemService is = new ItemService();
 		List<UserItem> userItemsForItem = is.getUserItemsForItem(item.getKey());

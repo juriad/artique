@@ -8,9 +8,9 @@ import cz.artique.shared.model.label.Label;
 
 public interface ClientLabelServiceAsync {
 
-	void getAllLabels(AsyncCallback<List<Label>> callback);
-
 	void addLabel(Label label, AsyncCallback<Label> callback);
+
+	void getAllLabels(AsyncCallback<List<Label>> callback);
 
 	void updateLabels(List<Label> labels, AsyncCallback<Void> callback);
 

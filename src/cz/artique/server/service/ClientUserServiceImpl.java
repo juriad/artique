@@ -3,11 +3,11 @@ package cz.artique.server.service;
 import com.google.appengine.api.users.User;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-import cz.artique.client.service.UserServiceWrapper;
+import cz.artique.client.service.ClientUserService;
 import cz.artique.shared.model.user.UserInfo;
 
-public class UserServiceWrapperImpl extends RemoteServiceServlet
-		implements UserServiceWrapper {
+public class ClientUserServiceImpl extends RemoteServiceServlet
+		implements ClientUserService {
 
 	private static final long serialVersionUID = 1L;
 

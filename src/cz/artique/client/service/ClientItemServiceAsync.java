@@ -12,12 +12,12 @@ import cz.artique.shared.model.item.UserItem;
 
 public interface ClientItemServiceAsync {
 
+	void addManualItem(UserItem item, AsyncCallback<UserItem> callback);
+
 	void getItems(ListingRequest request,
 			AsyncCallback<ListingResponse> callback);
 
 	void updateItems(Map<Key, ChangeSet> changeSets,
 			AsyncCallback<Map<Key, UserItem>> callback);
-
-	void addManualItem(UserItem item, AsyncCallback<UserItem> callback);
 
 }

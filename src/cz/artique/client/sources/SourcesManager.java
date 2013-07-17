@@ -20,6 +20,7 @@ import cz.artique.client.manager.Managers;
 import cz.artique.client.messages.MessageType;
 import cz.artique.client.messages.ValidationMessage;
 import cz.artique.client.service.ClientSourceService;
+import cz.artique.client.service.ClientSourceServiceAsync;
 import cz.artique.client.service.ClientSourceService.AddSource;
 import cz.artique.client.service.ClientSourceService.AddUserSource;
 import cz.artique.client.service.ClientSourceService.CheckRegion;
@@ -28,7 +29,6 @@ import cz.artique.client.service.ClientSourceService.GetRegions;
 import cz.artique.client.service.ClientSourceService.GetUserSources;
 import cz.artique.client.service.ClientSourceService.PlanSourceCheck;
 import cz.artique.client.service.ClientSourceService.UpdateUserSource;
-import cz.artique.client.service.ClientSourceServiceAsync;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.recomandation.Recommendation;
@@ -47,8 +47,6 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 	}
 
 	private Map<Key, UserSource> sourcesKeys = new HashMap<Key, UserSource>();
-	private Map<String, UserSource> sourcesNames =
-		new HashMap<String, UserSource>();
 	private Map<Key, UserSource> sourcesLabels = new HashMap<Key, UserSource>();
 	private UserSource manualSource;
 
@@ -67,13 +65,10 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 			public void onSuccess(List<UserSource> result) {
 				Map<Key, UserSource> newSourcesKeys =
 					new HashMap<Key, UserSource>();
-				Map<String, UserSource> newSourcesNames =
-					new HashMap<String, UserSource>();
 				Map<Key, UserSource> newSourcesLabels =
 					new HashMap<Key, UserSource>();
 				for (UserSource us : result) {
 					newSourcesKeys.put(us.getKey(), us);
-					newSourcesNames.put(us.getName(), us);
 					newSourcesLabels.put(us.getLabel(), us);
 					if (SourceType.MANUAL.equals(us.getSourceType())) {
 						manualSource = us;
@@ -83,7 +78,6 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 				updateHierarchy(sourcesKeys, newSourcesKeys);
 
 				sourcesKeys = newSourcesKeys;
-				sourcesNames = newSourcesNames;
 				sourcesLabels = newSourcesLabels;
 
 				new ValidationMessage<GetUserSources>(GetUserSources.GENERAL)
@@ -159,11 +153,7 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 	}
 
 	public List<UserSource> getSources() {
-		return new ArrayList<UserSource>(sourcesNames.values());
-	}
-
-	public UserSource getSourceByName(String name) {
-		return sourcesNames.get(name);
+		return new ArrayList<UserSource>(sourcesKeys.values());
 	}
 
 	public UserSource getSourceByKey(Key key) {
@@ -203,7 +193,6 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 
 			public void onSuccess(UserSource result) {
 				sourcesKeys.put(result.getKey(), result);
-				sourcesNames.put(result.getName(), result);
 				sourcesLabels.put(result.getLabel(), result);
 
 				// first register label, then add hierarchy (it needs label)
@@ -237,8 +226,6 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 			public void onSuccess(UserSource result) {
 				UserSource old = sourcesKeys.get(result.getKey());
 				sourcesKeys.put(result.getKey(), result);
-				sourcesNames.remove(old.getName());
-				sourcesNames.put(result.getName(), result);
 				sourcesLabels.put(result.getLabel(), result);
 
 				// first register label, then add hierarchy (it needs label)

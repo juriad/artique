@@ -3,11 +3,16 @@
 	<cron>
 		<url>/cron/checkSources?normal</url>
 		<description>fetches items from sources</description>
-		<schedule>every 1 minute</schedule>
+		<schedule>every 1 minutes</schedule>
 	</cron>
 	<cron>
 		<url>/cron/checkSources?error</url>
 		<description>probes error sources</description>
 		<schedule>every 12 hours</schedule>
+	</cron>
+	<cron>
+		<url>/cron/recommendation</url>
+		<description>calculates recommended sources for users</description>
+		<schedule>every 24 hours</schedule>
 	</cron>
 </cronentries>

@@ -58,4 +58,13 @@ public interface HierarchyTreeConstants extends ConstantsWithLookup {
 	@DefaultStringValue("Failed to load messages tree because messages manager failed to initialize.")
 	String failedToLoadMessagesTree();
 
+	@DefaultStringValue("All sources")
+	String sourceRootText();
+
+	@DefaultStringValue("All messages")
+	String messageRootText();
+
+	@DefaultStringValue("All filters")
+	String listFilterRootText();
+
 }

@@ -1,11 +1,24 @@
-package cz.artique.server.crawler;
+package cz.artique.server.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class CrawlerUtils {
-	private CrawlerUtils() {}
+/**
+ * Contains useful static methods.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
+public class ServerUtils {
+	private ServerUtils() {}
 
+	/**
+	 * Calculates SHA1 hash of original String.
+	 * 
+	 * @param original
+	 *            original string
+	 * @return hashed string
+	 */
 	public static String toSHA1(String original) {
 		MessageDigest md = null;
 		try {

@@ -9,10 +9,10 @@ import cz.artique.shared.model.shortcut.Shortcut;
 
 public interface ClientShortcutServiceAsync {
 
-	void getAllShortcuts(AsyncCallback<List<Shortcut>> callback);
+	void createShortcut(Shortcut shortcut, AsyncCallback<Shortcut> callback);
 
 	void deleteShortcut(Key shortcutKey, AsyncCallback<Void> callback);
 
-	void createShortcut(Shortcut shortcut, AsyncCallback<Shortcut> callback);
+	void getAllShortcuts(AsyncCallback<List<Shortcut>> callback);
 
 }

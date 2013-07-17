@@ -20,11 +20,11 @@ import cz.artique.client.manager.Managers;
 import cz.artique.client.messages.MessageType;
 import cz.artique.client.messages.ValidationMessage;
 import cz.artique.client.service.ClientListFilterService;
+import cz.artique.client.service.ClientListFilterServiceAsync;
 import cz.artique.client.service.ClientListFilterService.AddListFilter;
 import cz.artique.client.service.ClientListFilterService.DeleteListFilter;
 import cz.artique.client.service.ClientListFilterService.GetAllListFilters;
 import cz.artique.client.service.ClientListFilterService.UpdateListFilter;
-import cz.artique.client.service.ClientListFilterServiceAsync;
 import cz.artique.shared.model.label.ListFilter;
 
 public class ListFiltersManager

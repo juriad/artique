@@ -102,8 +102,11 @@ public class RecommendationService {
 
 	public void recalc() {
 		Mapping mapping = getConsumerProductMatrix();
+		if (mapping == null) {
+			return; // there is nobody to calculate recommendation for
+		}
 		SparseMatrix<Float64> Ct = makeC(mapping.matrix).transpose();
-		SparseMatrix<Float64> B = makeBt(mapping.matrix);
+		SparseMatrix<Float64> B = makeB(mapping.matrix);
 		SparseMatrix<Float64> CR0 = makeCR0(mapping.matrix.getNumberOfRows());
 
 		SparseMatrix<Float64> PR = null;
@@ -187,7 +190,7 @@ public class RecommendationService {
 			Float64.ONE), Float64.ZERO);
 	}
 
-	private SparseMatrix<Float64> makeBt(SparseMatrix<Float64> matrix) {
+	private SparseMatrix<Float64> makeB(SparseMatrix<Float64> matrix) {
 		// normalize customers for each product
 		return makeC(matrix.transpose()).transpose();
 	}
@@ -207,9 +210,15 @@ public class RecommendationService {
 		return SparseMatrix.valueOf(normRows);
 	}
 
+	/**
+	 * @return null if no user source exists
+	 */
 	private Mapping getConsumerProductMatrix() {
 		UserSourceService uss = new UserSourceService();
 		List<UserSource> allUserSources = uss.getAllUserSources();
+		if (allUserSources.isEmpty()) {
+			return null;
+		}
 
 		Map<String, List<Key>> users = new HashMap<String, List<Key>>();
 		Set<Key> sources = new HashSet<Key>();

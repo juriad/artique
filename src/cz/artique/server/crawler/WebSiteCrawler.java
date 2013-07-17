@@ -15,20 +15,41 @@ import com.google.appengine.api.datastore.Link;
 import com.google.appengine.api.datastore.Text;
 
 import cz.artique.server.service.ItemService;
+import cz.artique.server.utils.ServerUtils;
 import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.LinkItem;
 import cz.artique.shared.model.item.UserItem;
+import cz.artique.shared.model.source.Region;
+import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.model.source.WebSiteSource;
 
+/**
+ * Crawls {@link WebSiteCrawler} and adds new {@link LinkItem}s to system for
+ * all users watching crawled {@link Source}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class WebSiteCrawler extends HTMLCrawler<WebSiteSource, LinkItem> {
 
+	/**
+	 * Constructs crawler for {@link WebSiteSource}.
+	 * 
+	 * @param source
+	 *            source
+	 */
 	public WebSiteCrawler(WebSiteSource source) {
 		super(source);
 	}
 
-	public Map<String, LinkItem> getLinks(Elements page) {
+	/**
+	 * @param page
+	 *            elements matching region
+	 * @return list of {@link LinkItem}s
+	 */
+	private Map<String, LinkItem> getLinks(Elements page) {
 		Map<String, LinkItem> urls = new HashMap<String, LinkItem>();
 		Elements linkElements = page.select("a");
 
@@ -42,6 +63,11 @@ public class WebSiteCrawler extends HTMLCrawler<WebSiteSource, LinkItem> {
 		return urls;
 	}
 
+	/**
+	 * @param link
+	 *            link element
+	 * @return prototype of {@link LinkItem} for link
+	 */
 	private LinkItem getItem(Element link) {
 		LinkItem item = new LinkItem(getSource());
 		String linkHref = link.attr("href");
@@ -55,11 +81,24 @@ public class WebSiteCrawler extends HTMLCrawler<WebSiteSource, LinkItem> {
 		return item;
 	}
 
+	/**
+	 * @param item
+	 *            item the hash is calculated for
+	 * @return hash for item
+	 */
 	protected String getHash(Item item) {
 		String url = item.getUrl().getValue();
-		return CrawlerUtils.toSHA1(getSource().getUrl().getValue() + "|" + url);
+		return ServerUtils.toSHA1(getSource().getUrl().getValue() + "|" + url);
 	}
 
+	/**
+	 * Downloads the page specified by {@link Source#getUrl()}, builds DOM tree,
+	 * filters the page by {@link Region} and finds all anchors. For each anchor
+	 * a new {@link LinkItem} is created and added to system if it doesn't
+	 * exist.
+	 * 
+	 * @see cz.artique.server.crawler.Crawler#fetchItems()
+	 */
 	public int fetchItems() throws CrawlerException {
 		URI uri;
 		try {

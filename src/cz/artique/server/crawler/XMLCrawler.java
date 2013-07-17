@@ -23,18 +23,41 @@ import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedInput;
 
 import cz.artique.server.service.ItemService;
+import cz.artique.server.utils.ServerUtils;
 import cz.artique.shared.model.item.ArticleItem;
 import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.UserItem;
+import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.model.source.XMLSource;
 
+/**
+ * Crawls {@link XMLSource} and adds new {@link ArticleItem}s to system for all
+ * users watching crawled {@link Source}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class XMLCrawler extends AbstractCrawler<XMLSource, ArticleItem> {
 
+	/**
+	 * Constructs crawler for {@link XMLSource}.
+	 * 
+	 * @param source
+	 *            source
+	 */
 	public XMLCrawler(XMLSource source) {
 		super(source);
 	}
 
+	/**
+	 * 
+	 * Creates a feed for URL specified by {@link Source#getUrl()}, gets all
+	 * items and adds them to system as {@link ArticleItem}s if they doesn't
+	 * exist yes.
+	 * 
+	 * @see cz.artique.server.crawler.Crawler#fetchItems()
+	 */
 	public int fetchItems() throws CrawlerException {
 		URI uri;
 		try {
@@ -72,6 +95,13 @@ public class XMLCrawler extends AbstractCrawler<XMLSource, ArticleItem> {
 		return count;
 	}
 
+	/**
+	 * Adds {@link UserItem}s for each {@link UserSource} of crawled
+	 * {@link Source}.
+	 * 
+	 * @param items
+	 *            item to add
+	 */
 	protected void createUserItems(List<ArticleItem> items) {
 		List<UserSource> userSources = getUserSources();
 		for (ArticleItem item : items) {
@@ -84,6 +114,12 @@ public class XMLCrawler extends AbstractCrawler<XMLSource, ArticleItem> {
 		}
 	}
 
+	/**
+	 * @param uri
+	 *            URI which the feed is to be got from
+	 * @return feed
+	 * @throws CrawlerException
+	 */
 	protected SyndFeed getFeed(URI uri) throws CrawlerException {
 		SyndFeedInput input = new SyndFeedInput();
 		try {
@@ -104,6 +140,11 @@ public class XMLCrawler extends AbstractCrawler<XMLSource, ArticleItem> {
 		}
 	}
 
+	/**
+	 * @param feed
+	 *            feed whcih the items are extracted from
+	 * @return list of {@link ArticleItem}s for items in feed
+	 */
 	protected List<ArticleItem> getItems(SyndFeed feed) {
 		List<ArticleItem> items = new ArrayList<ArticleItem>();
 		@SuppressWarnings("unchecked")
@@ -117,6 +158,13 @@ public class XMLCrawler extends AbstractCrawler<XMLSource, ArticleItem> {
 		return items;
 	}
 
+	/**
+	 * Creates an {@link ArticleItem} for feed entry.
+	 * 
+	 * @param entry
+	 *            feed entry
+	 * @return item
+	 */
 	protected ArticleItem getItem(SyndEntry entry) {
 		ArticleItem a = new ArticleItem(getSource());
 		a.setTitle(entry.getTitle());
@@ -134,12 +182,17 @@ public class XMLCrawler extends AbstractCrawler<XMLSource, ArticleItem> {
 		return a;
 	}
 
+	/**
+	 * @param entry
+	 *            item which the hash is calculated for
+	 * @return calculated hash
+	 */
 	protected String getHash(SyndEntry entry) {
 		String id = entry.getUri();
 		if (id == null) {
 			id = entry.getTitle();
 		}
-		return CrawlerUtils.toSHA1(getSource().getUrl().getValue() + "|" + id);
+		return ServerUtils.toSHA1(getSource().getUrl().getValue() + "|" + id);
 	}
 
 	@Override

@@ -22,7 +22,21 @@ import com.google.appengine.api.datastore.Link;
 
 import cz.artique.server.utils.GAEConnectionManager;
 
+/**
+ * Abstract base for classes which process web resource downloaded via HTTP.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public abstract class Fetcher {
+	/**
+	 * Converts Link to URI.
+	 * 
+	 * @param link
+	 *            link
+	 * @return URI
+	 * @throws CrawlerException
+	 */
 	protected URI getURI(Link link) throws CrawlerException {
 		if (link == null) {
 			throw new NullPointerException();
@@ -34,6 +48,9 @@ public abstract class Fetcher {
 		}
 	}
 
+	/**
+	 * @return new HTTP client
+	 */
 	protected HttpClient getHttpClient() {
 		HttpParams httpParams = new BasicHttpParams();
 		ClientConnectionManager connectionManager = new GAEConnectionManager();
@@ -42,6 +59,12 @@ public abstract class Fetcher {
 		return httpClient;
 	}
 
+	/**
+	 * @param uri
+	 *            URI of web resource to be downloaded
+	 * @return entity from HTTP response
+	 * @throws CrawlerException
+	 */
 	protected HttpEntity getEntity(URI uri) throws CrawlerException {
 		HttpClient httpClient = getHttpClient();
 		HttpGet get = new HttpGet(uri);
@@ -59,6 +82,14 @@ public abstract class Fetcher {
 		return entity;
 	}
 
+	/**
+	 * Downloads web page via HTTP and builds DOM tree.
+	 * 
+	 * @param uri
+	 *            URI of web page to be downloaded
+	 * @return DOM representation of web page with URI
+	 * @throws CrawlerException
+	 */
 	protected Document getDocument(URI uri) throws CrawlerException {
 		HttpEntity entity = getEntity(uri);
 		InputStream is;

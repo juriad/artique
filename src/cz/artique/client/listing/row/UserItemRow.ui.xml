@@ -7,9 +7,9 @@
 		<g:cell>
 			<g:FlowPanel ui:field="header" stylePrimaryName="rowHeader">
 				<l:UserItemLabelsBar ui:field="labels" />
-				<g:Anchor ui:field="link" target="_blank" stylePrimaryName="itemLink" />
-
 				<g:Label ui:field="source" stylePrimaryName="itemSource" />
+				<g:Anchor ui:field="link" target="_blank" stylePrimaryName="itemLink" />
+				
 				<g:Label ui:field="added" stylePrimaryName="itemDate" />
 				<g:Anchor ui:field="backup" target="_blank"
 					stylePrimaryName="itemBackup" />

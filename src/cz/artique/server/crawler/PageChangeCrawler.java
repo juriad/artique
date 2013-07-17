@@ -15,22 +15,45 @@ import com.google.appengine.api.datastore.Text;
 import cz.artique.server.crawler.DiffMatchPatch.Diff;
 import cz.artique.server.service.ConfigService;
 import cz.artique.server.service.UserSourceService;
+import cz.artique.server.utils.ServerUtils;
 import cz.artique.shared.model.config.server.ServerConfigKey;
 import cz.artique.shared.model.item.ContentType;
+import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.PageChangeItem;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.source.PageChangeCrawlerData;
 import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Region;
+import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
 
+/**
+ * Crawls {@link PageChangeSource} and adds new {@link PageChangeItem}s to
+ * system for all users watching crawled {@link Source}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class PageChangeCrawler
 		extends HTMLCrawler<PageChangeSource, PageChangeItem> {
 
+	/**
+	 * Constructs crawler for {@link PageChangeSource}.
+	 * 
+	 * @param source
+	 *            source
+	 */
 	public PageChangeCrawler(PageChangeSource source) {
 		super(source);
 	}
 
+	/**
+	 * Downloads the page specified by {@link Source#getUrl()}, builds DOM tree,
+	 * filters the page by {@link Region} and compares content text with older
+	 * version. If the contens are different, a new {@link Item} will be added.
+	 * 
+	 * @see cz.artique.server.crawler.Crawler#fetchItems()
+	 */
 	public int fetchItems() throws CrawlerException {
 		URI uri;
 		try {
@@ -125,6 +148,13 @@ public class PageChangeCrawler
 		return added;
 	}
 
+	/**
+	 * Creates a new {@link PageChangeItem} from
+	 * 
+	 * @param page
+	 * @param diff
+	 * @return
+	 */
 	protected PageChangeItem getPageChangeItem(Elements page, String diff) {
 		PageChangeItem change = new PageChangeItem(getSource());
 		change.setComparedTo(getSource().getLastCheck());
@@ -139,12 +169,26 @@ public class PageChangeCrawler
 		return change;
 	}
 
+	/**
+	 * @param item
+	 *            item which calculate hash for
+	 * @return calculated hash
+	 */
 	protected String getHash(PageChangeItem item) {
 		String content = item.getContent().getValue();
-		return CrawlerUtils.toSHA1(getSource().getUrl().getValue() + "|"
+		return ServerUtils.toSHA1(getSource().getUrl().getValue() + "|"
 			+ content);
 	}
 
+	/**
+	 * Calculates difference between old and new content.
+	 * 
+	 * @param oldContent
+	 *            old content
+	 * @param newContent
+	 *            new content
+	 * @return difference HTML if they are different, null if identical
+	 */
 	protected String generateDiff(String oldContent, String newContent) {
 		DiffMatchPatch dmp = new DiffMatchPatch();
 		dmp.Diff_EditCost =

@@ -12,8 +12,8 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 import cz.artique.client.login.ErrorPage;
 import cz.artique.client.login.LoginPage;
-import cz.artique.client.service.UserServiceWrapper;
-import cz.artique.client.service.UserServiceWrapperAsync;
+import cz.artique.client.service.ClientUserService;
+import cz.artique.client.service.ClientUserServiceAsync;
 import cz.artique.shared.model.user.UserInfo;
 
 public class Main implements EntryPoint {
@@ -34,8 +34,8 @@ public class Main implements EntryPoint {
 	}
 
 	private void initApplication() {
-		UserServiceWrapperAsync userService =
-			GWT.create(UserServiceWrapper.class);
+		ClientUserServiceAsync userService =
+			GWT.create(ClientUserService.class);
 
 		userService.login(GWT.getHostPageBaseURL(),
 			new AsyncCallback<UserInfo>() {

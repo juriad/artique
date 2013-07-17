@@ -13,7 +13,7 @@
 			gwt-image: "mainBackground";
 			background-position: center center;
 			background-repeat: no-repeat;
-			border-left: 2px solid lightgrey;
+			border-left: 2px solid #222;
 		}
 	</ui:style>
 
@@ -21,7 +21,7 @@
 		<g:layer left="33%" right="33%">
 			<m:Messenger ui:field="messenger" />
 		</g:layer>
-		<g:layer left="0px" width="3em">
+		<g:layer left="0px" width="7em">
 			<g:StackLayoutPanel unit="EM" ui:field="stack">
 				<g:stack>
 					<g:header size="2">
@@ -41,12 +41,12 @@
 					</g:header>
 					<ah:ListFiltersTree ui:field="filters" />
 				</g:stack>
-				<g:stack>
-					<g:header size="2">
-						<ui:text from='{cons.history}' />
-					</g:header>
-					<ah:HistoryTree ui:field="history" />
-				</g:stack>
+				<!-- <g:stack> -->
+				<!-- <g:header size="2"> -->
+				<!-- <ui:text from='{cons.history}' /> -->
+				<!-- </g:header> -->
+				<!-- <ah:HistoryTree ui:field="history" /> -->
+				<!-- </g:stack> -->
 				<g:stack>
 					<g:header size="2">
 						<ui:text from='{cons.messages}' />
@@ -55,7 +55,7 @@
 				</g:stack>
 			</g:StackLayoutPanel>
 		</g:layer>
-		<g:layer left="3em" right="0px">
+		<g:layer left="7em" right="0px">
 			<al:ArtiqueList ui:field="list" styleName="{style.main}" />
 		</g:layer>
 	</g:LayoutPanel>

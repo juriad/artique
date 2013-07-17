@@ -79,7 +79,7 @@
 
 	<servlet>
 		<servlet-name>UserService</servlet-name>
-		<servlet-class>cz.artique.server.service.UserServiceWrapperImpl
+		<servlet-class>cz.artique.server.service.ClientUserServiceImpl
 		</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
