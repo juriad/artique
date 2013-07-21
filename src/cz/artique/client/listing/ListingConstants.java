@@ -5,7 +5,7 @@ import com.google.gwt.i18n.client.ConstantsWithLookup;
 public interface ListingConstants extends ConstantsWithLookup {
 	@DefaultStringValue("Added")
 	String added();
-	
+
 	@DefaultStringValue("Published")
 	String published();
 
@@ -14,7 +14,7 @@ public interface ListingConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("Author")
 	String author();
-	
+
 	@DefaultStringValue("New content")
 	String newContent();
 
@@ -23,4 +23,7 @@ public interface ListingConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("Compared to")
 	String comparedTo();
+
+	@DefaultStringValue("Manual source")
+	String manualSourceTitle();
 }

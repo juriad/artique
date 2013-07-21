@@ -5,7 +5,7 @@ import com.google.gwt.i18n.client.ConstantsWithLookup;
 public interface ListFiltersConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("Filter editor")
-	String listFilterEditor();
+	String listFilterDialog();
 
 	@DefaultStringValue("Delete")
 	String deleteButton();
@@ -52,12 +52,18 @@ public interface ListFiltersConstants extends ConstantsWithLookup {
 	@DefaultStringValue("Ascending")
 	String listFilterOrder_ASCENDING();
 
+	@DefaultStringValue("All")
+	String readState_ALL();
+
 	@DefaultStringValue("Read")
 	String readState_READ();
 
 	@DefaultStringValue("Unread")
 	String readState_UNREAD();
-	
+
 	@DefaultStringValue("Shortcut")
 	String shortcut();
+
+	@DefaultStringValue("Ad-hoc filter editor")
+	String adhocDialog();
 }

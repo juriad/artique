@@ -10,7 +10,7 @@ public interface LabelsConstants extends ConstantsWithLookup {
 	String operatorOr();
 
 	@DefaultStringValue("Labels editor")
-	String labelsEditor();
+	String labelsDialog();
 
 	@DefaultStringValue("Save")
 	String saveButton();
@@ -36,13 +36,7 @@ public interface LabelsConstants extends ConstantsWithLookup {
 	@DefaultStringValue("No")
 	String deleteNo();
 
-	@DefaultStringValue("Mark")
-	String mark();
-
-	@DefaultStringValue("Unmark")
-	String unmark();
-
-	@DefaultStringValue("Backup level")
+	@DefaultStringValue("Backing up")
 	String backupLevel();
 
 	@DefaultStringValue("Disabled")
@@ -59,5 +53,17 @@ public interface LabelsConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("No label exists.")
 	String noLabelExists();
+	
+	@DefaultStringValue("No")
+	String markedNo();
+
+	@DefaultStringValue("Click to mark")
+	String markedNoHover();
+	
+	@DefaultStringValue("Yes")
+	String markedYes();
+
+	@DefaultStringValue("Click to unmark")
+	String markedYesHover();
 
 }

@@ -4,25 +4,53 @@
 
 	<ui:with field='cons' type='cz.artique.client.ArtiqueConstants' />
 
-	<g:FlowPanel ui:field="panel">
-		<g:Label ui:field="userName" />
-		<g:Anchor ui:field="logout">
-			<ui:text from="{cons.logout}" />
-		</g:Anchor>
-		<g:Button ui:field="editLabelsButton">
-			<ui:text from="{cons.editLabelsButton}" />
-		</g:Button>
-		<g:Button ui:field="editShortcutsButton">
-			<ui:text from="{cons.editShortcutsButton}" />
-		</g:Button>
-		<g:Button ui:field="markAllReadButton">
-			<ui:text from="{cons.markAllReadButton}" />
-		</g:Button>
-		<g:Button ui:field="refreshButton">
-			<ui:text from="{cons.refreshButton}" />
-		</g:Button>
-		<g:Button ui:field="addNewItemsButton" enabled="false">
-			<ui:text from="{cons.noNewItems}" />
-		</g:Button>
-	</g:FlowPanel>
+	<g:HTMLPanel ui:field="panel" styleName="optionPanel">
+		<div class="optionList">
+			<div class="optionPanelHeader">
+				»
+				<ui:text from="{cons.optionList}" />
+			</div>
+			<div class="optionPanelContent">
+				<g:Button ui:field="markAllReadButton">
+					<ui:text from="{cons.markAllReadButton}" />
+				</g:Button>
+				<br />
+				<g:Button ui:field="refreshButton">
+					<ui:text from="{cons.refreshButton}" />
+				</g:Button>
+				<br />
+				<g:Button ui:field="addNewItemsButton" enabled="false">
+					<ui:text from="{cons.noNewItems}" />
+				</g:Button>
+			</div>
+		</div>
+		<div class="optionConfig">
+			<div class="optionPanelHeader">
+				»
+				<ui:text from="{cons.optionConfig}" />
+			</div>
+			<div class="optionPanelContent">
+				<g:Button ui:field="editLabelsButton">
+					<ui:text from="{cons.editLabelsButton}" />
+				</g:Button>
+				<br />
+				<g:Button ui:field="editShortcutsButton">
+					<ui:text from="{cons.editShortcutsButton}" />
+				</g:Button>
+			</div>
+		</div>
+		<div class="optionUser">
+			<div class="optionPanelHeader">
+				»
+				<ui:text from="{cons.optionUser}" />
+			</div>
+			<div class="optionPanelContent">
+				<g:InlineLabel ui:field="userName" stylePrimaryName="username" />
+				<br />
+				<g:Button ui:field="logout">
+					<ui:text from="{cons.logout}" />
+				</g:Button>
+			</div>
+		</div>
+	</g:HTMLPanel>
 </ui:UiBinder>

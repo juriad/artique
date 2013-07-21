@@ -5,7 +5,7 @@ import com.google.gwt.i18n.client.ConstantsWithLookup;
 public interface ItemsConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("Insert a new item manually")
-	String manualItemEditor();
+	String manualItemDialog();
 
 	@DefaultStringValue("URL")
 	String url();

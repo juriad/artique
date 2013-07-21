@@ -25,6 +25,7 @@ import cz.artique.client.service.ClientLabelService.UpdateLabels;
 import cz.artique.client.utils.CatList;
 import cz.artique.client.utils.SortedList;
 import cz.artique.shared.model.label.Label;
+import cz.artique.shared.model.label.LabelAppearance;
 import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.validation.HasIssue;
@@ -36,16 +37,21 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 	public static final Label AND, OR;
 
 	static {
+		LabelAppearance operatorAppearance = new LabelAppearance(null);
+		operatorAppearance.setForegroundColor("rgb(255,0,0)");
+
 		LabelsConstants constants = I18n.getLabelsConstants();
 		AND = new Label("__not_null__", "AND");
 		AND.setLabelType(LabelType.SYSTEM);
 		AND.setPriority(Integer.MAX_VALUE);
 		AND.setDisplayName(constants.operatorAnd());
+		AND.setAppearance(operatorAppearance);
 
 		OR = new Label("__not_null__", "OR");
 		OR.setLabelType(LabelType.SYSTEM);
 		OR.setPriority(Integer.MAX_VALUE);
 		OR.setDisplayName(constants.operatorOr());
+		OR.setAppearance(operatorAppearance);
 	}
 
 	public static final LabelsManager MANAGER = new LabelsManager();

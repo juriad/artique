@@ -1,23 +1,24 @@
 package cz.artique.client.listFilters;
 
 public enum ReadState {
+	ALL(null),
 	UNREAD(false),
 	READ(true);
 
-	private final boolean state;
+	private final Boolean state;
 
-	private ReadState(boolean state) {
+	private ReadState(Boolean state) {
 		this.state = state;
-	}
-
-	public boolean isState() {
-		return state;
 	}
 
 	public static ReadState get(Boolean read) {
 		if (read == null) {
-			return null;
+			return ALL;
 		}
 		return read ? READ : UNREAD;
+	}
+
+	public Boolean getState() {
+		return state;
 	}
 }

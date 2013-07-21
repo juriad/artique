@@ -32,6 +32,7 @@ public class ColorInputWithEnabled extends Widget
 	public ColorInputWithEnabled(ColorPicker picker, String value) {
 
 		setElement(createDisplayElement());
+		addStyleName("colorInput");
 
 		setValue(value);
 		final PopupPanel popup = new PopupPanel(true);

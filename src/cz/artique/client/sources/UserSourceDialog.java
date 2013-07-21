@@ -1,75 +1,55 @@
 package cz.artique.client.sources;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 
-import cz.artique.client.common.StopDialog;
+import cz.artique.client.common.UniversalDialog;
+import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.source.UserSource;
 
-public class UserSourceDialog {
-
-	private static UserSourceDialogUiBinder uiBinder = GWT
-		.create(UserSourceDialogUiBinder.class);
-
-	interface UserSourceDialogUiBinder
-			extends UiBinder<StopDialog, UserSourceDialog> {}
+public class UserSourceDialog extends UniversalDialog<UserSource> {
 
 	public static final UserSourceDialog DIALOG = new UserSourceDialog();
 
-	@UiField
-	StopDialog dialog;
-
-	@UiField
-	UserSourceEditor editor;
-
-	@UiField
-	Button saveButton;
-
-	@UiField
-	Button cancelButton;
-
 	public UserSourceDialog() {
-		dialog = uiBinder.createAndBindUi(this);
-	}
+		SourcesConstants constants = I18n.getSourcesConstants();
+		setText(constants.userSourceDialog());
+		final UserSourceEditor editor = new UserSourceEditor();
+		setWidget(editor);
 
-	@UiHandler("saveButton")
-	protected void saveButtonClicked(ClickEvent event) {
-		final UserSource value = editor.getValue();
-		if (value.getKey() == null) {
-			Managers.SOURCES_MANAGER.addUserSource(value,
-				new AsyncCallback<UserSource>() {
-					public void onSuccess(UserSource result) {
-						dialog.hide();
-					}
+		addButton(constants.saveButton(), new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				final UserSource value = editor.getValue();
+				if (value.getKey() == null) {
+					Managers.SOURCES_MANAGER.addUserSource(value,
+						new AsyncCallback<UserSource>() {
+							public void onSuccess(UserSource result) {
+								hide();
+							}
 
-					public void onFailure(Throwable caught) {}
-				});
-		} else {
-			Managers.SOURCES_MANAGER.updateUserSource(value,
-				new AsyncCallback<UserSource>() {
-					public void onSuccess(UserSource result) {
-						dialog.hide();
-					}
+							public void onFailure(Throwable caught) {}
+						});
+				} else {
+					Managers.SOURCES_MANAGER.updateUserSource(value,
+						new AsyncCallback<UserSource>() {
+							public void onSuccess(UserSource result) {
+								hide();
+							}
 
-					public void onFailure(Throwable caught) {}
-				});
-		}
-	}
+							public void onFailure(Throwable caught) {}
+						});
+				}
+			}
+		});
 
-	@UiHandler("cancelButton")
-	protected void cancelButtonClicked(ClickEvent event) {
-		dialog.hide();
-	}
+		addButton(constants.cancelButton(), HIDE);
 
-	public void showDialog(UserSource value) {
-		editor.setValue(value);
-		dialog.setWidth("100%");
-		dialog.center();
+		setShowAction(new OnShowAction<UserSource>() {
+			public void onShow(UserSource param) {
+				editor.setValue(param);
+			}
+		});
 	}
 }

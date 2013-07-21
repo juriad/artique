@@ -1,17 +1,19 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:ce="urn:import:com.google.gwt.user.cellview.client"
-	xmlns:db="urn:import:com.google.gwt.user.datepicker.client" xmlns:c="urn:import:cz.artique.client.common"
-	xmlns:l="urn:import:cz.artique.client.labels">
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:cz.artique.client.common">
 
 	<ui:with field='res' type='cz.artique.client.shortcuts.ShortcutsConstants' />
 
 	<g:HorizontalPanel>
 		<g:cell>
 			<g:VerticalPanel>
-				<g:ScrollPanel>
-					<ce:CellList ui:field="cellList" />
-				</g:ScrollPanel>
+				<c:ScrollableCellList ui:field="cellList">
+					<c:emptyListWidget>
+						<g:Label>
+							<ui:text from="{res.noDefinedShortcut}" />
+						</g:Label>
+					</c:emptyListWidget>
+				</c:ScrollableCellList>
 				<g:Button ui:field="actionShortcutButton">
 					<ui:text from="{res.addActionShortcut}" />
 				</g:Button>
@@ -36,9 +38,9 @@
 					</g:customCell>
 				</g:row>
 				<g:row>
-					<g:cell>
-						<ui:text from="{res.referenced}" />
-					</g:cell>
+					<g:customCell>
+						<g:InlineLabel ui:field="referencedLabel" />
+					</g:customCell>
 					<g:customCell>
 						<g:InlineLabel ui:field="referenced" />
 					</g:customCell>

@@ -24,31 +24,31 @@
 		<g:layer left="0px" width="7em">
 			<g:StackLayoutPanel unit="EM" ui:field="stack">
 				<g:stack>
-					<g:header size="2">
+					<g:header size="3">
 						<ui:text from='{cons.options}' />
 					</g:header>
 					<a:OptionPanel ui:field="optionPanel" />
 				</g:stack>
 				<g:stack>
-					<g:header size="2">
+					<g:header size="3">
 						<ui:text from='{cons.sources}' />
 					</g:header>
 					<ah:SourcesTree ui:field="sources" />
 				</g:stack>
 				<g:stack>
-					<g:header size="2">
+					<g:header size="3">
 						<ui:text from='{cons.filters}' />
 					</g:header>
 					<ah:ListFiltersTree ui:field="filters" />
 				</g:stack>
 				<!-- <g:stack> -->
-				<!-- <g:header size="2"> -->
+				<!-- <g:header size="3"> -->
 				<!-- <ui:text from='{cons.history}' /> -->
 				<!-- </g:header> -->
 				<!-- <ah:HistoryTree ui:field="history" /> -->
 				<!-- </g:stack> -->
 				<g:stack>
-					<g:header size="2">
+					<g:header size="3">
 						<ui:text from='{cons.messages}' />
 					</g:header>
 					<ah:MessagesTree ui:field="messages" />

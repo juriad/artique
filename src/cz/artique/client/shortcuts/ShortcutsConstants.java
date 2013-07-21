@@ -15,8 +15,11 @@ public interface ShortcutsConstants extends ConstantsWithLookup {
 	@DefaultStringValue("Type")
 	String type();
 
-	@DefaultStringValue("Referenced object")
-	String referenced();
+	@DefaultStringValue("Action")
+	String referencedAction();
+
+	@DefaultStringValue("Object")
+	String referencedObject();
 
 	@DefaultStringValue("Delete")
 	String deleteButton();
@@ -34,7 +37,7 @@ public interface ShortcutsConstants extends ConstantsWithLookup {
 	String addActionShortcut();
 
 	@DefaultStringValue("Action shortcut editor")
-	String actionShortcutEditor();
+	String actionShortcutDialog();
 
 	@DefaultStringValue("Save")
 	String saveButton();

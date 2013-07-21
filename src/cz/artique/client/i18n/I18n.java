@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 
 import cz.artique.client.ArtiqueConstants;
 import cz.artique.client.hierarchy.tree.HierarchyTreeConstants;
+import cz.artique.client.items.ItemsConstants;
 import cz.artique.client.labels.LabelsConstants;
 import cz.artique.client.listFilters.ListFiltersConstants;
 import cz.artique.client.listing.ListingConstants;
@@ -34,6 +35,9 @@ public class I18n {
 	private static final ListingConstants LISTING_CONSTANTS = GWT
 		.create(ListingConstants.class);
 
+	private static final ItemsConstants ITEMS_CONSTANTS = GWT
+		.create(ItemsConstants.class);
+
 	public static SourcesConstants getSourcesConstants() {
 		return SOURCES_CONSTANTS;
 	}
@@ -60,5 +64,9 @@ public class I18n {
 
 	public static ListingConstants getListingConstants() {
 		return LISTING_CONSTANTS;
+	}
+
+	public static ItemsConstants getItemsConstants() {
+		return ITEMS_CONSTANTS;
 	}
 }

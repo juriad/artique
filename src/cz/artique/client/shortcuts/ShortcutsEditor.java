@@ -16,15 +16,14 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
-import com.google.gwt.view.client.SingleSelectionModel;
 
+import cz.artique.client.common.ScrollableCellList;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.Label;
@@ -62,7 +61,7 @@ public class ShortcutsEditor extends Composite {
 	}
 
 	@UiField(provided = true)
-	CellList<Shortcut> cellList;
+	ScrollableCellList<Shortcut> cellList;
 
 	@UiField
 	InlineLabel keyStroke;
@@ -74,12 +73,13 @@ public class ShortcutsEditor extends Composite {
 	InlineLabel referenced;
 
 	@UiField
+	InlineLabel referencedLabel;
+
+	@UiField
 	Button deleteButton;
 
 	@UiField
 	Button actionShortcutButton;
-
-	private final SingleSelectionModel<Shortcut> selectionModel;
 
 	private String shortcutTypeAsString(ShortcutType type) {
 		ShortcutsConstants constants = I18n.getShortcutsConstants();
@@ -88,20 +88,13 @@ public class ShortcutsEditor extends Composite {
 	}
 
 	public ShortcutsEditor() {
-		cellList = new CellList<Shortcut>(new ShortcutCell());
+		cellList = new ScrollableCellList<Shortcut>(new ShortcutCell());
 		initWidget(uiBinder.createAndBindUi(this));
-		selectionModel = new SingleSelectionModel<Shortcut>();
-		ShortcutsConstants constants = I18n.getShortcutsConstants();
-		cellList.setEmptyListWidget(new InlineLabel(constants
-			.noDefinedShortcut()));
-		cellList.setSelectionModel(selectionModel);
-		cellList.setStylePrimaryName("cellList");
-		selectionModel
-			.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-				public void onSelectionChange(SelectionChangeEvent event) {
-					setFields();
-				}
-			});
+		cellList.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+			public void onSelectionChange(SelectionChangeEvent event) {
+				setFields();
+			}
+		});
 	}
 
 	public HandlerRegistration addValueChangeHandler(
@@ -111,7 +104,7 @@ public class ShortcutsEditor extends Composite {
 
 	@UiHandler("deleteButton")
 	protected void deleteButtonClicked(ClickEvent event) {
-		Shortcut selected = selectionModel.getSelectedObject();
+		Shortcut selected = cellList.getSelected();
 		if (selected == null) {
 			return;
 		}
@@ -133,7 +126,7 @@ public class ShortcutsEditor extends Composite {
 	}
 
 	public void setValue() {
-		selectionModel.clear();
+		cellList.clearSelection();
 		setFields();
 		Map<String, Shortcut> shortcuts =
 			Managers.SHORTCUTS_MANAGER.getAllShortcuts();
@@ -152,16 +145,23 @@ public class ShortcutsEditor extends Composite {
 	}
 
 	private void setFields() {
-		Shortcut selected = selectionModel.getSelectedObject();
+		Shortcut selected = cellList.getSelected();
 		if (selected == null) {
 			keyStroke.setText("");
 			type.setText("");
 			referenced.setText("");
+			referencedLabel.setText(I18n
+				.getShortcutsConstants()
+				.referencedObject());
 			deleteButton.setEnabled(false);
 		} else {
 			keyStroke.setText(selected.getKeyStroke());
 			type.setText(shortcutTypeAsString(selected.getType()));
 			referenced.setText(referencedAsString(selected));
+			referencedLabel.setText(ShortcutType.ACTION.equals(selected
+				.getType())
+				? I18n.getShortcutsConstants().referencedAction()
+				: I18n.getShortcutsConstants().referencedObject());
 			deleteButton.setEnabled(true);
 		}
 	}

@@ -32,6 +32,7 @@ public class SourcesTree
 
 	private void observeHistoryChange() {
 		HistoryManager.HISTORY.addHistoryHandler(new HistoryHandler() {
+			@SuppressWarnings("unchecked")
 			public void onHistoryChanged(HistoryEvent e) {
 				TreeItem rootItem = getRootItem();
 				if (rootItem == null) {
@@ -39,11 +40,18 @@ public class SourcesTree
 				}
 				refreshAll(rootItem);
 
-				select(getAllSourcesWidgets());
+				List<HierarchyTreeWidget<UserSource>> allSourcesWidgets =
+					getAllSourcesWidgets();
+				if (allSourcesWidgets.isEmpty()) {
+					allSourcesWidgets
+						.add((HierarchyTreeWidget<UserSource>) getRootItem()
+							.getWidget());
+				}
+				select(allSourcesWidgets);
 			}
 		});
 	}
-	
+
 	@Override
 	protected void afterUpdate(HierarchyChangeEvent<UserSource> event) {
 		refreshAll(getRootItem());

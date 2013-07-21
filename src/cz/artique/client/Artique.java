@@ -4,6 +4,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.MetaElement;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.History;
@@ -123,6 +125,19 @@ public class Artique extends Composite {
 		Element parent = stack.getElement().getParentElement();
 		parent.addClassName("leftPanel");
 		stack.setStyleName("leftPanelInner", true);
+		stack.addSelectionHandler(new SelectionHandler<Integer>() {
+			public void onSelection(SelectionEvent<Integer> event) {
+				for (int i = 0; i < stack.getWidgetCount(); i++) {
+					if (i == event.getSelectedItem()) {
+						stack.getHeaderWidget(i).addStyleName(
+							"gwt-StackLayoutPanelHeader-selected");
+					} else {
+						stack.getHeaderWidget(i).removeStyleName(
+							"gwt-StackLayoutPanelHeader-selected");
+					}
+				}
+			}
+		});
 
 		String panel =
 			Managers.CONFIG_MANAGER
@@ -137,10 +152,10 @@ public class Artique extends Composite {
 			stack.showWidget(1);
 		} else if (panel.equals("F")) {
 			stack.showWidget(2);
-		//} else if (panel.equals("H")) {
-		//	stack.showWidget(3);
+			// } else if (panel.equals("H")) {
+			// stack.showWidget(3);
 		} else if (panel.equals("M")) {
-		//	stack.showWidget(4);
+			// stack.showWidget(4);
 			stack.showWidget(3);
 		}
 		stack.setAnimationDuration(duration);

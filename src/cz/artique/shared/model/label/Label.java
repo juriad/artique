@@ -114,7 +114,7 @@ public class Label
 		setUserId(userId);
 		setName(name);
 		setBackupLevel(BackupLevel.NO_BACKUP);
-		setAppearance(new LabelAppearance());
+		setAppearance(new LabelAppearance(null));
 		setLabelType(LabelType.USER_DEFINED);
 		setPriority(0);
 	}

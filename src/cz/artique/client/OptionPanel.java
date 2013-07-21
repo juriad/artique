@@ -5,10 +5,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.history.HistoryItem;
@@ -27,10 +27,10 @@ public class OptionPanel extends Composite {
 	interface OptionUiBinder extends UiBinder<Widget, OptionPanel> {}
 
 	@UiField
-	Label userName;
+	InlineLabel userName;
 
 	@UiField
-	Anchor logout;
+	Button logout;
 
 	@UiField
 	Button editLabelsButton;
@@ -50,7 +50,6 @@ public class OptionPanel extends Composite {
 	public OptionPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
 		userName.setText(ArtiqueWorld.WORLD.getUserInfo().getNickname());
-		logout.setHref(ArtiqueWorld.WORLD.getUserInfo().getLogoutUrl());
 
 		final ArtiqueList list = ArtiqueWorld.WORLD.getList();
 		list.addNewDataHandler(new NewDataHandler() {
@@ -99,4 +98,9 @@ public class OptionPanel extends Composite {
 		ArtiqueWorld.WORLD.getList().showHead();
 	}
 
+	@UiHandler("logout")
+	protected void logoutClicked(ClickEvent event) {
+		String url = ArtiqueWorld.WORLD.getUserInfo().getLogoutUrl();
+		Window.Location.assign(url);
+	}
 }

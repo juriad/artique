@@ -18,6 +18,7 @@ import cz.artique.client.history.HistoryItem;
 import cz.artique.client.history.HistoryManager;
 import cz.artique.client.history.HistoryUtils;
 import cz.artique.client.i18n.I18n;
+import cz.artique.client.listFilters.AdhocDialog;
 import cz.artique.client.listFilters.ListFilterDialog;
 import cz.artique.shared.model.label.ListFilter;
 
@@ -50,7 +51,7 @@ public class ListFilterWidget extends AbstractHierarchyTreeWidget<ListFilter> {
 			ListFilter baseListFilter =
 				HistoryManager.HISTORY.getBaseListFilter();
 			baseListFilter.setHierarchy(getHierarchy().getHierarchy());
-			ListFilterDialog.DIALOG.showDialog(baseListFilter, true);
+			ListFilterDialog.DIALOG.showDialog(baseListFilter);
 		}
 	};
 
@@ -65,7 +66,7 @@ public class ListFilterWidget extends AbstractHierarchyTreeWidget<ListFilter> {
 				lf = lastHistoryItem.getListFilter().clone();
 			}
 			lf.setHierarchy(getHierarchy().getHierarchy());
-			ListFilterDialog.DIALOG.showDialog(lf, true);
+			ListFilterDialog.DIALOG.showDialog(lf);
 		}
 	};
 
@@ -91,7 +92,9 @@ public class ListFilterWidget extends AbstractHierarchyTreeWidget<ListFilter> {
 	private void createRootPanel(FlowPanel panel) {
 		String clearTooltip =
 			I18n.getHierarchyTreeConstants().clearListFilterTooltip();
-		createAnchor(panel, I18n.getHierarchyTreeConstants().listFilterRootText(), null, clearHandler, clearTooltip);
+		createAnchor(panel, I18n
+			.getHierarchyTreeConstants()
+			.listFilterRootText(), null, clearHandler, clearTooltip);
 		createImage(panel, ArtiqueWorld.WORLD.getResources().clear(),
 			clearHandler, clearTooltip);
 		addGeneralInnerImages(panel);
@@ -134,7 +137,7 @@ public class ListFilterWidget extends AbstractHierarchyTreeWidget<ListFilter> {
 		createImage(panel, ArtiqueWorld.WORLD.getResources().detail(),
 			new ClickHandler() {
 				public void onClick(ClickEvent event) {
-					ListFilterDialog.DIALOG.showDialog(item, true);
+					ListFilterDialog.DIALOG.showDialog(item);
 				}
 			}, detailTooltip);
 	}
@@ -152,7 +155,7 @@ public class ListFilterWidget extends AbstractHierarchyTreeWidget<ListFilter> {
 				} else {
 					lf = lastHistoryItem.getListFilter().clone();
 				}
-				ListFilterDialog.DIALOG.showDialog(lf, false);
+				AdhocDialog.DIALOG.showDialog(lf);
 			}
 		}, adhocTooltip);
 		String clearTooltip =

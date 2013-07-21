@@ -1,16 +1,19 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:ce="urn:import:com.google.gwt.user.cellview.client"
-	xmlns:db="urn:import:com.google.gwt.user.datepicker.client" xmlns:c="urn:import:cz.artique.client.common"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:cz.artique.client.common"
 	xmlns:l="urn:import:cz.artique.client.labels">
 
 	<ui:with field='res' type='cz.artique.client.labels.LabelsConstants' />
 
 	<g:HorizontalPanel>
 		<g:cell>
-			<g:ScrollPanel>
-				<ce:CellList ui:field="cellList" />
-			</g:ScrollPanel>
+			<c:ScrollableCellList ui:field="cellList">
+				<c:emptyListWidget>
+					<g:Label>
+						<ui:text from="{res.noLabelExists}" />
+					</g:Label>
+				</c:emptyListWidget>
+			</c:ScrollableCellList>
 		</g:cell>
 		<g:cell>
 			<g:Grid>
@@ -19,7 +22,7 @@
 						<ui:text from="{res.name}" />
 					</g:cell>
 					<g:customCell>
-						<g:TextBox ui:field="name" />
+						<g:InlineLabel ui:field="name" />
 					</g:customCell>
 				</g:row>
 				<g:row>
@@ -27,11 +30,7 @@
 						<ui:text from="{res.foregroundColor}" />
 					</g:cell>
 					<g:customCell>
-						<c:OptionalValue ui:field="foregroundColor">
-							<c:value>
-								<c:ColorInputWithEnabled />
-							</c:value>
-						</c:OptionalValue>
+						<c:ColorInputWithEnabled ui:field="foregroundColor" />
 					</g:customCell>
 				</g:row>
 				<g:row>
@@ -39,11 +38,7 @@
 						<ui:text from="{res.backgroundColor}" />
 					</g:cell>
 					<g:customCell>
-						<c:OptionalValue ui:field="backgroundColor">
-							<c:value>
-								<c:ColorInputWithEnabled />
-							</c:value>
-						</c:OptionalValue>
+						<c:ColorInputWithEnabled ui:field="backgroundColor" />
 					</g:customCell>
 				</g:row>
 				<g:row>
@@ -51,10 +46,20 @@
 						<ui:text from="{res.markedToDelete}" />
 					</g:cell>
 					<g:customCell>
-						<g:FlowPanel>
-							<g:InlineLabel ui:field="markedToDelete" />
-							<g:Button ui:field="deleteButton" />
-						</g:FlowPanel>
+						<g:ToggleButton ui:field="markedToDelete">
+							<g:upFace>
+								<ui:text from="{res.markedNo}" />
+							</g:upFace>
+							<g:upHoveringFace>
+								<ui:text from="{res.markedNoHover}" />
+							</g:upHoveringFace>
+							<g:downFace>
+								<ui:text from="{res.markedYes}" />
+							</g:downFace>
+							<g:downHoveringFace>
+								<ui:text from="{res.markedYesHover}" />
+							</g:downHoveringFace>
+						</g:ToggleButton>
 					</g:customCell>
 				</g:row>
 				<g:row>
@@ -70,11 +75,7 @@
 						<ui:text from="{res.shortcut}" />
 					</g:cell>
 					<g:customCell>
-						<c:OptionalValue ui:field="shortcut">
-							<c:value>
-								<g:TextBox />
-							</c:value>
-						</c:OptionalValue>
+						<g:TextBox ui:field="shortcut" />
 					</g:customCell>
 				</g:row>
 			</g:Grid>

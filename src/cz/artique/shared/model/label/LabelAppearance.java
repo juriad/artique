@@ -31,6 +31,9 @@ public class LabelAppearance implements Serializable {
 		if (other != null) {
 			this.backgroundColor = other.getBackgroundColor();
 			this.foregroundColor = other.getForegroundColor();
+		} else {
+			this.backgroundColor = "rgb(255,255,255)";
+			this.foregroundColor = "rgb(0,0,0)";
 		}
 	}
 

@@ -1,64 +1,44 @@
 package cz.artique.client.items;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 
-import cz.artique.client.common.StopDialog;
+import cz.artique.client.common.UniversalDialog;
+import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.item.UserItem;
 
-public class ManualItemDialog {
-
-	private static ManualItemDialogUiBinder uiBinder = GWT
-		.create(ManualItemDialogUiBinder.class);
-
-	interface ManualItemDialogUiBinder
-			extends UiBinder<StopDialog, ManualItemDialog> {}
+public class ManualItemDialog extends UniversalDialog<Void> {
 
 	public static final ManualItemDialog DIALOG = new ManualItemDialog();
 
-	@UiField
-	StopDialog dialog;
-
-	@UiField
-	ManualItemEditor editor;
-
-	@UiField
-	Button saveButton;
-
-	@UiField
-	Button cancelButton;
-
 	public ManualItemDialog() {
-		dialog = uiBinder.createAndBindUi(this);
-	}
+		ItemsConstants constants = I18n.getItemsConstants();
+		setText(constants.manualItemDialog());
+		final ManualItemEditor editor = new ManualItemEditor();
+		setWidget(editor);
 
-	@UiHandler("saveButton")
-	protected void saveButtonClicked(ClickEvent event) {
-		final UserItem value = editor.getValue();
-		Managers.ITEMS_MANAGER.addManualItem(value,
-			new AsyncCallback<UserItem>() {
-				public void onSuccess(UserItem result) {
-					dialog.hide();
-				}
+		addButton(constants.saveButton(), new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				final UserItem value = editor.getValue();
+				Managers.ITEMS_MANAGER.addManualItem(value,
+					new AsyncCallback<UserItem>() {
+						public void onSuccess(UserItem result) {
+							hide();
+						}
 
-				public void onFailure(Throwable caught) {}
-			});
-	}
+						public void onFailure(Throwable caught) {}
+					});
+			}
+		});
 
-	@UiHandler("cancelButton")
-	protected void cancelButtonClicked(ClickEvent event) {
-		dialog.hide();
-	}
+		addButton(constants.cancelButton(), HIDE);
 
-	public void showDialog() {
-		editor.setValue(null);
-		dialog.setWidth("100%");
-		dialog.center();
+		setShowAction(new OnShowAction<Void>() {
+			public void onShow(Void param) {
+				editor.setValue(null);
+			}
+		});
 	}
 }

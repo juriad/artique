@@ -86,11 +86,10 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		List<Label> labelsByKeys =
 			ls.getLabelsByKeys(userSource.getDefaultLabels());
 		for (Label l : labelsByKeys) {
-			validator
-				.checkUser(AddUserSource.DEFAULT_LABELS, userId, l.getUserId());
+			validator.checkUser(AddUserSource.DEFAULT_LABELS, userId,
+				l.getUserId());
 		}
 
-		Region region = userSource.getRegionObject();
 		if (userSource.getRegion() != null) {
 			uss.fillRegions(userSource);
 			if (!userSource
@@ -100,10 +99,9 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 				throw new ValidationException(new Issue<AddUserSource>(
 					AddUserSource.REGION, IssueType.INVALID_VALUE));
 			}
-		}
-		userSource.setRegionObject(region);
-
-		if (region != null) {
+			userSource.setRegionObject(null);
+		} else if (userSource.getRegionObject() != null) {
+			Region region = userSource.getRegionObject();
 			region.setHtmlSource(userSource.getSource());
 			region.setName(validator.checkString(AddUserSource.REGION_NAME,
 				region.getName(), false, false));
@@ -169,19 +167,19 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 		}
 		old.setDefaultLabels(defaultLabels);
 
-		Region region = userSource.getRegionObject();
 		if (userSource.getRegion() != null) {
 			uss.fillRegions(userSource);
 			if (!userSource
 				.getRegionObject()
 				.getHtmlSource()
 				.equals(userSource.getSource())) {
-				throw new ValidationException(new Issue<UpdateUserSource>(
-					UpdateUserSource.REGION, IssueType.INVALID_VALUE));
+				throw new ValidationException(new Issue<AddUserSource>(
+					AddUserSource.REGION, IssueType.INVALID_VALUE));
 			}
-		}
-
-		if (region != null) {
+			old.setRegion(userSource.getRegion());
+			old.setRegionObject(null);
+		} else if (userSource.getRegionObject() != null) {
+			Region region = userSource.getRegionObject();
 			region.setHtmlSource(userSource.getSource());
 			region.setName(validator.checkString(UpdateUserSource.REGION_NAME,
 				region.getName(), false, false));
@@ -191,10 +189,15 @@ public class ClientSourceServiceImpl implements ClientSourceService {
 			region.setNegativeSelector(validator.checkSelector(
 				UpdateUserSource.REGION_NEGATIVE, region.getNegativeSelector(),
 				true));
+			old.setRegion(null);
+			old.setRegionObject(region);
+		} else {
+			old.setRegion(null);
+			old.setRegionObject(null);
 		}
-		old.setRegionObject(region);
 
 		uss.updateUserSource(old);
+		uss.fillRegions(old);
 		return old;
 	}
 

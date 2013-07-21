@@ -170,6 +170,7 @@ public abstract class AbstractHierarchyTree<E extends HasHierarchy, F extends Pr
 		if (widgets != null && widgets.size() > 0) {
 			for (HierarchyTreeWidget<E> lf : widgets) {
 				lf.setSelected(true);
+				selectedItems.add(lf);
 			}
 		}
 	}

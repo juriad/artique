@@ -54,14 +54,12 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 
 	private final Anchor anchor;
 
-	private final Filter filter;
+	private Filter filter;
 
 	private String serialized;
 
 	public UserSourceWidget(Hierarchy<UserSource> hierarchy) {
 		super(hierarchy);
-		filter = constructFilter();
-
 		anchor =
 			createAnchor(getPanel(), hierarchy.getName(), null,
 				new ClickHandler() {
@@ -172,6 +170,7 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 	@Override
 	public boolean refresh() {
 		anchor.setName(getHierarchy().getName());
+		filter = constructFilter();
 		serialized = CachingHistoryUtils.UTILS.serializeListFilter(filter);
 		anchor.setHref("#" + serialized);
 		if (getHierarchy() instanceof LeafNode) {

@@ -411,7 +411,7 @@ public interface ValidationConstants extends ConstantsWithLookup {
 	@DefaultStringValue("---")
 	String UpdateLabels_DELETE_SOURCE_TOO_LONG();
 
-	@DefaultStringValue("Label cannot be deleted; it is still referenced by some source. Update of apperaince was successful.")
+	@DefaultStringValue("Label cannot be deleted; it is still referenced by some source. Update of appearance was successful.")
 	String UpdateLabels_DELETE_SOURCE_ALREADY_EXISTS();
 
 	@DefaultStringValue("---")
@@ -432,7 +432,7 @@ public interface ValidationConstants extends ConstantsWithLookup {
 	@DefaultStringValue("---")
 	String UpdateLabels_DELETE_FILTER_TOO_LONG();
 
-	@DefaultStringValue("Label cannot be deleted; it is still referenced by some filter. Update of apperaince was successful.")
+	@DefaultStringValue("Label cannot be deleted; it is still referenced by some filter. Update of appearance was successful.")
 	String UpdateLabels_DELETE_FILTER_ALREADY_EXISTS();
 
 	@DefaultStringValue("---")
@@ -453,7 +453,7 @@ public interface ValidationConstants extends ConstantsWithLookup {
 	@DefaultStringValue("---")
 	String UpdateLabels_DELETE_ITEM_TOO_LONG();
 
-	@DefaultStringValue("Label cannot be deleted; it is still referenced by some item. Update of apperaince was successful.")
+	@DefaultStringValue("Label cannot be deleted; it is still referenced by some item. Update of appearance was successful.")
 	String UpdateLabels_DELETE_ITEM_ALREADY_EXISTS();
 
 	@DefaultStringValue("---")

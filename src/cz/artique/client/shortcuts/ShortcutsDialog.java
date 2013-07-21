@@ -1,52 +1,24 @@
 package cz.artique.client.shortcuts;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
+import cz.artique.client.common.UniversalDialog;
+import cz.artique.client.i18n.I18n;
 
-import cz.artique.client.common.StopDialog;
-
-public class ShortcutsDialog {
-
-	private static ShortcutsDialogUiBinder uiBinder = GWT
-		.create(ShortcutsDialogUiBinder.class);
-
-	interface ShortcutsDialogUiBinder
-			extends UiBinder<StopDialog, ShortcutsDialog> {}
+public class ShortcutsDialog extends UniversalDialog<Void> {
 
 	public static final ShortcutsDialog DIALOG = new ShortcutsDialog();
 
-	@UiField
-	StopDialog dialog;
-
-	@UiField
-	ShortcutsEditor editor;
-
-	@UiField
-	Button closeButton;
-
 	public ShortcutsDialog() {
-		dialog = uiBinder.createAndBindUi(this);
-	}
+		ShortcutsConstants constants = I18n.getShortcutsConstants();
+		setText(constants.actionShortcutDialog());
+		final ShortcutsEditor editor = new ShortcutsEditor();
+		setWidget(editor);
 
-	@UiHandler("closeButton")
-	protected void closeButtonClicked(ClickEvent event) {
-		dialog.hide();
-	}
+		addButton(constants.closeButton(), HIDE);
 
-	public void showDialog() {
-		editor.setValue();
-		dialog.setWidth("100%");
-		dialog.center();
-	}
-
-	/**
-	 * Called by ActionShortcutDialog
-	 */
-	public void reload() {
-		editor.setValue();
+		setShowAction(new OnShowAction<Void>() {
+			public void onShow(Void param) {
+				editor.setValue();
+			}
+		});
 	}
 }

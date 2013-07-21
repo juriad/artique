@@ -37,6 +37,7 @@ import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.PageChangeItem;
 import cz.artique.shared.model.item.UserItem;
+import cz.artique.shared.model.source.SourceType;
 import cz.artique.shared.model.source.UserSource;
 
 public class UserItemRow extends RowWidget {
@@ -124,6 +125,8 @@ public class UserItemRow extends RowWidget {
 		Link url = userSource.getSourceObject().getUrl();
 		if (url != null && url.getValue() != null) {
 			source.setTitle(url.getValue());
+		} else if(SourceType.MANUAL.equals(userSource.getSourceType())) {
+			source.setTitle(I18n.getListingConstants().manualSourceTitle());
 		}
 	}
 

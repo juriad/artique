@@ -3,7 +3,7 @@ package cz.artique.client;
 import com.google.gwt.i18n.client.ConstantsWithLookup;
 
 public interface ArtiqueConstants extends ConstantsWithLookup {
-	@DefaultStringValue("General")
+	@DefaultStringValue("Options")
 	String options();
 
 	@DefaultStringValue("Sources")
@@ -53,4 +53,13 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("No new items")
 	String noNewItems();
+
+	@DefaultStringValue("List options")
+	String optionList();
+
+	@DefaultStringValue("Config options")
+	String optionConfig();
+
+	@DefaultStringValue("User options")
+	String optionUser();
 }

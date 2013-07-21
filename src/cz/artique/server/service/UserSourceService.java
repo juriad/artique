@@ -117,6 +117,7 @@ public class UserSourceService {
 			&& userSource.getRegionObject() != null) {
 			SourceService ss = new SourceService();
 			ss.addRegion(userSource.getRegionObject());
+			userSource.setRegion(userSource.getRegionObject().getKey());
 		}
 	}
 

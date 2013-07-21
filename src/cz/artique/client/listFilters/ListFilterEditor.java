@@ -1,7 +1,5 @@
 package cz.artique.client.listFilters;
 
-import java.util.Date;
-
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Display;
@@ -20,7 +18,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 
-import cz.artique.client.common.OptionalValue;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.shortcut.Shortcut;
@@ -44,35 +41,36 @@ public class ListFilterEditor extends Composite
 	TextBox hierarchy;
 
 	@UiField
-	OptionalValue<TextBox, String> exported;
+	TextBox exported;
 
 	@UiField
 	QueryFilter filter;
 
 	@UiField
-	OptionalValue<DateBox, Date> startFrom;
+	DateBox startFrom;
 
 	@UiField
-	OptionalValue<DateBox, Date> endTo;
+	DateBox endTo;
 
 	@UiField
-	OptionalValue<ReadStatePicker, ReadState> readPicker;
+	ReadStatePicker readPicker;
 
 	@UiField
 	ListFilterOrderPicker orderPicker;
 
 	@UiField
-	OptionalValue<TextBox, String> shortcut;
+	TextBox shortcut;
 
 	private Key listFilterKey;
 	private Key filterKey;
 
 	private boolean enabled = true;
 
-	public ListFilterEditor() {
+	public ListFilterEditor(boolean proper) {
 		initWidget(uiBinder.createAndBindUi(this));
 		Element element = grid.getCellFormatter().getElement(3, 0);
 		DOM.setElementAttribute(element, "colspan", "2");
+		setProper(proper);
 	}
 
 	public boolean isEnabled() {
@@ -117,7 +115,7 @@ public class ListFilterEditor extends Composite
 		lf.setEndTo(endTo.getValue());
 		lf.setRead(readPicker.getValue() == null ? null : readPicker
 			.getValue()
-			.isState());
+			.getState());
 		lf.setOrder(orderPicker.getValue());
 
 		lf.setKey(listFilterKey);
@@ -153,7 +151,7 @@ public class ListFilterEditor extends Composite
 		setValue(value);
 	}
 
-	public void setProper(boolean proper) {
+	private void setProper(boolean proper) {
 		for (int i = 0; i < 3; i++) {
 			Element element = grid.getRowFormatter().getElement(i);
 			if (proper) {

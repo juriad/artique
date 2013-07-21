@@ -5,7 +5,7 @@ import com.google.gwt.i18n.client.ConstantsWithLookup;
 public interface SourcesConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("Source editor")
-	String userSourceEditor();
+	String userSourceDialog();
 
 	@DefaultStringValue("Save")
 	String saveButton();
@@ -40,7 +40,7 @@ public interface SourcesConstants extends ConstantsWithLookup {
 	@DefaultStringValue("Last check")
 	String lastCheck();
 
-	@DefaultStringValue("Error sequence")
+	@DefaultStringValue("Errors")
 	String errorSequence();
 
 	@DefaultStringValue("Next check")
@@ -59,18 +59,18 @@ public interface SourcesConstants extends ConstantsWithLookup {
 	String watchingYes();
 
 	@DefaultStringValue("Stop watching")
-	String unwatchButton();
+	String watchingYesHover();
 
 	@DefaultStringValue("No")
 	String watchingNo();
 
 	@DefaultStringValue("Start watching")
-	String watchButton();
+	String watchingNoHover();
 
 	@DefaultStringValue("No check has been performed")
 	String notCheckedYet();
 
-	@DefaultStringValue("There were no errors during last check")
+	@DefaultStringValue("No errors")
 	String noErrorSequence();
 
 	@DefaultStringValue("No check has been planned")

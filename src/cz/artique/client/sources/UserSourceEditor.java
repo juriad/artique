@@ -20,7 +20,6 @@ import com.google.gwt.text.client.DateTimeFormatRenderer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
@@ -29,11 +28,13 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
-import com.google.gwt.view.client.SingleSelectionModel;
 
+import cz.artique.client.common.ScrollableCellList;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.Managers;
 import cz.artique.client.messages.Message;
@@ -86,7 +87,7 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 	}
 
 	@UiField(provided = true)
-	CellList<Source> cellList;
+	ScrollableCellList<Source> cellList;
 
 	@UiField
 	Grid grid;
@@ -110,10 +111,7 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 	Button setUrlButton;
 
 	@UiField
-	InlineLabel watching;
-
-	@UiField
-	Button watchButton;
+	ToggleButton watching;
 
 	@UiField
 	TextBox hierarchy;
@@ -128,10 +126,7 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 	InlineLabel errorSequence;
 
 	@UiField
-	InlineLabel nextCheck;
-
-	@UiField
-	Button checkNow;
+	PushButton nextCheck;
 
 	@UiField
 	SourceTypePicker sourceType;
@@ -147,10 +142,8 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 
 	private Recommendation recommandation;
 
-	private final SingleSelectionModel<Source> selectionModel;
-
 	public UserSourceEditor() {
-		cellList = new CellList<Source>(new SourceCell());
+		cellList = new ScrollableCellList<Source>(new SourceCell());
 		initWidget(uiBinder.createAndBindUi(this));
 
 		sourceSource
@@ -160,22 +153,15 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 				}
 			});
 
-		SourcesConstants constants = I18n.getSourcesConstants();
-		cellList.setEmptyListWidget(new InlineLabel(constants
-			.noRecommendation()));
-		selectionModel = new SingleSelectionModel<Source>();
-		cellList.setSelectionModel(selectionModel);
-		cellList.setStylePrimaryName("cellList");
-		selectionModel
-			.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-				public void onSelectionChange(SelectionChangeEvent event) {
-					setFields();
-				}
-			});
+		cellList.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+			public void onSelectionChange(SelectionChangeEvent event) {
+				setFields();
+			}
+		});
 	}
 
 	protected void setFields() {
-		Source selected = selectionModel.getSelectedObject();
+		Source selected = cellList.getSelected();
 		if (selected != null) {
 			urlAnchor.setText(selected.getUrl().getValue());
 			urlAnchor.setHref(selected.getUrl().getValue());
@@ -227,7 +213,7 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 			domain.setText(null);
 			setUrlButton.setEnabled(false);
 
-			selectionModel.clear();
+			cellList.clearSelection();
 			if (recommandation != null) {
 				cellList.setRowData(recommandation
 					.getRecommendedSourcesObjects());
@@ -314,29 +300,22 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 			constants.selectRegion()), true);
 	}
 
-	@UiHandler("watchButton")
-	protected void watchButtonClicked(ClickEvent event) {
+	@UiHandler("watching")
+	protected void watchingChanged(ValueChangeEvent<Boolean> event) {
 		if (watchState != null) {
-			watchState = !watchState;
+			watchState = event.getValue();
 			setWatch();
 		}
 	}
 
 	private void setWatch() {
-		SourcesConstants constants = I18n.getSourcesConstants();
 		if (watchState == null
 			|| SourceType.MANUAL.equals(sourceType.getValue())) {
-			watching.setText(constants.unavailable());
-			watchButton.setVisible(false);
+			watching.setDown(false);
+			watching.setEnabled(false);
 		} else {
-			watchButton.setVisible(true);
-			if (watchState) {
-				watching.setText(constants.watchingYes());
-				watchButton.setText(constants.unwatchButton());
-			} else {
-				watching.setText(constants.watchingNo());
-				watchButton.setText(constants.watchButton());
-			}
+			watching.setEnabled(true);
+			watching.setDown(watchState);
 		}
 	}
 
@@ -442,20 +421,18 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 			}
 
 			if (userSource.getSourceObject().getNextCheck() != null) {
-				nextCheck.setText(renderer.render(userSource
-					.getSourceObject()
-					.getNextCheck()));
+				nextCheck.getUpFace().setText(
+					renderer
+						.render(userSource.getSourceObject().getNextCheck()));
 			} else {
-				nextCheck.setText(constants.noCheckPlanned());
+				nextCheck.getUpFace().setText(constants.noCheckPlanned());
 			}
-			checkNow.setVisible(true);
-			checkNow.setEnabled(true);
+			nextCheck.setEnabled(true);
 		} else {
 			lastCheck.setText(constants.unavailable());
-			nextCheck.setText(constants.unavailable());
+			nextCheck.getUpFace().setText(constants.unavailable());
 			errorSequence.setText(constants.unavailable());
-			checkNow.setEnabled(false);
-			checkNow.setVisible(false);
+			nextCheck.setEnabled(false);
 		}
 
 		for (int i = 5; i < grid.getRowCount(); i++) {
@@ -492,11 +469,10 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		setValue(value);
 	}
 
-	@UiHandler("checkNow")
+	@UiHandler("nextCheck")
 	protected void checkNowClicked(ClickEvent event) {
 		if (userSource.getKey() == null || source == null) {
-			checkNow.setVisible(false);
-			checkNow.setEnabled(false);
+			nextCheck.setEnabled(false);
 			return;
 		}
 		Managers.SOURCES_MANAGER.planSourceCheck(source.getKey(),
@@ -508,9 +484,10 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 					DateTimeFormatRenderer renderer =
 						new DateTimeFormatRenderer(DateTimeFormat
 							.getFormat(PredefinedFormat.DATE_TIME_MEDIUM));
-					nextCheck.setText(renderer.render(userSource
-						.getSourceObject()
-						.getNextCheck()));
+					nextCheck.getUpFace().setText(
+						renderer.render(userSource
+							.getSourceObject()
+							.getNextCheck()));
 				}
 			});
 	}
@@ -530,7 +507,7 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 			sourceType.setEnabled(false);
 			url = urlBox.getValue();
 		} else {
-			Source selected = selectionModel.getSelectedObject();
+			Source selected = cellList.getSelected();
 			if (selected != null) {
 				newSource = selected;
 				url = selected.getUrl().getValue();

@@ -13,7 +13,6 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -23,8 +22,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
-import com.google.gwt.view.client.SingleSelectionModel;
 
+import cz.artique.client.common.ScrollableCellList;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.source.Region;
@@ -45,8 +44,6 @@ public class SourceRegionPicker extends Composite
 
 			SourcesConstants constants = I18n.getSourcesConstants();
 
-			sb.appendHtmlConstant("<table><tr>");
-			sb.appendHtmlConstant("<td style='font-weight:bold;'>");
 			if (value.getName() == null) {
 				sb
 					.appendHtmlConstant("<i>" + constants.customRegion()
@@ -54,18 +51,11 @@ public class SourceRegionPicker extends Composite
 			} else {
 				sb.appendEscaped(value.getName());
 			}
-			sb.appendHtmlConstant("</td></tr><tr><td style='color: green;'>");
-			sb.appendEscaped(value.getPositiveSelector() == null ? "" : value
-				.getPositiveSelector());
-			sb.appendHtmlConstant("</td></tr><tr><td style='color: red;'>");
-			sb.appendEscaped(value.getNegativeSelector() == null ? "" : value
-				.getNegativeSelector());
-			sb.appendHtmlConstant("</td></tr></table>");
 		}
 	}
 
 	@UiField(provided = true)
-	CellList<Region> cellList;
+	ScrollableCellList<Region> cellList;
 
 	@UiField
 	TextBox name;
@@ -94,18 +84,13 @@ public class SourceRegionPicker extends Composite
 	private UserSource userSource;
 
 	public SourceRegionPicker() {
-		cellList = new CellList<Region>(new RegionCell());
+		cellList = new ScrollableCellList<Region>(new RegionCell());
 		initWidget(uiBinder.createAndBindUi(this));
-		final SingleSelectionModel<Region> selectionModel =
-			new SingleSelectionModel<Region>();
-		cellList.setSelectionModel(selectionModel);
-		cellList.setStylePrimaryName("cellList");
-		selectionModel
-			.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-				public void onSelectionChange(SelectionChangeEvent event) {
-					selectionChanged(selectionModel.getSelectedObject());
-				}
-			});
+		cellList.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+			public void onSelectionChange(SelectionChangeEvent event) {
+				selectionChanged(cellList.getSelected());
+			}
+		});
 	}
 
 	protected void selectionChanged(Region selected) {
@@ -120,20 +105,17 @@ public class SourceRegionPicker extends Composite
 		String headerText =
 			selected.getName() == null ? constants.customRegion() : selected
 				.getName();
-		header.setText(headerText);
+		header.setText("» " + headerText);
 	}
 
 	@UiHandler("checkButton")
 	protected void checkButtonClicked(ClickEvent event) {
-		@SuppressWarnings("unchecked")
-		SingleSelectionModel<Region> selectionModel =
-			(SingleSelectionModel<Region>) cellList.getSelectionModel();
-		Region selectedObject = selectionModel.getSelectedObject();
+		Region selectedObject = cellList.getSelected();
 		if (!new Region().equals(selectedObject)) {
 			// not custom or null
 			return;
 		}
-		
+
 		Region regionObject = getValue().getRegionObject();
 		Managers.SOURCES_MANAGER.checkRegion(regionObject, null);
 	}
@@ -144,11 +126,8 @@ public class SourceRegionPicker extends Composite
 	}
 
 	public UserSource getValue() {
-		@SuppressWarnings("unchecked")
-		SingleSelectionModel<Region> selectionModel =
-			(SingleSelectionModel<Region>) cellList.getSelectionModel();
-		Region selectedObject = selectionModel.getSelectedObject();
-		if (cellList.getRowCount() == 0 || selectedObject == null) {
+		Region selectedObject = cellList.getSelected();
+		if (cellList.isEmpty() || selectedObject == null) {
 			return userSource;
 		} else {
 			UserSource us = new UserSource();
@@ -211,8 +190,7 @@ public class SourceRegionPicker extends Composite
 							regionObject = custom;
 						}
 						selectionChanged(regionObject);
-						cellList.getSelectionModel().setSelected(regionObject,
-							true);
+						cellList.setSelected(regionObject, true);
 					}
 				});
 		}
