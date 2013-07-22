@@ -33,7 +33,6 @@ public abstract class RowWidget extends Composite
 	protected void setContent(Widget content) {
 		this.content = content;
 		content.setVisible(false);
-		content.setStylePrimaryName("rowContent");
 		collapse();
 	}
 

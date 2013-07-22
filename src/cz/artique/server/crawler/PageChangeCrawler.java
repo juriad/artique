@@ -125,6 +125,7 @@ public class PageChangeCrawler
 			String diff = generateDiff(oldContent, newContent);
 			if (diff != null) {
 				PageChangeItem item = getPageChangeItem(filteredPage, diff);
+				createNonDuplicateItem(item);
 				List<UserItem> userItems = new ArrayList<UserItem>();
 				for (UserSource us : older) {
 					UserItem userItem = createUserItem(us, item);
@@ -194,7 +195,7 @@ public class PageChangeCrawler
 		dmp.Diff_EditCost =
 			ConfigService.CONFIG_SERVICE
 				.getConfig(ServerConfigKey.DIFF_EDIT_COST)
-				.<Long> get()
+				.<Integer> get()
 				.shortValue();
 		dmp.Diff_Timeout =
 			ConfigService.CONFIG_SERVICE
@@ -203,8 +204,14 @@ public class PageChangeCrawler
 				.floatValue();
 
 		LinkedList<Diff> diffs = dmp.diff_main(oldContent, newContent);
-		if (diffs.size() == 0) {
-			// texts are identical
+		boolean identical = true;
+		for (Diff diff : diffs) {
+			if (!DiffMatchPatch.Operation.EQUAL.equals(diff.operation)) {
+				identical = false;
+				break;
+			}
+		}
+		if (identical) {
 			return null;
 		}
 

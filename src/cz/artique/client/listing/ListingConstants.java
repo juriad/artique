@@ -15,15 +15,24 @@ public interface ListingConstants extends ConstantsWithLookup {
 	@DefaultStringValue("Author")
 	String author();
 
-	@DefaultStringValue("New content")
-	String newContent();
-
-	@DefaultStringValue("Difference")
-	String diffContent();
-
 	@DefaultStringValue("Compared to")
 	String comparedTo();
 
 	@DefaultStringValue("Manual source")
 	String manualSourceTitle();
+
+	@DefaultStringValue("No")
+	String content_NO();
+
+	@DefaultStringValue("HTML")
+	String content_HTML();
+
+	@DefaultStringValue("TXT")
+	String content_TXT();
+
+	@DefaultStringValue("HTML Diff")
+	String content_DIFF_HTML();
+
+	@DefaultStringValue("TXT Diff")
+	String content_DIFF_TXT();
 }

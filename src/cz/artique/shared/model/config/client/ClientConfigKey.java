@@ -18,7 +18,7 @@ public enum ClientConfigKey implements GenKey, Serializable {
 	 * Timeout of all services. If service timeouts, message is shown and all
 	 * services are suspended.
 	 */
-	SERVICE_TIMEOUT("service.timeout", new ConfigValue(2000)),
+	SERVICE_TIMEOUT("service.timeout", new ConfigValue(3000)),
 	/**
 	 * Number of items to show when the listing is loaded.
 	 */

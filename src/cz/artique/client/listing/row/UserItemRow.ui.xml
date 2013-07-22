@@ -9,7 +9,7 @@
 				<l:UserItemLabelsBar ui:field="labels" />
 				<g:Label ui:field="source" stylePrimaryName="itemSource" />
 				<g:Anchor ui:field="link" target="_blank" stylePrimaryName="itemLink" />
-				
+
 				<g:Label ui:field="added" stylePrimaryName="itemDate" />
 				<g:Anchor ui:field="backup" target="_blank"
 					stylePrimaryName="itemBackup" />
@@ -18,8 +18,7 @@
 			</g:FlowPanel>
 		</g:cell>
 		<g:cell>
-			<g:FlowPanel ui:field="content" stylePrimaryName="rowContent">
-			</g:FlowPanel>
+			<c:ContentsPanel ui:field="content" />
 		</g:cell>
 	</g:VerticalPanel>
 </ui:UiBinder>

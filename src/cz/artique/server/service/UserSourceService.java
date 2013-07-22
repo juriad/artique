@@ -287,6 +287,7 @@ public class UserSourceService {
 				us.setCrawlerData(crawlerDataKey);
 			}
 			Datastore.put(tx, list);
+			tx.commit();
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();
