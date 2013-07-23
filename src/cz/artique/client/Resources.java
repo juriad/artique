@@ -12,6 +12,10 @@ public interface Resources extends ClientBundle {
 	CssResource style();
 
 	@NotStrict
+	@Source("dialogs.css")
+	CssResource dialogs();
+
+	@NotStrict
 	@Source("login/login-style.css")
 	CssResource loginStyle();
 
@@ -33,26 +37,11 @@ public interface Resources extends ClientBundle {
 	@Source("icons/mail-mark-junk.png")
 	ImageResource showDisabled();
 
-	@Source("icons/dialog-error.png")
-	ImageResource error();
-
-	@Source("icons/dialog-warning.png")
-	ImageResource warning();
-
-	@Source("icons/dialog-information.png")
-	ImageResource info();
-
 	@Source("icons/reload.png")
 	ImageResource reload();
 
 	@Source("icons/add.png")
 	ImageResource add();
-
-	@Source("icons/go-jump.png")
-	ImageResource open();
-
-	@Source("icons/lock.png")
-	ImageResource backup();
 
 	@Source("mainBackground.png")
 	ImageResource mainBackground();

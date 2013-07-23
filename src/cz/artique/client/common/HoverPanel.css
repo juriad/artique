@@ -1,0 +1,22 @@
+.hoverPanel {
+	position: relative;
+}
+
+.hoverPanelInner {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	position: absolute;
+	padding-right: 1em;
+}
+
+.hoverPanel-expanded .hoverPanelInner,.hoverPanelInner:hover {
+	z-index: 10;
+	overflow: visible;
+	width: auto !important;
+}
+
+.hoverPanelInner:hover {
+	z-index: 15;
+}

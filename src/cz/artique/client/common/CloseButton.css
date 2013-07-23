@@ -1,0 +1,13 @@
+.closeButton {
+	font-size: x-small;
+	position: relative;
+	top: -0.5em;
+	color: #bbb;
+	font-weight: bold;
+	cursor: pointer;
+	display: inline-block;
+}
+
+.closeButton:hover {
+	color: red;
+}

@@ -1,11 +1,15 @@
 package cz.artique.client.common;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.HasCloseHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.user.client.ui.InlineLabel;
 
 public class CloseButton<E> extends InlineLabel implements HasCloseHandlers<E> {
@@ -18,12 +22,21 @@ public class CloseButton<E> extends InlineLabel implements HasCloseHandlers<E> {
 		}
 	}
 
-	private final static String closeSign = "x";
+	interface MyResources extends ClientBundle {
+		@NotStrict
+		@Source("CloseButton.css")
+		CssResource style();
+	}
+
+	private static final MyResources res = GWT.create(MyResources.class);
+
+	private static final String closeSign = "x";
 
 	private final E closeFor;
 
 	public CloseButton(E closeFor) {
 		super(closeSign);
+		res.style().ensureInjected();
 		this.closeFor = closeFor;
 		setStylePrimaryName("closeButton");
 		addClickHandler(new ClickHandler() {

@@ -1,11 +1,15 @@
 package cz.artique.client.common;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.HasOpenHandlers;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.user.client.ui.InlineLabel;
 
 public class AddButton<E> extends InlineLabel implements HasOpenHandlers<E> {
@@ -18,12 +22,21 @@ public class AddButton<E> extends InlineLabel implements HasOpenHandlers<E> {
 		}
 	}
 
+	interface MyResources extends ClientBundle {
+		@NotStrict
+		@Source("AddButton.css")
+		CssResource style();
+	}
+
+	private static final MyResources res = GWT.create(MyResources.class);
+
 	protected static final String addSign = "+";
 
 	private final E addFor;
 
 	public AddButton(E addFor) {
 		super(addSign);
+		res.style().ensureInjected();
 		this.addFor = addFor;
 		setStylePrimaryName("addButton");
 		addClickHandler(new ClickHandler() {

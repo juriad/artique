@@ -13,11 +13,16 @@ import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.i18n.shared.DateTimeFormat.PredefinedFormat;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.CssResource.NotStrict;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.text.client.DateTimeFormatRenderer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -25,9 +30,11 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.impl.HyperlinkImpl;
 
-import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.common.ContentsPanel;
+import cz.artique.client.history.CachingHistoryUtils;
+import cz.artique.client.history.HistoryManager;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.listing.ListingConstants;
 import cz.artique.client.manager.Managers;
@@ -37,6 +44,8 @@ import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.PageChangeItem;
 import cz.artique.shared.model.item.UserItem;
+import cz.artique.shared.model.label.Filter;
+import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.source.SourceType;
 import cz.artique.shared.model.source.UserSource;
 
@@ -65,6 +74,22 @@ public class UserItemRow extends RowWidget {
 		}
 	}
 
+	interface MyResources extends ClientBundle {
+		@NotStrict
+		@Source("UserItemRow.css")
+		CssResource style();
+
+		@Source("../../icons/go-jump.png")
+		ImageResource open();
+
+		@Source("../../icons/lock.png")
+		ImageResource backup();
+	}
+
+	private static final MyResources res = GWT.create(MyResources.class);
+
+	private final HyperlinkImpl impl = GWT.create(HyperlinkImpl.class);
+
 	@UiField
 	VerticalPanel row;
 
@@ -78,7 +103,7 @@ public class UserItemRow extends RowWidget {
 	Anchor link;
 
 	@UiField
-	Label source;
+	Anchor source;
 
 	@UiField
 	Label added;
@@ -96,6 +121,7 @@ public class UserItemRow extends RowWidget {
 
 	public UserItemRow(UserItem data) {
 		super(data);
+		res.style().ensureInjected();
 		content = new ContentsPanel<Anchor>(new UserItemContentFactory());
 
 		initWidget(uiBinder.createAndBindUi(this));
@@ -121,7 +147,7 @@ public class UserItemRow extends RowWidget {
 	}
 
 	private void fillLinkAnchor() {
-		Image open = new Image(ArtiqueWorld.WORLD.getResources().open());
+		Image open = new Image(res.open());
 		link.getElement().appendChild(open.getElement());
 		link.setHref(getValue().getItemObject().getUrl().getValue());
 		link.setStyleName("itemIcon", true);
@@ -132,6 +158,27 @@ public class UserItemRow extends RowWidget {
 		UserSource userSource =
 			Managers.SOURCES_MANAGER.getSourceByKey(userSourceKey);
 		source.setText(userSource.getName());
+
+		cz.artique.shared.model.label.Label label =
+			Managers.LABELS_MANAGER.getLabelByKey(userSource.getLabel());
+		final Filter filter =
+			CachingHistoryUtils.UTILS.getFilterForLabel(label);
+		final String serialized =
+			CachingHistoryUtils.UTILS.serializeListFilter(filter);
+
+		source.setHref("#" + serialized);
+		source.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				if (impl.handleAsClick(Event.as(event.getNativeEvent()))) {
+					ListFilter listFilter =
+						HistoryManager.HISTORY.getBaseListFilter();
+					listFilter.setFilterObject(filter);
+					HistoryManager.HISTORY
+						.setListFilter(listFilter, serialized);
+				}
+				event.preventDefault();
+			}
+		});
 
 		Link url = userSource.getSourceObject().getUrl();
 		if (url != null && url.getValue() != null) {
@@ -266,7 +313,7 @@ public class UserItemRow extends RowWidget {
 		labels.setNewData(getValue());
 		setReadState();
 		if (backupImage == null && getValue().getBackupBlobKey() != null) {
-			backupImage = new Image(ArtiqueWorld.WORLD.getResources().backup());
+			backupImage = new Image(res.backup());
 			backup.getElement().appendChild(backupImage.getElement());
 			String blobKey = getValue().getBackupBlobKey();
 			backup.setHref("/export/backupService?backup=" + blobKey);

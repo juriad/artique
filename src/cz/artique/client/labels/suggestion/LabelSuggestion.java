@@ -2,6 +2,7 @@ package cz.artique.client.labels.suggestion;
 
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -17,6 +18,9 @@ import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -26,6 +30,14 @@ import cz.artique.shared.model.label.Label;
 public class LabelSuggestion extends Composite
 		implements HasSelectionHandlers<SuggestionResult> {
 
+	interface MyResources extends ClientBundle {
+		@NotStrict
+		@Source("LabelSuggestion.css")
+		CssResource style();
+	}
+
+	private static final MyResources res = GWT.create(MyResources.class);
+
 	private final TextBox textBox;
 	private final SuggestionPopup popup;
 
@@ -33,6 +45,7 @@ public class LabelSuggestion extends Composite
 	private LabelsPool pool;
 
 	public LabelSuggestion(LabelsPool pool, int maxItems) {
+		res.style().ensureInjected();
 		this.pool = pool;
 
 		FlowPanel panel = new FlowPanel();

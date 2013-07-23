@@ -5,7 +5,9 @@ import java.util.List;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.CellList.Style;
@@ -19,6 +21,14 @@ import com.google.gwt.view.client.SingleSelectionModel;
 public class ScrollableCellList<T> extends Composite
 		implements HasSelectionChangedHandlers {
 
+	interface MyResources extends ClientBundle {
+		@NotStrict
+		@Source("ScrollableCellList.css")
+		CssResource style();
+	}
+
+	private static final MyResources res = GWT.create(MyResources.class);
+
 	private final ScrollPanel scroll;
 
 	private final CellList<T> cellList;
@@ -26,6 +36,7 @@ public class ScrollableCellList<T> extends Composite
 	private final SingleSelectionModel<T> selectionModel;
 
 	public ScrollableCellList(final Cell<T> cell) {
+		res.style().ensureInjected();
 		ScrollableCellListResource.INSTANCE.cellListStyle().ensureInjected();
 		scroll = new ScrollPanel();
 		initWidget(scroll);
@@ -42,6 +53,7 @@ public class ScrollableCellList<T> extends Composite
 	@UiChild(tagname = "emptyListWidget", limit = 1)
 	public void addEmptyListWidget(Widget widget) {
 		cellList.setEmptyListWidget(widget);
+		widget.addStyleName("emptyList");
 	}
 
 	public HandlerRegistration addSelectionChangeHandler(Handler handler) {
@@ -84,7 +96,7 @@ public class ScrollableCellList<T> extends Composite
 		/**
 		 * The path to the default CSS styles used by this resource.
 		 */
-		String DEFAULT_CSS = "ScrollableCellList.css";
+		String DEFAULT_CSS = "ModifiedCellList.css";
 
 		/**
 		 * Applied to even items.

@@ -2,6 +2,10 @@ package cz.artique.client.messages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.CssResource.NotStrict;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -13,14 +17,29 @@ import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.common.CloseButton;
 
-public class MessageBubbleWidget extends Composite {
+public class MessageWidget extends Composite {
+	interface MyResources extends ClientBundle {
+		@NotStrict
+		@Source("MessageWidget.css")
+		CssResource style();
 
-	private static MessageBubbleUiBinder uiBinder = GWT
-		.create(MessageBubbleUiBinder.class);
+		@Source("../icons/dialog-error.png")
+		ImageResource error();
+
+		@Source("../icons/dialog-warning.png")
+		ImageResource warning();
+
+		@Source("../icons/dialog-information.png")
+		ImageResource info();
+	}
+
+	private static final MyResources res = GWT.create(MyResources.class);
+
+	private static MessageUiBinder uiBinder = GWT.create(MessageUiBinder.class);
 	private final Message message;
 
 	@UiField(provided = true)
-	CloseButton<MessageBubbleWidget> closeButton;
+	CloseButton<MessageWidget> closeButton;
 
 	@UiField
 	Label messageLabel;
@@ -28,12 +47,12 @@ public class MessageBubbleWidget extends Composite {
 	@UiField
 	FlowPanel panel;
 
-	interface MessageBubbleUiBinder
-			extends UiBinder<Widget, MessageBubbleWidget> {}
+	interface MessageUiBinder extends UiBinder<Widget, MessageWidget> {}
 
-	public MessageBubbleWidget(Message message) {
+	public MessageWidget(Message message) {
+		res.style().ensureInjected();
 		this.message = message;
-		closeButton = new CloseButton<MessageBubbleWidget>(this);
+		closeButton = new CloseButton<MessageWidget>(this);
 		initWidget(uiBinder.createAndBindUi(this));
 
 		messageLabel.setText(message.getMessageBody());
@@ -49,14 +68,14 @@ public class MessageBubbleWidget extends Composite {
 			new Timer() {
 				@Override
 				public void run() {
-					MessageBubbleWidget.this.removeFromParent();
+					MessageWidget.this.removeFromParent();
 				}
 			}.schedule(message.getMessageType().getTimeout());
 		}
 	}
 
 	@UiHandler(value = "closeButton")
-	protected void closeClosed(CloseEvent<MessageBubbleWidget> e) {
+	protected void closeClosed(CloseEvent<MessageWidget> e) {
 		this.removeFromParent();
 	}
 

@@ -1,0 +1,23 @@
+.label {
+	margin-left: 0.3em;
+	border: 1px solid transparent;
+	border-radius: 2px;
+}
+
+.label:hover {
+	border: 1px solid grey;
+}
+
+.label a {
+	padding: 0.1em 0.3em;
+	text-decoration: none;
+	padding-right: 0.1em;
+}
+
+.label:hover .closeButton {
+	color: #666;
+}
+
+.label:hover .closeButton:hover {
+	color: red;
+}

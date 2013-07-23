@@ -1,0 +1,19 @@
+.cellListKeyboardSelectedItem {
+	background: transparent;
+}
+
+.cellListSelectedItem {
+	background: #73c8f1;
+	height: auto;
+	overflow: visible;
+}
+
+.cellListWidget {
+	
+}
+
+.cellListOddItem,.cellListEvenItem {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	cursor: pointer;
+}

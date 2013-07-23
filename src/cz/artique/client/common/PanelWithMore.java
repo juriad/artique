@@ -3,27 +3,16 @@ package cz.artique.client.common;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
 public class PanelWithMore<E extends IsWidget & Comparable<E>>
-		extends FlowPanel {
-	private boolean expanded;
+		extends HoverPanel {
 	private Widget extraWidget;
 
 	public PanelWithMore() {
 		super();
-		setStylePrimaryName("panelWithMore");
-	}
-
-	public void setExpanded(boolean expanded) {
-		this.expanded = expanded;
-		setStyleDependentName("expanded", expanded);
-	}
-
-	public boolean isExpanded() {
-		return expanded;
+		addStyleName("panelWithMore");
 	}
 
 	@SuppressWarnings("unchecked")

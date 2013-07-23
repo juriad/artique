@@ -1,9 +1,13 @@
 package cz.artique.client.labels;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.HasCloseHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
@@ -16,6 +20,13 @@ import cz.artique.shared.model.label.LabelAppearance;
 public class LabelWidget extends Composite
 		implements HasCloseHandlers<LabelWidget>, Comparable<LabelWidget>,
 		HasEnabled {
+	interface MyResources extends ClientBundle {
+		@NotStrict
+		@Source("LabelWidget.css")
+		CssResource style();
+	}
+
+	private static final MyResources res = GWT.create(MyResources.class);
 
 	public static final ArtiqueLabelWidgetFactory FACTORY =
 		new ArtiqueLabelWidgetFactory();
@@ -37,6 +48,7 @@ public class LabelWidget extends Composite
 	private final LabelRenderer renderer = new LabelRenderer(false);
 
 	public LabelWidget(final Label label) {
+		res.style().ensureInjected();
 		this.label = label;
 		panel = new InlineFlowPanel();
 		initWidget(panel);

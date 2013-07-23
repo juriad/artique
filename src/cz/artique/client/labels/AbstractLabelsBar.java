@@ -11,7 +11,6 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.common.AddButton;
@@ -98,11 +97,9 @@ public abstract class AbstractLabelsBar extends Composite {
 	public AbstractLabelsBar(final LabelsPool pool) {
 		this.pool = pool;
 		panel = new PanelWithMore<LabelWidget>();
-		FlowPanel flowPanel = new FlowPanel();
-		initWidget(flowPanel);
-		flowPanel.add(panel);
+		initWidget(panel);
 
-		setStylePrimaryName("labelsBar");
+		addStyleName("labelsBar");
 
 		addLabel = AddButton.FACTORY.createWidget(this);
 		panel.setExtraWidget(addLabel);

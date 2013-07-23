@@ -1,19 +1,12 @@
-.cellListKeyboardSelectedItem {
-	background: transparent;
+.scrollableCellList {
+	max-width: 15em;
+	max-height: 15em;
+	min-width: 8em;
+	min-height: 8em;
+	background: white;
 }
 
-.cellListSelectedItem {
-	background: #73c8f1;
-	height: auto;
-	overflow: visible;
-}
-
-.cellListWidget {
-	
-}
-
-.cellListOddItem,.cellListEvenItem {
-	padding-left: 0.5em;
-	padding-right: 0.5em;
-	cursor: pointer;
+.scrollableCellList .emptyList {
+	padding: 0.5em;
+	text-align: center;
 }

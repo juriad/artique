@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:al="urn:import:cz.artique.client.listing"
 	xmlns:ah="urn:import:cz.artique.client.hierarchy.tree" xmlns:m="urn:import:cz.artique.client.messages"
-	xmlns:a="urn:import:cz.artique.client">
+	xmlns:a="urn:import:cz.artique.client" xmlns:l="urn:import:cz.artique.client.leftPanel">
 
 	<ui:with field='cons' type='cz.artique.client.ArtiqueConstants' />
 
@@ -22,38 +22,38 @@
 			<m:Messenger ui:field="messenger" />
 		</g:layer>
 		<g:layer left="0px" width="7em">
-			<g:StackLayoutPanel unit="EM" ui:field="stack">
-				<g:stack>
-					<g:header size="3">
+			<l:LeftPanel unit="EM" ui:field="stack">
+				<l:stack>
+					<l:header size="3">
 						<ui:text from='{cons.options}' />
-					</g:header>
-					<a:OptionPanel ui:field="optionPanel" />
-				</g:stack>
-				<g:stack>
-					<g:header size="3">
+					</l:header>
+					<l:OptionPanel ui:field="optionPanel" />
+				</l:stack>
+				<l:stack>
+					<l:header size="3">
 						<ui:text from='{cons.sources}' />
-					</g:header>
+					</l:header>
 					<ah:SourcesTree ui:field="sources" />
-				</g:stack>
-				<g:stack>
-					<g:header size="3">
+				</l:stack>
+				<l:stack>
+					<l:header size="3">
 						<ui:text from='{cons.filters}' />
-					</g:header>
+					</l:header>
 					<ah:ListFiltersTree ui:field="filters" />
-				</g:stack>
-				<!-- <g:stack> -->
-				<!-- <g:header size="3"> -->
+				</l:stack>
+				<!-- <l:stack> -->
+				<!-- <l:header size="3"> -->
 				<!-- <ui:text from='{cons.history}' /> -->
-				<!-- </g:header> -->
+				<!-- </l:header> -->
 				<!-- <ah:HistoryTree ui:field="history" /> -->
-				<!-- </g:stack> -->
-				<g:stack>
-					<g:header size="3">
+				<!-- </l:stack> -->
+				<l:stack>
+					<l:header size="3">
 						<ui:text from='{cons.messages}' />
-					</g:header>
+					</l:header>
 					<ah:MessagesTree ui:field="messages" />
-				</g:stack>
-			</g:StackLayoutPanel>
+				</l:stack>
+			</l:LeftPanel>
 		</g:layer>
 		<g:layer left="7em" right="0px">
 			<al:ArtiqueList ui:field="list" styleName="{style.main}" />

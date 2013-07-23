@@ -58,13 +58,13 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 
 	private String serialized;
 
+	private final HyperlinkImpl impl = GWT.create(HyperlinkImpl.class);
+
 	public UserSourceWidget(Hierarchy<UserSource> hierarchy) {
 		super(hierarchy);
 		anchor =
 			createAnchor(getPanel(), hierarchy.getName(), null,
 				new ClickHandler() {
-					final HyperlinkImpl impl = GWT.create(HyperlinkImpl.class);
-
 					public void onClick(ClickEvent event) {
 						if (impl.handleAsClick(Event.as(event.getNativeEvent()))) {
 							ListFilter baseListFilter =

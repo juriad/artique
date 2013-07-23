@@ -1,0 +1,48 @@
+/* dialogs */
+.gwt-ToggleButton,.gwt-PushButton {
+	display: inline-block;
+}
+
+.gwt-ToggleButton-down,.gwt-ToggleButton-down-hovering {
+	border: 1px inset #222;
+}
+
+.gwt-ToggleButton-up,.gwt-ToggleButton-up-hovering {
+	border: 1px outset #222;
+}
+
+.gwt-ToggleButton-down-hovering,.gwt-ToggleButton-up-hovering {
+	border-color: black;
+}
+
+.gwt-PushButton-down,.gwt-PushButton-down-hovering {
+	border: 1px inset #222;
+}
+
+.gwt-PushButton-up,.gwt-PushButton-up-hovering {
+	border: 1px outset #222;
+}
+
+.gwt-PushButton-down-hovering,.gwt-PushButton-up-hovering {
+	border-color: black;
+}
+
+.gwt-Button {
+	border: 1px outset #222;
+}
+
+.gwt-Button:hover {
+	border-color: black;
+}
+
+.colorInput {
+	cursor: pointer;
+}
+
+.gwt-DisclosurePanel .content {
+	border-left: 3px solid #222;
+}
+
+.gwt-DisclosurePanel .header:hover {
+	color: red;
+}

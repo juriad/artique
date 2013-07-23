@@ -1,0 +1,78 @@
+/* hierarchy */
+.hierarchyWidget .hiddenAction {
+	visibility: hidden;
+	vertical-align: middle;
+	margin-left: 1em;
+	cursor: pointer;
+	opacity: 0.3;
+	filter: alpha(opacity \= 30);
+}
+
+.hierarchyWidget .hiddenAction:hover {
+	opacity: 1;
+	filter: alpha(opacity \= 100);
+}
+
+.hierarchyWidget:hover .hiddenAction {
+	visibility: visible;
+}
+
+.hierarchyWidget,.hierarchyWidget a {
+	color: white;
+	text-decoration: none;
+	white-space: normal;
+}
+
+.hierarchyWidget a {
+	display: inline-block;
+	padding: 0.5em;
+	min-width: 3em;
+}
+
+.hierarchyWidget a:hover {
+	color: red;
+}
+
+.hierarchyWidget-selected a {
+	color: red;
+}
+
+.hierarchyWidget:hover {
+	background: #444;
+}
+
+.hierarchyWidget:hover {
+	border-left: 2000px solid #444;
+	margin-left: -2000px;
+}
+
+.hierarchyWidget .message {
+	color: black;
+	margin-top: 0.5em;
+	cursor: pointer;
+	display: inline-block;
+}
+
+.hierarchyTree table {
+	width: 100%;
+	table-layout: fixed;
+	border-spacing: 0px;
+}
+
+.hierarchyTree div {
+	padding-right: 0px !IMPORTANT;
+	padding-top: 0px !IMPORTANT;
+	padding-bottom: 0px !IMPORTANT;
+}
+
+.hierarchyTree table td {
+	padding: 0px;
+}
+
+.hierarchyTree table td:first-child {
+	width: 16px;
+}
+
+.hierarchyTree table td:first-child img {
+	cursor: pointer;
+}

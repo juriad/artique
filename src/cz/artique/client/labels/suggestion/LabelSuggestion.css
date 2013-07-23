@@ -1,0 +1,27 @@
+.labelSuggestionBox {
+	margin-left: 0.3em;
+}
+
+.labelSuggestion {
+	position: relative;
+	display: inline-block;
+}
+
+.labelSuggestionPopup {
+	margin-left: 0.5em;
+	position: absolute;
+	z-index: 20;
+	border: 1px solid #73c8f1;
+	line-height: 1.2em;
+	background-color: white;
+}
+
+.suggestionLabel {
+	padding: 0.1em 0.5em;
+	display: block;
+	cursor: pointer;
+}
+
+.suggestionLabel-selected {
+	background-color: #73c8f1;
+}

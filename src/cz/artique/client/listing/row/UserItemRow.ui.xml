@@ -6,13 +6,19 @@
 	<g:VerticalPanel ui:field="row" stylePrimaryName="row">
 		<g:cell>
 			<g:FlowPanel ui:field="header" stylePrimaryName="rowHeader">
-				<l:UserItemLabelsBar ui:field="labels" />
-				<g:Label ui:field="source" stylePrimaryName="itemSource" />
-				<g:Anchor ui:field="link" target="_blank" stylePrimaryName="itemLink" />
+				<l:UserItemLabelsBar ui:field="labels"
+					addStyleNames="rowHeaderLeft itemLabels" width="15em" />
+				<c:HoverPanel addStyleNames="rowHeaderLeft itemSource"
+					width="6em">
+					<g:Anchor ui:field="source" />
+				</c:HoverPanel>
+				<g:Anchor ui:field="link" target="_blank"
+					stylePrimaryName="rowHeaderLeft itemLink rowHeaderIcon" />
 
-				<g:Label ui:field="added" stylePrimaryName="itemDate" />
+				<g:Label ui:field="added" stylePrimaryName="rowHeaderRight itemDate"
+					width="10em" />
 				<g:Anchor ui:field="backup" target="_blank"
-					stylePrimaryName="itemBackup" />
+					stylePrimaryName="rowHeaderRight itemBackup rowHeaderIcon" />
 
 				<g:Label ui:field="title" stylePrimaryName="itemTitle" />
 			</g:FlowPanel>

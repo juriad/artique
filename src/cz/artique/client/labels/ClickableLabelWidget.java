@@ -1,7 +1,10 @@
 package cz.artique.client.labels;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.impl.HyperlinkImpl;
 
 import cz.artique.client.history.CachingHistoryUtils;
 import cz.artique.client.history.HistoryManager;
@@ -22,6 +25,8 @@ public class ClickableLabelWidget extends LabelWidget {
 		}
 	}
 
+	private final HyperlinkImpl impl = GWT.create(HyperlinkImpl.class);
+
 	public ClickableLabelWidget(final Label label) {
 		super(label);
 
@@ -34,7 +39,8 @@ public class ClickableLabelWidget extends LabelWidget {
 
 		nameLabel.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				if (isEnabled()) {
+				if (isEnabled()
+					&& impl.handleAsClick(Event.as(event.getNativeEvent()))) {
 					Filter filter =
 						CachingHistoryUtils.UTILS.getFilterForLabel(label);
 					ListFilter listFilter =

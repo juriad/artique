@@ -1,0 +1,59 @@
+.universalDialog .dialogTopLeft,.universalDialog .dialogTopRight {
+	background: #222;
+}
+
+.universalDialog .dialogBottomLeft,.universalDialog .dialogBottomCenter,.universalDialog .dialogBottomRight
+	{
+	background: #222;
+}
+
+.universalDialog .dialogMiddleLeft,.universalDialog .dialogMiddleRight {
+	background: #222;
+}
+
+.universalDialog .dialogTopLeftInner,.universalDialog .dialogTopRightInner
+	{
+	width: 5px;
+}
+
+.universalDialog .dialogBottomLeftInner,.universalDialog .dialogBottomRightInner
+	{
+	width: 5px;
+	height: 5px;
+}
+
+.universalDialog .Caption {
+	background: #222;
+	color: red;
+	font-weight: bold;
+	border-color: #222;
+	cursor: move;
+	line-height: 2em;
+	padding-left: 1em;
+}
+
+.universalDialog .dialogMiddleCenter {
+	background: #ddd;
+	padding: 0;
+}
+
+.universalDialog .dialogWidget {
+	padding: 1em;
+}
+
+.universalDialog .dialogButtons {
+	background: none repeat scroll 0 0 #666;
+	padding: 0.5em;
+	text-align: right;
+}
+
+.universalDialog .dialogButton {
+	margin-left: 0.3em;
+	background: #222;
+	color: white;
+	border-color: #222;
+}
+
+.universalDialog .dialogButton:hover {
+	border-color: red;
+}

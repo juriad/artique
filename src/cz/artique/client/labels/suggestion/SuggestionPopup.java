@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ValueLabel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import cz.artique.client.labels.LabelRenderer;
 import cz.artique.shared.model.label.Label;
 
 public class SuggestionPopup extends Composite
@@ -61,7 +62,7 @@ public class SuggestionPopup extends Composite
 		panel = new VerticalPanel();
 		initWidget(panel);
 		for (int i = 0; i < maxItems; i++) {
-			ValueLabel<Label> l = LabelSuggestionFactory.FACTORY.createLabel();
+			ValueLabel<Label> l = createLabel();
 			l.setVisible(false);
 			l.addDomHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
@@ -84,7 +85,7 @@ public class SuggestionPopup extends Composite
 
 		moreLabels = new com.google.gwt.user.client.ui.Label();
 		moreLabels.setVisible(false);
-		moreLabels.addStyleName("labelSuggestionMore");
+		moreLabels.addStyleName("labelSuggestionPopupMore");
 		panel.add(moreLabels);
 	}
 
@@ -201,5 +202,13 @@ public class SuggestionPopup extends Composite
 	public HandlerRegistration addSelectionHandler(
 			SelectionHandler<Label> handler) {
 		return addHandler(handler, SelectionEvent.getType());
+	}
+
+	private final LabelRenderer labelRenderer = new LabelRenderer(true);
+
+	public ValueLabel<Label> createLabel() {
+		ValueLabel<Label> valueLabel = new ValueLabel<Label>(labelRenderer);
+		valueLabel.setStylePrimaryName("labelSuggestionLabel");
+		return valueLabel;
 	}
 }

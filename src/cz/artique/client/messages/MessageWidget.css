@@ -1,0 +1,45 @@
+.message {
+	padding: 0.5em;
+}
+
+.messages .message {
+	height: 3em;
+	margin: 0.5em;
+}
+
+.message .closeButton {
+	font-size: medium;
+	position: static;
+	float: right;
+}
+
+.message .messageContent {
+	margin-right: 1em;
+	padding: 0.3em 1em;
+}
+
+.message-INFO {
+	background: #ffff73;
+	border: 1px solid #ffff20;
+}
+
+.message-WARN {
+	background: #7373ff;
+	border: 1px solid #2020ff;
+}
+
+.message-ERROR {
+	background: #ff7373;
+	border: 1px solid #ff2020;
+}
+
+.message-FAILURE {
+	background: black;
+	color: red;
+	border: 1px solid grey;
+}
+
+.message-DEBUG {
+	background: #ddd;
+	border: 1px solid lightgrey;
+}

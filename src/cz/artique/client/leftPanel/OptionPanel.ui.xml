@@ -5,7 +5,7 @@
 	<ui:with field='cons' type='cz.artique.client.ArtiqueConstants' />
 
 	<g:HTMLPanel ui:field="panel" styleName="optionPanel">
-		<div class="optionList">
+		<div class="optionList optionPanelOption">
 			<div class="optionPanelHeader">
 				»
 				<ui:text from="{cons.optionList}" />
@@ -24,7 +24,7 @@
 				</g:Button>
 			</div>
 		</div>
-		<div class="optionConfig">
+		<div class="optionConfig optionPanelOption">
 			<div class="optionPanelHeader">
 				»
 				<ui:text from="{cons.optionConfig}" />
@@ -39,7 +39,7 @@
 				</g:Button>
 			</div>
 		</div>
-		<div class="optionUser">
+		<div class="optionUser optionPanelOption">
 			<div class="optionPanelHeader">
 				»
 				<ui:text from="{cons.optionUser}" />
