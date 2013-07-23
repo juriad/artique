@@ -29,7 +29,8 @@ public class XMLSource extends Source implements Serializable, GenKey {
 	/**
 	 * Constructs XMLSource from URL.
 	 * 
-	 * @param url URL of source
+	 * @param url
+	 *            URL of source
 	 */
 	public XMLSource(Link url) {
 		super(url);

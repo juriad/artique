@@ -2,7 +2,7 @@ package cz.artique.server.service;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URI;
+import java.net.URL;
 import java.nio.channels.Channels;
 import java.util.List;
 
@@ -48,16 +48,16 @@ public class BackupService extends Fetcher {
 			throw new CrawlerException("Missing url.");
 		}
 
-		URI uri;
+		URL url;
 		try {
-			uri = getURI(userItem.getItemObject().getUrl());
+			url = getURL(userItem.getItemObject().getUrl());
 		} catch (CrawlerException e) {
 			throw e;
 		}
 
 		Document doc;
 		try {
-			doc = getDocument(uri);
+			doc = getDocument(url);
 		} catch (CrawlerException e) {
 			throw e;
 		}

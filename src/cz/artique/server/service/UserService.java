@@ -11,8 +11,8 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.artique.server.meta.user.UserInfoMeta;
-import cz.artique.server.utils.ServerUtils;
 import cz.artique.server.utils.KeyGen;
+import cz.artique.server.utils.ServerUtils;
 import cz.artique.shared.model.user.UserInfo;
 
 public class UserService {

@@ -38,6 +38,6 @@ public class SuggestionResult {
 	}
 
 	public boolean hasValue() {
-		return isExisting()|| isNewValue();
+		return isExisting() || isNewValue();
 	}
 }

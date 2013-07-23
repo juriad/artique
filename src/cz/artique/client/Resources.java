@@ -53,7 +53,7 @@ public interface Resources extends ClientBundle {
 
 	@Source("icons/lock.png")
 	ImageResource backup();
-	
+
 	@Source("mainBackground.png")
 	ImageResource mainBackground();
 

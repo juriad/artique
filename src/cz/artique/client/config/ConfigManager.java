@@ -12,9 +12,9 @@ import cz.artique.client.manager.Manager;
 import cz.artique.client.messages.MessageType;
 import cz.artique.client.messages.ValidationMessage;
 import cz.artique.client.service.ClientConfigService;
-import cz.artique.client.service.ClientConfigServiceAsync;
 import cz.artique.client.service.ClientConfigService.GetClientConfigs;
 import cz.artique.client.service.ClientConfigService.SetClientConfigs;
+import cz.artique.client.service.ClientConfigServiceAsync;
 import cz.artique.shared.model.config.client.ClientConfigKey;
 import cz.artique.shared.model.config.client.ClientConfigValue;
 

@@ -53,13 +53,13 @@ public interface LabelsConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("No label exists.")
 	String noLabelExists();
-	
+
 	@DefaultStringValue("No")
 	String markedNo();
 
 	@DefaultStringValue("Click to mark")
 	String markedNoHover();
-	
+
 	@DefaultStringValue("Yes")
 	String markedYes();
 

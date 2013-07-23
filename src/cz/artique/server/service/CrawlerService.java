@@ -9,6 +9,7 @@ import cz.artique.server.crawler.PageChangeCrawler;
 import cz.artique.server.crawler.WebSiteCrawler;
 import cz.artique.server.crawler.XMLCrawler;
 import cz.artique.shared.model.config.server.ServerConfigKey;
+import cz.artique.shared.model.source.CheckStat;
 import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.PageChangeSource;
 import cz.artique.shared.model.source.Source;
@@ -45,15 +46,17 @@ public class CrawlerService {
 		Date nextCheck;
 		if (count < 0) {
 			int failedInterval =
-				ConfigService.CONFIG_SERVICE.getConfig(
-					ServerConfigKey.CRAWLER_CHECK_INTERVAL_FAILED).<Integer> get();
+				ConfigService.CONFIG_SERVICE
+					.getConfig(ServerConfigKey.CRAWLER_CHECK_INTERVAL_FAILED)
+					.<Integer> get();
 			nextCheck =
-				new Date((long) (new Date().getTime() + failedInterval
-					* source.getErrorSequence()));
+				new Date(new Date().getTime() + failedInterval
+					* source.getErrorSequence());
 		} else if (source.getLastCheck() == null) {
 			int firstInterval =
-				ConfigService.CONFIG_SERVICE.getConfig(
-					ServerConfigKey.CRAWLER_CHECK_INTERVAL_FIRST).<Integer> get();
+				ConfigService.CONFIG_SERVICE
+					.getConfig(ServerConfigKey.CRAWLER_CHECK_INTERVAL_FIRST)
+					.<Integer> get();
 			nextCheck =
 				new Date((long) (new Date().getTime() + firstInterval
 					* calcInterval(count)));
@@ -75,6 +78,37 @@ public class CrawlerService {
 		source.setNextCheck(nextCheck);
 	}
 
+	/**
+	 * Saves a new {@link CheckStat} describing check when it was successful.
+	 * 
+	 * @param items
+	 *            number of items acquired
+	 */
+	protected void writeStat(Source s, int items) {
+		CheckStat stat = new CheckStat();
+		stat.setProbeDate(new Date());
+		stat.setSource(s.getKey());
+		stat.setItemsAcquired(items);
+		SourceService ss = new SourceService();
+		ss.addStat(stat);
+	}
+
+	/**
+	 * Saves a new {@link CheckStat} describing this check when it failed.
+	 * 
+	 * @param t
+	 *            exception which occurred while crawling
+	 */
+	protected void writeStat(Source s, Throwable t) {
+		CheckStat stat = new CheckStat();
+		stat.setProbeDate(new Date());
+		stat.setSource(s.getKey());
+		stat.setItemsAcquired(0);
+		stat.setError(t.getLocalizedMessage());
+		SourceService ss = new SourceService();
+		ss.addStat(stat);
+	}
+
 	public boolean crawl(Source source) {
 		try {
 			Crawler<? extends Source> crawler = createCrawler(source);
@@ -82,10 +116,12 @@ public class CrawlerService {
 			source.setErrorSequence(0);
 			setNextCheck(source, count);
 			source.setLastCheck(new Date());
+			writeStat(source, count);
 			return true;
 		} catch (CrawlerException e) {
 			source.setErrorSequence(source.getErrorSequence() + 1);
 			setNextCheck(source, -1);
+			writeStat(source, e);
 			return false;
 		}
 	}

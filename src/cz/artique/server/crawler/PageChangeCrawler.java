@@ -1,13 +1,9 @@
 package cz.artique.server.crawler;
 
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
-import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import com.google.appengine.api.datastore.Text;
@@ -15,10 +11,10 @@ import com.google.appengine.api.datastore.Text;
 import cz.artique.server.crawler.DiffMatchPatch.Diff;
 import cz.artique.server.service.ConfigService;
 import cz.artique.server.service.UserSourceService;
+import cz.artique.server.utils.ServerTextContent;
 import cz.artique.server.utils.ServerUtils;
 import cz.artique.shared.model.config.server.ServerConfigKey;
 import cz.artique.shared.model.item.ContentType;
-import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.PageChangeItem;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.source.PageChangeCrawlerData;
@@ -48,55 +44,19 @@ public class PageChangeCrawler
 	}
 
 	/**
-	 * Downloads the page specified by {@link Source#getUrl()}, builds DOM tree,
-	 * filters the page by {@link Region} and compares content text with older
-	 * version. If the contens are different, a new {@link Item} will be added.
+	 * Compares content text with older version. If the contents are different,
+	 * a new {@link PageChangeItem} will be added.
 	 * 
-	 * @see cz.artique.server.crawler.Crawler#fetchItems()
+	 * @param region
+	 *            region the filtered page is restrained to
+	 * @param filteredPage
+	 *            restrained page by region
+	 * @param list
+	 *            list of user sources watching region
+	 * @return number of imported items
 	 */
-	public int fetchItems() throws CrawlerException {
-		URI uri;
-		try {
-			uri = getURI(getSource().getUrl());
-		} catch (CrawlerException e) {
-			writeStat(e);
-			throw e;
-		}
-
-		Document doc;
-		try {
-			doc = getDocument(uri);
-		} catch (CrawlerException e) {
-			writeStat(e);
-			throw e;
-		}
-
-		List<UserSource> userSources = getUserSources();
-		Map<Region, List<UserSource>> byRegion =
-			new HashMap<Region, List<UserSource>>();
-		for (UserSource userSource : userSources) {
-			if (userSource.getRegionObject() != null) {
-				Region region = userSource.getRegionObject();
-				if (!byRegion.containsKey(region)) {
-					byRegion.put(region, new ArrayList<UserSource>());
-				}
-				byRegion.get(region).add(userSource);
-			}
-		}
-
-		int count = 0;
-		for (Region region : byRegion.keySet()) {
-			Document doc2 = doc.clone();
-			Elements filteredPage = filterPage(region, doc2);
-			int added =
-				handleByRegion(region, filteredPage, byRegion.get(region));
-			count += added;
-		}
-
-		return count;
-	}
-
-	private int handleByRegion(Region region, Elements filteredPage,
+	@Override
+	protected int handleByRegion(Region region, Elements filteredPage,
 			List<UserSource> list) {
 		UserSourceService uss = new UserSourceService();
 
@@ -116,7 +76,7 @@ public class PageChangeCrawler
 
 		int added = 0;
 
-		String newContent = filteredPage.text();
+		String newContent = ServerTextContent.asPlainText(filteredPage);
 		if (data != null) {
 			String oldContent = data.getContent().getValue();
 			data.setContent(new Text(newContent));

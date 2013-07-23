@@ -19,10 +19,10 @@ import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
 import cz.artique.client.messages.ValidationMessage;
 import cz.artique.client.service.ClientItemService;
-import cz.artique.client.service.ClientItemServiceAsync;
 import cz.artique.client.service.ClientItemService.AddManualItem;
 import cz.artique.client.service.ClientItemService.GetItems;
 import cz.artique.client.service.ClientItemService.UpdateItems;
+import cz.artique.client.service.ClientItemServiceAsync;
 import cz.artique.shared.items.ChangeSet;
 import cz.artique.shared.items.ListingRequest;
 import cz.artique.shared.items.ListingResponse;
@@ -246,8 +246,7 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 		}
 	}
 
-	public HandlerRegistration addModifiedHandler(
-			final ModifiedHandler handler) {
+	public HandlerRegistration addModifiedHandler(final ModifiedHandler handler) {
 		handlers.add(handler);
 		return new HandlerRegistration() {
 			public void removeHandler() {

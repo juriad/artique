@@ -10,8 +10,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import cz.artique.client.utils.SortedList;
 import cz.artique.shared.utils.HasHierarchy;
 
-public class InnerNode<E extends HasHierarchy>
-		implements Hierarchy<E> {
+public class InnerNode<E extends HasHierarchy> implements Hierarchy<E> {
 
 	private final String name;
 	private final Hierarchy<E> parent;

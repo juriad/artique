@@ -110,7 +110,9 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 
 			if (hierarchy.getParent() == null) {
 				// root node
-				anchor.setText(I18n.getHierarchyTreeConstants().sourceRootText());
+				anchor.setText(I18n
+					.getHierarchyTreeConstants()
+					.sourceRootText());
 				final Image showHideDisabled = new Image();
 				getPanel().add(showHideDisabled);
 

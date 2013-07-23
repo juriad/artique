@@ -79,7 +79,7 @@ public class SuggestionPopup extends Composite
 			valueLabels.add(l);
 			panel.add(l);
 		}
-		
+
 		setStylePrimaryName("labelSuggestionPopup");
 
 		moreLabels = new com.google.gwt.user.client.ui.Label();
@@ -175,7 +175,9 @@ public class SuggestionPopup extends Composite
 		}
 
 		if (oldFocused >= 0) {
-			valueLabels.get(oldFocused).setStyleDependentName("selected", false);
+			valueLabels
+				.get(oldFocused)
+				.setStyleDependentName("selected", false);
 		}
 
 		if (newFocused >= 0) {

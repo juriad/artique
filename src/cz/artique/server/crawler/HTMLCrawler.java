@@ -1,18 +1,20 @@
 package cz.artique.server.crawler;
 
-import java.util.HashSet;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import cz.artique.server.service.ItemService;
 import cz.artique.shared.model.item.Item;
-import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.source.HTMLSource;
 import cz.artique.shared.model.source.Region;
+import cz.artique.shared.model.source.Source;
+import cz.artique.shared.model.source.UserSource;
 
 /**
  * Abstract base for crawlers of {@link HTMLSource}s. Contains methods which are
@@ -31,6 +33,45 @@ public abstract class HTMLCrawler<E extends HTMLSource, F extends Item>
 	}
 
 	/**
+	 * Downloads the page specified by {@link Source#getUrl()}, builds DOM tree,
+	 * filters the page by {@link Region}s and calls
+	 * {@link #handleByRegion(Region, Elements, List)}
+	 * 
+	 * @see cz.artique.server.crawler.Crawler#fetchItems()
+	 */
+	public int fetchItems() throws CrawlerException {
+		URL url = getURL(getSource().getUrl());
+		Document doc = getDocument(url);
+
+		List<UserSource> userSources = getUserSources();
+		Map<Region, List<UserSource>> byRegion =
+			new HashMap<Region, List<UserSource>>();
+		for (UserSource userSource : userSources) {
+			if (userSource.getRegionObject() != null) {
+				Region region = userSource.getRegionObject();
+				if (!byRegion.containsKey(region)) {
+					byRegion.put(region, new ArrayList<UserSource>());
+				}
+				byRegion.get(region).add(userSource);
+			}
+		}
+
+		int count = 0;
+		for (Region region : byRegion.keySet()) {
+			Document doc2 = doc.clone();
+			Elements filteredPage = filterPage(region, doc2);
+			int added =
+				handleByRegion(region, filteredPage, byRegion.get(region));
+			count += added;
+		}
+
+		return count;
+	}
+
+	protected abstract int handleByRegion(Region region, Elements filteredPage,
+			List<UserSource> list);
+
+	/**
 	 * Filters document doc by region and returns only matched elements.
 	 * 
 	 * @param region
@@ -39,7 +80,7 @@ public abstract class HTMLCrawler<E extends HTMLSource, F extends Item>
 	 *            document to filter
 	 * @return matched elements
 	 */
-	protected Elements filterPage(Region region, Document doc) {
+	private Elements filterPage(Region region, Document doc) {
 		String positive = region.getPositiveSelector();
 		String negative = region.getNegativeSelector();
 		Elements positiveElements;
@@ -70,20 +111,5 @@ public abstract class HTMLCrawler<E extends HTMLSource, F extends Item>
 		}
 
 		return simplified;
-	}
-
-	/**
-	 * @param item
-	 *            item
-	 * @return list of users who already have the item
-	 */
-	protected Set<String> getUsersAlreadyHavingItem(F item) {
-		ItemService is = new ItemService();
-		List<UserItem> userItemsForItem = is.getUserItemsForItem(item.getKey());
-		Set<String> users = new HashSet<String>();
-		for (UserItem ui : userItemsForItem) {
-			users.add(ui.getUserId());
-		}
-		return users;
 	}
 }

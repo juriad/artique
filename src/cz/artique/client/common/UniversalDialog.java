@@ -49,6 +49,7 @@ public class UniversalDialog<T> extends StopDialog {
 		return addButton(button);
 	}
 
+	@Override
 	public void setWidget(Widget widget) {
 		content.clear();
 		content.add(widget);

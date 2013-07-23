@@ -24,7 +24,7 @@ public class ClickableLabelWidget extends LabelWidget {
 
 	public ClickableLabelWidget(final Label label) {
 		super(label);
-		
+
 		if (!LabelType.SYSTEM.equals(label.getLabelType())) {
 			Filter filter = CachingHistoryUtils.UTILS.getFilterForLabel(label);
 			String serialized =

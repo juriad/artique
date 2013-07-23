@@ -1,20 +1,19 @@
 package cz.artique.server.crawler;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Link;
 import com.google.appengine.api.datastore.Text;
 
 import cz.artique.server.service.ItemService;
+import cz.artique.server.utils.ServerTextContent;
 import cz.artique.server.utils.ServerUtils;
 import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.Item;
@@ -47,18 +46,22 @@ public class WebSiteCrawler extends HTMLCrawler<WebSiteSource, LinkItem> {
 	/**
 	 * @param page
 	 *            elements matching region
+	 * @param region
+	 *            region the page is restrained to
 	 * @return list of {@link LinkItem}s
 	 */
-	private Map<String, LinkItem> getLinks(Elements page) {
+	private Map<String, LinkItem> getLinks(Elements page, Region region) {
 		Map<String, LinkItem> urls = new HashMap<String, LinkItem>();
 		Elements linkElements = page.select("a");
 
 		for (Element link : linkElements) {
-			String linkHref = link.attr("href");
+			String linkHref = link.attr("abs:href");
 			if (linkHref.isEmpty()) {
 				continue;
 			}
-			urls.put(linkHref, getItem(link));
+			if (!urls.containsKey(linkHref)) {
+				urls.put(linkHref, getItem(link, region));
+			}
 		}
 		return urls;
 	}
@@ -66,93 +69,68 @@ public class WebSiteCrawler extends HTMLCrawler<WebSiteSource, LinkItem> {
 	/**
 	 * @param link
 	 *            link element
+	 * @param region
+	 *            region the page is restrained to
 	 * @return prototype of {@link LinkItem} for link
 	 */
-	private LinkItem getItem(Element link) {
+	private LinkItem getItem(Element link, Region region) {
 		LinkItem item = new LinkItem(getSource());
-		String linkHref = link.attr("href");
-		String linkText = link.text();
+		String linkHref = link.attr("abs:href");
+		String linkText = ServerTextContent.getPlainText(link);
 
-		item.setContent(new Text(link.parent().text()));
-		item.setContentType(ContentType.PLAIN_TEXT);
+		setContent(item, link);
 		item.setTitle(linkText);
 		item.setUrl(new Link(linkHref));
-		item.setHash(getHash(item));
+		item.setHash(getHash(item, region));
 		return item;
+	}
+
+	private void setContent(LinkItem item, Element link) {
+		// TODO nice to have: get content of link item based on
+		item
+			.setContent(new Text(ServerTextContent.getPlainText(link.parent())));
+		item.setContentType(ContentType.PLAIN_TEXT);
 	}
 
 	/**
 	 * @param item
 	 *            item the hash is calculated for
+	 * @param region
+	 *            region the page is restrained to
 	 * @return hash for item
 	 */
-	protected String getHash(Item item) {
+	protected String getHash(Item item, Region region) {
 		String url = item.getUrl().getValue();
-		return ServerUtils.toSHA1(getSource().getUrl().getValue() + "|" + url);
+		return ServerUtils.toSHA1(getSource().getUrl().getValue() + "|"
+			+ KeyFactory.keyToString(region.getKey()) + "|" + url);
 	}
 
 	/**
-	 * Downloads the page specified by {@link Source#getUrl()}, builds DOM tree,
-	 * filters the page by {@link Region} and finds all anchors. For each anchor
-	 * a new {@link LinkItem} is created and added to system if it doesn't
-	 * exist.
+	 * Finds all anchors. For each anchor a new {@link LinkItem} is created and
+	 * added to system if it doesn't exist.
 	 * 
-	 * @see cz.artique.server.crawler.Crawler#fetchItems()
+	 * @param region
+	 *            region the filtered page is restrained to
+	 * @param filteredPage
+	 *            restrained page by region
+	 * @param list
+	 *            list of user sources watching region
+	 * @return number of imported items
 	 */
-	public int fetchItems() throws CrawlerException {
-		URI uri;
-		try {
-			uri = getURI(getSource().getUrl());
-		} catch (CrawlerException e) {
-			writeStat(e);
-			throw e;
-		}
-
-		Document doc;
-		try {
-			doc = getDocument(uri);
-		} catch (CrawlerException e) {
-			writeStat(e);
-			throw e;
-		}
-
-		List<UserSource> userSources = getUserSources();
-
-		Map<String, LinkItem> forItems = new HashMap<String, LinkItem>();
-		Map<String, List<UserSource>> forSources =
-			new HashMap<String, List<UserSource>>();
-		for (UserSource us : userSources) {
-			if (us.getRegionObject() == null) {
-				continue;
-			}
-			Document doc2 = doc.clone();
-			Elements filteredPage = filterPage(us.getRegionObject(), doc2);
-			Map<String, LinkItem> links = getLinks(filteredPage);
-			forItems.putAll(links);
-			for (String link : links.keySet()) {
-				if (!forSources.containsKey(link)) {
-					forSources.put(link, new ArrayList<UserSource>());
-				}
-				forSources.get(link).add(us);
-			}
-		}
-
+	@Override
+	protected int handleByRegion(Region region, Elements filteredPage,
+			List<UserSource> list) {
 		int count = 0;
-		for (String link : forItems.keySet()) {
-			LinkItem item = forItems.get(link);
-			List<UserSource> sources = forSources.get(link);
+		Map<String, LinkItem> links = getLinks(filteredPage, region);
+		for (String link : links.keySet()) {
+			LinkItem item = links.get(link);
 			LinkItem duplicate = createNonDuplicateItem(item);
 			if (duplicate != null) {
-				item = duplicate;
+				continue;
 			}
 
-			Set<String> usersAlreadyHavingItem =
-				getUsersAlreadyHavingItem(item);
 			List<UserItem> userItems = new ArrayList<UserItem>();
-			for (UserSource us : sources) {
-				if (usersAlreadyHavingItem.contains(us.getUserId())) {
-					continue;
-				}
+			for (UserSource us : list) {
 				UserItem userItem = createUserItem(us, item);
 				userItems.add(userItem);
 			}

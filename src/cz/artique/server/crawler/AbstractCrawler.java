@@ -1,7 +1,6 @@
 package cz.artique.server.crawler;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import cz.artique.server.service.BackupService;
@@ -9,8 +8,8 @@ import cz.artique.server.service.ItemService;
 import cz.artique.server.service.SourceService;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;
-import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.CheckStat;
+import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
 
 /**
@@ -35,37 +34,6 @@ public abstract class AbstractCrawler<E extends Source, F extends Item>
 	protected AbstractCrawler(E source) {
 		this.source = source;
 		backupService = new BackupService();
-	}
-
-	/**
-	 * Saves a new {@link CheckStat} describing check when it was successful.
-	 * 
-	 * @param items
-	 *            number of items acquired
-	 */
-	protected void writeStat(int items) {
-		CheckStat s = new CheckStat();
-		s.setProbeDate(new Date());
-		s.setSource(getSource().getKey());
-		s.setItemsAcquired(items);
-		SourceService ss = new SourceService();
-		ss.addStat(s);
-	}
-
-	/**
-	 * Saves a new {@link CheckStat} describing this check when it failed.
-	 * 
-	 * @param t
-	 *            exception which occurred while crawling
-	 */
-	protected void writeStat(Throwable t) {
-		CheckStat s = new CheckStat();
-		s.setProbeDate(new Date());
-		s.setSource(getSource().getKey());
-		s.setItemsAcquired(0);
-		s.setError(t.getLocalizedMessage());
-		SourceService ss = new SourceService();
-		ss.addStat(s);
 	}
 
 	/**

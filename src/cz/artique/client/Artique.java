@@ -14,7 +14,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.StackLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-//import cz.artique.client.hierarchy.tree.HistoryTree;
 import cz.artique.client.hierarchy.tree.ListFiltersTree;
 import cz.artique.client.hierarchy.tree.SourcesTree;
 import cz.artique.client.history.HistoryEvent;
@@ -30,6 +29,7 @@ import cz.artique.client.messages.MessageType;
 import cz.artique.client.messages.Messenger;
 import cz.artique.shared.model.config.client.ClientConfigKey;
 import cz.artique.shared.model.label.ListFilter;
+//import cz.artique.client.hierarchy.tree.HistoryTree;
 
 public class Artique extends Composite {
 

@@ -52,7 +52,8 @@ public class MessageWidget extends AbstractHierarchyTreeWidget<Message> {
 	private void createRootPanel(FlowPanel panel) {
 		String clearTooltip =
 			I18n.getHierarchyTreeConstants().clearMessagesTooltip();
-		createAnchor(panel, I18n.getHierarchyTreeConstants().messageRootText(), null, null, null);
+		createAnchor(panel, I18n.getHierarchyTreeConstants().messageRootText(),
+			null, null, null);
 		createImage(panel, ArtiqueWorld.WORLD.getResources().clear(),
 			clearHandler, clearTooltip);
 	}

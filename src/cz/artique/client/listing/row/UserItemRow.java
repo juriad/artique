@@ -31,7 +31,7 @@ import cz.artique.client.common.ContentsPanel;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.listing.ListingConstants;
 import cz.artique.client.manager.Managers;
-import cz.artique.client.utils.TextContent;
+import cz.artique.client.utils.ClientTextContent;
 import cz.artique.shared.model.item.ArticleItem;
 import cz.artique.shared.model.item.ContentType;
 import cz.artique.shared.model.item.Item;
@@ -233,30 +233,8 @@ public class UserItemRow extends RowWidget {
 				div.setInnerHTML(((PageChangeItem) itemObject)
 					.getDiff()
 					.getValue());
-
-				NodeList<Element> elementsByTagName =
-					div.getElementsByTagName("a");
-				for (int i = 0; i < elementsByTagName.getLength(); i++) {
-					Element e = elementsByTagName.getItem(i);
-					e.setAttribute("target", "_blank");
-				}
-
 				content.addContent("DIFF_HTML", div);
 			}
-//			{
-//				if (ContentType.PLAIN_TEXT.equals(((PageChangeItem) itemObject)
-//					.getDiffType())) {
-//					String string =
-//						((PageChangeItem) itemObject).getDiff().getValue();
-//					content.addContent("DIFF_TXT", string);
-//				} else {
-//					Element div = DOM.createDiv();
-//					div.setInnerHTML(((PageChangeItem) itemObject)
-//						.getDiff()
-//						.getValue());
-//					content.addContent("DIFF_TXT", div.getInnerText());
-//				}
-//			}
 		}
 
 		if (ContentType.HTML.equals((itemObject).getContentType())) {
@@ -277,12 +255,13 @@ public class UserItemRow extends RowWidget {
 			} else {
 				Element div = DOM.createDiv();
 				div.setInnerHTML(itemObject.getContent().getValue());
-				content.addContent("TXT", TextContent.asPlainText(div));
+				content.addContent("TXT", ClientTextContent.asPlainText(div));
 				// content.addContent("TXT", div.getInnerText());
 			}
 		}
 	}
 
+	@Override
 	public void refresh() {
 		labels.setNewData(getValue());
 		setReadState();
@@ -300,11 +279,13 @@ public class UserItemRow extends RowWidget {
 		setStyleDependentName("unread", !read);
 	}
 
+	@Override
 	public void openOriginal() {
 		Window.open(getValue().getItemObject().getUrl().getValue(), "_blank",
 			"");
 	}
 
+	@Override
 	public void openAddLabel() {
 		labels.openSuggestion();
 	}

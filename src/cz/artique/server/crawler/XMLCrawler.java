@@ -3,7 +3,8 @@ package cz.artique.server.crawler;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -59,21 +60,8 @@ public class XMLCrawler extends AbstractCrawler<XMLSource, ArticleItem> {
 	 * @see cz.artique.server.crawler.Crawler#fetchItems()
 	 */
 	public int fetchItems() throws CrawlerException {
-		URI uri;
-		try {
-			uri = getURI(getSource().getUrl());
-		} catch (CrawlerException e) {
-			writeStat(e);
-			throw e;
-		}
-
-		SyndFeed feed;
-		try {
-			feed = getFeed(uri);
-		} catch (CrawlerException e) {
-			writeStat(e);
-			throw e;
-		}
+		URL url = getURL(getSource().getUrl());
+		SyndFeed feed = getFeed(url);
 
 		List<ArticleItem> items = getItems(feed);
 		Collections.sort(items, new Comparator<ArticleItem>() {
@@ -91,7 +79,6 @@ public class XMLCrawler extends AbstractCrawler<XMLSource, ArticleItem> {
 		createUserItems(items2);
 
 		int count = items2.size();
-		writeStat(count);
 		return count;
 	}
 
@@ -115,20 +102,22 @@ public class XMLCrawler extends AbstractCrawler<XMLSource, ArticleItem> {
 	}
 
 	/**
-	 * @param uri
-	 *            URI which the feed is to be got from
+	 * @param url
+	 *            URL which the feed is to be got from
 	 * @return feed
 	 * @throws CrawlerException
 	 */
-	protected SyndFeed getFeed(URI uri) throws CrawlerException {
+	protected SyndFeed getFeed(URL url) throws CrawlerException {
 		SyndFeedInput input = new SyndFeedInput();
 		try {
 			HttpClient client = getHttpClient();
-			HttpGet get = new HttpGet(uri);
+			HttpGet get = new HttpGet(url.toURI());
 			HttpResponse resp = client.execute(get);
 			InputStream is = resp.getEntity().getContent();
 			SyndFeed feed = input.build(new InputStreamReader(is));
 			return feed;
+		} catch (URISyntaxException e) {
+			throw new CrawlerException("URL is not valid URI", e);
 		} catch (IllegalArgumentException e) {
 			throw new CrawlerException("Unsupported feed", e);
 		} catch (FeedException e) {

@@ -15,10 +15,10 @@ import cz.artique.server.meta.source.SourceMeta;
 import cz.artique.server.meta.source.UserSourceMeta;
 import cz.artique.server.utils.KeyGen;
 import cz.artique.shared.model.config.server.ServerConfigKey;
+import cz.artique.shared.model.source.CheckStat;
 import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
-import cz.artique.shared.model.source.CheckStat;
 import cz.artique.shared.model.source.UserSource;
 
 public class SourceService {
@@ -91,9 +91,8 @@ public class SourceService {
 
 	public List<Source> getSourcesForNormalCheck() {
 		int maxErrors =
-			ConfigService.CONFIG_SERVICE
-				.getConfig(ServerConfigKey.MAX_ERROR_SEQUENCE)
-				.get();
+			ConfigService.CONFIG_SERVICE.getConfig(
+				ServerConfigKey.MAX_ERROR_SEQUENCE).get();
 		SourceMeta meta = SourceMeta.get();
 		List<Source> list =
 			Datastore
@@ -107,9 +106,8 @@ public class SourceService {
 
 	public List<Source> getSourcesForErrorCheck() {
 		int maxErrors =
-			ConfigService.CONFIG_SERVICE
-				.getConfig(ServerConfigKey.MAX_ERROR_SEQUENCE)
-				.get();
+			ConfigService.CONFIG_SERVICE.getConfig(
+				ServerConfigKey.MAX_ERROR_SEQUENCE).get();
 		SourceMeta meta = SourceMeta.get();
 		List<Source> list =
 			Datastore
