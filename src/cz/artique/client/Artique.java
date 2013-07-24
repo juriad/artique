@@ -18,6 +18,7 @@ import cz.artique.client.history.HistoryHandler;
 import cz.artique.client.history.HistoryItem;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.leftPanel.LeftPanel;
+import cz.artique.client.listFilters.top.TopPanel;
 import cz.artique.client.listing.ArtiqueList;
 import cz.artique.client.listing.ArtiqueListProvider;
 import cz.artique.client.manager.ManagerReady;
@@ -52,20 +53,22 @@ public class Artique extends Composite {
 	Messenger messenger;
 
 	@UiField
-	LeftPanel stack;
+	LeftPanel leftPanel;
 
-	private static Resources resources;
+	@UiField(provided = true)
+	TopPanel topPanel;
+
+	private static ArtiqueResources resources;
 
 	static {
-		resources = GWT.create(Resources.class);
+		resources = GWT.create(ArtiqueResources.class);
 		resources.style().ensureInjected();
-		resources.dialogs().ensureInjected();
-		ArtiqueWorld.WORLD.setResources(resources);
 	}
 
 	public Artique() {
 		list = new ArtiqueList();
 		ArtiqueWorld.WORLD.setList(list);
+		topPanel = new TopPanel();
 		initWidget(uiBinder.createAndBindUi(this));
 		ArtiqueWorld.WORLD.setSourcesTree(sources);
 
@@ -122,7 +125,7 @@ public class Artique extends Composite {
 	}
 
 	protected void showPanel() {
-		Element parent = stack.getElement().getParentElement();
+		Element parent = leftPanel.getElement().getParentElement();
 		parent.addClassName("leftPanelLayer");
 
 		String panel =
@@ -133,7 +136,7 @@ public class Artique extends Composite {
 		// H for history
 		int index = "OSFM".indexOf(panel);
 		if (index >= 0) {
-			stack.showWidget(false, index);
+			leftPanel.showWidget(false, index);
 		}
 	}
 }

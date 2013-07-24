@@ -53,7 +53,9 @@ public class ScrollableCellList<T> extends Composite
 	@UiChild(tagname = "emptyListWidget", limit = 1)
 	public void addEmptyListWidget(Widget widget) {
 		cellList.setEmptyListWidget(widget);
-		widget.addStyleName("emptyList");
+		if (widget != null) {
+			widget.addStyleName("emptyList");
+		}
 	}
 
 	public HandlerRegistration addSelectionChangeHandler(Handler handler) {

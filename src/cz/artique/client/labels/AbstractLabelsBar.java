@@ -155,4 +155,9 @@ public abstract class AbstractLabelsBar extends Composite {
 	public void openSuggestion() {
 		labelOpenHandler.onOpen(null);
 	}
+
+	@Override
+	public void setWidth(String width) {
+		panel.setWidth(width);
+	}
 }

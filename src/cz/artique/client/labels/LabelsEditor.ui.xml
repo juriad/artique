@@ -30,7 +30,7 @@
 						<ui:text from="{res.foregroundColor}" />
 					</g:cell>
 					<g:customCell>
-						<c:ColorInputWithEnabled ui:field="foregroundColor" />
+						<c:ColorInput ui:field="foregroundColor" />
 					</g:customCell>
 				</g:row>
 				<g:row>
@@ -38,7 +38,7 @@
 						<ui:text from="{res.backgroundColor}" />
 					</g:cell>
 					<g:customCell>
-						<c:ColorInputWithEnabled ui:field="backgroundColor" />
+						<c:ColorInput ui:field="backgroundColor" />
 					</g:customCell>
 				</g:row>
 				<g:row>

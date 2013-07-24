@@ -9,6 +9,7 @@
 	-o-text-overflow: ellipsis;
 	position: absolute;
 	padding-right: 1em;
+	padding-left: 1em;
 }
 
 .hoverPanel-expanded .hoverPanelInner,.hoverPanelInner:hover {

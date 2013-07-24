@@ -7,7 +7,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.impl.HyperlinkImpl;
 
-import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyTreeWidget;
 import cz.artique.client.hierarchy.HierarchyTreeWidgetFactory;
@@ -95,8 +94,8 @@ public class ListFilterWidget extends AbstractHierarchyTreeWidget<ListFilter> {
 		createAnchor(panel, I18n
 			.getHierarchyTreeConstants()
 			.listFilterRootText(), null, clearHandler, clearTooltip);
-		createImage(panel, ArtiqueWorld.WORLD.getResources().clear(),
-			clearHandler, clearTooltip);
+		createImage(panel, HierarchyResources.INSTANCE.clear(), clearHandler,
+			clearTooltip);
 		addGeneralInnerImages(panel);
 	}
 
@@ -108,11 +107,11 @@ public class ListFilterWidget extends AbstractHierarchyTreeWidget<ListFilter> {
 	private void addGeneralInnerImages(FlowPanel panel) {
 		String createNewTooltip =
 			I18n.getHierarchyTreeConstants().createNewListFilterTooltip();
-		createImage(panel, ArtiqueWorld.WORLD.getResources().createNew(),
+		createImage(panel, HierarchyResources.INSTANCE.createNew(),
 			createNewHandler, createNewTooltip);
 		String saveCurrentTooltip =
 			I18n.getHierarchyTreeConstants().saveCurrentListFilterTooltip();
-		createImage(panel, ArtiqueWorld.WORLD.getResources().saveCurrent(),
+		createImage(panel, HierarchyResources.INSTANCE.saveCurrent(),
 			saveCurrentHandler, saveCurrentTooltip);
 	}
 
@@ -134,7 +133,7 @@ public class ListFilterWidget extends AbstractHierarchyTreeWidget<ListFilter> {
 
 		String detailTooltip =
 			I18n.getHierarchyTreeConstants().detailListFilterTooltip();
-		createImage(panel, ArtiqueWorld.WORLD.getResources().detail(),
+		createImage(panel, HierarchyResources.INSTANCE.detail(),
 			new ClickHandler() {
 				public void onClick(ClickEvent event) {
 					ListFilterDialog.DIALOG.showDialog(item);
@@ -160,7 +159,7 @@ public class ListFilterWidget extends AbstractHierarchyTreeWidget<ListFilter> {
 		}, adhocTooltip);
 		String clearTooltip =
 			I18n.getHierarchyTreeConstants().clearListFilterTooltip();
-		createImage(panel, ArtiqueWorld.WORLD.getResources().clear(),
-			clearHandler, clearTooltip);
+		createImage(panel, HierarchyResources.INSTANCE.clear(), clearHandler,
+			clearTooltip);
 	}
 }

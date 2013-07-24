@@ -1,0 +1,44 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:a="urn:import:cz.artique.client.listFilters.top"
+	xmlns:db="urn:import:com.google.gwt.user.datepicker.client" xmlns:c="urn:import:cz.artique.client.common">
+
+	<ui:with field='res'
+		type='cz.artique.client.listFilters.ListFiltersConstants' />
+
+	<g:FlowPanel>
+		<g:Button ui:field="refreshButton" addStyleNames="topPanelLeft">
+			<ui:text from="{res.refresh}" />
+		</g:Button>
+		<g:Button ui:field="editButton" addStyleNames="topPanelLeft">
+			<ui:text from="{res.editFilter}" />
+		</g:Button>
+		<g:Button ui:field="clearButton" addStyleNames="topPanelLeft">
+			<ui:text from="{res.clearAll}" />
+		</g:Button>
+
+		<g:Button ui:field="markAllReadButton" addStyleNames="topPanelRight">
+			<ui:text from="{res.markAllRead}" />
+		</g:Button>
+		<g:Button ui:field="addNewItemsButton" enabled="false"
+			addStyleNames="topPanelRight">
+			<ui:text from="{res.noNewItems}" />
+		</g:Button>
+
+		<g:FlowPanel addStyleNames="currentFilter">
+			<g:Label addStyleNames="currentFilterLabel topPanelLeft">
+				<ui:text from="{res.currentFilter}" />
+			</g:Label>
+			<g:FlowPanel addStyleNames="topPanelLeft">
+				<a:CurrentQueryFilter ui:field="currentFilter">
+					<a:emptyFilterWidget>
+						<g:Label>
+							<ui:text from="{res.noLabelsFilter}" />
+						</g:Label>
+					</a:emptyFilterWidget>
+				</a:CurrentQueryFilter>
+				<a:CurrentCriteria ui:field="currentCriteria" />
+			</g:FlowPanel>
+		</g:FlowPanel>
+	</g:FlowPanel>
+</ui:UiBinder>

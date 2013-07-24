@@ -1,4 +1,4 @@
-package cz.artique.client.listFilters;
+package cz.artique.client.listFilters.top;
 
 import static cz.artique.client.labels.LabelsManager.AND;
 import static cz.artique.client.labels.LabelsManager.OR;
@@ -7,16 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.gwt.uibinder.client.UiChild;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.labels.LabelWidget;
 import cz.artique.client.labels.suggestion.LabelsPool;
 import cz.artique.client.labels.suggestion.SuggestionResult;
+import cz.artique.client.listFilters.AbstractQueryFilter;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.FilterLevel;
 import cz.artique.shared.model.label.Label;
 
-public class QueryFilter extends AbstractQueryFilter {
+public class CurrentQueryFilter extends AbstractQueryFilter {
 
 	private static class MyLabelsPool implements LabelsPool {
 		public boolean isNewValueAllowed() {
@@ -24,12 +28,11 @@ public class QueryFilter extends AbstractQueryFilter {
 		}
 
 		public List<Label> fullTextSearch(String text) {
-			return Managers.LABELS_MANAGER.fullTextSearch(text,
-				Managers.LABELS_MANAGER.getLabels(null));
+			return new ArrayList<Label>();
 		}
 	}
 
-	public QueryFilter() {
+	public CurrentQueryFilter() {
 		super(new MyLabelsPool());
 	}
 
@@ -130,6 +133,34 @@ public class QueryFilter extends AbstractQueryFilter {
 
 	@Override
 	protected LabelWidget createWidget(Label l) {
-		return LabelWidget.FACTORY.createWidget(l);
+		LabelWidget labelWidget = LabelWidget.FACTORY.createWidget(l);
+		labelWidget.setEnabled(false);
+		return labelWidget;
+	}
+
+	private Widget emptyFilterWidget;
+
+	@UiChild(tagname = "emptyFilterWidget", limit = 1)
+	public void addEmptyFilterWidget(Widget emptyFilterWidget) {
+		this.emptyFilterWidget = emptyFilterWidget;
+		if (emptyFilterWidget != null) {
+			emptyFilterWidget.removeFromParent();
+			emptyFilterWidget.addStyleName("emptyFilter");
+		}
+	}
+
+	@Override
+	public void setFilter(Filter filter) {
+		if (emptyFilterWidget != null) {
+			emptyFilterWidget.removeFromParent();
+		}
+		super.setFilter(filter);
+		List<Label> labels2 = getLabels();
+		if (emptyFilterWidget != null) {
+			FlowPanel panel = (FlowPanel) getWidget();
+			if (labels2.isEmpty()) {
+				panel.add(emptyFilterWidget);
+			}
+		}
 	}
 }

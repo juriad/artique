@@ -16,12 +16,12 @@
 	background-color: white;
 }
 
-.suggestionLabel {
+.labelSuggestionLabel {
 	padding: 0.1em 0.5em;
 	display: block;
 	cursor: pointer;
 }
 
-.suggestionLabel-selected {
+.labelSuggestionLabel-selected,.labelSuggestionLabel:hover {
 	background-color: #73c8f1;
 }

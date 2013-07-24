@@ -35,6 +35,7 @@ public class LeftPanel extends StackLayoutPanel {
 		});
 	}
 
+	@Override
 	public void insert(Widget child, Widget header, double headerSize,
 			int beforeIndex) {
 		super.insert(child, header, headerSize, beforeIndex);

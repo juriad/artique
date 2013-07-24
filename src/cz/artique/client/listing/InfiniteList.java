@@ -8,11 +8,15 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -30,6 +34,14 @@ import cz.artique.shared.model.item.UserItem;
 public class InfiniteList extends Composite
 		implements HasSelectionChangedHandlers, HasScrollEndHandlers,
 		HasNewDataHandlers {
+
+	interface MyResources extends ClientBundle {
+		@NotStrict
+		@Source("InfiniteList.css")
+		CssResource style();
+	}
+
+	private static final MyResources res = GWT.create(MyResources.class);
 
 	private class OpenCloseHander
 			implements CloseHandler<RowWidget>, OpenHandler<RowWidget> {
@@ -57,6 +69,7 @@ public class InfiniteList extends Composite
 	private InfiniteListDataProvider provider;
 
 	public InfiniteList() {
+		res.style().ensureInjected();
 		flowPanel = new FlowPanel();
 		scrollPanel = new ScrollPanel();
 		initWidget(scrollPanel);

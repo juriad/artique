@@ -57,14 +57,19 @@
 	display: inline;
 }
 
-.itemSource {
-	margin-left: 1em;
+.itemSource,.itemLink {
+	padding-left: 1em;
+}
+
+.itemSource a {
+	text-decoration: none;
+	color: black;
 }
 
 .itemTitle {
 	font-size: 110%;
 	line-height: 1.7em;
-	margin-left: 23em;
+	margin-left: 24em;
 	margin-right: 12em;
 	cursor: pointer;
 }

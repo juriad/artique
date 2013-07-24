@@ -1,0 +1,9 @@
+.currentCriteria {
+	color: white;
+	font-weight: bold;
+	padding: 0.2em;
+}
+
+.currentCriteriaLower {
+	text-transform: lowercase;
+}

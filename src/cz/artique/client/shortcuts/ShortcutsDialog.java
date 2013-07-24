@@ -16,8 +16,9 @@ public class ShortcutsDialog extends UniversalDialog<Void> {
 		addButton(constants.closeButton(), HIDE);
 
 		setShowAction(new OnShowAction<Void>() {
-			public void onShow(Void param) {
+			public boolean onShow(Void param) {
 				editor.setValue();
+				return true;
 			}
 		});
 	}

@@ -7,7 +7,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.impl.HyperlinkImpl;
 
-import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyTreeWidget;
 import cz.artique.client.hierarchy.HierarchyTreeWidgetFactory;
@@ -55,8 +54,8 @@ public class HistoryWidget extends AbstractHierarchyTreeWidget<HistoryItem> {
 		String clearTooltip =
 			I18n.getHierarchyTreeConstants().clearHistoryTooltip();
 		createLabel(panel, "/", null, null);
-		createImage(panel, ArtiqueWorld.WORLD.getResources().clear(),
-			clearHandler, clearTooltip);
+		createImage(panel, HierarchyResources.INSTANCE.clear(), clearHandler,
+			clearTooltip);
 	}
 
 	// unnecessary

@@ -66,4 +66,37 @@ public interface ListFiltersConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("Ad-hoc filter editor")
 	String adhocDialog();
+
+	@DefaultStringValue("^ Mark read ^")
+	String markAllRead();
+
+	@DefaultStringValue("Edit filter")
+	String editFilter();
+
+	@DefaultStringValue("Refresh")
+	String refresh();
+
+	@DefaultStringValue("Add new items")
+	String addNewItems();
+
+	@DefaultStringValue("No new items")
+	String noNewItems();
+
+	@DefaultStringValue("Clear labels")
+	String clearLabels();
+
+	@DefaultStringValue("Clear all")
+	String clearAll();
+
+	@DefaultStringValue("Current filter:")
+	String currentFilter();
+
+	@DefaultStringValue("items")
+	String items();
+
+	@DefaultStringValue("ordered")
+	String ordered();
+	
+	@DefaultStringValue("No labels criteria")
+	String noLabelsFilter();
 }

@@ -2,7 +2,8 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:al="urn:import:cz.artique.client.listing"
 	xmlns:ah="urn:import:cz.artique.client.hierarchy.tree" xmlns:m="urn:import:cz.artique.client.messages"
-	xmlns:a="urn:import:cz.artique.client" xmlns:l="urn:import:cz.artique.client.leftPanel">
+	xmlns:a="urn:import:cz.artique.client" xmlns:l="urn:import:cz.artique.client.leftPanel"
+	xmlns:t="urn:import:cz.artique.client.listFilters.top">
 
 	<ui:with field='cons' type='cz.artique.client.ArtiqueConstants' />
 
@@ -13,16 +14,15 @@
 			gwt-image: "mainBackground";
 			background-position: center center;
 			background-repeat: no-repeat;
-			border-left: 2px solid #222;
 		}
 	</ui:style>
 
 	<g:LayoutPanel>
-		<g:layer left="33%" right="33%">
+		<g:layer left="33%" right="33%" top="4em" bottom="0px">
 			<m:Messenger ui:field="messenger" />
 		</g:layer>
-		<g:layer left="0px" width="7em">
-			<l:LeftPanel unit="EM" ui:field="stack">
+		<g:layer left="0px" width="7em" top="3em" bottom="0px">
+			<l:LeftPanel unit="EM" ui:field="leftPanel">
 				<l:stack>
 					<l:header size="3">
 						<ui:text from='{cons.options}' />
@@ -55,8 +55,11 @@
 				</l:stack>
 			</l:LeftPanel>
 		</g:layer>
-		<g:layer left="7em" right="0px">
+		<g:layer left="7em" right="0px" top="3em" bottom="0px">
 			<al:ArtiqueList ui:field="list" styleName="{style.main}" />
+		</g:layer>
+		<g:layer left="0px" right="0px" top="0px" height="3em">
+			<t:TopPanel ui:field="topPanel" />
 		</g:layer>
 	</g:LayoutPanel>
 </ui:UiBinder>

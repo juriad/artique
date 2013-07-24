@@ -3,10 +3,14 @@ package cz.artique.client.common;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.ui.Composite;
@@ -17,6 +21,14 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class ContentsPanel<E extends Widget & HasName & HasClickHandlers>
 		extends Composite {
+
+	interface MyResources extends ClientBundle {
+		@NotStrict
+		@Source("ContentsPanel.css")
+		CssResource style();
+	}
+
+	private static final MyResources res = GWT.create(MyResources.class);
 
 	public interface ContentButtonFactory<E extends Widget & HasName & HasClickHandlers> {
 		E createButton(String name);
@@ -39,6 +51,7 @@ public class ContentsPanel<E extends Widget & HasName & HasClickHandlers>
 	};
 
 	public ContentsPanel(ContentButtonFactory<E> factory) {
+		res.style().ensureInjected();
 		this.factory = factory;
 		FlowPanel panel = new FlowPanel();
 		initWidget(panel);

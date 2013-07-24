@@ -5,7 +5,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 
-import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyTreeWidget;
 import cz.artique.client.hierarchy.HierarchyTreeWidgetFactory;
@@ -54,8 +53,8 @@ public class MessageWidget extends AbstractHierarchyTreeWidget<Message> {
 			I18n.getHierarchyTreeConstants().clearMessagesTooltip();
 		createAnchor(panel, I18n.getHierarchyTreeConstants().messageRootText(),
 			null, null, null);
-		createImage(panel, ArtiqueWorld.WORLD.getResources().clear(),
-			clearHandler, clearTooltip);
+		createImage(panel, HierarchyResources.INSTANCE.clear(), clearHandler,
+			clearTooltip);
 	}
 
 	private void createInnerNodePanel(FlowPanel panel) {

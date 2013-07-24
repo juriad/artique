@@ -52,6 +52,11 @@ public enum ShortcutAction {
 	 * Clears all criteria on current list filter.
 	 */
 	TOTAL_CLEAR_FILTER,
+
+	/**
+	 * Shows ad-hoc filter dialog.
+	 */
+	ADJUST_FILTER,
 	/**
 	 * Prepends new items to the top of current listing of items.
 	 */

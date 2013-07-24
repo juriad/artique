@@ -38,8 +38,9 @@ public class ActionShortcutDialog extends UniversalDialog<Void> {
 		addButton(constants.cancelButton(), HIDE);
 
 		setShowAction(new OnShowAction<Void>() {
-			public void onShow(Void param) {
+			public boolean onShow(Void param) {
 				editor.setValue(null);
+				return true;
 			}
 		});
 	}

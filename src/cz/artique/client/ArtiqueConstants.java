@@ -42,21 +42,6 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 	@DefaultStringValue("Edit shortcuts")
 	String editShortcutsButton();
 
-	@DefaultStringValue("Mark read above selected")
-	String markAllReadButton();
-
-	@DefaultStringValue("Refresh")
-	String refreshButton();
-
-	@DefaultStringValue("Add new items")
-	String addNewItems();
-
-	@DefaultStringValue("No new items")
-	String noNewItems();
-
-	@DefaultStringValue("List options")
-	String optionList();
-
 	@DefaultStringValue("Config options")
 	String optionConfig();
 

@@ -48,7 +48,7 @@
 
 .hierarchyWidget .message {
 	color: black;
-	margin-top: 0.5em;
+	margin: 0.25em;
 	cursor: pointer;
 	display: inline-block;
 }

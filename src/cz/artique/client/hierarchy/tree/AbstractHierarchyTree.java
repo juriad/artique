@@ -3,10 +3,6 @@ package cz.artique.client.hierarchy.tree;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Tree;
@@ -25,13 +21,6 @@ import cz.artique.shared.utils.HasHierarchy;
 
 public abstract class AbstractHierarchyTree<E extends HasHierarchy, F extends ProvidesHierarchy<E> & Manager>
 		extends Composite {
-	interface MyResources extends ClientBundle {
-		@NotStrict
-		@Source("Hierarchy.css")
-		CssResource style();
-	}
-
-	private static final MyResources res = GWT.create(MyResources.class);
 
 	private final ScrollPanel scrollPanel;
 	private final Tree tree;
@@ -42,7 +31,7 @@ public abstract class AbstractHierarchyTree<E extends HasHierarchy, F extends Pr
 
 	public AbstractHierarchyTree(final F manager,
 			final HierarchyTreeWidgetFactory<E> factory) {
-		res.style().ensureInjected();
+		HierarchyResources.INSTANCE.style().ensureInjected();
 		this.manager = manager;
 		this.factory = factory;
 		scrollPanel = new ScrollPanel();

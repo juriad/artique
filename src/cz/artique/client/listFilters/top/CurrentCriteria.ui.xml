@@ -1,0 +1,30 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:a="urn:import:cz.artique.client.listFilters.top"
+	xmlns:db="urn:import:com.google.gwt.user.datepicker.client" xmlns:c="urn:import:cz.artique.client.common">
+
+	<ui:with field='res'
+		type='cz.artique.client.listFilters.ListFiltersConstants' />
+
+	<g:HTMLPanel>
+		<g:InlineLabel ui:field="readState" />
+		<g:InlineLabel ui:field="items" addStyleNames="currentCriteriaLower">
+			<ui:text from="{res.items}" />
+		</g:InlineLabel>
+
+		<g:InlineLabel ui:field="fromLabel" addStyleNames="currentCriteriaLower">
+			<ui:text from="{res.startFrom}" />
+		</g:InlineLabel>
+		<g:DateLabel ui:field="from" />
+
+		<g:InlineLabel ui:field="toLabel" addStyleNames="currentCriteriaLower">
+			<ui:text from="{res.endTo}" />
+		</g:InlineLabel>
+		<g:DateLabel ui:field="to" />
+
+		<g:InlineLabel ui:field="orderedLabel" addStyleNames="currentCriteriaLower">
+			<ui:text from="{res.ordered}" />
+		</g:InlineLabel>
+		<g:InlineLabel ui:field="ordered" addStyleNames="currentCriteriaLower" />
+	</g:HTMLPanel>
+</ui:UiBinder>

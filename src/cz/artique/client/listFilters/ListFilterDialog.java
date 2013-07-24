@@ -93,13 +93,14 @@ public class ListFilterDialog extends UniversalDialog<ListFilter> {
 		addButton(constants.cancelButton(), HIDE);
 
 		setShowAction(new OnShowAction<ListFilter>() {
-			public void onShow(ListFilter param) {
+			public boolean onShow(ListFilter param) {
 				editor.setValue(param);
 				if (param == null || param.getKey() == null) {
 					deleteButton.setText(constants.wipeButton());
 				} else {
 					deleteButton.setText(constants.deleteButton());
 				}
+				return true;
 			}
 		});
 	}

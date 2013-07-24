@@ -21,7 +21,7 @@ public class UniversalDialog<T> extends StopDialog {
 	private static final MyResources res = GWT.create(MyResources.class);
 
 	public interface OnShowAction<T> {
-		void onShow(T param);
+		boolean onShow(T param);
 	}
 
 	private FlowPanel buttons;
@@ -79,7 +79,10 @@ public class UniversalDialog<T> extends StopDialog {
 
 	public void showDialog(T param) {
 		if (onShow != null) {
-			onShow.onShow(param);
+			boolean result = onShow.onShow(param);
+			if (result == false) {
+				return;
+			}
 		}
 		setWidth("100%");
 		center();

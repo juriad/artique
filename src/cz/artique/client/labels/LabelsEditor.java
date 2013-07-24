@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 
-import cz.artique.client.common.ColorInputWithEnabled;
+import cz.artique.client.common.ColorInput;
 import cz.artique.client.common.ScrollableCellList;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.BackupLevel;
@@ -62,10 +62,10 @@ public class LabelsEditor extends Composite implements HasValue<List<Label>> {
 	InlineLabel name;
 
 	@UiField
-	ColorInputWithEnabled foregroundColor;
+	ColorInput foregroundColor;
 
 	@UiField
-	ColorInputWithEnabled backgroundColor;
+	ColorInput backgroundColor;
 
 	@UiField
 	ToggleButton markedToDelete;

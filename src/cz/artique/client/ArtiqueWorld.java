@@ -24,7 +24,6 @@ public enum ArtiqueWorld {
 
 	private UserInfo userInfo;
 	private ArtiqueList list;
-	private Resources resources;
 	private SourcesTree sourcesTree;
 	private boolean online = true;
 
@@ -42,14 +41,6 @@ public enum ArtiqueWorld {
 
 	public void setList(ArtiqueList list) {
 		this.list = list;
-	}
-
-	public void setResources(Resources resources) {
-		this.resources = resources;
-	}
-
-	public Resources getResources() {
-		return resources;
 	}
 
 	public SourcesTree getSourcesTree() {

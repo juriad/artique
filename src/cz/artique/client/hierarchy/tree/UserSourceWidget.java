@@ -82,7 +82,7 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 			final UserSource item = leaf.getItem();
 			String detailTooltip =
 				I18n.getHierarchyTreeConstants().detailUserSourceTooltip();
-			createImage(getPanel(), ArtiqueWorld.WORLD.getResources().detail(),
+			createImage(getPanel(), HierarchyResources.INSTANCE.detail(),
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						UserSourceDialog.DIALOG.showDialog(item);
@@ -93,8 +93,7 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 				// manual source
 				String addManualItemTooltip =
 					I18n.getHierarchyTreeConstants().addManualItemTooltip();
-				createImage(getPanel(),
-					ArtiqueWorld.WORLD.getResources().add(),
+				createImage(getPanel(), HierarchyResources.INSTANCE.add(),
 					new ClickHandler() {
 						public void onClick(ClickEvent event) {
 							ManualItemDialog.DIALOG.showDialog();
@@ -104,9 +103,8 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 		} else if (hierarchy instanceof InnerNode) {
 			String createNewTooltip =
 				I18n.getHierarchyTreeConstants().createNewUserSourceTooltip();
-			createImage(getPanel(), ArtiqueWorld.WORLD
-				.getResources()
-				.createNew(), createNewHandler, createNewTooltip);
+			createImage(getPanel(), HierarchyResources.INSTANCE.createNew(),
+				createNewHandler, createNewTooltip);
 
 			if (hierarchy.getParent() == null) {
 				// root node
@@ -140,13 +138,13 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 		ImageResource ir;
 		if (showingDisabled) {
 			tooltip = constants.hideDisabledSourcesTooltip();
-			ir = ArtiqueWorld.WORLD.getResources().hideDisabled();
+			ir = HierarchyResources.INSTANCE.hideDisabled();
 		} else {
 			tooltip = constants.showDisabledSourcesTooltip();
-			ir = ArtiqueWorld.WORLD.getResources().showDisabled();
+			ir = HierarchyResources.INSTANCE.showDisabled();
 		}
-		image.setTitle(tooltip);
 		image.setResource(ir);
+		image.setTitle(tooltip);
 		image.setStylePrimaryName("hiddenAction");
 	}
 

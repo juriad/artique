@@ -47,8 +47,12 @@ public class UserSourceDialog extends UniversalDialog<UserSource> {
 		addButton(constants.cancelButton(), HIDE);
 
 		setShowAction(new OnShowAction<UserSource>() {
-			public void onShow(UserSource param) {
+			public boolean onShow(UserSource param) {
+				if (param == null) {
+					return false;
+				}
 				editor.setValue(param);
+				return true;
 			}
 		});
 	}

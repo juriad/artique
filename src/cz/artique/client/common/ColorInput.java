@@ -1,6 +1,5 @@
 package cz.artique.client.common;
 
-import com.google.code.gwteyecandy.ColorInput;
 import com.google.code.gwteyecandy.ColorPicker;
 import com.google.code.gwteyecandy.resources.ColorResources;
 import com.google.gwt.core.client.GWT;
@@ -12,25 +11,35 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ColorInputWithEnabled extends Widget
-		implements HasEnabled, HasValue<String> {
+public class ColorInput extends Widget implements HasEnabled, HasValue<String> {
 
 	private static final ColorResources res = GWT.create(ColorResources.class);
 
+	interface MyResources extends ClientBundle {
+		@NotStrict
+		@Source("ColorInput.css")
+		CssResource style();
+	}
+
+	private static final MyResources res2 = GWT.create(MyResources.class);
+
 	private String value;
 
-	public ColorInputWithEnabled() {
+	public ColorInput() {
 		this(new ColorPicker(), "rgb(255, 255, 255)");
 	}
 
-	public ColorInputWithEnabled(ColorPicker picker, String value) {
-
+	public ColorInput(ColorPicker picker, String value) {
+		res2.style().ensureInjected();
 		setElement(createDisplayElement());
 		addStyleName("colorInput");
 
@@ -42,7 +51,7 @@ public class ColorInputWithEnabled extends Widget
 		addDomHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (isEnabled()) {
-					popup.showRelativeTo(ColorInputWithEnabled.this);
+					popup.showRelativeTo(ColorInput.this);
 				}
 			}
 		}, ClickEvent.getType());

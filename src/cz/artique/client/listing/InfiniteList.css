@@ -1,0 +1,4 @@
+.infiniteList {
+	opacity: 0.95;
+	filter: alpha(opacity \= 95)
+}

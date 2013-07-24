@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import cz.artique.client.history.CachingHistoryUtils;
 import cz.artique.client.history.HistoryItem;
 import cz.artique.client.items.ManualItemDialog;
+import cz.artique.client.listFilters.AdhocDialog;
 import cz.artique.client.manager.AbstractManager;
 import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
@@ -65,6 +66,9 @@ public class ShortcutsManager
 						break;
 					case TOTAL_CLEAR_FILTER:
 						listFilter = new ListFilter();
+						break;
+					case ADJUST_FILTER:
+						AdhocDialog.DIALOG.showDialog();
 						break;
 					case REFRESH:
 						HistoryItem lastHistoryItem =

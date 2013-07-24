@@ -1,4 +1,14 @@
-/* dialogs */
+/* left panel layer */
+.leftPanelLayer {
+	z-index: 2;
+	border-right: 2px solid #222;
+}
+
+.leftPanelLayer:hover {
+	width: 30em !important;
+}
+
+/* components in dialogs */
 .gwt-ToggleButton,.gwt-PushButton {
 	display: inline-block;
 }
@@ -33,10 +43,6 @@
 
 .gwt-Button:hover {
 	border-color: black;
-}
-
-.colorInput {
-	cursor: pointer;
 }
 
 .gwt-DisclosurePanel .content {

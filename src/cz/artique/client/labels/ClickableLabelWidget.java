@@ -39,8 +39,11 @@ public class ClickableLabelWidget extends LabelWidget {
 
 		nameLabel.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				if (isEnabled()
-					&& impl.handleAsClick(Event.as(event.getNativeEvent()))) {
+				if (!isEnabled()) {
+					event.preventDefault();
+					return;
+				}
+				if (impl.handleAsClick(Event.as(event.getNativeEvent()))) {
 					Filter filter =
 						CachingHistoryUtils.UTILS.getFilterForLabel(label);
 					ListFilter listFilter =
@@ -50,8 +53,8 @@ public class ClickableLabelWidget extends LabelWidget {
 						CachingHistoryUtils.UTILS.serializeListFilter(filter);
 					HistoryManager.HISTORY
 						.setListFilter(listFilter, serialized);
+					event.preventDefault();
 				}
-				event.preventDefault();
 			}
 		});
 	}

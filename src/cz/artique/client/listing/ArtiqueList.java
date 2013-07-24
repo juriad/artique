@@ -6,9 +6,6 @@ import java.util.List;
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 
@@ -158,13 +155,7 @@ public class ArtiqueList extends InfiniteList {
 
 	public ArtiqueList() {
 		scrollPanel.setWidth("100%");
-		scrollPanel.setHeight(Window.getClientHeight() + "px");
-		Window.addResizeHandler(new ResizeHandler() {
-			public void onResize(ResizeEvent event) {
-				scrollPanel.setHeight(event.getHeight() + "px");
-			}
-		});
-
+		scrollPanel.setHeight("100%");
 		scrollPanel.addScrollHandler(new MyScrollHandler());
 		this.addSelectionChangeHandler(new SelectionHandler());
 		this.addScrollEndHandler(new EndHandler());

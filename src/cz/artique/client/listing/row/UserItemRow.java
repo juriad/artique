@@ -133,13 +133,13 @@ public class UserItemRow extends RowWidget {
 
 		fillTitle();
 
-		fillContent();
 		setContent(content);
 
 		addOpenHandler(new OpenHandler<RowWidget>() {
 			public void onOpen(OpenEvent<RowWidget> event) {
 				Managers.ITEMS_MANAGER.readSet(getValue(), true, null);
 				setReadState();
+				fillContent();
 			}
 		});
 
@@ -175,8 +175,8 @@ public class UserItemRow extends RowWidget {
 					listFilter.setFilterObject(filter);
 					HistoryManager.HISTORY
 						.setListFilter(listFilter, serialized);
+					event.preventDefault();
 				}
-				event.preventDefault();
 			}
 		});
 
@@ -262,7 +262,14 @@ public class UserItemRow extends RowWidget {
 		});
 	}
 
+	private boolean contentHasBeenFilled = false;
+
 	private void fillContent() {
+		if (contentHasBeenFilled) {
+			return;
+		}
+		contentHasBeenFilled = true;
+
 		Item itemObject = getValue().getItemObject();
 		ListingConstants constants = I18n.getListingConstants();
 
@@ -303,7 +310,6 @@ public class UserItemRow extends RowWidget {
 				Element div = DOM.createDiv();
 				div.setInnerHTML(itemObject.getContent().getValue());
 				content.addContent("TXT", ClientTextContent.asPlainText(div));
-				// content.addContent("TXT", div.getInnerText());
 			}
 		}
 	}

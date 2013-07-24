@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 
 import cz.artique.client.common.UniversalDialog;
 import cz.artique.client.history.CachingHistoryUtils;
+import cz.artique.client.history.HistoryItem;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.ListFilter;
@@ -38,8 +39,17 @@ public class AdhocDialog extends UniversalDialog<ListFilter> {
 		addButton(constants.closeButton(), HIDE);
 
 		setShowAction(new OnShowAction<ListFilter>() {
-			public void onShow(ListFilter param) {
+			public boolean onShow(ListFilter param) {
+				if (param == null) {
+					HistoryItem lastHistoryItem =
+						Managers.HISTORY_MANAGER.getLastHistoryItem();
+					if (lastHistoryItem == null) {
+						return false;
+					}
+					param = lastHistoryItem.getListFilter();
+				}
 				editor.setValue(param);
+				return true;
 			}
 		});
 	}
