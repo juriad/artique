@@ -24,6 +24,14 @@ import cz.artique.shared.validation.Issue;
 import cz.artique.shared.validation.IssueType;
 import cz.artique.shared.validation.ValidationException;
 
+/**
+ * Provides methods which manipulate with {@link UserItem}s.
+ * Methods are defined by communication interface.
+ * 
+ * @see ClientItemService
+ * @author Adam Juraszek
+ * 
+ */
 public class ClientItemServiceImpl implements ClientItemService {
 
 	public ListingResponse getItems(ListingRequest request) {

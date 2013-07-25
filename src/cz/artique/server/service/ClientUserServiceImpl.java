@@ -6,6 +6,14 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import cz.artique.client.service.ClientUserService;
 import cz.artique.shared.model.user.UserInfo;
 
+/**
+ * Allows client to login user.
+ * Methods are defined by communication interface.
+ * 
+ * @see ClientUserService
+ * @author Adam Juraszek
+ * 
+ */
 public class ClientUserServiceImpl extends RemoteServiceServlet
 		implements ClientUserService {
 

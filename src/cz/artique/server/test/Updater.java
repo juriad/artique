@@ -38,6 +38,7 @@ public class Updater extends HttpServlet {
 
 	protected void process(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		// set enqued to false for all sources
 		List<Source> asList =
 			Datastore
 				.query(SourceMeta.get())

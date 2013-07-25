@@ -11,6 +11,14 @@ import cz.artique.shared.validation.Issue;
 import cz.artique.shared.validation.IssueType;
 import cz.artique.shared.validation.ValidationException;
 
+/**
+ * Provides methods which manipulate with {@link Shortcut}s.
+ * Methods are defined by communication interface.
+ * 
+ * @see ClientShortcutService
+ * @author Adam Juraszek
+ * 
+ */
 public class ClientShortcutServiceImpl implements ClientShortcutService {
 
 	public List<Shortcut> getAllShortcuts() {

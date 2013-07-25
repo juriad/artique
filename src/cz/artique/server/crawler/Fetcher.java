@@ -84,8 +84,8 @@ public abstract class Fetcher {
 	/**
 	 * Downloads web page via HTTP and builds DOM tree.
 	 * 
-	 * @param uri
-	 *            URI of web page to be downloaded
+	 * @param url
+	 *            URL of web page to be downloaded
 	 * @return DOM representation of web page with URL
 	 * @throws CrawlerException
 	 */

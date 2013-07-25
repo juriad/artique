@@ -25,8 +25,23 @@ import cz.artique.shared.model.recomandation.Recommendation;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
 
+/**
+ * Calculates and serves {@link Recommendation} of {@link Source}s the user may
+ * be interested in.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class RecommendationService {
 
+	/**
+	 * Vector filled with one single value.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 * @param <F>
+	 *            type of vector
+	 */
 	class AllSame<F extends Field<F>> extends Vector<F> {
 
 		private final F val;
@@ -73,6 +88,12 @@ public class RecommendationService {
 		}
 	}
 
+	/**
+	 * Wraps consumer-product matrix, list of users and list of sources.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	static class Mapping {
 		List<String> users;
 		List<Key> sources;
@@ -87,6 +108,13 @@ public class RecommendationService {
 		}
 	}
 
+	/**
+	 * Result score of calculation for one {@link Source} identified by its
+	 * index.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	static class Result {
 		int sourceIndex;
 		double score;
@@ -100,6 +128,17 @@ public class RecommendationService {
 
 	public RecommendationService() {}
 
+	/**
+	 * Main method which starts calculation.
+	 * 
+	 * The calculation consists of these steps:
+	 * <ol>
+	 * <li>gets matrix from database,
+	 * <li>normalizes matrix separately both horizontally and vertically,
+	 * <li>does the iterative matrix multiplication
+	 * <li>saves recommendation
+	 * </ol>
+	 */
 	public void recalc() {
 		Mapping mapping = getConsumerProductMatrix();
 		if (mapping == null) {
@@ -123,6 +162,14 @@ public class RecommendationService {
 		saveRecommendations(mapping, PR);
 	}
 
+	/**
+	 * Saves recommendation.
+	 * 
+	 * @param mapping
+	 *            contains original state and list of users and sources
+	 * @param PR
+	 *            result consumer-product matrix
+	 */
 	private void saveRecommendations(Mapping mapping, SparseMatrix<Float64> PR) {
 		SparseMatrix<Float64> matrix = mapping.matrix;
 		List<Recommendation> recommendations = new ArrayList<Recommendation>();
@@ -148,6 +195,17 @@ public class RecommendationService {
 		}
 	}
 
+	/**
+	 * Creates recommendation of {@link Source}s for user.
+	 * 
+	 * @param user
+	 *            the user the {@link Recommendation} is created for
+	 * @param sources
+	 *            list of all {@link Source}s
+	 * @param results
+	 *            list of result {@link Source}s with scores
+	 * @return created {@link Recommendation}
+	 */
 	private Recommendation createRecommendation(String user, List<Key> sources,
 			List<Result> results) {
 		List<Key> bestRecommendations =
@@ -159,6 +217,16 @@ public class RecommendationService {
 		return rec;
 	}
 
+	/**
+	 * Gets the best few {@link Source}s according to their score from list of
+	 * all {@link Source}s.
+	 * 
+	 * @param results
+	 *            list of scored {@link Source}s
+	 * @param sourceKeys
+	 *            list of all {@link Source}s
+	 * @return list of best {@link Source}s
+	 */
 	private List<Key> getBestRecommendations(List<Result> results,
 			List<Key> sourceKeys) {
 		int recommendations =
@@ -179,6 +247,13 @@ public class RecommendationService {
 		return sources;
 	}
 
+	/**
+	 * Makes matrix with ones on diagonal.
+	 * 
+	 * @param numberOfRows
+	 *            number of rows
+	 * @return matrix
+	 */
 	private SparseMatrix<Float64> makeCR0(int numberOfRows) {
 		List<SparseVector<Float64>> matrix =
 			new ArrayList<SparseVector<Float64>>();
@@ -190,11 +265,25 @@ public class RecommendationService {
 			Float64.ONE), Float64.ZERO);
 	}
 
+	/**
+	 * Normalizes customers for each product.
+	 * 
+	 * @param matrix
+	 *            consumer-product matrix
+	 * @return normalized matrix
+	 */
 	private SparseMatrix<Float64> makeB(SparseMatrix<Float64> matrix) {
 		// normalize customers for each product
 		return makeC(matrix.transpose()).transpose();
 	}
 
+	/**
+	 * Normalizes products for each customer.
+	 * 
+	 * @param matrix
+	 *            consumer-product matrix
+	 * @return normalized matrix
+	 */
 	private SparseMatrix<Float64> makeC(SparseMatrix<Float64> matrix) {
 		// normalize products for each customer
 		List<SparseVector<Float64>> normRows =
@@ -211,7 +300,9 @@ public class RecommendationService {
 	}
 
 	/**
-	 * @return null if no user source exists
+	 * Fetches and restores consumer-product matrix from database.
+	 * 
+	 * @return null if no {@link UserSource} exists
 	 */
 	private Mapping getConsumerProductMatrix() {
 		UserSourceService uss = new UserSourceService();
@@ -263,6 +354,13 @@ public class RecommendationService {
 		return new Mapping(usersList, sourcesList, SparseMatrix.valueOf(matrix));
 	}
 
+	/**
+	 * Gets {@link Recommendation} calculated for specified user
+	 * 
+	 * @param userId
+	 *            user the {@link Recommendation} is desired for
+	 * @return {@link Recommendation}
+	 */
 	public Recommendation getRecommendation(String userId) {
 		Recommendation rec = new Recommendation(userId);
 		Key key = KeyGen.genKey(rec);

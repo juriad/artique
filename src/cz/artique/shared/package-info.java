@@ -5,5 +5,7 @@
  * 
  * There are also packages {@link cz.artique.server} and
  * {@link cz.artique.client}.
+ * 
+ * @author Adam Juraszek
  */
 package cz.artique.shared;

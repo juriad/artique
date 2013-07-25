@@ -113,8 +113,10 @@ public class PageChangeCrawler
 	 * Creates a new {@link PageChangeItem} from
 	 * 
 	 * @param page
+	 *            filtered page
 	 * @param diff
-	 * @return
+	 *            difference from last version of page
+	 * @return prototype of {@link PageChangeItem} representing this change
 	 */
 	protected PageChangeItem getPageChangeItem(Elements page, String diff) {
 		PageChangeItem change = new PageChangeItem(getSource());

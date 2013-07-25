@@ -23,6 +23,15 @@ import cz.artique.shared.validation.Issue;
 import cz.artique.shared.validation.IssueType;
 import cz.artique.shared.validation.ValidationException;
 
+/**
+ * Provides methods which manipulate with {@link UserSource}s, {@link Source}s,
+ * {@link Region}s and {@link Recommendation}s.
+ * Methods are defined by communication interface.
+ * 
+ * @see ClientSourceService
+ * @author Adam Juraszek
+ * 
+ */
 public class ClientSourceServiceImpl implements ClientSourceService {
 
 	@SuppressWarnings("unchecked")

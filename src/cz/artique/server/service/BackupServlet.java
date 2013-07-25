@@ -8,6 +8,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Entry point for users when serving backups of webpages.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class BackupServlet extends HttpServlet {
 
 	/**
@@ -30,7 +36,8 @@ public class BackupServlet extends HttpServlet {
 	}
 
 	/**
-	 * Processes this request.
+	 * Gets backup key from request parameter and delegates it to
+	 * {@link BackupService#serveBackup(String, HttpServletResponse)}
 	 * 
 	 * @param req
 	 *            the request

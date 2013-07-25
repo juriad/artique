@@ -8,6 +8,12 @@ import cz.artique.server.crawler.CrawlerException;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Label;
 
+/**
+ * Task which is added to Task Queue in order to delay {@link UserItem} backup.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class BackupTask implements DeferredTask {
 
 	private static final long serialVersionUID = 1L;
@@ -15,11 +21,28 @@ public class BackupTask implements DeferredTask {
 	private final Key userItemKey;
 	private final Key backupLabelKey;
 
+	/**
+	 * Saves state-less key of {@link UserItem} to be backed up and key of
+	 * {@link Label} which caused the backup.
+	 * 
+	 * @param itemKey
+	 *            key of {@link UserItem} to back up
+	 * @param backupLabelKey
+	 *            key of {@link Label} which caused the backup
+	 */
 	public BackupTask(Key itemKey, Key backupLabelKey) {
 		this.userItemKey = itemKey;
 		this.backupLabelKey = backupLabelKey;
 	}
 
+	/**
+	 * Gets {@link UserItem} and {@link Label} from database and delegates it to
+	 * {@link BackupService#backup(UserItem, cz.artique.shared.model.label.BackupLevel)}
+	 * .
+	 * Finally it saves key of backup back to backed up {@link UserItem}.
+	 * 
+	 * @see java.lang.Runnable#run()
+	 */
 	public void run() {
 		ItemService is = new ItemService();
 		UserItem userItem = is.getByKey(userItemKey);

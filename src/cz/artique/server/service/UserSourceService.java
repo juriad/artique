@@ -21,6 +21,7 @@ import cz.artique.server.utils.KeyGen;
 import cz.artique.shared.model.config.server.ServerConfigKey;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
+import cz.artique.shared.model.source.CrawlerData;
 import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.PageChangeCrawlerData;
 import cz.artique.shared.model.source.Region;
@@ -28,10 +29,27 @@ import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.SourceType;
 import cz.artique.shared.model.source.UserSource;
 
+/**
+ * Provides methods which manipulates with entity {@link UserSource} in
+ * database.
+ * It also contains several other methods which are related to
+ * {@link UserSource}s and nearby entities.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class UserSourceService {
 
 	public UserSourceService() {}
 
+	/**
+	 * Takes userSources, extracts keys of {@link Region}s, fetches them from
+	 * database
+	 * and sets regionObjects of all {@link UserSource}s.
+	 * 
+	 * @param userSources
+	 *            iterable of {@link UserSource}s
+	 */
 	public void fillRegions(Iterable<UserSource> userSources) {
 		Map<Key, List<UserSource>> map = new HashMap<Key, List<UserSource>>();
 		for (UserSource us : userSources) {
@@ -53,10 +71,25 @@ public class UserSourceService {
 		}
 	}
 
+	/**
+	 * Calls {@link #fillRegions(Iterable)}; this is a wrapper used for a single
+	 * {@link UserSource}
+	 * 
+	 * @param userSources
+	 *            list of {@link UserSource}s, usually a single one
+	 */
 	public void fillRegions(UserSource... userSources) {
 		fillRegions(Arrays.asList(userSources));
 	}
 
+	/**
+	 * Takes userSources, extracts keys of {@link Source}s, fetches them from
+	 * database
+	 * and sets sourceObjects of all {@link UserSource}s.
+	 * 
+	 * @param userSources
+	 *            iterable of {@link UserSource}s
+	 */
 	public void fillSources(Iterable<UserSource> userSources) {
 		Map<Key, List<UserSource>> map = new HashMap<Key, List<UserSource>>();
 		for (UserSource us : userSources) {
@@ -78,15 +111,26 @@ public class UserSourceService {
 		}
 	}
 
+	/**
+	 * Calls {@link #fillSources(Iterable)}; this is a wrapper used for a single
+	 * {@link UserSource}
+	 * 
+	 * @param userSources
+	 *            list of {@link UserSource}s, usually a single one
+	 */
 	public void fillSources(UserSource... userSources) {
 		fillSources(Arrays.asList(userSources));
 	}
 
 	/**
-	 * Returns old if already exists
+	 * Creates a new {@link UserSource} if such does not exist yet.
+	 * Returns old if already exists.
+	 * Calls {@link #createUserSourceIfNotExist(UserSource)} and than handles
+	 * the rest: labels, regions.
 	 * 
 	 * @param userSource
-	 * @return incomplete usersource
+	 *            prototype of {@link UserSource}
+	 * @return new {@link UserSource} or existing one
 	 */
 	public UserSource createUserSource(UserSource userSource) {
 		UserSource old = createUserSourceIfNotExist(userSource);
@@ -112,6 +156,13 @@ public class UserSourceService {
 		return userSource;
 	}
 
+	/**
+	 * Detects change of {@link Region}; it that case, it creates a new
+	 * {@link Region} and sets
+	 * its key to {@link UserSource}.
+	 * 
+	 * @param userSource
+	 */
 	private void handleRegionChange(UserSource userSource) {
 		if (userSource.getRegion() == null
 			&& userSource.getRegionObject() != null) {
@@ -121,6 +172,14 @@ public class UserSourceService {
 		}
 	}
 
+	/**
+	 * Creates a new {@link UserSource} if such does not exist yet.
+	 * Returns old if already exists
+	 * 
+	 * @param userSource
+	 *            prototype of {@link UserSource}
+	 * @return incomplete {@link UserSource} or existing one
+	 */
 	private UserSource createUserSourceIfNotExist(UserSource userSource) {
 		Transaction tx = Datastore.beginTransaction();
 		UserSource theUserSource = null;
@@ -140,6 +199,14 @@ public class UserSourceService {
 		return theUserSource;
 	}
 
+	/**
+	 * Creates a new {@link Label} for newly-created {@link UserSource}.
+	 * The {@link Label} will be of type {@link LabelType#USER_SOURCE}.
+	 * 
+	 * @param userSource
+	 *            {@link UserSource} the {@link Label} is being created for
+	 * @return new {@link Label}
+	 */
 	private Label createLabelForUserSource(UserSource userSource) {
 		Key labelKey;
 		String labelName = KeyFactory.keyToString(userSource.getSource());
@@ -151,6 +218,12 @@ public class UserSourceService {
 		return l;
 	}
 
+	/**
+	 * Updates existing {@link UserSource}.
+	 * 
+	 * @param userSource
+	 *            {@link UserSource} to update
+	 */
 	public void updateUserSource(UserSource userSource) {
 		handleRegionChange(userSource);
 		Transaction tx = Datastore.beginTransaction();
@@ -178,6 +251,15 @@ public class UserSourceService {
 		updateSourceUsage(original, userSource);
 	}
 
+	/**
+	 * Updates usage of underlying {@link Source}.
+	 * Adds +1 if started to be watched, -1 if stopped watching.
+	 * 
+	 * @param original
+	 *            former {@link UserSource} before change
+	 * @param userSource
+	 *            {@link UserSource} after change
+	 */
 	private void updateSourceUsage(UserSource original, UserSource userSource) {
 		int diff = 0;
 		if (original == null) {
@@ -223,6 +305,13 @@ public class UserSourceService {
 		}
 	}
 
+	/**
+	 * Gets all {@link UserSource}s for a single user.
+	 * 
+	 * @param userId
+	 *            the user the {@link UserSource}s are gotten for
+	 * @return list of all {@link UserSource}s
+	 */
 	public List<UserSource> getUserSources(String userId) {
 		UserSourceMeta meta = UserSourceMeta.get();
 		ModelQuery<UserSource> query =
@@ -233,6 +322,14 @@ public class UserSourceService {
 		return userSources;
 	}
 
+	/**
+	 * Gets {@link UserSource} of {@link ManualSource} for a user.
+	 * 
+	 * @param userId
+	 *            the user the {@link UserSource} of {@link ManualSource} is
+	 *            gotten for
+	 * @return {@link UserSource} of {@link ManualSource}
+	 */
 	public UserSource getManualUserSource(String userId) {
 		SourceService ss = new SourceService();
 		ManualSource manualSource = ss.ensureManualSource(userId);
@@ -256,6 +353,13 @@ public class UserSourceService {
 		return userSource;
 	}
 
+	/**
+	 * Gets whole {@link UserSource} by its key.
+	 * 
+	 * @param key
+	 *            key of {@link UserSource}
+	 * @return {@link UserSource}
+	 */
 	public UserSource getUserSource(Key key) {
 		UserSource userSource = Datastore.get(UserSourceMeta.get(), key);
 		fillRegions(userSource);
@@ -263,17 +367,36 @@ public class UserSourceService {
 		return userSource;
 	}
 
+	/**
+	 * Gets {@link PageChangeCrawlerData} by its key.
+	 * 
+	 * @param crawlerData
+	 *            key of {@link PageChangeCrawlerData}
+	 * @return {@link PageChangeCrawlerData}
+	 */
 	public PageChangeCrawlerData getPageChangeCrawlerData(Key crawlerData) {
 		PageChangeCrawlerData pageChangeCrawlerData =
 			Datastore.get(PageChangeCrawlerDataMeta.get(), crawlerData);
 		return pageChangeCrawlerData;
 	}
 
+	/**
+	 * @param data
+	 *            {@link PageChangeCrawlerData} to save
+	 */
 	public void saveCrawlerData(PageChangeCrawlerData data) {
 		Key key = Datastore.put(data);
 		data.setKey(key);
 	}
 
+	/**
+	 * Sets key of {@link CrawlerData} to all {@link UserSource}s in list.
+	 * 
+	 * @param firstTime
+	 *            list of {@link UserSource}s
+	 * @param crawlerDataKey
+	 *            key of {@link CrawlerData} to be set
+	 */
 	public void setCrawlerData(List<UserSource> firstTime, Key crawlerDataKey) {
 		List<Key> keys = new ArrayList<Key>();
 		for (UserSource us : firstTime) {
@@ -295,6 +418,9 @@ public class UserSourceService {
 		}
 	}
 
+	/**
+	 * @return all existing {@link UserSource}s
+	 */
 	public List<UserSource> getAllUserSources() {
 		UserSourceMeta meta = UserSourceMeta.get();
 		List<UserSource> userSources =
@@ -303,6 +429,27 @@ public class UserSourceService {
 				.filterInMemory(meta.sourceType.notEqual(SourceType.MANUAL))
 				.sort(meta.userId.asc)
 				.asList();
+		return userSources;
+	}
+
+	/**
+	 * Gets list of active {@link UserSource}s for {@link Source} identified by
+	 * its key.
+	 * 
+	 * @param sourceKey
+	 *            key of {@link Source}
+	 * @return list of active {@link UserSource}s
+	 */
+	public List<UserSource> getActiveUserSourcesForSource(Key sourceKey) {
+		UserSourceMeta meta = UserSourceMeta.get();
+		List<UserSource> userSources =
+			Datastore
+				.query(meta)
+				.filter(meta.source.equal(sourceKey))
+				.filter(meta.watching.equal(Boolean.TRUE))
+				.asList();
+		UserSourceService uss = new UserSourceService();
+		uss.fillRegions(userSources);
 		return userSources;
 	}
 }

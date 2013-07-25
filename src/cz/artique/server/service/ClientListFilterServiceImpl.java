@@ -3,6 +3,7 @@ package cz.artique.server.service;
 import java.util.List;
 
 import cz.artique.client.service.ClientListFilterService;
+import cz.artique.client.service.ClientSourceService;
 import cz.artique.server.validation.Validator;
 import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.FilterLevel;
@@ -12,6 +13,14 @@ import cz.artique.shared.validation.Issue;
 import cz.artique.shared.validation.IssueType;
 import cz.artique.shared.validation.ValidationException;
 
+/**
+ * Provides methods which manipulate with {@link ListFilter}s.
+ * Methods are defined by communication interface.
+ * 
+ * @see ClientSourceService
+ * @author Adam Juraszek
+ * 
+ */
 public class ClientListFilterServiceImpl implements ClientListFilterService {
 
 	public List<ListFilter> getAllListFilters() {

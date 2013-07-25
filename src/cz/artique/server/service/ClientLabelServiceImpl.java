@@ -11,6 +11,14 @@ import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.validation.ValidationException;
 
+/**
+ * Provides methods which manipulate with {@link Label}s.
+ * Methods are defined by communication interface.
+ * 
+ * @see ClientLabelService
+ * @author Adam Juraszek
+ * 
+ */
 public class ClientLabelServiceImpl implements ClientLabelService {
 
 	public List<Label> getAllLabels() {

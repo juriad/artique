@@ -35,4 +35,10 @@ public interface ListingConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("TXT Diff")
 	String content_DIFF_TXT();
+
+	@DefaultStringValue("Today")
+	String today();
+
+	@DefaultStringValue("Yesterday")
+	String yesterday();
 }

@@ -11,6 +11,7 @@ import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import cz.artique.client.labels.ClickableLabelWidget;
 import cz.artique.client.labels.LabelWidget;
 import cz.artique.client.labels.suggestion.LabelsPool;
 import cz.artique.client.labels.suggestion.SuggestionResult;
@@ -133,7 +134,7 @@ public class CurrentQueryFilter extends AbstractQueryFilter {
 
 	@Override
 	protected LabelWidget createWidget(Label l) {
-		LabelWidget labelWidget = LabelWidget.FACTORY.createWidget(l);
+		LabelWidget labelWidget = ClickableLabelWidget.FACTORY.createWidget(l);
 		labelWidget.setEnabled(false);
 		return labelWidget;
 	}

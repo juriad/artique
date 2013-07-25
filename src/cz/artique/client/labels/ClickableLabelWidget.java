@@ -39,10 +39,6 @@ public class ClickableLabelWidget extends LabelWidget {
 
 		nameLabel.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				if (!isEnabled()) {
-					event.preventDefault();
-					return;
-				}
 				if (impl.handleAsClick(Event.as(event.getNativeEvent()))) {
 					Filter filter =
 						CachingHistoryUtils.UTILS.getFilterForLabel(label);

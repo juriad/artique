@@ -27,6 +27,13 @@ import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.user.UserInfo;
 
+/**
+ * Produces list of exported {@link Item}s in form of RSS or Atom identified by
+ * export alias of some {@link ListFilter}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ExportServlet extends HttpServlet {
 
 	/**
@@ -49,7 +56,8 @@ public class ExportServlet extends HttpServlet {
 	}
 
 	/**
-	 * Processes this request.
+	 * Produces list of exported {@link Item}s in form of RSS or Atom identified
+	 * by export alias of some {@link ListFilter}.
 	 * 
 	 * @param req
 	 *            the request
@@ -109,16 +117,30 @@ public class ExportServlet extends HttpServlet {
 		feed.setLink(requestURL.toString());
 		feed.setUri(requestURL.toString());
 		try {
-			respondFeed(resp, feed, bestListFilter, type);
+			respondFeed(resp, feed, bestListFilter);
 		} catch (FeedException e) {
 			resp.sendError(500,
 				"Failed to print feed to output: " + e.getLocalizedMessage());
 		}
 	}
 
+	/**
+	 * Fills feed with {@link Item}s matching {@link ListFilter} and writes it
+	 * into http response.
+	 * 
+	 * @param resp
+	 *            response which the feed is to be written to
+	 * @param feed
+	 *            feed
+	 * @param listFilter
+	 *            {@link ListFilter}
+	 * @throws IOException
+	 *             if the feed cannot be written to response
+	 * @throws FeedException
+	 *             if the xml of feed cannot be created
+	 */
 	private void respondFeed(HttpServletResponse resp, SyndFeed feed,
-			ListFilter listFilter, String type)
-			throws IOException, FeedException {
+			ListFilter listFilter) throws IOException, FeedException {
 		ItemService is = new ItemService();
 		int fetchCount =
 			ConfigService.CONFIG_SERVICE.getConfig(
@@ -160,6 +182,16 @@ public class ExportServlet extends HttpServlet {
 		output.output(feed, resp.getWriter(), true);
 	}
 
+	/**
+	 * Creates feed of desired type filled with information about
+	 * {@link ListFilter}.
+	 * 
+	 * @param listFilter
+	 *            {@link ListFilter}
+	 * @param type
+	 *            desired type of feed (RSS, Atom)
+	 * @return desired feed
+	 */
 	private SyndFeed createFeed(ListFilter listFilter, String type) {
 		UserService us = new UserService();
 		UserInfo userInfo = us.getUserInfo(listFilter.getUserId());
@@ -174,6 +206,15 @@ public class ExportServlet extends HttpServlet {
 		return feed;
 	}
 
+	/**
+	 * Finds best list filter by user and export alias.
+	 * 
+	 * @param user
+	 *            owner of {@link ListFilter}
+	 * @param export
+	 *            export alias of {@link ListFilter}
+	 * @return found {@link ListFilter} or null
+	 */
 	private ListFilter findBestListFilter(String user, String export) {
 		UserService us = new UserService();
 		UserInfo userInfo = us.getUserInfoByNickname(user);

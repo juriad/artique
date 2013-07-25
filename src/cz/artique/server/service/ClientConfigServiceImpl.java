@@ -17,8 +17,15 @@ import cz.artique.shared.model.config.client.ClientConfig;
 import cz.artique.shared.model.config.client.ClientConfigKey;
 import cz.artique.shared.model.config.client.ClientConfigValue;
 
+/**
+ * Provides methods which manipulate with client configuration in database.
+ * Methods are defined by communication interface.
+ * 
+ * @see ConfigService
+ * @author Adam Juraszek
+ * 
+ */
 public class ClientConfigServiceImpl implements ClientConfigService {
-
 	public List<ClientConfigValue> getClientConfigs() {
 		String userId = UserService.getCurrentUserId();
 
@@ -59,6 +66,15 @@ public class ClientConfigServiceImpl implements ClientConfigService {
 		return new ArrayList<ClientConfigValue>(configs.values());
 	}
 
+	/**
+	 * Gets configuration value by key.
+	 * 
+	 * @param configKey
+	 *            key of configuration
+	 * @param config
+	 *            configuration from database
+	 * @return configuration value
+	 */
 	private ClientConfigValue getValue(ClientConfigKey configKey,
 			ClientConfig config) {
 		final ClientConfigValue value;
@@ -143,6 +159,12 @@ public class ClientConfigServiceImpl implements ClientConfigService {
 		return getClientConfigs();
 	}
 
+	/**
+	 * @param value
+	 *            configuration value
+	 * @param config
+	 *            configuration from database
+	 */
 	private void setValue(ClientConfigValue value, ClientConfig config) {
 		switch (value.getKey().getType()) {
 		case DOUBLE:

@@ -7,6 +7,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Entry point for AppEngine platform cron to launch recommendation
+ * recalculation.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class CronRecommendationServlet extends HttpServlet {
 
 	/**
@@ -29,7 +36,7 @@ public class CronRecommendationServlet extends HttpServlet {
 	}
 
 	/**
-	 * Processes this request.
+	 * Delegates recalculation to {@link RecommendationService#recalc()}.
 	 * 
 	 * @param req
 	 *            the request

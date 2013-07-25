@@ -16,8 +16,25 @@ import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.utils.SharedUtils;
 
+/**
+ * Provides methods which manipulates with entity {@link ListFilter} in
+ * database.
+ * It also contains several other methods which are related to
+ * {@link ListFilter}s.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ListFilterService {
 
+	/**
+	 * Takes listFilters, extracts keys of {@link Filter}s, fetches them from
+	 * database
+	 * and sets filterObjects of all {@link ListFilter}s.
+	 * 
+	 * @param listFilters
+	 *            iterable of {@link ListFilter}s
+	 */
 	public void fillFilters(Iterable<ListFilter> listFilters) {
 		Map<Key, List<ListFilter>> map = new HashMap<Key, List<ListFilter>>();
 		for (ListFilter lf : listFilters) {
@@ -47,10 +64,24 @@ public class ListFilterService {
 		}
 	}
 
+	/**
+	 * Calls {@link #fillFilters(Iterable)}; this is a wrapper used for a single
+	 * {@link ListFilter}
+	 * 
+	 * @param listFilters
+	 *            list of {@link ListFilter}s, usually a single one
+	 */
 	public void fillFilters(ListFilter... listFilters) {
 		fillFilters(Arrays.asList(listFilters));
 	}
 
+	/**
+	 * Gets all {@link ListFilter}s for a single user.
+	 * 
+	 * @param userId
+	 *            the user the {@link ListFilter}s are gotten for
+	 * @return list of all {@link ListFilter}s
+	 */
 	public List<ListFilter> getAllListFilters(String userId) {
 		ListFilterMeta meta = ListFilterMeta.get();
 		List<ListFilter> listFilters =
@@ -59,6 +90,12 @@ public class ListFilterService {
 		return listFilters;
 	}
 
+	/**
+	 * Creates a new {@link ListFilter} in database.
+	 * 
+	 * @param listFilter
+	 *            {@link ListFilter} to be created
+	 */
 	public void createListFilter(ListFilter listFilter) {
 		Filter filter = listFilter.getFilterObject();
 		Key filterKey = saveFilter(filter);
@@ -67,6 +104,12 @@ public class ListFilterService {
 		listFilter.setKey(key);
 	}
 
+	/**
+	 * Updates an existing {@link ListFilter}.
+	 * 
+	 * @param listFilter
+	 *            {@link ListFilter} to be updated
+	 */
 	public void updateListFilter(ListFilter listFilter) {
 		ListFilter old = new ListFilter();
 		old.setFilter(listFilter.getFilter());
@@ -85,6 +128,17 @@ public class ListFilterService {
 		}
 	}
 
+	/**
+	 * Saves {@link Filter} to database.
+	 * A new {@link Filter} is created in database when filterObject of
+	 * {@link ListFilter} is changed in any way.
+	 * The old one is deleted.
+	 * 
+	 * @see #deleteFilter(Filter)
+	 * @param filter
+	 *            {@link Filter} to be saved
+	 * @return key of saved {@link Filter}
+	 */
 	private Key saveFilter(Filter filter) {
 		if (filter == null) {
 			return null;
@@ -102,6 +156,12 @@ public class ListFilterService {
 		return filter.getKey();
 	}
 
+	/**
+	 * Deletes {@link Filter} from database.
+	 * 
+	 * @param filter
+	 *            {@link Filter} to be deleted
+	 */
 	private void deleteFilter(Filter filter) {
 		if (filter == null) {
 			return;
@@ -114,12 +174,27 @@ public class ListFilterService {
 		Datastore.deleteAsync(keys);
 	}
 
+	/**
+	 * Deletes {@link ListFilter}.
+	 * 
+	 * @param listFilter
+	 *            {@link ListFilter} to be deleted
+	 */
 	public void deleteListFilter(ListFilter listFilter) {
 		fillFilters(listFilter);
 		deleteFilter(listFilter.getFilterObject());
 		Datastore.delete(listFilter.getKey());
 	}
 
+	/**
+	 * Gets {@link ListFilter} of a user identified by its export alias.
+	 * 
+	 * @param alias
+	 *            export alias of the {@link ListFilter}
+	 * @param userId
+	 *            owner of the {@link ListFilter}
+	 * @return found {@link ListFilter} or null if it does not exist
+	 */
 	public ListFilter getExportByAlias(String alias, String userId) {
 		ListFilterMeta meta = ListFilterMeta.get();
 		List<ListFilter> exports =
@@ -136,6 +211,13 @@ public class ListFilterService {
 		}
 	}
 
+	/**
+	 * Gets {@link ListFilter} by its key.
+	 * 
+	 * @param key
+	 *            key of {@link ListFilter}
+	 * @return {@link ListFilter}
+	 */
 	public ListFilter getListFilterByKey(Key key) {
 		ListFilter listFilter = Datastore.get(ListFilterMeta.get(), key);
 		fillFilters(listFilter);

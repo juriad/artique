@@ -15,12 +15,22 @@ import cz.artique.shared.model.config.server.ServerConfig;
 import cz.artique.shared.model.config.server.ServerConfigKey;
 import cz.artique.shared.model.config.server.ServerConfigValue;
 
+/**
+ * Provides methods which manipulate with server configuration in database.
+ * 
+ * @see ClientConfigServiceImpl
+ * @author Adam Juraszek
+ * 
+ */
 public enum ConfigService {
 	CONFIG_SERVICE;
 
 	private Map<ServerConfigKey, ServerConfigValue<?>> configs =
 		new HashMap<ServerConfigKey, ServerConfigValue<?>>();
 
+	/**
+	 * Refreshes configuration cache.
+	 */
 	private void refresh() {
 		configs.clear();
 		Map<String, ServerConfigKey> map =
@@ -54,6 +64,15 @@ public enum ConfigService {
 		}
 	}
 
+	/**
+	 * Gets configuration value by key.
+	 * 
+	 * @param configKey
+	 *            key of configuration
+	 * @param config
+	 *            configuration from database
+	 * @return configuration value
+	 */
 	private ServerConfigValue<?> getValue(ServerConfigKey configKey,
 			ServerConfig config) {
 		final ServerConfigValue<?> value;
@@ -84,6 +103,13 @@ public enum ConfigService {
 		return value;
 	}
 
+	/**
+	 * Returns configuration value by key.
+	 * 
+	 * @param key
+	 *            key of configuration
+	 * @return configuration value
+	 */
 	public ServerConfigValue<?> getConfig(ServerConfigKey key) {
 		ServerConfigValue<?> configValue = configs.get(key);
 		if (configValue == null) {
@@ -93,6 +119,12 @@ public enum ConfigService {
 		return configValue;
 	}
 
+	/**
+	 * Updates configuration in database for listed configuration values.
+	 * 
+	 * @param changedConfigs
+	 *            value to change in database
+	 */
 	public void setConfigs(List<ServerConfigValue<?>> changedConfigs) {
 		Map<Key, ServerConfigValue<?>> keysToChange =
 			new HashMap<Key, ServerConfigValue<?>>();
@@ -138,6 +170,12 @@ public enum ConfigService {
 		}
 	}
 
+	/**
+	 * @param value
+	 *            configuration value
+	 * @param config
+	 *            configuration from database
+	 */
 	private void setValue(ServerConfigValue<?> value, ServerConfig config) {
 		switch (value.getKey().getType()) {
 		case DOUBLE:

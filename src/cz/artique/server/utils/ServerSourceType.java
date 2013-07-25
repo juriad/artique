@@ -63,7 +63,8 @@ public enum ServerSourceType {
 	 * Finds enum value by source type.
 	 * 
 	 * @param type
-	 * @return
+	 *            source type
+	 * @return corresponding {@link ServerSourceType} or null if not found
 	 */
 	public static ServerSourceType get(SourceType type) {
 		for (ServerSourceType st : values()) {

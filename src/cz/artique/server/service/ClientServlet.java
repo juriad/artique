@@ -30,6 +30,13 @@ import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.model.user.UserInfo;
 
+/**
+ * Client extension communicates with this servlet in order to get list of all
+ * {@link Label}s for a user or to add a new {@link ManualItem}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ClientServlet extends HttpServlet {
 
 	/**
@@ -52,7 +59,8 @@ public class ClientServlet extends HttpServlet {
 	}
 
 	/**
-	 * Processes this request.
+	 * Depending on parameters, responds with list of all {@link Label}s for a
+	 * user or creates a {@link ManualItem}.
 	 * 
 	 * @param req
 	 *            the request
@@ -123,6 +131,18 @@ public class ClientServlet extends HttpServlet {
 		}
 	}
 
+	/**
+	 * Adds new {@link ManualItem} and corresponding {@link UserItem}.
+	 * 
+	 * @param userInfo
+	 *            user the new {@link ManualItem} is created for
+	 * @param jsonItem
+	 *            JSON representation of the new item.
+	 * @param resp
+	 *            http response
+	 * @throws IOException
+	 *             when there is problem writing into response
+	 */
 	private void addItem(UserInfo userInfo, String jsonItem,
 			HttpServletResponse resp) throws IOException {
 		Map<?, ?> map;
@@ -168,6 +188,20 @@ public class ClientServlet extends HttpServlet {
 		JSONValue.writeJSONString("OK", resp.getWriter());
 	}
 
+	/**
+	 * Creates {@link UserItem} for {@link ManualItem}.
+	 * It also creates necessary non-existing {@link Label}s if they are
+	 * present.
+	 * 
+	 * @param map
+	 *            request parameters
+	 * @param item
+	 *            {@link ManualItem} this {@link UserItem} shall be created for
+	 * @param userId
+	 *            owner of this {@link UserItem}
+	 * @return array containing {@link UserItem} and {@link Label} causing
+	 *         backup
+	 */
 	private Object[] createUserItem(Map<?, ?> map, ManualItem item,
 			String userId) {
 		UserItem userItem = new UserItem();
@@ -221,6 +255,13 @@ public class ClientServlet extends HttpServlet {
 		return new Object[] { userItem, backupLabel };
 	}
 
+	/**
+	 * Checks whether label name is valid.
+	 * 
+	 * @param label
+	 *            label name
+	 * @return new label name
+	 */
 	private String checkLabel(String label) {
 		label = label.trim();
 		if (label.isEmpty()) {
@@ -235,6 +276,13 @@ public class ClientServlet extends HttpServlet {
 		return label;
 	}
 
+	/**
+	 * Creates {@link ManualItem} filled with parameters of request.
+	 * 
+	 * @param map
+	 *            request parameters
+	 * @return created {@link ManualItem}
+	 */
 	private ManualItem createManualItem(Map<?, ?> map) {
 		ManualItem item = new ManualItem();
 		item.setAdded(new Date());
@@ -284,6 +332,17 @@ public class ClientServlet extends HttpServlet {
 		return item;
 	}
 
+	/**
+	 * Returns in http response list of all user-defined {@link Label}s and list
+	 * of {@link Label}s automatically assigned to {@link ManualItem}s.
+	 * 
+	 * @param userInfo
+	 *            owner of desired {@link Label}s
+	 * @param resp
+	 *            http response
+	 * @throws IOException
+	 *             when there is problem writing into response
+	 */
 	private void getLabels(UserInfo userInfo, HttpServletResponse resp)
 			throws IOException {
 		LabelService ls = new LabelService();

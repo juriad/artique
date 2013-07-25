@@ -23,7 +23,9 @@ import cz.artique.shared.model.source.UserSource;
  * @author Adam Juraszek
  * 
  * @param <E>
+ *            type of {@link HTMLSource}
  * @param <F>
+ *            type of items the E produces
  */
 public abstract class HTMLCrawler<E extends HTMLSource, F extends Item>
 		extends AbstractCrawler<E, F> {
@@ -68,6 +70,15 @@ public abstract class HTMLCrawler<E extends HTMLSource, F extends Item>
 		return count;
 	}
 
+	/**
+	 * @param region
+	 *            {@link Region}
+	 * @param filteredPage
+	 *            filtered page by {@link Region}
+	 * @param list
+	 *            list of {@link UserSource} interested in this {@link Region}
+	 * @return number of created items
+	 */
 	protected abstract int handleByRegion(Region region, Elements filteredPage,
 			List<UserSource> list);
 

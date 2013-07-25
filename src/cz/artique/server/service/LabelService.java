@@ -22,10 +22,27 @@ import cz.artique.shared.validation.Issue;
 import cz.artique.shared.validation.IssueType;
 import cz.artique.shared.validation.ValidationException;
 
+/**
+ * Provides methods which manipulates with entity {@link Label} in
+ * database.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class LabelService {
 
 	public LabelService() {}
 
+	/**
+	 * Gets all {@link Label}s for a user, optionally filtered by their type.
+	 * 
+	 * @param userId
+	 *            user the {@link Label}s are gotten for
+	 * @param type
+	 *            {@link LabelType} the {@link Label}s are filtered to, or null
+	 *            to return all {@link Label}s
+	 * @return list of {@link Label}s
+	 */
 	public List<Label> getAllLabels(String userId, LabelType type) {
 		LabelMeta meta = LabelMeta.get();
 		ModelQuery<Label> query =
@@ -37,6 +54,13 @@ public class LabelService {
 		return labels;
 	}
 
+	/**
+	 * Creates a new {@link Label} if it had not existed.
+	 * 
+	 * @param label
+	 *            {@link Label} to be created
+	 * @return new {@link Label} or existing one
+	 */
 	public Label creatIfNotExist(Label label) {
 		Key key = KeyGen.genKey(label);
 		LabelMeta meta = LabelMeta.get();
@@ -58,6 +82,13 @@ public class LabelService {
 		return theLabel;
 	}
 
+	/**
+	 * Gets list of {@link Label}s identified by their keys.
+	 * 
+	 * @param labelKeys
+	 *            iterable of keys of {@link Label}s
+	 * @return list of {@link Label}s
+	 */
 	public List<Label> getLabelsByKeys(Iterable<Key> labelKeys) {
 		if (labelKeys == null) {
 			return new ArrayList<Label>();
@@ -66,6 +97,13 @@ public class LabelService {
 		return labels;
 	}
 
+	/**
+	 * Gets a {@link Label} identified by its key.
+	 * 
+	 * @param labelKey
+	 *            key of {@link Label}
+	 * @return {@link Label}
+	 */
 	public Label getLabelByKey(Key labelKey) {
 		if (labelKey == null) {
 			return null;
@@ -73,10 +111,25 @@ public class LabelService {
 		return getLabelsByKeys(Arrays.asList(labelKey)).get(0);
 	}
 
+	/**
+	 * Saves an existing {@link Label}s to database.
+	 * 
+	 * @param labelsByKeys
+	 *            list of {@link Label}s to be saved
+	 */
 	public void saveLabels(List<Label> labelsByKeys) {
 		Datastore.put(labelsByKeys);
 	}
 
+	/**
+	 * Deletes list of {@link Label}s identified by their keys.
+	 * 
+	 * @param toDelete
+	 *            list of {@link Label}s to be deleted
+	 * @throws ValidationException
+	 *             exception thrown when some {@link Label} cannot be deleted;
+	 *             cancels deletion of the rest {@link Label}s
+	 */
 	public void deleteLabels(List<Key> toDelete) throws ValidationException {
 		for (Key key : toDelete) {
 			UserSourceMeta usMeta = UserSourceMeta.get();

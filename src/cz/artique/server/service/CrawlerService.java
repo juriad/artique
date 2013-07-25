@@ -9,6 +9,7 @@ import cz.artique.server.crawler.PageChangeCrawler;
 import cz.artique.server.crawler.WebSiteCrawler;
 import cz.artique.server.crawler.XMLCrawler;
 import cz.artique.shared.model.config.server.ServerConfigKey;
+import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.source.CheckStat;
 import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.PageChangeSource;
@@ -16,7 +17,22 @@ import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.WebSiteSource;
 import cz.artique.shared.model.source.XMLSource;
 
+/**
+ * Initializes the crawling by calling proper {@link Crawler}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class CrawlerService {
+	/**
+	 * Creates {@link Crawler} for {@link Source} by its type.
+	 * 
+	 * @param source
+	 *            {@link Source} the {@link Crawler} is to be created for
+	 * @return {@link Crawler}
+	 * @throws CrawlerException
+	 *             when no such {@link Crawler} exists
+	 */
 	private Crawler<? extends Source> createCrawler(Source source)
 			throws CrawlerException {
 		if (source instanceof XMLSource) {
@@ -32,6 +48,14 @@ public class CrawlerService {
 		}
 	}
 
+	/**
+	 * Heuristics which doubles interval when no {@link Item} was acquired and
+	 * shrinks interval in case of many {@link Item}s.
+	 * 
+	 * @param count
+	 *            number of items acquired during last check
+	 * @return coefficient to be multiplied with length of last interval
+	 */
 	private double calcInterval(int count) {
 		if (count == 0) {
 			return 2.0;
@@ -40,6 +64,14 @@ public class CrawlerService {
 		}
 	}
 
+	/**
+	 * Sets nextCheck of source depending on number of acquired items.
+	 * 
+	 * @param source
+	 *            {@link Source} the next check is set for
+	 * @param count
+	 *            number of items acquired during last check
+	 */
 	private void setNextCheck(Source source, int count) {
 		// TODO nice to have: extend setNextCheck to be more intelligent
 
@@ -109,6 +141,13 @@ public class CrawlerService {
 		ss.addStat(stat);
 	}
 
+	/**
+	 * Initializes the crawling by calling proper {@link Crawler}.
+	 * 
+	 * @param source
+	 *            {@link Source} to be crawled
+	 * @return true for success; false for error
+	 */
 	public boolean crawl(Source source) {
 		try {
 			Crawler<? extends Source> crawler = createCrawler(source);

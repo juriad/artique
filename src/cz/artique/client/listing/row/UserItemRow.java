@@ -31,6 +31,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.impl.HyperlinkImpl;
+import com.google.gwt.user.datepicker.client.CalendarUtil;
 
 import cz.artique.client.common.ContentsPanel;
 import cz.artique.client.history.CachingHistoryUtils;
@@ -190,21 +191,38 @@ public class UserItemRow extends RowWidget {
 
 	private void fillDateLabel() {
 		ListingConstants constants = I18n.getListingConstants();
-
-		DateTimeFormatRenderer shortRenderer =
-			new DateTimeFormatRenderer(
-				DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_SHORT));
-
 		Item itemObject = getValue().getItemObject();
-		String simple;
-		if (itemObject instanceof ArticleItem
-			&& ((ArticleItem) itemObject).getPublished() != null) {
-			simple =
-				shortRenderer.render(((ArticleItem) itemObject).getPublished());
-		} else {
-			simple = shortRenderer.render(itemObject.getAdded());
+
+		{
+			DateTimeFormatRenderer timeRenderer =
+				new DateTimeFormatRenderer(
+					DateTimeFormat.getFormat(PredefinedFormat.TIME_SHORT));
+
+			DateTimeFormatRenderer dateRenderer =
+				new DateTimeFormatRenderer(
+					DateTimeFormat.getFormat(PredefinedFormat.DATE_MEDIUM));
+
+			Date dateShown;
+			if (itemObject instanceof ArticleItem
+				&& ((ArticleItem) itemObject).getPublished() != null) {
+				dateShown = ((ArticleItem) itemObject).getPublished();
+			} else {
+				dateShown = itemObject.getAdded();
+			}
+
+			String time = timeRenderer.render(dateShown);
+			String date;
+			int daysBetween =
+				CalendarUtil.getDaysBetween(dateShown, new Date());
+			if (daysBetween == 0) {
+				date = constants.today();
+			} else if (daysBetween == 1) {
+				date = constants.yesterday();
+			} else {
+				date = dateRenderer.render(dateShown);
+			}
+			added.setText(date + " " + time);
 		}
-		added.setText(simple);
 
 		DateTimeFormatRenderer longRenderer =
 			new DateTimeFormatRenderer(

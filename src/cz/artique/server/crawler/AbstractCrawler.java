@@ -5,7 +5,7 @@ import java.util.List;
 
 import cz.artique.server.service.BackupService;
 import cz.artique.server.service.ItemService;
-import cz.artique.server.service.SourceService;
+import cz.artique.server.service.UserSourceService;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.source.CheckStat;
@@ -115,9 +115,9 @@ public abstract class AbstractCrawler<E extends Source, F extends Item>
 	 * @return list of active {@link UserSource}s for crawled {@link Source}.
 	 */
 	protected List<UserSource> getUserSources() {
-		SourceService ss = new SourceService();
+		UserSourceService uss = new UserSourceService();
 		List<UserSource> activeUserSourcesForSource =
-			ss.getActiveUserSourcesForSource(getSource().getKey());
+			uss.getActiveUserSourcesForSource(getSource().getKey());
 		return activeUserSourcesForSource;
 	}
 

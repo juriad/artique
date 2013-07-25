@@ -11,6 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import cz.artique.shared.model.source.Source;
 
+/**
+ * Entry point for AppEngine platform cron to launch source check.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class CronCheckSourcesServlet extends HttpServlet {
 
 	/**
@@ -33,7 +39,9 @@ public class CronCheckSourcesServlet extends HttpServlet {
 	}
 
 	/**
-	 * Processes this request.
+	 * Gets list of sources to be checked (either in normal or error mode:
+	 * depends on request parameter) and delegates it to
+	 * {@link CheckService#check(Source)}
 	 * 
 	 * @param req
 	 *            the request

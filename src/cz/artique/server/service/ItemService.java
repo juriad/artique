@@ -34,9 +34,26 @@ import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.label.ListFilterOrder;
+import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
 
+/**
+ * Provides methods which manipulates with entity {@link UserItem} and
+ * {@link Item} in database.
+ * It also contains several other methods which are related to these entities.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ItemService {
+	/**
+	 * Takes userItems, extracts keys of {@link Item}s, fetches them from
+	 * database
+	 * and sets itemObject of all {@link UserItem}s.
+	 * 
+	 * @param userItems
+	 *            iterable of {@link UserItem}s
+	 */
 	public void fillItems(Iterable<UserItem> userItems) {
 		Map<Key, List<UserItem>> map = new HashMap<Key, List<UserItem>>();
 		for (UserItem ui : userItems) {
@@ -58,10 +75,27 @@ public class ItemService {
 		}
 	}
 
+	/**
+	 * Calls {@link #fillItems(Iterable)}; this is a wrapper used for a single
+	 * {@link UserItem}
+	 * 
+	 * @param userItems
+	 *            list of {@link UserItem}s, usually a single one
+	 */
 	public void fillItems(UserItem... userItems) {
 		fillItems(Arrays.asList(userItems));
 	}
 
+	/**
+	 * The main method used when requesting {@link UserItem}s shown in infinite
+	 * list.
+	 * 
+	 * @param userId
+	 *            the user the items are gotten for
+	 * @param request
+	 *            criteria of desired items
+	 * @return response containing list of matching items
+	 */
 	public ListingResponse getItems(String userId, ListingRequest request) {
 		UserItemMeta meta = UserItemMeta.get();
 		Date date = new Date();
@@ -180,6 +214,17 @@ public class ItemService {
 		return new ListingResponse(head, tail, date, endReached);
 	}
 
+	/**
+	 * Constructs query filtered by user and read state (optionally).
+	 * 
+	 * @param listFilter
+	 *            {@link ListFilter}
+	 * @param fc
+	 *            another criterion
+	 * @param userId
+	 *            owner of the {@link UserItem}s
+	 * @return query prototype
+	 */
 	private ModelQuery<UserItem> getBaseQuery(ListFilter listFilter,
 			FilterCriterion fc, String userId) {
 		UserItemMeta meta = UserItemMeta.get();
@@ -196,6 +241,13 @@ public class ItemService {
 		return query;
 	}
 
+	/**
+	 * Returns the last {@link UserItem} before specified date.
+	 * 
+	 * @param cut
+	 *            date
+	 * @return such {@link UserItem} or key of value -1
+	 */
 	private Key getLastBefore(Date cut) {
 		UserItemMeta meta = UserItemMeta.get();
 		List<Key> asKeyList =
@@ -212,6 +264,13 @@ public class ItemService {
 		}
 	}
 
+	/**
+	 * Returns the first {@link UserItem} after specified date.
+	 * 
+	 * @param cut
+	 *            date
+	 * @return such {@link UserItem} or key of value infinity
+	 */
 	private Key getFirstAfter(Date cut) {
 		UserItemMeta meta = UserItemMeta.get();
 		List<Key> asKeyList =
@@ -228,6 +287,13 @@ public class ItemService {
 		}
 	}
 
+	/**
+	 * Returns minimum of several keys.
+	 * 
+	 * @param ks
+	 *            list of keys
+	 * @return minimal one
+	 */
 	private static Key min(Key... ks) {
 		if (ks == null || ks.length == 0) {
 			return null;
@@ -242,6 +308,13 @@ public class ItemService {
 		return min;
 	}
 
+	/**
+	 * Returns maximum of several keys.
+	 * 
+	 * @param ks
+	 *            list of keys
+	 * @return maximal one
+	 */
 	private static Key max(Key... ks) {
 		if (ks == null || ks.length == 0) {
 			return null;
@@ -256,6 +329,13 @@ public class ItemService {
 		return max;
 	}
 
+	/**
+	 * Constructs complex criterion for {@link Filter}.
+	 * 
+	 * @param filter
+	 *            {@link Filter}
+	 * @return criterion
+	 */
 	private FilterCriterion getCriterionForFilter(Filter filter) {
 		if (filter == null) {
 			return null;
@@ -297,6 +377,13 @@ public class ItemService {
 		}
 	}
 
+	/**
+	 * Gets {@link UserItem} by its key.
+	 * 
+	 * @param key
+	 *            key of {@link UserItem}
+	 * @return {@link UserItem}
+	 */
 	public UserItem getByKey(Key key) {
 		UserItem userItem = Datastore.getOrNull(UserItemMeta.get(), key);
 		if (userItem != null) {
@@ -305,6 +392,12 @@ public class ItemService {
 		return userItem;
 	}
 
+	/**
+	 * Adds a new {@link ManualItem} and corresponding {@link UserItem}.
+	 * 
+	 * @param userItem
+	 *            {@link UserItem} of the new {@link ManualItem}
+	 */
 	public void addManualItem(UserItem userItem) {
 		UserSourceService uss = new UserSourceService();
 		UserSource manualUserSource =
@@ -328,6 +421,17 @@ public class ItemService {
 		userItem.setKey(userItemKey);
 	}
 
+	/**
+	 * Updates list of {@link UserItem} based on set of changes.
+	 * 
+	 * @param userItems
+	 *            {@link UserItem}s to change
+	 * @param changeSets
+	 *            set of changes for each {@link UserItem}
+	 * @param userId
+	 *            restriction to user
+	 * @return updated {@link UserItem}s
+	 */
 	public Map<Key, UserItem> updateItems(List<UserItem> userItems,
 			Map<Key, ChangeSet> changeSets, String userId) {
 		Map<Key, UserItem> result = new HashMap<Key, UserItem>();
@@ -351,6 +455,14 @@ public class ItemService {
 		return result;
 	}
 
+	/**
+	 * Sets key of backed up webpage to {@link UserItem} identified by its key.
+	 * 
+	 * @param userItemKey
+	 *            key of {@link UserItem}
+	 * @param blobKey
+	 *            key of backed up webpage
+	 */
 	public void setBackup(Key userItemKey, BlobKey blobKey) {
 		// TODO nice to have: delete old backup if current backupBlobKey != null
 		Transaction tx = Datastore.beginTransaction();
@@ -368,11 +480,25 @@ public class ItemService {
 		}
 	}
 
+	/**
+	 * Creates a new {@link Item} in database.
+	 * 
+	 * @param item
+	 *            {@link Item} to be created
+	 */
 	public void addItem(Item item) {
 		Key key = Datastore.put(item);
 		item.setKey(key);
 	}
 
+	/**
+	 * Gets list of existing {@link UserItem}s corresponding to an {@link Item}
+	 * identified by its key.
+	 * 
+	 * @param itemKey
+	 *            key of {@link Item}
+	 * @return list of corresponding {@link UserItem}s
+	 */
 	public List<UserItem> getUserItemsForItem(Key itemKey) {
 		UserItemMeta meta = UserItemMeta.get();
 		List<UserItem> list =
@@ -381,16 +507,26 @@ public class ItemService {
 	}
 
 	/**
-	 * Returns incomplete
+	 * Returns list of incomplete {@link UserItem}s by their keys.
 	 * 
 	 * @param itemKeys
-	 * @return
+	 *            keys of desired {@link UserItem}s
+	 * @return list of incomplete {@link UserItem}s
 	 */
 	public List<UserItem> getUserItemsByKeys(Iterable<Key> itemKeys) {
 		List<UserItem> list = Datastore.get(UserItemMeta.get(), itemKeys);
 		return list;
 	}
 
+	/**
+	 * Gets list of {@link ArticleItem}s with the same hash and {@link Source}.
+	 * 
+	 * @param sourceKey
+	 *            key of {@link Source}
+	 * @param hash
+	 *            hash of {@link Item}
+	 * @return list of {@link ArticleItem}s
+	 */
 	public List<ArticleItem> getCollidingArticleItems(Key sourceKey, String hash) {
 		ArticleItemMeta meta = ArticleItemMeta.get();
 		List<ArticleItem> items =
@@ -402,6 +538,12 @@ public class ItemService {
 		return items;
 	}
 
+	/**
+	 * Saves list of new {@link UserItem}s to database.
+	 * 
+	 * @param userItems
+	 *            list of {@link UserItem}s to save
+	 */
 	public void saveUserItems(List<UserItem> userItems) {
 		List<Key> keys = Datastore.put(userItems);
 		int i = 0;
@@ -411,6 +553,15 @@ public class ItemService {
 		}
 	}
 
+	/**
+	 * Gets list of {@link LinkItem}s with the same hash and {@link Source}.
+	 * 
+	 * @param sourceKey
+	 *            key of {@link Source}
+	 * @param hash
+	 *            hash of {@link Item}
+	 * @return list of {@link LinkItem}s
+	 */
 	public List<LinkItem> getCollidingLinkItems(Key sourceKey, String hash) {
 		LinkItemMeta meta = LinkItemMeta.get();
 		List<LinkItem> items =
