@@ -4,9 +4,7 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import cz.artique.client.hierarchy.tree.SourcesTree;
 import cz.artique.client.i18n.I18n;
-import cz.artique.client.listing.ArtiqueList;
 import cz.artique.client.manager.Managers;
 import cz.artique.client.messages.Message;
 import cz.artique.client.messages.MessageType;
@@ -17,14 +15,11 @@ import cz.artique.shared.model.user.UserInfo;
 public enum ArtiqueWorld {
 	WORLD;
 
+	private UserInfo userInfo;
+	
 	private ClientPingServiceAsync service = GWT
 		.create(ClientPingService.class);
-
 	private Timer timer;
-
-	private UserInfo userInfo;
-	private ArtiqueList list;
-	private SourcesTree sourcesTree;
 	private boolean online = true;
 
 	public UserInfo getUserInfo() {
@@ -33,22 +28,6 @@ public enum ArtiqueWorld {
 
 	public void setUserInfo(UserInfo userInfo) {
 		this.userInfo = userInfo;
-	}
-
-	public ArtiqueList getList() {
-		return list;
-	}
-
-	public void setList(ArtiqueList list) {
-		this.list = list;
-	}
-
-	public SourcesTree getSourcesTree() {
-		return sourcesTree;
-	}
-
-	public void setSourcesTree(SourcesTree sourcesTree) {
-		this.sourcesTree = sourcesTree;
 	}
 
 	public boolean isOnline() {

@@ -8,7 +8,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.ArtiqueWorld;
-import cz.artique.client.ArtiqueResources;
 
 public class LoginPage extends Composite {
 
@@ -17,7 +16,7 @@ public class LoginPage extends Composite {
 	interface LoginUiBinder extends UiBinder<Widget, LoginPage> {}
 
 	static {
-		ArtiqueResources resources = GWT.create(ArtiqueResources.class);
+		LoginResources resources = GWT.create(LoginResources.class);
 		resources.loginStyle().ensureInjected();
 	}
 

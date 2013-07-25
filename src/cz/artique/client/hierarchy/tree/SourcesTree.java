@@ -141,4 +141,15 @@ public class SourcesTree
 		showDisabled = !showDisabled;
 		refreshAll(getRootItem());
 	}
+
+	@Override
+	protected HierarchyTreeWidget<UserSource> createHierarchyWidget(
+			Hierarchy<UserSource> hierarchy) {
+		HierarchyTreeWidget<UserSource> hierarchyWidget =
+			super.createHierarchyWidget(hierarchy);
+		if (hierarchyWidget instanceof UserSourceWidget) {
+			((UserSourceWidget) hierarchyWidget).setSourcesTree(this);
+		}
+		return hierarchyWidget;
+	}
 }

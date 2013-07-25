@@ -2,7 +2,6 @@
 <!-- Could not determine the version of your GWT SDK; using the module DTD from GWT 1.6.4. You may want to change this. -->
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 1.6.4//EN" "http://google-web-toolkit.googlecode.com/svn/tags/1.6.4/distro-source/core/src/gwt-module.dtd">
 <module rename-to='main'>
-	<inherits name="com.google.gwt.user.User" />
 	<inherits name='com.google.gwt.uibinder.UiBinder' />
 	<inherits name='com.google.gwt.user.theme.standard.Standard' />
 	<inherits name="com.google.gwt.resources.Resources" />

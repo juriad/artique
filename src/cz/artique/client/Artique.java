@@ -4,6 +4,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.MetaElement;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.History;
@@ -37,6 +40,14 @@ public class Artique extends Composite {
 
 	interface MainUiBinder extends UiBinder<Widget, Artique> {}
 
+	interface MyResources extends ClientBundle {
+		@NotStrict
+		@Source("Artique.css")
+		CssResource style();
+	}
+
+	private static final MyResources res = GWT.create(MyResources.class);
+
 	@UiField(provided = true)
 	ArtiqueList list;
 
@@ -58,19 +69,17 @@ public class Artique extends Composite {
 	@UiField(provided = true)
 	TopPanel topPanel;
 
-	private static ArtiqueResources resources;
+	// private static ArtiqueResources resources;
 
 	static {
-		resources = GWT.create(ArtiqueResources.class);
-		resources.style().ensureInjected();
+		// resources.style().ensureInjected();
+		res.style().ensureInjected();
 	}
 
 	public Artique() {
 		list = new ArtiqueList();
-		ArtiqueWorld.WORLD.setList(list);
-		topPanel = new TopPanel();
+		topPanel = new TopPanel(list);
 		initWidget(uiBinder.createAndBindUi(this));
-		ArtiqueWorld.WORLD.setSourcesTree(sources);
 
 		initHistory();
 		initTokenForClient();

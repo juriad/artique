@@ -13,7 +13,6 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.impl.HyperlinkImpl;
 
-import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyTreeWidget;
 import cz.artique.client.hierarchy.HierarchyTreeWidgetFactory;
@@ -59,6 +58,10 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 	private String serialized;
 
 	private final HyperlinkImpl impl = GWT.create(HyperlinkImpl.class);
+
+	private SourcesTree sourcesTree;
+
+	private Image showHideDisabled;
 
 	public UserSourceWidget(Hierarchy<UserSource> hierarchy) {
 		super(hierarchy);
@@ -111,12 +114,15 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 				anchor.setText(I18n
 					.getHierarchyTreeConstants()
 					.sourceRootText());
-				final Image showHideDisabled = new Image();
+				showHideDisabled = new Image();
 				getPanel().add(showHideDisabled);
 
 				showHideDisabled.addClickHandler(new ClickHandler() {
 					public void onClick(ClickEvent event) {
-						ArtiqueWorld.WORLD.getSourcesTree().toggleDisabled();
+						if (getSourcesTree() == null) {
+							return;
+						}
+						getSourcesTree().toggleDisabled();
 						setShowHideDisabled(showHideDisabled);
 					}
 				});
@@ -131,9 +137,11 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 	}
 
 	private void setShowHideDisabled(Image image) {
+		if (getSourcesTree() == null) {
+			return;
+		}
 		HierarchyTreeConstants constants = I18n.getHierarchyTreeConstants();
-		boolean showingDisabled =
-			ArtiqueWorld.WORLD.getSourcesTree().isShowingDisabled();
+		boolean showingDisabled = getSourcesTree().isShowingDisabled();
 		String tooltip;
 		ImageResource ir;
 		if (showingDisabled) {
@@ -181,6 +189,17 @@ public class UserSourceWidget extends AbstractHierarchyTreeWidget<UserSource> {
 			return false;
 		} else {
 			return false;
+		}
+	}
+
+	public SourcesTree getSourcesTree() {
+		return sourcesTree;
+	}
+
+	public void setSourcesTree(SourcesTree sourcesTree) {
+		this.sourcesTree = sourcesTree;
+		if (showHideDisabled != null) {
+			setShowHideDisabled(showHideDisabled);
 		}
 	}
 

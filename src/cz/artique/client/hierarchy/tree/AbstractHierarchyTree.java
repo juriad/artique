@@ -60,7 +60,8 @@ public abstract class AbstractHierarchyTree<E extends HasHierarchy, F extends Pr
 								if (inTree != null) {
 									int index = event.getChanged().getIndex();
 									HierarchyTreeWidget<E> w =
-										factory.createWidget(event.getChanged());
+										createHierarchyWidget(event
+											.getChanged());
 									inTree.insertItem(index,
 										new TreeItem(w.asWidget()));
 								}
@@ -112,8 +113,14 @@ public abstract class AbstractHierarchyTree<E extends HasHierarchy, F extends Pr
 		return null;
 	}
 
+	protected HierarchyTreeWidget<E> createHierarchyWidget(
+			Hierarchy<E> hierarchy) {
+		HierarchyTreeWidget<E> w = factory.createWidget(hierarchy);
+		return w;
+	}
+
 	private TreeItem createTree(Hierarchy<E> root) {
-		HierarchyTreeWidget<E> w = factory.createWidget(root);
+		HierarchyTreeWidget<E> w = createHierarchyWidget(root);
 		TreeItem rootItem = new TreeItem(w.asWidget());
 		for (Hierarchy<E> child : root.getChildren()) {
 			TreeItem childItem = createTree(child);

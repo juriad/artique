@@ -12,7 +12,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
-import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.history.CachingHistoryUtils;
 import cz.artique.client.history.HistoryEvent;
 import cz.artique.client.history.HistoryHandler;
@@ -59,7 +58,10 @@ public class TopPanel extends Composite {
 	@UiField
 	CurrentCriteria currentCriteria;
 
-	public TopPanel() {
+	private final ArtiqueList list;
+
+	public TopPanel(ArtiqueList list) {
+		this.list = list;
 		res.style().ensureInjected();
 		initWidget(uiBinder.createAndBindUi(this));
 		setStylePrimaryName("topPanel");
@@ -85,10 +87,9 @@ public class TopPanel extends Composite {
 			}
 		});
 
-		final ArtiqueList list = ArtiqueWorld.WORLD.getList();
 		list.addNewDataHandler(new NewDataHandler() {
 			public void onNewData(NewDataEvent event) {
-				int available = list.getAvailableHeadSize();
+				int available = TopPanel.this.list.getAvailableHeadSize();
 				ListFiltersConstants constants = I18n.getListFiltersConstants();
 				if (available > 0) {
 					addNewItemsButton.setEnabled(true);
@@ -138,11 +139,11 @@ public class TopPanel extends Composite {
 
 	@UiHandler("addNewItemsButton")
 	protected void addNewItemsButtonClicked(ClickEvent event) {
-		ArtiqueWorld.WORLD.getList().showHead();
+		list.showHead();
 	}
 
 	@UiHandler("markAllReadButton")
 	protected void markAllReadButtonClicked(ClickEvent event) {
-		ArtiqueWorld.WORLD.getList().markAllRead();
+		list.markAllRead();
 	}
 }
