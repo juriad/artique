@@ -10,12 +10,26 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import cz.artique.client.utils.SortedList;
 import cz.artique.shared.utils.HasHierarchy;
 
+/**
+ * Represents {@link Hierarchy} which has some children.
+ * 
+ * @author Adam Juraszek
+ * 
+ * @param <E>
+ *            type of hierarchy
+ */
 public class InnerNode<E extends HasHierarchy> implements Hierarchy<E> {
 
 	private final String name;
 	private final Hierarchy<E> parent;
 	private final SortedList<Hierarchy<E>> children;
 
+	/**
+	 * @param name
+	 *            name of node
+	 * @param parent
+	 *            parent node, null when the node is root
+	 */
 	public InnerNode(String name, Hierarchy<E> parent) {
 		this.name = name;
 		this.parent = parent;
@@ -24,10 +38,6 @@ public class InnerNode<E extends HasHierarchy> implements Hierarchy<E> {
 
 	public String getName() {
 		return name;
-	}
-
-	public E getItem() {
-		return null;
 	}
 
 	public List<Hierarchy<E>> getChildren() {
@@ -41,6 +51,12 @@ public class InnerNode<E extends HasHierarchy> implements Hierarchy<E> {
 	private final Map<Hierarchy<E>, HandlerRegistration> registrations =
 		new HashMap<Hierarchy<E>, HandlerRegistration>();
 
+	/**
+	 * Adds child into list of children.
+	 * 
+	 * @param child
+	 *            node to add
+	 */
 	public void addChild(Hierarchy<E> child) {
 		children.add(child);
 		HandlerRegistration registration =
@@ -61,6 +77,11 @@ public class InnerNode<E extends HasHierarchy> implements Hierarchy<E> {
 		}
 	}
 
+	/**
+	 * Removes child from list of children.
+	 * 
+	 * @param child node to remove
+	 */
 	public void removeChild(Hierarchy<E> child) {
 		children.remove(child);
 		registrations.remove(child);

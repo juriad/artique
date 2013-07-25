@@ -5,6 +5,12 @@ import cz.artique.client.hierarchy.tree.HistoryWidget.HistoryWidgetFactory;
 import cz.artique.client.history.HistoryItem;
 import cz.artique.client.history.HistoryManager;
 
+/**
+ * Not used.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class HistoryTree
 		extends AbstractHierarchyTree<HistoryItem, HistoryManager> {
 
@@ -14,8 +20,13 @@ public class HistoryTree
 
 	private int lastCount = 0;
 
+	/**
+	 * Expand two levels.
+	 * 
+	 * @see cz.artique.client.hierarchy.tree.AbstractHierarchyTree#afterHierarchyChange(cz.artique.client.hierarchy.HierarchyChangeEvent)
+	 */
 	@Override
-	protected void afterUpdate(HierarchyChangeEvent<HistoryItem> event) {
+	protected void afterHierarchyChange(HierarchyChangeEvent<HistoryItem> event) {
 		if (getRootItem().getChildCount() > 0 && lastCount < 1) {
 			expand(2);
 			lastCount = getRootItem().getChildCount();

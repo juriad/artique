@@ -190,7 +190,7 @@ public class SourceRegionPicker extends Composite
 							regionObject = custom;
 						}
 						selectionChanged(regionObject);
-						cellList.setSelected(regionObject, true);
+						cellList.setSelected(regionObject);
 					}
 				});
 		}

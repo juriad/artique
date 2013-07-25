@@ -34,6 +34,20 @@ import cz.artique.shared.model.label.ListFilter;
 
 //import cz.artique.client.hierarchy.tree.HistoryTree;
 
+/**
+ * Defines the application layout when the user is logged-in.
+ * It consists of:
+ * <ul>
+ * <li> {@link LeftPanel} (options, sources, filters, messages),
+ * <li> {@link TopPanel} (filter and items single-click operations),
+ * <li> {@link Messenger} (shows latest messages) and
+ * <li> {@link ArtiqueList} (shows all items matched by current
+ * {@link ListFilter}).
+ * </ul>
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class Artique extends Composite {
 
 	private static MainUiBinder uiBinder = GWT.create(MainUiBinder.class);
@@ -76,6 +90,10 @@ public class Artique extends Composite {
 		res.style().ensureInjected();
 	}
 
+	/**
+	 * Constructs UI and inits history and sets client token for client
+	 * extension.
+	 */
 	public Artique() {
 		list = new ArtiqueList();
 		topPanel = new TopPanel(list);
@@ -85,6 +103,9 @@ public class Artique extends Composite {
 		initTokenForClient();
 	}
 
+	/**
+	 * Adds new element meta named "clientToken" to head of the page.
+	 */
 	private void initTokenForClient() {
 		Element head = Document.get().getElementsByTagName("head").getItem(0);
 		MetaElement meta = Document.get().createMetaElement();
@@ -93,6 +114,12 @@ public class Artique extends Composite {
 		head.appendChild(meta);
 	}
 
+	/**
+	 * Registers HistoryHandler which sets {@link ArtiqueListProvider} and
+	 * waits 10 seconds for all managers to initialize.
+	 * When they are ready, it fires current history state which sets history to
+	 * initial state.
+	 */
 	private void initHistory() {
 		// change list provider when history changes
 		Managers.HISTORY_MANAGER.addHistoryHandler(new HistoryHandler() {
@@ -116,7 +143,7 @@ public class Artique extends Composite {
 					MessageType.ERROR, constants.failedToLoadManagers()), true);
 			}
 		};
-		timer.schedule(5000);
+		timer.schedule(10000);
 
 		// fire initial history when managers are ready
 		Managers.waitForManagers(new ManagerReady() {
@@ -133,6 +160,10 @@ public class Artique extends Composite {
 			Managers.SOURCES_MANAGER, Managers.ITEMS_MANAGER);
 	}
 
+	/**
+	 * Change slightly class of left panel layer (to achieve hover effect) and
+	 * show appropriate widget in left panel.
+	 */
 	protected void showPanel() {
 		Element parent = leftPanel.getElement().getParentElement();
 		parent.addClassName("leftPanelLayer");

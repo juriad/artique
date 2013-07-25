@@ -7,20 +7,33 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.TreeItem;
 
 import cz.artique.client.hierarchy.Hierarchy;
 import cz.artique.client.hierarchy.HierarchyTreeWidget;
 import cz.artique.shared.utils.HasHierarchy;
 
-public class AbstractHierarchyTreeWidget<E extends HasHierarchy>
+/**
+ * Abstract widget meant to be used inside {@link TreeItem}.
+ * 
+ * @author Adam Juraszek
+ * 
+ * @param <E>
+ *            type of hierarchy
+ */
+public abstract class AbstractHierarchyTreeWidget<E extends HasHierarchy>
 		extends Composite implements HierarchyTreeWidget<E> {
 
 	private Hierarchy<E> hierarchy;
 
+	/**
+	 * @param hierarchy
+	 *            wrapped hierarchy node
+	 */
 	public AbstractHierarchyTreeWidget(Hierarchy<E> hierarchy) {
 		this.hierarchy = hierarchy;
 		panel = new FlowPanel();
-		initWidget(getPanel());
+		initWidget(panel);
 		setStylePrimaryName("hierarchyWidget");
 	}
 
@@ -33,7 +46,20 @@ public class AbstractHierarchyTreeWidget<E extends HasHierarchy>
 		return hierarchy;
 	}
 
-	protected Anchor createAnchor(FlowPanel panel, String name, String token,
+	/**
+	 * Creates anchor and adds it to panel
+	 * 
+	 * @param name
+	 *            name of anchor
+	 * @param token
+	 *            href hash
+	 * @param clickHandler
+	 *            click handler
+	 * @param tooltip
+	 *            tooltip
+	 * @return created anchor
+	 */
+	protected Anchor createAnchor(String name, String token,
 			ClickHandler clickHandler, String tooltip) {
 		Anchor anchor = new Anchor(name);
 		panel.add(anchor);
@@ -49,8 +75,19 @@ public class AbstractHierarchyTreeWidget<E extends HasHierarchy>
 		return anchor;
 	}
 
-	protected InlineLabel createLabel(FlowPanel panel, String name,
-			ClickHandler clickHandler, String tooltip) {
+	/**
+	 * Creates inline label and adds it to panel
+	 * 
+	 * @param name
+	 *            name of anchor
+	 * @param clickHandler
+	 *            click handler
+	 * @param tooltip
+	 *            tooltip
+	 * @return created inline label
+	 */
+	protected InlineLabel createLabel(String name, ClickHandler clickHandler,
+			String tooltip) {
 		InlineLabel label = new InlineLabel(name);
 		panel.add(label);
 		if (clickHandler != null) {
@@ -62,7 +99,18 @@ public class AbstractHierarchyTreeWidget<E extends HasHierarchy>
 		return label;
 	}
 
-	protected Image createImage(FlowPanel panel, ImageResource resource,
+	/**
+	 * Creates image and adds it to panel
+	 * 
+	 * @param resource
+	 *            resource of the image
+	 * @param clickHandler
+	 *            click handler
+	 * @param tooltip
+	 *            tooltip
+	 * @return created image
+	 */
+	protected Image createImage(ImageResource resource,
 			ClickHandler clickHandler, String tooltip) {
 		Image image;
 		if (resource != null) {
@@ -93,7 +141,8 @@ public class AbstractHierarchyTreeWidget<E extends HasHierarchy>
 		return selected;
 	}
 
-	protected FlowPanel getPanel() {
+	@Override
+	protected FlowPanel getWidget() {
 		return panel;
 	}
 }

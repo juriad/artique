@@ -13,6 +13,12 @@ public class LeafNode<E extends HasHierarchy> implements Hierarchy<E> {
 	private final Hierarchy<E> parent;
 	private final E item;
 
+	/**
+	 * @param item
+	 *            value of {@link LeafNode}
+	 * @param parent
+	 *            parent node
+	 */
 	public LeafNode(E item, Hierarchy<E> parent) {
 		this.item = item;
 		this.parent = parent;
@@ -22,6 +28,11 @@ public class LeafNode<E extends HasHierarchy> implements Hierarchy<E> {
 		return item.getName();
 	}
 
+	/**
+	 * Returns value of leaf node.
+	 * 
+	 * @return hierarchy object
+	 */
 	public E getItem() {
 		return item;
 	}

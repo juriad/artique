@@ -19,6 +19,17 @@ import cz.artique.client.manager.Manager;
 import cz.artique.client.manager.ManagerReady;
 import cz.artique.shared.utils.HasHierarchy;
 
+/**
+ * Wraps standard {@link Tree} into {@link ScrollPanel} and adjusts it to
+ * support hierarchical operations.
+ * 
+ * @author Adam Juraszek
+ * 
+ * @param <E>
+ *            type of hierarchy
+ * @param <F>
+ *            manager providing hierarchy
+ */
 public abstract class AbstractHierarchyTree<E extends HasHierarchy, F extends ProvidesHierarchy<E> & Manager>
 		extends Composite {
 
@@ -29,6 +40,15 @@ public abstract class AbstractHierarchyTree<E extends HasHierarchy, F extends Pr
 	private Hierarchy<E> root;
 	private F manager;
 
+	/**
+	 * As soon as manager is ready, builds {@link Hierarchy} and wraps it into
+	 * {@link TreeItem}s and adds it into {@link Tree}.
+	 * 
+	 * @param manager
+	 *            manager providing hierarchy
+	 * @param factory
+	 *            factory to create {@link HierarchyTreeWidget}s
+	 */
 	public AbstractHierarchyTree(final F manager,
 			final HierarchyTreeWidgetFactory<E> factory) {
 		HierarchyResources.INSTANCE.style().ensureInjected();
@@ -82,7 +102,7 @@ public abstract class AbstractHierarchyTree<E extends HasHierarchy, F extends Pr
 								parent.insertItem(index, inTree);
 								getHierarchyWidget(inTree).refresh();
 							}
-							afterUpdate(event);
+							afterHierarchyChange(event);
 						}
 					});
 				initialized();
@@ -90,15 +110,41 @@ public abstract class AbstractHierarchyTree<E extends HasHierarchy, F extends Pr
 		});
 	}
 
-	protected void afterUpdate(HierarchyChangeEvent<E> event) {}
+	/**
+	 * Allows extended functionality to be hooked to the end of
+	 * {@link HierarchyChangeEvent} processing.
+	 * 
+	 * @param event
+	 *            processed event
+	 */
+	protected void afterHierarchyChange(HierarchyChangeEvent<E> event) {}
 
+	/**
+	 * Allows extended functionality to be hooked to the end of initialization.
+	 */
 	protected void initialized() {}
 
+	/**
+	 * Gets {@link HierarchyTreeWidget} from {@link TreeItem}.
+	 * 
+	 * @param item
+	 *            treeItem containing {@link HierarchyTreeWidget}
+	 * @return contained {@link HierarchyTreeWidget}
+	 */
 	@SuppressWarnings("unchecked")
 	protected HierarchyTreeWidget<E> getHierarchyWidget(TreeItem item) {
 		return ((HierarchyTreeWidget<E>) item.getWidget());
 	}
 
+	/**
+	 * Hierarchically search tree for hierarchy object.
+	 * 
+	 * @param hierarchy
+	 *            hierarchy object
+	 * @param rootItem
+	 *            tree item
+	 * @return tree item containing hierarchy object or null if not found
+	 */
 	protected TreeItem findInTree(Hierarchy<E> hierarchy, TreeItem rootItem) {
 		if (getHierarchyWidget(rootItem).getHierarchy().equals(hierarchy)) {
 			return rootItem;
@@ -113,12 +159,24 @@ public abstract class AbstractHierarchyTree<E extends HasHierarchy, F extends Pr
 		return null;
 	}
 
+	/**
+	 * @param hierarchy
+	 *            hierarchy object
+	 * @return created {@link HierarchyTreeWidget}
+	 */
 	protected HierarchyTreeWidget<E> createHierarchyWidget(
 			Hierarchy<E> hierarchy) {
 		HierarchyTreeWidget<E> w = factory.createWidget(hierarchy);
 		return w;
 	}
 
+	/**
+	 * Rebuilds general hierarchy into hierarchy of {@link TreeItem}s.
+	 * 
+	 * @param root
+	 *            hierarchy object
+	 * @return corresponding {@link TreeItem}
+	 */
 	private TreeItem createTree(Hierarchy<E> root) {
 		HierarchyTreeWidget<E> w = createHierarchyWidget(root);
 		TreeItem rootItem = new TreeItem(w.asWidget());
@@ -129,22 +187,45 @@ public abstract class AbstractHierarchyTree<E extends HasHierarchy, F extends Pr
 		return rootItem;
 	}
 
+	/**
+	 * @return root {@link TreeItem}
+	 */
 	protected TreeItem getRootItem() {
 		return rootItem;
 	}
 
+	/**
+	 * @return {@link Tree}
+	 */
 	protected Tree getTree() {
 		return tree;
 	}
 
+	/**
+	 * @return root node of hierarchy
+	 */
 	protected Hierarchy<E> getRoot() {
 		return root;
 	}
 
+	/**
+	 * Expands {@link Tree}.
+	 * 
+	 * @param levels
+	 *            number of levels to expand
+	 */
 	protected void expand(int levels) {
 		expand(getRootItem(), levels);
 	}
 
+	/**
+	 * Recursively expand {@link Tree}.
+	 * 
+	 * @param item
+	 *            {@link TreeItem}
+	 * @param levels
+	 *            number of levels to expand
+	 */
 	private void expand(TreeItem item, int levels) {
 		item.setState(true);
 		for (int i = 0; i < item.getChildCount(); i++) {
@@ -155,6 +236,10 @@ public abstract class AbstractHierarchyTree<E extends HasHierarchy, F extends Pr
 	Boolean hasAdhocTreeItem = null;
 	TreeItem adhocTreeItem = null;
 
+	/**
+	 * @return {@link TreeItem} corresponding to adhoc hierarchy object or null
+	 *         if it does not exist
+	 */
 	protected TreeItem getAdhocTreeItem() {
 		if (hasAdhocTreeItem == null) {
 			Hierarchy<E> adhocItem = manager.getAdhocItem();
@@ -171,6 +256,12 @@ public abstract class AbstractHierarchyTree<E extends HasHierarchy, F extends Pr
 	List<HierarchyTreeWidget<E>> selectedItems =
 		new ArrayList<HierarchyTreeWidget<E>>();
 
+	/**
+	 * Selects list of widgets, others will be deselected.
+	 * 
+	 * @param widgets
+	 *            list of widgets to select
+	 */
 	protected void select(List<HierarchyTreeWidget<E>> widgets) {
 		for (HierarchyTreeWidget<E> lf : selectedItems) {
 			lf.setSelected(false);

@@ -16,6 +16,12 @@ import cz.artique.client.listFilters.ListFiltersManager;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.ListFilter;
 
+/**
+ * Tree containing hierarchy of {@link ListFilter}s.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ListFiltersTree
 		extends AbstractHierarchyTree<ListFilter, ListFiltersManager> {
 
@@ -23,12 +29,21 @@ public class ListFiltersTree
 		super(Managers.LIST_FILTERS_MANAGER, ListFilterWidgetFactory.FACTORY);
 	}
 
+	/**
+	 * Observe history and expand two levels.
+	 * 
+	 * @see cz.artique.client.hierarchy.tree.AbstractHierarchyTree#initialized()
+	 */
 	@Override
 	protected void initialized() {
 		observeHistoryChange();
 		expand(2);
 	}
 
+	/**
+	 * Find current {@link ListFilter} in tree and select it.
+	 * Select ad-hoc node if it has not been found.
+	 */
 	private void observeHistoryChange() {
 		HistoryManager.HISTORY.addHistoryHandler(new HistoryHandler() {
 			@SuppressWarnings("unchecked")

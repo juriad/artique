@@ -18,69 +18,17 @@ import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 import com.google.gwt.view.client.SelectionChangeEvent.HasSelectionChangedHandlers;
 import com.google.gwt.view.client.SingleSelectionModel;
 
+/**
+ * {@link CellList} inside {@link ScrollPanel} with altered style.
+ * The {@link CellList} already has set {@link SingleSelectionModel}.
+ * 
+ * @author Adam Juraszek
+ * 
+ * @param <T>
+ *            cell type
+ */
 public class ScrollableCellList<T> extends Composite
 		implements HasSelectionChangedHandlers {
-
-	interface MyResources extends ClientBundle {
-		@NotStrict
-		@Source("ScrollableCellList.css")
-		CssResource style();
-	}
-
-	private static final MyResources res = GWT.create(MyResources.class);
-
-	private final ScrollPanel scroll;
-
-	private final CellList<T> cellList;
-
-	private final SingleSelectionModel<T> selectionModel;
-
-	public ScrollableCellList(final Cell<T> cell) {
-		res.style().ensureInjected();
-		ScrollableCellListResource.INSTANCE.cellListStyle().ensureInjected();
-		scroll = new ScrollPanel();
-		initWidget(scroll);
-		setStylePrimaryName("scrollableCellList");
-
-		cellList = new CellList<T>(cell, ScrollableCellListResource.INSTANCE);
-		cellList.setStylePrimaryName("cellList");
-		scroll.add(cellList);
-
-		selectionModel = new SingleSelectionModel<T>();
-		cellList.setSelectionModel(selectionModel);
-	}
-
-	@UiChild(tagname = "emptyListWidget", limit = 1)
-	public void addEmptyListWidget(Widget widget) {
-		cellList.setEmptyListWidget(widget);
-		if (widget != null) {
-			widget.addStyleName("emptyList");
-		}
-	}
-
-	public HandlerRegistration addSelectionChangeHandler(Handler handler) {
-		return selectionModel.addSelectionChangeHandler(handler);
-	}
-
-	public T getSelected() {
-		return selectionModel.getSelectedObject();
-	}
-
-	public void setSelected(T object, boolean selected) {
-		selectionModel.setSelected(object, selected);
-	}
-
-	public void clearSelection() {
-		selectionModel.clear();
-	}
-
-	public void setRowData(List<? extends T> values) {
-		cellList.setRowData(values);
-	}
-
-	public boolean isEmpty() {
-		return cellList.getRowCount() == 0;
-	}
 
 	static interface ScrollableCellListResource extends CellList.Resources {
 
@@ -124,5 +72,96 @@ public class ScrollableCellList<T> extends Composite
 		 * Applied to the widget.
 		 */
 		String cellListWidget();
+	}
+
+	interface MyResources extends ClientBundle {
+		@NotStrict
+		@Source("ScrollableCellList.css")
+		CssResource style();
+	}
+
+	private static final MyResources res = GWT.create(MyResources.class);
+
+	private final ScrollPanel scroll;
+
+	private final CellList<T> cellList;
+
+	private final SingleSelectionModel<T> selectionModel;
+
+	/**
+	 * @param cell
+	 *            cell the {@link CellList} will contain
+	 */
+	public ScrollableCellList(final Cell<T> cell) {
+		res.style().ensureInjected();
+		ScrollableCellListResource.INSTANCE.cellListStyle().ensureInjected();
+		scroll = new ScrollPanel();
+		initWidget(scroll);
+		setStylePrimaryName("scrollableCellList");
+
+		cellList = new CellList<T>(cell, ScrollableCellListResource.INSTANCE);
+		cellList.setStylePrimaryName("cellList");
+		scroll.add(cellList);
+
+		selectionModel = new SingleSelectionModel<T>();
+		cellList.setSelectionModel(selectionModel);
+	}
+
+	/**
+	 * Sets widget shown when the {@link CellList} is empty.
+	 * 
+	 * @param widget
+	 */
+	@UiChild(tagname = "emptyListWidget", limit = 1)
+	public void addEmptyListWidget(Widget widget) {
+		cellList.setEmptyListWidget(widget);
+		if (widget != null) {
+			widget.addStyleName("emptyList");
+		}
+	}
+
+	public HandlerRegistration addSelectionChangeHandler(Handler handler) {
+		return selectionModel.addSelectionChangeHandler(handler);
+	}
+
+	/**
+	 * @return selected value
+	 */
+	public T getSelected() {
+		return selectionModel.getSelectedObject();
+	}
+
+	/**
+	 * Sets selected value.
+	 * 
+	 * @param object
+	 *            new value
+	 */
+	public void setSelected(T object) {
+		selectionModel.setSelected(object, true);
+	}
+
+	/**
+	 * Clears selection.
+	 */
+	public void clearSelection() {
+		selectionModel.clear();
+	}
+
+	/**
+	 * Sets list of value shown in cells.
+	 * 
+	 * @param values
+	 *            list of values
+	 */
+	public void setRowData(List<? extends T> values) {
+		cellList.setRowData(values);
+	}
+
+	/**
+	 * @return whether the {@link CellList} is empty
+	 */
+	public boolean isEmpty() {
+		return cellList.getRowCount() == 0;
 	}
 }

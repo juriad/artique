@@ -18,6 +18,13 @@ import cz.artique.client.service.ClientConfigServiceAsync;
 import cz.artique.shared.model.config.client.ClientConfigKey;
 import cz.artique.shared.model.config.client.ClientConfigValue;
 
+/**
+ * Manager which wraps {@link ClientConfigService} and provides related methods
+ * to client part of application.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ConfigManager extends AbstractManager<ClientConfigServiceAsync>
 		implements Manager {
 
@@ -31,6 +38,12 @@ public class ConfigManager extends AbstractManager<ClientConfigServiceAsync>
 		refresh(null);
 	}
 
+	/**
+	 * Refresh cached configuration by calling
+	 * {@link ClientConfigService#getClientConfigs()}
+	 * 
+	 * @see cz.artique.client.manager.Manager#refresh(com.google.gwt.user.client.rpc.AsyncCallback)
+	 */
 	public void refresh(final AsyncCallback<Void> ping) {
 		assumeOnline();
 		service.getClientConfigs(new AsyncCallback<List<ClientConfigValue>>() {
@@ -59,10 +72,26 @@ public class ConfigManager extends AbstractManager<ClientConfigServiceAsync>
 
 	}
 
+	/**
+	 * Returns configuration value from cache.
+	 * 
+	 * @param key
+	 *            configuration key
+	 * @return configuration value
+	 */
 	public ClientConfigValue getConfig(ClientConfigKey key) {
 		return configs.get(key);
 	}
 
+	/**
+	 * Updates configuration values by calling
+	 * {@link ClientConfigService#setClientConfigs(List)}
+	 * 
+	 * @param config
+	 *            list of changed values
+	 * @param ping
+	 *            notification about result
+	 */
 	public void updateConfigValues(List<ClientConfigValue> config,
 			final AsyncCallback<Void> ping) {
 		assumeOnline();

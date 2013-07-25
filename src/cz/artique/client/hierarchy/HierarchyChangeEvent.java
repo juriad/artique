@@ -4,6 +4,14 @@ import com.google.gwt.event.shared.GwtEvent;
 
 import cz.artique.shared.utils.HasHierarchy;
 
+/**
+ * Event describing what and in what manner changed.
+ * 
+ * @author Adam Juraszek
+ * 
+ * @param <E>
+ *            type of hierarchy
+ */
 public class HierarchyChangeEvent<E extends HasHierarchy>
 		extends GwtEvent<HierarchyChangeHandler<E>> {
 
@@ -17,6 +25,12 @@ public class HierarchyChangeEvent<E extends HasHierarchy>
 	private final Hierarchy<E> changed;
 	private final HierarchyChangeType changeType;
 
+	/**
+	 * @param changed
+	 *            changed node
+	 * @param changeType
+	 *            type of change
+	 */
 	public HierarchyChangeEvent(Hierarchy<E> changed,
 			HierarchyChangeType changeType) {
 		this.changed = changed;
@@ -33,10 +47,16 @@ public class HierarchyChangeEvent<E extends HasHierarchy>
 		handler.onHierarchyChange(this);
 	}
 
+	/**
+	 * @return changed node
+	 */
 	public Hierarchy<E> getChanged() {
 		return changed;
 	}
 
+	/**
+	 * @return type of change
+	 */
 	public HierarchyChangeType getChangeType() {
 		return changeType;
 	}

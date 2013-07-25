@@ -11,6 +11,14 @@ import com.google.gwt.user.client.ui.InsertPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * Shows its content in fixed width; overflowed content is hidden and marked
+ * with ellipsis.
+ * On hover the whole content is shown over other widgets.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class HoverPanel extends ComplexPanel implements InsertPanel.ForIsWidget {
 
 	interface MyResources extends ClientBundle {
@@ -24,6 +32,9 @@ public class HoverPanel extends ComplexPanel implements InsertPanel.ForIsWidget 
 	private boolean expanded;
 	private final Element inner;
 
+	/**
+	 * Constructs hover panel.
+	 */
 	public HoverPanel() {
 		res.style().ensureInjected();
 		Element outer = DOM.createDiv();
@@ -36,11 +47,18 @@ public class HoverPanel extends ComplexPanel implements InsertPanel.ForIsWidget 
 		setStyleName(inner, "hoverPanelInner", true);
 	}
 
+	/**
+	 * @param expanded
+	 *            whether whole content is forces to be shown
+	 */
 	public void setExpanded(boolean expanded) {
 		this.expanded = expanded;
 		setStyleDependentName("expanded", expanded);
 	}
 
+	/**
+	 * @return whether whole content is forces to be shown
+	 */
 	public boolean isExpanded() {
 		return expanded;
 	}

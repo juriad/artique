@@ -12,11 +12,31 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.ListBox;
 
+/**
+ * Shows selection of enum values in form of {@link ListBox}.
+ * The shown name will be "group_" followed by enum name in uppercase.
+ * 
+ * @see EnumRadioPicker
+ * @author Adam Juraszek
+ * 
+ * @param <E>
+ *            type of enum which contains all options
+ */
 public class EnumListPicker<E extends Enum<E>> extends Composite
 		implements HasEnabled, HasValue<E> {
 
 	private final List<E> enums = new ArrayList<E>();
 
+	/**
+	 * Constructs the list picker.
+	 * 
+	 * @param enu
+	 *            default value
+	 * @param group
+	 *            group name
+	 * @param constants
+	 *            i18n constants containing translation
+	 */
 	public EnumListPicker(E enu, String group, ConstantsWithLookup constants) {
 		listBox = new ListBox();
 		initWidget(listBox);

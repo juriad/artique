@@ -15,11 +15,26 @@ import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.label.ListFilterOrder;
 
+/**
+ * Serializes and deserializes {@link ListFilter}s and their parts.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class HistoryUtils {
 	public static final HistoryUtils UTILS = new HistoryUtils();
 
 	protected HistoryUtils() {}
 
+	/**
+	 * Combines together serialized baseListFilter and serialized filter
+	 * 
+	 * @param serializedBaseListFilter
+	 *            serialized baseListFilter
+	 * @param serializedFilter
+	 *            serialized filter
+	 * @return serialized listFilter
+	 */
 	public String serializeListFilter(String serializedBaseListFilter,
 			String serializedFilter) {
 		StringBuilder sb = new StringBuilder();
@@ -36,6 +51,13 @@ public class HistoryUtils {
 
 	}
 
+	/**
+	 * Serializes baseListFilter.
+	 * 
+	 * @param listFilter
+	 *            {@link ListFilter} to serialize
+	 * @return serialized baseListFilter
+	 */
 	public String serializeBaseListFilter(ListFilter listFilter) {
 		if (listFilter == null) {
 			return "";
@@ -77,6 +99,13 @@ public class HistoryUtils {
 		return sb.toString();
 	}
 
+	/**
+	 * Serialize whole {@link ListFilter}.
+	 * 
+	 * @param listFilter
+	 *            {@link ListFilter} to serialize
+	 * @return serialized listFilter
+	 */
 	public String serializeListFilter(ListFilter listFilter) {
 		if (listFilter == null) {
 			return "";
@@ -86,6 +115,13 @@ public class HistoryUtils {
 		return serializeListFilter(serializedBaseListFilter, serializedFilter);
 	}
 
+	/**
+	 * Deserializes whole {@link ListFilter}.
+	 * 
+	 * @param token
+	 *            token to deserialize
+	 * @return deserialized listFilter
+	 */
 	public ListFilter deserializeListFilter(String token) {
 		token = token.trim();
 		ListFilter lf = new ListFilter();
@@ -146,6 +182,13 @@ public class HistoryUtils {
 		return lf;
 	}
 
+	/**
+	 * Consumes one parameter from input string.
+	 * 
+	 * @param s
+	 *            input string
+	 * @return consumed parameter
+	 */
 	protected String consumeParameter(String s) {
 		int index = s.indexOf("&");
 		if (index >= 0) {
@@ -156,6 +199,13 @@ public class HistoryUtils {
 		return s;
 	}
 
+	/**
+	 * Serializes {@link Label}.
+	 * 
+	 * @param l
+	 *            label to serialize
+	 * @return serialized label
+	 */
 	protected String serializeLabel(Label l) {
 		switch (l.getLabelType()) {
 		case SYSTEM:
@@ -170,11 +220,11 @@ public class HistoryUtils {
 	}
 
 	/**
-	 * 
-	 * labels manager must be ready
+	 * Deserializes list of {@link Label}s.
+	 * Labels manager must be ready.
 	 * 
 	 * @param labelNames
-	 * @return
+	 * @return deserialized list of {@link Label}s
 	 */
 	protected List<Label> deserializeLabels(final List<String> labelNames) {
 		if (!Managers.LABELS_MANAGER.isReady()) {
@@ -207,10 +257,12 @@ public class HistoryUtils {
 	}
 
 	/**
-	 * labels manager must be ready
+	 * Serializes {@link Filter}.
+	 * Labels manager must be ready.
 	 * 
 	 * @param filter
-	 * @return
+	 *            {@link Filter} to serialize
+	 * @return serialized {@link Filter}
 	 */
 	public String serializeFilter(Filter filter) {
 		if (!Managers.LABELS_MANAGER.isReady()) {
@@ -257,10 +309,11 @@ public class HistoryUtils {
 	}
 
 	/**
-	 * labels manager must be ready
+	 * Deserializes {@link Filter} Labels manager must be ready.
 	 * 
 	 * @param string
-	 * @return
+	 *            serialized filter
+	 * @return deserialized filter
 	 */
 	protected Filter deserializeFilter(String string) {
 		if (!Managers.LABELS_MANAGER.isReady()) {

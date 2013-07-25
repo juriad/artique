@@ -4,7 +4,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.impl.HyperlinkImpl;
 
 import cz.artique.client.hierarchy.Hierarchy;
@@ -21,8 +20,20 @@ import cz.artique.client.listFilters.AdhocDialog;
 import cz.artique.client.listFilters.ListFilterDialog;
 import cz.artique.shared.model.label.ListFilter;
 
+/**
+ * Widget representing {@link ListFilter} in {@link ListFiltersTree}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ListFilterWidget extends AbstractHierarchyTreeWidget<ListFilter> {
 
+	/**
+	 * Factory.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	public static class ListFilterWidgetFactory
 			implements HierarchyTreeWidgetFactory<ListFilter> {
 
@@ -69,82 +80,101 @@ public class ListFilterWidget extends AbstractHierarchyTreeWidget<ListFilter> {
 		}
 	};
 
+	/**
+	 * Constructs widget depending on whether it is root, inner, leaf or ad-hoc
+	 * node.
+	 * 
+	 * @param hierarchy
+	 *            hierarchy node
+	 */
 	public ListFilterWidget(final Hierarchy<ListFilter> hierarchy) {
 		super(hierarchy);
 
 		if (hierarchy instanceof LeafNode) {
 			LeafNode<ListFilter> leaf = (LeafNode<ListFilter>) hierarchy;
 			if (leaf.getItem().getKey() == null) {
-				createAdhocPanel(getPanel());
+				createAdhocPanel();
 			} else {
-				createLeafNodePanel(getPanel());
+				createLeafNodePanel();
 			}
 		} else if (hierarchy instanceof InnerNode) {
 			if (hierarchy.getParent() != null) {
-				createInnerNodePanel(getPanel());
+				createInnerNodePanel();
 			} else {
-				createRootPanel(getPanel());
+				createRootPanel();
 			}
 		}
 	}
 
-	private void createRootPanel(FlowPanel panel) {
+	/**
+	 * Create content in case it is root node.
+	 */
+	private void createRootPanel() {
 		String clearTooltip =
 			I18n.getHierarchyTreeConstants().clearListFilterTooltip();
-		createAnchor(panel, I18n
-			.getHierarchyTreeConstants()
-			.listFilterRootText(), null, clearHandler, clearTooltip);
-		createImage(panel, HierarchyResources.INSTANCE.clear(), clearHandler,
+		createAnchor(I18n.getHierarchyTreeConstants().listFilterRootText(),
+			null, clearHandler, clearTooltip);
+		createImage(HierarchyResources.INSTANCE.clear(), clearHandler,
 			clearTooltip);
-		addGeneralInnerImages(panel);
+		addGeneralInnerImages();
 	}
 
-	private void createInnerNodePanel(FlowPanel panel) {
-		createLabel(panel, getHierarchy().getName(), null, null);
-		addGeneralInnerImages(panel);
+	/**
+	 * Create content in case it is inner node.
+	 */
+	private void createInnerNodePanel() {
+		createLabel(getHierarchy().getName(), null, null);
+		addGeneralInnerImages();
 	}
 
-	private void addGeneralInnerImages(FlowPanel panel) {
+	/**
+	 * Add icons shared among root and inner nodes.
+	 */
+	private void addGeneralInnerImages() {
 		String createNewTooltip =
 			I18n.getHierarchyTreeConstants().createNewListFilterTooltip();
-		createImage(panel, HierarchyResources.INSTANCE.createNew(),
-			createNewHandler, createNewTooltip);
+		createImage(HierarchyResources.INSTANCE.createNew(), createNewHandler,
+			createNewTooltip);
 		String saveCurrentTooltip =
 			I18n.getHierarchyTreeConstants().saveCurrentListFilterTooltip();
-		createImage(panel, HierarchyResources.INSTANCE.saveCurrent(),
+		createImage(HierarchyResources.INSTANCE.saveCurrent(),
 			saveCurrentHandler, saveCurrentTooltip);
 	}
 
-	private void createLeafNodePanel(FlowPanel panel) {
+	/**
+	 * Create content in case it is leaf node.
+	 */
+	private void createLeafNodePanel() {
 		LeafNode<ListFilter> leaf = (LeafNode<ListFilter>) getHierarchy();
 		final ListFilter item = leaf.getItem();
 		final String token = HistoryUtils.UTILS.serializeListFilter(item);
-		createAnchor(panel, getHierarchy().getName(), token,
-			new ClickHandler() {
-				final HyperlinkImpl impl = GWT.create(HyperlinkImpl.class);
+		createAnchor(getHierarchy().getName(), token, new ClickHandler() {
+			final HyperlinkImpl impl = GWT.create(HyperlinkImpl.class);
 
-				public void onClick(ClickEvent event) {
-					if (impl.handleAsClick(Event.as(event.getNativeEvent()))) {
-						HistoryManager.HISTORY.setListFilter(item, token);
-						event.preventDefault();
-					}
+			public void onClick(ClickEvent event) {
+				if (impl.handleAsClick(Event.as(event.getNativeEvent()))) {
+					HistoryManager.HISTORY.setListFilter(item, token);
+					event.preventDefault();
 				}
-			}, null);
+			}
+		}, null);
 
 		String detailTooltip =
 			I18n.getHierarchyTreeConstants().detailListFilterTooltip();
-		createImage(panel, HierarchyResources.INSTANCE.detail(),
-			new ClickHandler() {
-				public void onClick(ClickEvent event) {
-					ListFilterDialog.DIALOG.showDialog(item);
-				}
-			}, detailTooltip);
+		createImage(HierarchyResources.INSTANCE.detail(), new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				ListFilterDialog.DIALOG.showDialog(item);
+			}
+		}, detailTooltip);
 	}
 
-	private void createAdhocPanel(FlowPanel panel) {
+	/**
+	 * Create content in case it is ad-hoc node.
+	 */
+	private void createAdhocPanel() {
 		String adhoc = I18n.getHierarchyTreeConstants().adhoc();
 		String adhocTooltip = I18n.getHierarchyTreeConstants().adhocTooltip();
-		createAnchor(panel, adhoc, null, new ClickHandler() {
+		createAnchor(adhoc, null, new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				HistoryItem lastHistoryItem =
 					HistoryManager.HISTORY.getLastHistoryItem();
@@ -159,7 +189,7 @@ public class ListFilterWidget extends AbstractHierarchyTreeWidget<ListFilter> {
 		}, adhocTooltip);
 		String clearTooltip =
 			I18n.getHierarchyTreeConstants().clearListFilterTooltip();
-		createImage(panel, HierarchyResources.INSTANCE.clear(), clearHandler,
+		createImage(HierarchyResources.INSTANCE.clear(), clearHandler,
 			clearTooltip);
 	}
 }

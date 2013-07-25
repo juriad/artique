@@ -6,6 +6,12 @@ import cz.artique.client.manager.Managers;
 import cz.artique.client.messages.Message;
 import cz.artique.client.messages.MessagesManager;
 
+/**
+ * Tree containing pseudo-hierarchy of {@link Message}s.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class MessagesTree
 		extends AbstractHierarchyTree<Message, MessagesManager> {
 
@@ -15,8 +21,13 @@ public class MessagesTree
 
 	private int lastCount = 0;
 
+	/**
+	 * Expand two levels (maximum).
+	 * 
+	 * @see cz.artique.client.hierarchy.tree.AbstractHierarchyTree#afterHierarchyChange(cz.artique.client.hierarchy.HierarchyChangeEvent)
+	 */
 	@Override
-	protected void afterUpdate(HierarchyChangeEvent<Message> event) {
+	protected void afterHierarchyChange(HierarchyChangeEvent<Message> event) {
 		if (getRootItem().getChildCount() > 0 && lastCount < 1) {
 			expand(2);
 			lastCount = getRootItem().getChildCount();

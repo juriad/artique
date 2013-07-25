@@ -17,8 +17,18 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasName;
+import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * Extends Simple {@link HTMLPanel}; can switch between several contents by
+ * clicking on buttons. It might be similar to {@link TabLayoutPanel}.
+ * 
+ * @author Adam Juraszek
+ * 
+ * @param <E>
+ *            type of button widget
+ */
 public class ContentsPanel<E extends Widget & HasName & HasClickHandlers>
 		extends Composite {
 
@@ -41,6 +51,9 @@ public class ContentsPanel<E extends Widget & HasName & HasClickHandlers>
 	private Map<String, E> buttons;
 	private final ContentButtonFactory<E> factory;
 
+	/**
+	 * Sets content by name of click event source.
+	 */
 	private ClickHandler handler = new ClickHandler() {
 		public void onClick(ClickEvent event) {
 			if (event.getSource() instanceof HasName) {
@@ -50,6 +63,10 @@ public class ContentsPanel<E extends Widget & HasName & HasClickHandlers>
 		}
 	};
 
+	/**
+	 * @param factory
+	 *            factory of switch buttons
+	 */
 	public ContentsPanel(ContentButtonFactory<E> factory) {
 		res.style().ensureInjected();
 		this.factory = factory;
@@ -69,15 +86,40 @@ public class ContentsPanel<E extends Widget & HasName & HasClickHandlers>
 		buttons = new HashMap<String, E>();
 	}
 
+	/**
+	 * Add a new content by its name and DOM element.
+	 * The content will be set to innerHTML of the element.
+	 * 
+	 * @param name
+	 *            name of content
+	 * @param element
+	 *            DOM element
+	 */
 	public void addContent(String name, Element element) {
 		addContent(name,
 			SafeHtmlUtils.fromTrustedString(element.getInnerHTML()));
 	}
 
+	/**
+	 * Adds a new content by its name and unescaped string.
+	 * 
+	 * @param name
+	 *            name of content
+	 * @param string
+	 *            unescaped string content
+	 */
 	public void addContent(String name, String string) {
 		addContent(name, SafeHtmlUtils.fromString(string));
 	}
 
+	/**
+	 * Adds a new content by its name and {@link SafeHtml} representation.
+	 * 
+	 * @param name
+	 *            name of content
+	 * @param html
+	 *            {@link SafeHtml} representation of content
+	 */
 	public void addContent(String name, SafeHtml html) {
 		E button = factory.createButton(name);
 		button.setStylePrimaryName("contentsPanelButton");
@@ -93,6 +135,12 @@ public class ContentsPanel<E extends Widget & HasName & HasClickHandlers>
 		}
 	}
 
+	/**
+	 * Sets content which will be shown to the one represented by argument name.
+	 * 
+	 * @param name
+	 *            name of set content
+	 */
 	public void setContent(String name) {
 		String asString = contents.get(name).asString();
 		content.getElement().setInnerHTML(asString);

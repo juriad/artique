@@ -12,10 +12,25 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.RadioButton;
 
+/**
+ * Shows selection of enum values in form of set of {@link RadioButton}s.
+ * The shown name will be "group_" followed by enum name in uppercase.
+ * 
+ * @see EnumListPicker
+ * @author Adam Juraszek
+ * 
+ * @param <E>
+ *            type of enum which contains all options
+ */
 public class EnumRadioPicker<E extends Enum<E>> extends Composite
 		implements HasEnabled, HasValue<E> {
+	/**
+	 * Emulates selected value.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	public class ValueHandler implements ValueChangeHandler<Boolean> {
-
 		public void onValueChange(ValueChangeEvent<Boolean> event) {
 			if (event.getValue()) {
 				RadioButton rb = (RadioButton) event.getSource();
@@ -35,6 +50,16 @@ public class EnumRadioPicker<E extends Enum<E>> extends Composite
 	private final Map<RadioButton, E> buttons = new HashMap<RadioButton, E>();
 	private final Map<E, RadioButton> enums = new HashMap<E, RadioButton>();
 
+	/**
+	 * Constructs the radio picker.
+	 * 
+	 * @param enu
+	 *            default value
+	 * @param group
+	 *            group name
+	 * @param constants
+	 *            i18n constants containing translation
+	 */
 	public EnumRadioPicker(E enu, String group, ConstantsWithLookup constants) {
 		panel = new InlineFlowPanel();
 		initWidget(panel);
@@ -65,8 +90,15 @@ public class EnumRadioPicker<E extends Enum<E>> extends Composite
 		return enabled;
 	}
 
-	// default implementation
+	/**
+	 * Allows to disable some radio button.
+	 * 
+	 * @param enu
+	 *            enum value
+	 * @return true if enum value can is available, false otherwise
+	 */
 	protected boolean canBeSelected(E enu) {
+		// default implementation
 		return true;
 	}
 

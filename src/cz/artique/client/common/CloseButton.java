@@ -10,9 +10,20 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.InlineLabel;
 
-public class CloseButton<E> extends InlineLabel implements HasCloseHandlers<E> {
+/**
+ * CloseButton is button-like styled letter X which fires {@link CloseEvent} on
+ * click.
+ * 
+ * @author Adam Juraszek
+ * 
+ * @param <E>
+ *            type of target of {@link CloseEvent}
+ */
+public class CloseButton<E> extends InlineLabel
+		implements HasCloseHandlers<E>, HasEnabled {
 
 	public static final CloseButtonFactory FACTORY = new CloseButtonFactory();
 
@@ -34,6 +45,10 @@ public class CloseButton<E> extends InlineLabel implements HasCloseHandlers<E> {
 
 	private final E closeFor;
 
+	/**
+	 * @param closeFor
+	 *            who will be target of {@link CloseEvent}
+	 */
 	public CloseButton(E closeFor) {
 		super(closeSign);
 		res.style().ensureInjected();
@@ -63,6 +78,9 @@ public class CloseButton<E> extends InlineLabel implements HasCloseHandlers<E> {
 		return addHandler(handler, CloseEvent.getType());
 	}
 
+	/**
+	 * @return who will be target of {@link CloseEvent}
+	 */
 	public E getCloseFor() {
 		return closeFor;
 	}

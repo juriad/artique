@@ -23,6 +23,12 @@ import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.source.UserSource;
 
+/**
+ * Tree containing hierarchy of {@link UserSource}s.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class SourcesTree
 		extends AbstractHierarchyTree<UserSource, SourcesManager> {
 
@@ -30,6 +36,11 @@ public class SourcesTree
 		super(Managers.SOURCES_MANAGER, UserSourceWidgetFactory.FACTORY);
 	}
 
+	/**
+	 * Observe history change.
+	 * When history is changed, select those sources which are used in current
+	 * {@link ListFiltr}.
+	 */
 	private void observeHistoryChange() {
 		HistoryManager.HISTORY.addHistoryHandler(new HistoryHandler() {
 			@SuppressWarnings("unchecked")
@@ -52,11 +63,22 @@ public class SourcesTree
 		});
 	}
 
+	/**
+	 * Refresh all
+	 * 
+	 * @see cz.artique.client.hierarchy.tree.AbstractHierarchyTree#afterHierarchyChange(cz.artique.client.hierarchy.HierarchyChangeEvent)
+	 */
 	@Override
-	protected void afterUpdate(HierarchyChangeEvent<UserSource> event) {
+	protected void afterHierarchyChange(HierarchyChangeEvent<UserSource> event) {
 		refreshAll(getRootItem());
 	}
 
+	/**
+	 * Gets widgets corresponding to labels of sources used in current
+	 * {@link ListFilter}.
+	 * 
+	 * @return list of widgets
+	 */
 	@SuppressWarnings("unchecked")
 	protected List<HierarchyTreeWidget<UserSource>> getAllSourcesWidgets() {
 		List<HierarchyTreeWidget<UserSource>> allSourcesWidgets =
@@ -81,6 +103,11 @@ public class SourcesTree
 		return allSourcesWidgets;
 	}
 
+	/**
+	 * Gets labels of all sources used in current {@link ListFilter}.
+	 * 
+	 * @return list of labels
+	 */
 	protected List<Label> getAllSourcesLabels() {
 		List<Label> labels = new ArrayList<Label>();
 		HistoryItem historyItem = HistoryManager.HISTORY.getLastHistoryItem();
@@ -102,10 +129,11 @@ public class SourcesTree
 	}
 
 	/**
-	 * Returns number of shown
+	 * Change visibility of according to show-hide status.
 	 * 
 	 * @param rootItem
-	 * @return
+	 *            {@link TreeItem}
+	 * @return whether the {@link TreeItem} shall be visible
 	 */
 	protected boolean refreshAll(TreeItem rootItem) {
 		boolean visible = rootItem.equals(getRootItem());
@@ -124,6 +152,11 @@ public class SourcesTree
 		return visible;
 	}
 
+	/**
+	 * Observe history, expand two levels and refresh all.
+	 * 
+	 * @see cz.artique.client.hierarchy.tree.AbstractHierarchyTree#initialized()
+	 */
 	@Override
 	protected void initialized() {
 		observeHistoryChange();
@@ -131,17 +164,29 @@ public class SourcesTree
 		refreshAll(getRootItem());
 	}
 
+	/**
+	 * @return shall disabled {@link UserSource}s be shown
+	 */
 	public boolean isShowingDisabled() {
 		return showDisabled;
 	}
 
 	boolean showDisabled = false;
 
+	/**
+	 * Toggles whether disabled {@link UserSource}s shall be shown.
+	 */
 	public void toggleDisabled() {
 		showDisabled = !showDisabled;
 		refreshAll(getRootItem());
 	}
 
+	/**
+	 * Injects reference to {@link SourcesTree} into the
+	 * {@link UserSourceWidget}.
+	 * 
+	 * @see cz.artique.client.hierarchy.tree.AbstractHierarchyTree#createHierarchyWidget(cz.artique.client.hierarchy.Hierarchy)
+	 */
 	@Override
 	protected HierarchyTreeWidget<UserSource> createHierarchyWidget(
 			Hierarchy<UserSource> hierarchy) {

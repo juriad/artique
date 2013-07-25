@@ -2,6 +2,12 @@ package cz.artique.client.history;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+/**
+ * Notifies application about change of history.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class HistoryEvent extends GwtEvent<HistoryHandler> {
 
 	private static final Type<HistoryHandler> TYPE = new Type<HistoryHandler>();

@@ -16,7 +16,21 @@ import cz.artique.client.service.ClientUserService;
 import cz.artique.client.service.ClientUserServiceAsync;
 import cz.artique.shared.model.user.UserInfo;
 
+/**
+ * Main and the only entry point to the application.
+ * Depending on whether the user is logger, it shows {@link Artique} or
+ * {@link LoginPage}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class Main implements EntryPoint {
+	/**
+	 * Reacts to any uncaught exception by reloading application.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	public class ClientExceptionHandler implements UncaughtExceptionHandler {
 		public void onUncaughtException(Throwable e) {
 			e.printStackTrace();
@@ -24,6 +38,11 @@ public class Main implements EntryPoint {
 		}
 	}
 
+	/**
+	 * Sets {@link ClientExceptionHandler} and inits application.
+	 * 
+	 * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
+	 */
 	public void onModuleLoad() {
 		GWT.setUncaughtExceptionHandler(new ClientExceptionHandler());
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
@@ -33,6 +52,11 @@ public class Main implements EntryPoint {
 		});
 	}
 
+	/**
+	 * Contacts server via {@link ClientUserService}.
+	 * If the user is already logged in, call {@link #loadArtique()}, else call
+	 * {@link #loadLogin()}.
+	 */
 	private void initApplication() {
 		ClientUserServiceAsync userService =
 			GWT.create(ClientUserService.class);
@@ -54,15 +78,24 @@ public class Main implements EntryPoint {
 			});
 	}
 
+	/**
+	 * Shows {@link Artique}.
+	 */
 	protected void loadArtique() {
 		Artique t = new Artique();
 		RootLayoutPanel.get().add(t);
 	}
 
+	/**
+	 * Shows {@link LoginPage}.
+	 */
 	private void loadLogin() {
 		RootPanel.get().add(new LoginPage());
 	}
 
+	/**
+	 * Shows {@link ErrorPage}.
+	 */
 	private void loadError() {
 		RootPanel.get().add(new ErrorPage());
 	}

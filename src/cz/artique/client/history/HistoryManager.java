@@ -21,12 +21,27 @@ import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
 import cz.artique.client.utils.SortedList;
 import cz.artique.shared.model.config.client.ClientConfigKey;
+import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.label.ListFilterOrder;
 
+/**
+ * Manages history state of application.
+ * Provides methods which controls current state.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class HistoryManager
 		implements ProvidesHierarchy<HistoryItem>, HasHistoryHandlers, Manager {
 
+	/**
+	 * Restore {@link ListFilter} and add new {@link HistoryItem}.
+	 * This is used to react to browser event: back, forward.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	public class ArtiqueHistoryHandler implements ValueChangeHandler<String> {
 
 		public void onValueChange(ValueChangeEvent<String> event) {
@@ -45,6 +60,9 @@ public class HistoryManager
 
 	public static final HistoryManager HISTORY = new HistoryManager();
 
+	/**
+	 * Observes GWT history.
+	 */
 	private HistoryManager() {
 		// observe GWT history
 		History.addValueChangeHandler(new ArtiqueHistoryHandler());
@@ -69,6 +87,15 @@ public class HistoryManager
 	private Map<String, HistoryItem> tokenMap =
 		new HashMap<String, HistoryItem>();
 
+	/**
+	 * Set {@link ListFilter} as a new {@link HistoryItem}.
+	 * This is called from within the application.
+	 * 
+	 * @param listFilter
+	 *            {@link ListFilter}
+	 * @param token
+	 *            serialized {@link ListFilter}
+	 */
 	public void setListFilter(ListFilter listFilter, String token) {
 		tokenMap.put(token, new HistoryItem(listFilter, token));
 		if (getLastHistoryItem() != null
@@ -81,6 +108,12 @@ public class HistoryManager
 		}
 	}
 
+	/**
+	 * Actually adds new {@link HistoryItem} both to history and hierarchy.
+	 * 
+	 * @param historyItem
+	 *            {@link HistoryItem} to add
+	 */
 	protected void addHistoryItem(HistoryItem historyItem) {
 		if (historyItems.contains(historyItem)) {
 			historyItems.remove(historyItem);
@@ -112,6 +145,9 @@ public class HistoryManager
 		}
 	}
 
+	/**
+	 * @return number of items to keep in hierarchy
+	 */
 	public int getMaxItems() {
 		return maxItems;
 	}
@@ -125,6 +161,16 @@ public class HistoryManager
 		this.maxItems = maxItems;
 	}
 
+	/**
+	 * Clears hierarchy.
+	 */
+	public void clear() {
+		while (historyItems.size() > 1) {
+			HistoryItem removed = historyItems.remove(1);
+			HierarchyUtils.remove(hierarchyRoot, removed);
+		}
+	}
+
 	private final InnerNode<HistoryItem> hierarchyRoot = HierarchyUtils
 		.createRootNode();
 
@@ -132,12 +178,18 @@ public class HistoryManager
 		return hierarchyRoot;
 	}
 
+	/**
+	 * @return {@link ListFilter} with no {@link Filter}; other criteria are
+	 *         preserved.
+	 */
 	public ListFilter getBaseListFilter() {
 		ListFilter lf = new ListFilter();
 		if (historyItems.size() > 0) {
 			ListFilter last = historyItems.getLast().getListFilter();
 			lf.setOrder(last.getOrder());
 			lf.setRead(last.getRead());
+			lf.setEndTo(last.getEndTo());
+			lf.setStartFrom(last.getStartFrom());
 		} else {
 			lf.setOrder(ListFilterOrder.getDefault());
 			lf.setRead(null);
@@ -145,14 +197,32 @@ public class HistoryManager
 		return lf;
 	}
 
+	/**
+	 * @return current history item or null (in early part of initialization)
+	 */
 	public HistoryItem getLastHistoryItem() {
 		return historyItems.isEmpty() ? null : historyItems.getLast();
 	}
 
+	/**
+	 * Search for existing {@link HistoryItem} represented by token.
+	 * 
+	 * @param token
+	 *            token
+	 * @return {@link HistoryItem} or null if not found
+	 */
 	public HistoryItem getByToken(String token) {
 		return tokenMap.get(token);
 	}
 
+	/**
+	 * Extends handlers to prioritize their calls.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 * @param <E>
+	 *            type of handler
+	 */
 	private static class PriorityHandler<E>
 			implements Comparable<PriorityHandler<E>> {
 		private final E handler;
@@ -163,6 +233,9 @@ public class HistoryManager
 			this.priority = priority;
 		}
 
+		/**
+		 * @return actual handler
+		 */
 		public E getHandler() {
 			return handler;
 		}
@@ -212,12 +285,5 @@ public class HistoryManager
 
 	public Hierarchy<HistoryItem> getAdhocItem() {
 		return null;
-	}
-
-	public void clear() {
-		while (historyItems.size() > 1) {
-			HistoryItem removed = historyItems.remove(1);
-			HierarchyUtils.remove(hierarchyRoot, removed);
-		}
 	}
 }

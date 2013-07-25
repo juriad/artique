@@ -3,6 +3,12 @@ package cz.artique.client.history;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.utils.HasHierarchy;
 
+/**
+ * Combines {@link ListFilter} and hash part of URL into hierarchy object.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class HistoryItem implements HasHierarchy {
 	private final ListFilter listFilter;
 	private final String token;
@@ -12,10 +18,16 @@ public class HistoryItem implements HasHierarchy {
 		this.token = token;
 	}
 
+	/**
+	 * @return {@link ListFilter}
+	 */
 	public ListFilter getListFilter() {
 		return listFilter;
 	}
 
+	/**
+	 * @return token
+	 */
 	public String getToken() {
 		return token;
 	}
@@ -27,8 +39,6 @@ public class HistoryItem implements HasHierarchy {
 	public String getHierarchy() {
 		return "/";
 	}
-
-	public void setHierarchy(String hierarchy) {}
 
 	@Override
 	public int hashCode() {

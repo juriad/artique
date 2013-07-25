@@ -3,9 +3,16 @@ package cz.artique.client.common;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * Plain reimplementation of {@link FlowPanel} backed by SPAN element.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class InlineFlowPanel extends ComplexPanel {
 	/**
 	 * Creates an empty inline flow panel.

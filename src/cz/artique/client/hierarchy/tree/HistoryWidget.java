@@ -4,7 +4,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.impl.HyperlinkImpl;
 
 import cz.artique.client.hierarchy.Hierarchy;
@@ -16,6 +15,12 @@ import cz.artique.client.history.HistoryItem;
 import cz.artique.client.history.HistoryManager;
 import cz.artique.client.i18n.I18n;
 
+/**
+ * Not used.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class HistoryWidget extends AbstractHierarchyTreeWidget<HistoryItem> {
 
 	public static class HistoryWidgetFactory
@@ -40,45 +45,44 @@ public class HistoryWidget extends AbstractHierarchyTreeWidget<HistoryItem> {
 		super(hierarchy);
 
 		if (hierarchy instanceof LeafNode) {
-			createLeafNodePanel(getPanel());
+			createLeafNodePanel();
 		} else if (hierarchy instanceof InnerNode) {
 			if (hierarchy.getParent() != null) {
-				createInnerNodePanel(getPanel());
+				createInnerNodePanel();
 			} else {
-				createRootPanel(getPanel());
+				createRootPanel();
 			}
 		}
 	}
 
-	private void createRootPanel(FlowPanel panel) {
+	private void createRootPanel() {
 		String clearTooltip =
 			I18n.getHierarchyTreeConstants().clearHistoryTooltip();
-		createLabel(panel, "/", null, null);
-		createImage(panel, HierarchyResources.INSTANCE.clear(), clearHandler,
+		createLabel("/", null, null);
+		createImage(HierarchyResources.INSTANCE.clear(), clearHandler,
 			clearTooltip);
 	}
 
 	// unnecessary
-	private void createInnerNodePanel(FlowPanel panel) {
-		createLabel(panel, getHierarchy().getName(), null, null);
+	private void createInnerNodePanel() {
+		createLabel(getHierarchy().getName(), null, null);
 	}
 
-	private void createLeafNodePanel(FlowPanel panel) {
+	private void createLeafNodePanel() {
 		LeafNode<HistoryItem> leaf = (LeafNode<HistoryItem>) getHierarchy();
 		final HistoryItem item = leaf.getItem();
 		final String token = item.getToken();
-		createAnchor(panel, getHierarchy().getName(), token,
-			new ClickHandler() {
-				final HyperlinkImpl impl = GWT.create(HyperlinkImpl.class);
+		createAnchor(getHierarchy().getName(), token, new ClickHandler() {
+			final HyperlinkImpl impl = GWT.create(HyperlinkImpl.class);
 
-				public void onClick(ClickEvent event) {
-					if (impl.handleAsClick(Event.as(event.getNativeEvent()))) {
-						HistoryManager.HISTORY.setListFilter(
-							item.getListFilter(), token);
-						event.preventDefault();
-					}
+			public void onClick(ClickEvent event) {
+				if (impl.handleAsClick(Event.as(event.getNativeEvent()))) {
+					HistoryManager.HISTORY.setListFilter(item.getListFilter(),
+						token);
+					event.preventDefault();
 				}
-			}, null);
+			}
+		}, null);
 		// TODO nice to have: tooltip v historii
 	}
 }

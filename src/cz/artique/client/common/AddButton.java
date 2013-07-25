@@ -10,9 +10,20 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.InlineLabel;
 
-public class AddButton<E> extends InlineLabel implements HasOpenHandlers<E> {
+/**
+ * AddButton is button-like styled "plus sign" which fires {@link OpenEvent} on
+ * click.
+ * 
+ * @author Adam Juraszek
+ * 
+ * @param <E>
+ *            type of target of {@link OpenEvent}
+ */
+public class AddButton<E> extends InlineLabel
+		implements HasOpenHandlers<E>, HasEnabled {
 
 	public static final AddButtonFactory FACTORY = new AddButtonFactory();
 
@@ -34,6 +45,10 @@ public class AddButton<E> extends InlineLabel implements HasOpenHandlers<E> {
 
 	private final E addFor;
 
+	/**
+	 * @param addFor
+	 *            who will be target of {@link OpenEvent}
+	 */
 	public AddButton(E addFor) {
 		super(addSign);
 		res.style().ensureInjected();
@@ -62,6 +77,9 @@ public class AddButton<E> extends InlineLabel implements HasOpenHandlers<E> {
 		return addHandler(handler, OpenEvent.getType());
 	}
 
+	/**
+	 * @return who will be target of {@link OpenEvent}
+	 */
 	public E getAddFor() {
 		return addFor;
 	}

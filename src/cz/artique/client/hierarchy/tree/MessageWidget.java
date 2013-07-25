@@ -2,7 +2,6 @@ package cz.artique.client.hierarchy.tree;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 
 import cz.artique.client.hierarchy.Hierarchy;
@@ -14,8 +13,20 @@ import cz.artique.client.i18n.I18n;
 import cz.artique.client.messages.Message;
 import cz.artique.client.messages.MessagesManager;
 
+/**
+ * Widget representing {@link Message} in {@link MessagesTree}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class MessageWidget extends AbstractHierarchyTreeWidget<Message> {
 
+	/**
+	 * Factory.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	public static class MessageWidgetFactory
 			implements HierarchyTreeWidgetFactory<Message> {
 
@@ -34,39 +45,54 @@ public class MessageWidget extends AbstractHierarchyTreeWidget<Message> {
 		}
 	};
 
+	/**
+	 * Constructs widget depending on whether it is root, inner, leaf node.
+	 * 
+	 * @param hierarchy
+	 *            hierarchy node
+	 */
 	public MessageWidget(Hierarchy<Message> hierarchy) {
 		super(hierarchy);
 
 		if (hierarchy instanceof LeafNode) {
-			createLeafNodePanel(getPanel());
+			createLeafNodePanel();
 		} else if (hierarchy instanceof InnerNode) {
 			if (hierarchy.getParent() != null) {
-				createInnerNodePanel(getPanel());
+				createInnerNodePanel();
 			} else {
-				createRootPanel(getPanel());
+				createRootPanel();
 			}
 		}
 	}
 
-	private void createRootPanel(FlowPanel panel) {
+	/**
+	 * Create content in case it is root node.
+	 */
+	private void createRootPanel() {
 		String clearTooltip =
 			I18n.getHierarchyTreeConstants().clearMessagesTooltip();
-		createAnchor(panel, I18n.getHierarchyTreeConstants().messageRootText(),
-			null, null, null);
-		createImage(panel, HierarchyResources.INSTANCE.clear(), clearHandler,
+		createAnchor(I18n.getHierarchyTreeConstants().messageRootText(), null,
+			null, null);
+		createImage(HierarchyResources.INSTANCE.clear(), clearHandler,
 			clearTooltip);
 	}
 
-	private void createInnerNodePanel(FlowPanel panel) {
-		createLabel(panel, getHierarchy().getName(), null, null);
+	/**
+	 * Create content in case it is inner node.
+	 */
+	private void createInnerNodePanel() {
+		createLabel(getHierarchy().getName(), null, null);
 	}
 
-	private void createLeafNodePanel(FlowPanel panel) {
+	/**
+	 * Create content in case it is leaf node.
+	 */
+	private void createLeafNodePanel() {
 		LeafNode<Message> leaf = (LeafNode<Message>) getHierarchy();
 		final Message item = leaf.getItem();
 
 		InlineLabel messageLabel =
-			createLabel(panel, item.getMessageBody(), new ClickHandler() {
+			createLabel(item.getMessageBody(), new ClickHandler() {
 				public void onClick(ClickEvent event) {
 					MessagesManager.MESSENGER.addMessage(item, false);
 				}
