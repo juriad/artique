@@ -6,18 +6,22 @@ import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 
+import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.shortcut.Shortcut;
@@ -61,6 +65,15 @@ public class ListFilterEditor extends Composite
 	@UiField
 	TextBox shortcut;
 
+	@UiField
+	Anchor RSS;
+
+	@UiField
+	Anchor Atom;
+
+	@UiField
+	InlineLabel notShared;
+
 	private Key listFilterKey;
 	private Key filterKey;
 
@@ -68,7 +81,7 @@ public class ListFilterEditor extends Composite
 
 	public ListFilterEditor(boolean proper) {
 		initWidget(uiBinder.createAndBindUi(this));
-		Element element = grid.getCellFormatter().getElement(3, 0);
+		Element element = grid.getCellFormatter().getElement(4, 0);
 		DOM.setElementAttribute(element, "colspan", "2");
 		setProper(proper);
 	}
@@ -129,6 +142,7 @@ public class ListFilterEditor extends Composite
 		name.setValue(value.getName());
 		hierarchy.setValue(value.getHierarchy());
 		exported.setValue(value.getExportAlias());
+		setShared(value.getExportAlias());
 
 		filter.setFilter(value.getFilterObject());
 		startFrom.setValue(value.getStartFrom());
@@ -145,6 +159,33 @@ public class ListFilterEditor extends Composite
 
 		listFilterKey = value.getKey();
 		filterKey = value.getFilter();
+	}
+
+	private void setShared(String exportAlias) {
+		if (exportAlias != null)
+			exportAlias.trim();
+		if (exportAlias != null && exportAlias.equals(""))
+			exportAlias = null;
+
+		if (exportAlias != null) {
+			String user =
+				URL.encodeQueryString(ArtiqueWorld.WORLD
+					.getUserInfo()
+					.getNickname());
+			String export = URL.encodeQueryString(exportAlias);
+			String href =
+				"/export/feedService?user=" + user + "&export=" + export;
+			RSS.setVisible(true);
+			RSS.setHref(href + "&type=rss");
+			Atom.setVisible(true);
+			Atom.setHref(href + "&type=atom");
+
+			notShared.setVisible(false);
+		} else {
+			RSS.setVisible(false);
+			Atom.setVisible(false);
+			notShared.setVisible(true);
+		}
 	}
 
 	public void setValue(ListFilter value, boolean fireEvents) {

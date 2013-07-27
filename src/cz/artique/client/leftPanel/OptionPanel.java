@@ -20,6 +20,8 @@ import cz.artique.client.shortcuts.ShortcutsDialog;
 
 public class OptionPanel extends Composite {
 
+	private static final String docUrl = "http://userdoc.artique.cz/intro";
+
 	interface MyResources extends ClientBundle {
 		@NotStrict
 		@Source("OptionPanel.css")
@@ -44,6 +46,9 @@ public class OptionPanel extends Composite {
 	@UiField
 	Button editShortcutsButton;
 
+	@UiField
+	Button doc;
+
 	public OptionPanel() {
 		res.style().ensureInjected();
 		initWidget(uiBinder.createAndBindUi(this));
@@ -64,5 +69,10 @@ public class OptionPanel extends Composite {
 	protected void logoutClicked(ClickEvent event) {
 		String url = ArtiqueWorld.WORLD.getUserInfo().getLogoutUrl();
 		Window.Location.assign(url);
+	}
+
+	@UiHandler("doc")
+	protected void docClicked(ClickEvent event) {
+		Window.open(docUrl, "_blank", "");
 	}
 }

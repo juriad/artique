@@ -32,6 +32,24 @@
 			</g:customCell>
 		</g:row>
 		<g:row>
+			<g:cell>
+				<ui:text from='{res.shareLinks}' />
+			</g:cell>
+			<g:customCell>
+				<g:HTMLPanel>
+					<g:Anchor ui:field="RSS" target="_blank">
+						<ui:text from='{res.RSS}' />
+					</g:Anchor>
+					<g:Anchor ui:field="Atom" target="_blank">
+						<ui:text from='{res.Atom}' />
+					</g:Anchor>
+					<g:InlineLabel ui:field="notShared">
+						<ui:text from='{res.notShared}' />
+					</g:InlineLabel>
+				</g:HTMLPanel>
+			</g:customCell>
+		</g:row>
+		<g:row>
 			<g:customCell>
 				<a:QueryFilter ui:field="filter" />
 			</g:customCell>

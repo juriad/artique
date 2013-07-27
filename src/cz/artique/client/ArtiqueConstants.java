@@ -47,4 +47,10 @@ public interface ArtiqueConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("User options")
 	String optionUser();
+
+	@DefaultStringValue("Documentation")
+	String optionDoc();
+
+	@DefaultStringValue("Browse documentation")
+	String goToDoc();
 }

@@ -178,6 +178,7 @@ public class ExportServlet extends HttpServlet {
 		}
 		feed.setEntries(entries);
 
+		feed.setEncoding(resp.getCharacterEncoding());
 		SyndFeedOutput output = new SyndFeedOutput();
 		output.output(feed, resp.getWriter(), true);
 	}

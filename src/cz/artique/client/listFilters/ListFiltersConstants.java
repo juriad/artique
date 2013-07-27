@@ -96,7 +96,19 @@ public interface ListFiltersConstants extends ConstantsWithLookup {
 
 	@DefaultStringValue("ordered")
 	String ordered();
-	
+
 	@DefaultStringValue("No labels criteria")
 	String noLabelsFilter();
+
+	@DefaultStringValue("Share links")
+	String shareLinks();
+
+	@DefaultStringValue("RSS")
+	String RSS();
+
+	@DefaultStringValue("Atom")
+	String Atom();
+
+	@DefaultStringValue("Not shared")
+	String notShared();
 }
