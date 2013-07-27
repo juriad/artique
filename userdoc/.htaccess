@@ -1,0 +1,9 @@
+RewriteEngine On
+#pokud je to zanorene v nejakem adresari, uvedte ho za /
+RewriteBase /
+#ignoruj vsechny opravdove adresare
+RewriteCond %{REQUEST_FILENAME} !-d
+#ignoruj vsechy opravdove soubory (php skripty, obrazky, styly)
+RewriteCond %{REQUEST_FILENAME} !-f
+#vsechno ostatni necha vygenerovat index.php (ten se musi rozhodnout podle promenne url, zda stranka existuje a jaky ma mit obsah)
+RewriteRule ^(.*)$ index.php?page=$1 [QSA,L]
