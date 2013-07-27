@@ -20,11 +20,23 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import cz.artique.client.labels.LabelRenderer;
 import cz.artique.shared.model.label.Label;
 
+/**
+ * Popup list of appropriate suggested {@link Label}s.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class SuggestionPopup extends Composite
 		implements HasSelectionHandlers<Label> {
 
 	private boolean mouseOver = false;
 
+	/**
+	 * Detects whether the mouse is over and focuses hovered suggestion.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	class MouseHandlers implements MouseOverHandler, MouseOutHandler {
 
 		public void onMouseOut(MouseOutEvent event) {
@@ -57,6 +69,10 @@ public class SuggestionPopup extends Composite
 	private int focused = -1;
 	private int actualSize = 0;
 
+	/**
+	 * @param maxItems
+	 *            maximum number of suggested {@link Label}s.
+	 */
 	public SuggestionPopup(int maxItems) {
 		this.maxItems = maxItems;
 		panel = new VerticalPanel();
@@ -89,14 +105,27 @@ public class SuggestionPopup extends Composite
 		panel.add(moreLabels);
 	}
 
+	/**
+	 * @param value
+	 *            new selected value
+	 */
 	protected void setSelectedValue(Label value) {
 		this.selectedValue = value;
 	}
 
+	/**
+	 * @return currently selected value
+	 */
 	public Label getSelectedValue() {
 		return selectedValue;
 	}
 
+	/**
+	 * Only first {@link #getMaxItems()} will be shown.
+	 * 
+	 * @param labels
+	 *            list of appropriate suggested {@link Label}s.
+	 */
 	public void setData(List<Label> labels) {
 		actualSize = Math.min(labels.size(), maxItems);
 		for (int i = 0; i < actualSize; i++) {
@@ -122,6 +151,9 @@ public class SuggestionPopup extends Composite
 		selectedValue = null;
 	}
 
+	/**
+	 * @return first available suggested {@link Label}
+	 */
 	public Label getFirstAvaliable() {
 		if (valueLabels.size() > 0) {
 			ValueLabel<Label> valueLabel = valueLabels.get(0);
@@ -132,10 +164,18 @@ public class SuggestionPopup extends Composite
 		return null;
 	}
 
+	/**
+	 * @return maximum number of {@link Label}s to be shown
+	 */
 	public int getMaxItems() {
 		return maxItems;
 	}
 
+	/**
+	 * Reacts to key up pressed in suggestion box.
+	 * 
+	 * @return whether a suggestion is selected
+	 */
 	public boolean up() {
 		int oldFocused = focused;
 
@@ -151,6 +191,11 @@ public class SuggestionPopup extends Composite
 		return focused >= 0;
 	}
 
+	/**
+	 * Reacts to key down pressed in suggestion box.
+	 * 
+	 * @return whether a suggestion is selected
+	 */
 	public boolean down() {
 		int oldFocused = focused;
 
@@ -166,10 +211,21 @@ public class SuggestionPopup extends Composite
 		return focused >= 0;
 	}
 
+	/**
+	 * @return whether mouse is hovering over the popup
+	 */
 	public boolean isMouseOver() {
 		return mouseOver;
 	}
 
+	/**
+	 * Changes focused suggested {@link Label} from old to new.
+	 * 
+	 * @param oldFocused
+	 *            old suggested {@link Label}
+	 * @param newFocused
+	 *            new suggested {@link Label}
+	 */
 	private void changeFocus(int oldFocused, int newFocused) {
 		if (oldFocused == newFocused) {
 			return;
@@ -190,6 +246,11 @@ public class SuggestionPopup extends Composite
 		}
 	}
 
+	/**
+	 * Sets focused suggestion by its index.
+	 * 
+	 * @param index
+	 */
 	public void setFocused(int index) {
 		if (index < -1 || index >= actualSize) {
 			return;
@@ -206,7 +267,12 @@ public class SuggestionPopup extends Composite
 
 	private final LabelRenderer labelRenderer = new LabelRenderer(true);
 
-	public ValueLabel<Label> createLabel() {
+	/**
+	 * Creates the widget representing suggested {@link Label}.
+	 * 
+	 * @return widget of suggested {@link Label}
+	 */
+	protected ValueLabel<Label> createLabel() {
 		ValueLabel<Label> valueLabel = new ValueLabel<Label>(labelRenderer);
 		valueLabel.setStylePrimaryName("labelSuggestionLabel");
 		return valueLabel;

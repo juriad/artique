@@ -13,11 +13,24 @@ import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.label.ListFilter;
 
+/**
+ * Extends basic {@link LabelWidget}; adds support for filtering items having
+ * assigned the clicked {@link Label}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ClickableLabelWidget extends LabelWidget {
 
 	public static final ClickableArtiqueLabelFactory FACTORY =
 		new ClickableArtiqueLabelFactory();
 
+	/**
+	 * Factory.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	public static class ClickableArtiqueLabelFactory
 			implements LabelWidgetFactory {
 		public LabelWidget createWidget(Label l) {

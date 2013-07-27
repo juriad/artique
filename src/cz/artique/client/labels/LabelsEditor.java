@@ -32,6 +32,12 @@ import cz.artique.shared.model.label.LabelAppearance;
 import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.shortcut.Shortcut;
 
+/**
+ * Editor shown inside {@link LabelsDialog}; defines layout and control.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class LabelsEditor extends Composite implements HasValue<List<Label>> {
 	private static LabelsEditorUiBinder uiBinder = GWT
 		.create(LabelsEditorUiBinder.class);
@@ -93,6 +99,13 @@ public class LabelsEditor extends Composite implements HasValue<List<Label>> {
 		return addHandler(handler, ValueChangeEvent.getType());
 	}
 
+	/**
+	 * When user selects foreground color, add the color selection to list of
+	 * changes.
+	 * 
+	 * @param event
+	 *            event
+	 */
 	@UiHandler("foregroundColor")
 	protected void foregroundColorChanged(ValueChangeEvent<String> event) {
 		Label selected = getLabel(cellList.getSelected());
@@ -104,6 +117,13 @@ public class LabelsEditor extends Composite implements HasValue<List<Label>> {
 		setFields();
 	}
 
+	/**
+	 * When user selects background color, add the color selection to list of
+	 * changes.
+	 * 
+	 * @param event
+	 *            event
+	 */
 	@UiHandler("backgroundColor")
 	protected void backgroundColorChanged(ValueChangeEvent<String> event) {
 		Label selected = getLabel(cellList.getSelected());
@@ -115,6 +135,13 @@ public class LabelsEditor extends Composite implements HasValue<List<Label>> {
 		setFields();
 	}
 
+	/**
+	 * When user marks (unmarks) the {@link Label} to be deleted, add the new
+	 * state to list of changes.
+	 * 
+	 * @param event
+	 *            event
+	 */
 	@UiHandler("markedToDelete")
 	protected void markedToDeleteChanged(ValueChangeEvent<Boolean> event) {
 		Label selected = getLabel(cellList.getSelected());
@@ -126,6 +153,13 @@ public class LabelsEditor extends Composite implements HasValue<List<Label>> {
 		setFields();
 	}
 
+	/**
+	 * When user changes backup level of the {@link Label}, add the new
+	 * state to list of changes.
+	 * 
+	 * @param event
+	 *            event
+	 */
 	@UiHandler("backupLevel")
 	protected void backupLevelChanged(ValueChangeEvent<BackupLevel> event) {
 		Label selected = getLabel(cellList.getSelected());
@@ -137,6 +171,13 @@ public class LabelsEditor extends Composite implements HasValue<List<Label>> {
 		setFields();
 	}
 
+	/**
+	 * When user changes (or adds or removes) shortcut to the {@link Label}, add
+	 * the new shortcut to list of changes.
+	 * 
+	 * @param event
+	 *            event
+	 */
 	@UiHandler("shortcut")
 	protected void shortcutChanged(ValueChangeEvent<String> event) {
 		Label selected = getLabel(cellList.getSelected());
@@ -148,11 +189,21 @@ public class LabelsEditor extends Composite implements HasValue<List<Label>> {
 		setFields();
 	}
 
+	/**
+	 * Returns list of changed {@link Label}s.
+	 * 
+	 * @see com.google.gwt.user.client.ui.HasValue#getValue()
+	 */
 	public List<Label> getValue() {
 		List<Label> result = new ArrayList<Label>(changes.values());
 		return result;
 	}
 
+	/**
+	 * Fills the dialog with list of all user-defined {@link Label}s.
+	 * 
+	 * @see com.google.gwt.user.client.ui.HasValue#setValue(java.lang.Object)
+	 */
 	public void setValue(List<Label> value) {
 		changes = new HashMap<Key, Label>();
 		cellList.clearSelection();
@@ -167,6 +218,14 @@ public class LabelsEditor extends Composite implements HasValue<List<Label>> {
 		cellList.setRowData(labels);
 	}
 
+	/**
+	 * Returns copy (may be an existing one) of {@link Label} used to store its
+	 * changes.
+	 * 
+	 * @param label
+	 *            {@link Label} to copy
+	 * @return copy of {@link Label}
+	 */
 	private Label getLabel(Label label) {
 		if (label == null || label.getKey() == null) {
 			return null;
@@ -186,6 +245,9 @@ public class LabelsEditor extends Composite implements HasValue<List<Label>> {
 		return l;
 	}
 
+	/**
+	 * Sets fields in the dialog according to currently selected {@link Label}.
+	 */
 	private void setFields() {
 		Label selected = getLabel(cellList.getSelected());
 		if (selected == null) {

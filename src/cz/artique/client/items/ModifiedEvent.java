@@ -7,6 +7,12 @@ import com.google.gwt.event.shared.GwtEvent;
 
 import cz.artique.shared.model.item.UserItem;
 
+/**
+ * Event notifying about modification of some {@link UserItem}s.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ModifiedEvent extends GwtEvent<ModifiedHandler> {
 
 	private static final Type<ModifiedHandler> TYPE =
@@ -31,6 +37,9 @@ public class ModifiedEvent extends GwtEvent<ModifiedHandler> {
 		handler.onModified(this);
 	}
 
+	/**
+	 * @return modified {@link UserItem}s
+	 */
 	public Map<Key, UserItem> getModified() {
 		return modified;
 	}

@@ -4,10 +4,20 @@ import com.google.gwt.text.shared.AbstractRenderer;
 
 import cz.artique.shared.model.label.Label;
 
+/**
+ * Renders label name in two manners; the difference is at system labels.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class LabelRenderer extends AbstractRenderer<Label> {
 
 	private final boolean descriptive;
 
+	/**
+	 * @param descriptive
+	 *            whether the system label shall be rendered with description
+	 */
 	public LabelRenderer(boolean descriptive) {
 		this.descriptive = descriptive;
 	}
@@ -26,6 +36,11 @@ public class LabelRenderer extends AbstractRenderer<Label> {
 		}
 	}
 
+	/**
+	 * How to render system labels.
+	 * 
+	 * @return whether the system label shall be rendered with description
+	 */
 	public boolean isDescriptive() {
 		return descriptive;
 	}

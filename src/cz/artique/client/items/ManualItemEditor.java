@@ -26,6 +26,12 @@ import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.source.UserSource;
 
+/**
+ * Editor shown inside {@link ManualItemDialog}; defines layout and control.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ManualItemEditor extends Composite implements HasValue<UserItem> {
 	private static ManualItemEditorUiBinder uiBinder = GWT
 		.create(ManualItemEditorUiBinder.class);
@@ -57,6 +63,12 @@ public class ManualItemEditor extends Composite implements HasValue<UserItem> {
 		return addHandler(handler, ValueChangeEvent.getType());
 	}
 
+	/**
+	 * Returns {@link UserItem} containing {@link ManualItem} which user has
+	 * filled in the form.
+	 * 
+	 * @see com.google.gwt.user.client.ui.HasValue#getValue()
+	 */
 	public UserItem getValue() {
 		ManualItem item = new ManualItem();
 		item.setTitle(title.getValue());
@@ -79,14 +91,17 @@ public class ManualItemEditor extends Composite implements HasValue<UserItem> {
 		return userItem;
 	}
 
+	/**
+	 * Prepares blank editor.
+	 * 
+	 * @see com.google.gwt.user.client.ui.HasValue#setValue(java.lang.Object)
+	 */
 	public void setValue(UserItem value) {
 		title.setValue("");
 		url.setValue("");
 		content.setValue("");
-		UserItem userItem = new UserItem();
 		UserSource manualSource = Managers.SOURCES_MANAGER.getManualSource();
-		userItem.setLabels(manualSource.getDefaultLabels());
-		labels.setNewData(userItem);
+		labels.setNewData(manualSource.getDefaultLabels());
 	}
 
 	public void setValue(UserItem value, boolean fireEvents) {

@@ -10,14 +10,24 @@ import cz.artique.client.labels.AbstractLabelsBar;
 import cz.artique.client.labels.LabelWidget;
 import cz.artique.client.labels.suggestion.LabelsPool;
 import cz.artique.client.manager.Managers;
-import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
 
+/**
+ * List of labels to be assigned when new manual item is created.
+ * 
+ * @see AbstractLabelsBar
+ * @author Adam Juraszek
+ * 
+ */
 public class ManualItemLabelsBar extends AbstractLabelsBar {
 
-	private UserItem item;
-
+	/**
+	 * Allow user to add new label and select labels of those user defined.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	private static class MyLabelsPool implements LabelsPool {
 		public boolean isNewValueAllowed() {
 			return true;
@@ -68,17 +78,17 @@ public class ManualItemLabelsBar extends AbstractLabelsBar {
 		}
 	}
 
-	public UserItem getItem() {
-		return item;
-	}
-
-	public void setNewData(UserItem userItem) {
-		this.item = userItem;
-		List<Key> labels2 = userItem.getLabels();
-		if (labels2 == null) {
-			labels2 = new ArrayList<Key>();
+	/**
+	 * Sets list of labels to be prefilled in the bar.
+	 * 
+	 * @param labels
+	 *            list of labels
+	 */
+	public void setNewData(List<Key> labels) {
+		if (labels == null) {
+			labels = new ArrayList<Key>();
 		}
-		List<Label> newList = Managers.LABELS_MANAGER.getSortedList(labels2);
+		List<Label> newList = Managers.LABELS_MANAGER.getSortedList(labels);
 
 		removeAllLabels();
 

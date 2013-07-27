@@ -9,6 +9,12 @@ import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.item.UserItem;
 
+/**
+ * Dialog which is shown when user wants to add new manual item.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ManualItemDialog extends UniversalDialog<Void> {
 
 	public static final ManualItemDialog DIALOG = new ManualItemDialog();

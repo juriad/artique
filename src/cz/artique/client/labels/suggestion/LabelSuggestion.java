@@ -23,10 +23,18 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 
 import cz.artique.shared.model.label.Label;
 
+/**
+ * Reimplementation of {@link SuggestBox} for {@link Label}s; it allows user to
+ * select a non-existent {@link Label}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class LabelSuggestion extends Composite
 		implements HasSelectionHandlers<SuggestionResult> {
 
@@ -44,6 +52,17 @@ public class LabelSuggestion extends Composite
 	private boolean complete = false;
 	private LabelsPool pool;
 
+	/**
+	 * Creates a new suggestion box with a {@link LabelsPool} of available
+	 * {@link Label}s and maximum number of {@link Label}s to be shown.
+	 * 
+	 * The suggestion reacts to UP, DOWN, ENTER, ESCAPE and TAB keys.
+	 * 
+	 * @param pool
+	 *            {@link LabelsPool}
+	 * @param maxItems
+	 *            maximum number of {@link Label}s to be shown
+	 */
 	public LabelSuggestion(LabelsPool pool, int maxItems) {
 		res.style().ensureInjected();
 		this.pool = pool;
@@ -138,6 +157,9 @@ public class LabelSuggestion extends Composite
 		});
 	}
 
+	/**
+	 * When enter was pressed.
+	 */
 	protected void enter() {
 		if (popup.isVisible() && popup.getSelectedValue() != null) {
 			saveExistingValue();
@@ -146,6 +168,9 @@ public class LabelSuggestion extends Composite
 		}
 	}
 
+	/**
+	 * When a name of non-existent {@link Label} was inserted.
+	 */
 	protected void saveNewValue() {
 		complete();
 
@@ -167,12 +192,18 @@ public class LabelSuggestion extends Composite
 		}
 	}
 
+	/**
+	 * When a name of existing {@link Label} was inserted.
+	 */
 	protected void saveExistingValue() {
 		complete();
 		SelectionEvent.fire(this,
 			new SuggestionResult(popup.getSelectedValue()));
 	}
 
+	/**
+	 * When user presses any key causing the textbox change its content.
+	 */
 	protected void textChanged() {
 		String text = textBox.getText();
 		if (text.length() > 0) {
@@ -184,6 +215,12 @@ public class LabelSuggestion extends Composite
 		}
 	}
 
+	/**
+	 * When tab was pressed.
+	 * 
+	 * @param event
+	 *            event to be prevented to perform default action
+	 */
 	protected void tab(KeyDownEvent event) {
 		if (popup.isVisible()) {
 			Label selectedValue = popup.getSelectedValue();
@@ -199,17 +236,26 @@ public class LabelSuggestion extends Composite
 		}
 	}
 
+	/**
+	 * Cancels the suggestion.
+	 */
 	protected void cancel() {
 		complete();
 		SelectionEvent.fire(this, new SuggestionResult());
 	}
 
+	/**
+	 * When key down was pressed.
+	 */
 	protected void keyDown() {
 		if (popup.isVisible()) {
 			popup.down();
 		}
 	}
 
+	/**
+	 * When key down was pressed.
+	 */
 	protected void keyUp() {
 		if (popup.isVisible()) {
 			popup.up();
@@ -221,6 +267,9 @@ public class LabelSuggestion extends Composite
 		return addHandler(handler, SelectionEvent.getType());
 	}
 
+	/**
+	 * Ends the suggestion event processing.
+	 */
 	private void complete() {
 		if (complete) {
 			return;
@@ -230,6 +279,9 @@ public class LabelSuggestion extends Composite
 		textBox.setFocus(false);
 	}
 
+	/**
+	 * Focuses (restores) the suggestion.
+	 */
 	public void focus() {
 		textBox.setValue(null);
 		textChanged();

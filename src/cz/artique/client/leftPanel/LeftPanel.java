@@ -10,6 +10,12 @@ import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.user.client.ui.StackLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * Defines left panel which consists of options, sources, filters and messages.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class LeftPanel extends StackLayoutPanel {
 
 	interface MyResources extends ClientBundle {
@@ -35,6 +41,12 @@ public class LeftPanel extends StackLayoutPanel {
 		});
 	}
 
+	/**
+	 * Force custom style.
+	 * 
+	 * @see com.google.gwt.user.client.ui.StackLayoutPanel#insert(com.google.gwt.user.client.ui.Widget,
+	 *      com.google.gwt.user.client.ui.Widget, double, int)
+	 */
 	@Override
 	public void insert(Widget child, Widget header, double headerSize,
 			int beforeIndex) {
@@ -43,6 +55,14 @@ public class LeftPanel extends StackLayoutPanel {
 		header.setStylePrimaryName("leftPanelHeader");
 	}
 
+	/**
+	 * Show widget optionally without animation.
+	 * 
+	 * @param animate
+	 *            whether animation shall be shown
+	 * @param index
+	 *            index of widget to be shown
+	 */
 	public void showWidget(boolean animate, int index) {
 		int duration = getAnimationDuration();
 		if (!animate) {

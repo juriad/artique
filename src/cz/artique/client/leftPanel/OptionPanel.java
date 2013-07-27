@@ -18,6 +18,13 @@ import cz.artique.client.ArtiqueWorld;
 import cz.artique.client.labels.LabelsDialog;
 import cz.artique.client.shortcuts.ShortcutsDialog;
 
+/**
+ * Options panel inside {@link LeftPanel}; it contains configuration, user login
+ * and documentation.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class OptionPanel extends Composite {
 
 	private static final String docUrl = "http://userdoc.artique.cz/intro";
@@ -55,22 +62,46 @@ public class OptionPanel extends Composite {
 		userName.setText(ArtiqueWorld.WORLD.getUserInfo().getNickname());
 	}
 
+	/**
+	 * When edit labels button was clicked.
+	 * 
+	 * @param event
+	 *            event
+	 */
 	@UiHandler("editLabelsButton")
 	protected void editLabelsButtonClicked(ClickEvent event) {
 		LabelsDialog.DIALOG.showDialog();
 	}
 
+	/**
+	 * When edit shortcuts button was clicked.
+	 * 
+	 * @param event
+	 *            event
+	 */
 	@UiHandler("editShortcutsButton")
 	protected void editShortcutsButtonClicked(ClickEvent event) {
 		ShortcutsDialog.DIALOG.showDialog();
 	}
 
+	/**
+	 * When logout button was clicked.
+	 * 
+	 * @param event
+	 *            event
+	 */
 	@UiHandler("logout")
 	protected void logoutClicked(ClickEvent event) {
 		String url = ArtiqueWorld.WORLD.getUserInfo().getLogoutUrl();
 		Window.Location.assign(url);
 	}
 
+	/**
+	 * When browse documentation button was clicked.
+	 * 
+	 * @param event
+	 *            event
+	 */
 	@UiHandler("doc")
 	protected void docClicked(ClickEvent event) {
 		Window.open(docUrl, "_blank", "");

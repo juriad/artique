@@ -32,6 +32,16 @@ import cz.artique.shared.validation.HasIssue;
 import cz.artique.shared.validation.Issue;
 import cz.artique.shared.validation.ValidationException;
 
+/**
+ * Labels manager wraps {@link ClientLabelService}; provides its methods.
+ * It can provide list of {@link Label}s based on their type, name or
+ * key(s).
+ * 
+ * The manager also defines the only two system labels: operators AND and OR.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 
 	public static final Label AND, OR;
@@ -63,6 +73,9 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 	private List<Label> systemLabels = new ArrayList<Label>();
 	private List<Label> userDefinedLabels = new ArrayList<Label>();
 
+	/**
+	 * Load list of all {@link Label}s and register operators.
+	 */
 	private LabelsManager() {
 		super(GWT.<ClientLabelServiceAsync> create(ClientLabelService.class));
 		refresh(null);
@@ -70,6 +83,15 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 		systemLabels.add(OR);
 	}
 
+	/**
+	 * When a new {@link UserSource} is added a new {@link Label} is created.
+	 * This informs about the new {@link Label}.
+	 * 
+	 * When a {@link UserSource} changes its name, the display name of its
+	 * {@link Label} shall be also changed.
+	 * 
+	 * @param source
+	 */
 	public void updateUserSourceLabel(UserSource source) {
 		Key labelKey = source.getLabel();
 		Label label = labelsKeys.get(labelKey);
@@ -88,6 +110,11 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 	private List<AsyncCallback<Void>> pingsWaiting =
 		new ArrayList<AsyncCallback<Void>>();
 
+	/**
+	 * Loads list of all existing labels and classifies them by their type.
+	 * 
+	 * @see cz.artique.client.manager.Manager#refresh(com.google.gwt.user.client.rpc.AsyncCallback)
+	 */
 	public void refresh(final AsyncCallback<Void> ping) {
 		pingsWaiting.add(ping);
 		if (pingsWaiting.size() > 2) {
@@ -159,6 +186,15 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 		});
 	}
 
+	/**
+	 * Calls {@link ClientLabelService#addLabel(Label)} and registers newly
+	 * created {@link Label}.
+	 * 
+	 * @param name
+	 *            name of {@link Label} to be created
+	 * @param ping
+	 *            callback
+	 */
 	public void createNewLabel(String name, final AsyncCallback<Label> ping) {
 		Label label = new Label(null, name);
 		assumeOnline();
@@ -191,10 +227,21 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 		});
 	}
 
+	/**
+	 * @param key
+	 * @return {@link Label} defined by key or null if such does not exist
+	 */
 	public Label getLabelByKey(Key key) {
 		return labelsKeys.get(key);
 	}
 
+	/**
+	 * Gets the sorted list of {@link Label}s defined by their keys.
+	 * 
+	 * @param keys
+	 *            the list of keys of {@link Label}s
+	 * @return the sorted list of {@link Label}s
+	 */
 	public List<Label> getSortedList(List<Key> keys) {
 		List<Label> labels = new ArrayList<Label>(keys.size());
 		for (Key key : keys) {
@@ -205,6 +252,13 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 		return labels;
 	}
 
+	/**
+	 * Returns list of all {@link Label}s optionally filtered by their type.
+	 * 
+	 * @param filterType
+	 *            optional desired type
+	 * @return list of {@link Label}s (optionally: of desired type)
+	 */
 	@SuppressWarnings("unchecked")
 	public List<Label> getLabels(LabelType filterType) {
 		if (filterType == null) {
@@ -224,6 +278,15 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 		}
 	}
 
+	/**
+	 * Searches {@link Label}s for those matched by part of their name.
+	 * 
+	 * @param text
+	 *            part of name to search for
+	 * @param allLabels
+	 *            list of {@link Label}s to search
+	 * @return list of matching {@link Label}s
+	 */
 	public List<Label> fullTextSearch(String text, List<Label> allLabels) {
 		text = text.trim().toLowerCase();
 
@@ -253,15 +316,41 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 		return sorted;
 	}
 
+	/**
+	 * Combines name with type.
+	 * 
+	 * @param type
+	 *            type of {@link Label}
+	 * @param name
+	 *            name of {@link Label}
+	 * @return name with type
+	 */
 	private String nameWithType(LabelType type, String name) {
 		return type.getType() + "$" + name;
 	}
 
+	/**
+	 * Returns label by name and type.
+	 * 
+	 * @param type
+	 *            type of {@link Label}
+	 * @param name
+	 *            name of {@link Label}
+	 * @return found {@link Label} or null if such does not exist
+	 */
 	public Label getLabelByName(LabelType type, String name) {
 		Label label = labelNames.get(nameWithType(type, name));
 		return label;
 	}
 
+	/**
+	 * Updates list of {@link Label}s.
+	 * 
+	 * @param value
+	 *            list of {@link Label}s to be updated
+	 * @param ping
+	 *            callback
+	 */
 	public void updateLabels(final List<Label> value,
 			final AsyncCallback<Void> ping) {
 		assumeOnline();

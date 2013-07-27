@@ -17,6 +17,16 @@ import cz.artique.client.common.InlineFlowPanel;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelAppearance;
 
+/**
+ * Widget representing a {@link Label}; it contains the {@link Label} name and
+ * {@link CloseButton}.
+ * 
+ * The {@link LabelWidget} is {@link Comparable} because it is added into
+ * {@link AbstractLabelsBar}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class LabelWidget extends Composite
 		implements HasCloseHandlers<LabelWidget>, Comparable<LabelWidget>,
 		HasEnabled {
@@ -31,6 +41,12 @@ public class LabelWidget extends Composite
 	public static final ArtiqueLabelWidgetFactory FACTORY =
 		new ArtiqueLabelWidgetFactory();
 
+	/**
+	 * Factory.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	public static class ArtiqueLabelWidgetFactory implements LabelWidgetFactory {
 		public LabelWidget createWidget(Label l) {
 			return new LabelWidget(l);
@@ -64,6 +80,9 @@ public class LabelWidget extends Composite
 		setStyle();
 	}
 
+	/**
+	 * Sets foreground and background color.
+	 */
 	private void setStyle() {
 		if (label.getAppearance() != null) {
 			LabelAppearance appearance = label.getAppearance();
@@ -82,6 +101,9 @@ public class LabelWidget extends Composite
 		return closeButton.addCloseHandler(handler);
 	}
 
+	/**
+	 * @return backed {@link Label}
+	 */
 	public Label getLabel() {
 		return label;
 	}
@@ -90,10 +112,20 @@ public class LabelWidget extends Composite
 		return getLabel().compareTo(o.getLabel());
 	}
 
+	/**
+	 * Returns whether the close button is enabled.
+	 * 
+	 * @see com.google.gwt.user.client.ui.HasEnabled#isEnabled()
+	 */
 	public boolean isEnabled() {
 		return enabled;
 	}
 
+	/**
+	 * Disables close button.
+	 * 
+	 * @see com.google.gwt.user.client.ui.HasEnabled#setEnabled(boolean)
+	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 		closeButton.setEnabled(enabled);

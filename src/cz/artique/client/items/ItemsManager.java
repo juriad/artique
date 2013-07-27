@@ -28,7 +28,16 @@ import cz.artique.shared.items.ListingRequest;
 import cz.artique.shared.items.ListingResponse;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Label;
+import cz.artique.shared.model.label.ListFilter;
 
+/**
+ * Items manager wraps {@link ClientItemService}; provides its methods.
+ * It also manages sets of changes for of {@link UserItem} attributes and sends
+ * them periodically to server.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 		implements HasModifiedHandlers {
 	public static final ItemsManager MANAGER = new ItemsManager();
@@ -38,6 +47,10 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 
 	private final Timer timer;
 
+	/**
+	 * Send all pending change sets when history changes and also each 3
+	 * seconds.
+	 */
 	private ItemsManager() {
 		super(GWT.<ClientItemServiceAsync> create(ClientItemService.class));
 		changeSets = new HashMap<Key, ChangeSet>();
@@ -59,6 +72,13 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 		}, 1);
 	}
 
+	/**
+	 * Get existing or create new {@link ChangeSet} for {@link UserItem}.
+	 * 
+	 * @param userItem
+	 *            {@link UserItem}
+	 * @return existing or new {@link ChangeSet}
+	 */
 	private ChangeSet getChangeSet(UserItem userItem) {
 		ChangeSet changeSet = changeSets.get(userItem.getKey());
 		if (changeSet == null) {
@@ -68,6 +88,17 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 		return changeSet;
 	}
 
+	/**
+	 * Informs manager about {@link Label} to be added to a {@link UserItem}.
+	 * The {@link Label} will be added to {@link ChangeSet}.
+	 * 
+	 * @param userItem
+	 *            {@link UserItem} to be changed
+	 * @param label
+	 *            label which was added
+	 * @param ping
+	 *            callback when applied
+	 */
 	public synchronized void labelAdded(UserItem userItem, Label label,
 			AsyncCallback<UserItem> ping) {
 		if (userItem.getLabels().contains(label.getKey())) {
@@ -90,6 +121,18 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 		}
 	}
 
+	/**
+	 * Informs manager about {@link Label} to be removed from a {@link UserItem}
+	 * .
+	 * The {@link Label} will be added to {@link ChangeSet}.
+	 * 
+	 * @param userItem
+	 *            {@link UserItem} to be changed
+	 * @param label
+	 *            label which was removed
+	 * @param ping
+	 *            callback when applied
+	 */
 	public synchronized void labelRemoved(UserItem userItem, Label label,
 			AsyncCallback<UserItem> ping) {
 		if (!userItem.getLabels().remove(label.getKey())) {
@@ -111,6 +154,17 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 		}
 	}
 
+	/**
+	 * Informs manager about new read state of a {@link UserItem}.
+	 * The new state will be added to {@link ChangeSet}.
+	 * 
+	 * @param userItem
+	 *            {@link UserItem} to be changed
+	 * @param read
+	 *            new read state
+	 * @param ping
+	 *            callback when applied
+	 */
 	public synchronized void readSet(UserItem userItem, boolean read,
 			AsyncCallback<UserItem> ping) {
 		if (read == userItem.isRead()) {
@@ -132,6 +186,11 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 		}
 	}
 
+	/**
+	 * Send all pending {@link ChangeSet}s to server to be performed.
+	 * 
+	 * @see cz.artique.client.manager.Manager#refresh(com.google.gwt.user.client.rpc.AsyncCallback)
+	 */
 	public synchronized void refresh(final AsyncCallback<Void> ping) {
 		if (changeSets.isEmpty()) {
 			return;
@@ -184,6 +243,14 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 			});
 	}
 
+	/**
+	 * Reapplies failed changes to current {@link ChangeSet}s.
+	 * 
+	 * @param copyChangeSets
+	 *            failed {@link ChangeSet}s
+	 * @param copyPings
+	 *            callbacks of failed changes
+	 */
 	private synchronized void mergeFailed(Map<Key, ChangeSet> copyChangeSets,
 			Map<Key, AsyncCallback<UserItem>> copyPings) {
 		for (Key key : copyChangeSets.keySet()) {
@@ -208,6 +275,15 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 		}
 	}
 
+	/**
+	 * Just calls {@link ClientItemService#getItems(ListingRequest)} method.
+	 * 
+	 * @param request
+	 *            request containing information about {@link ListFilter} and
+	 *            items range
+	 * @param ping
+	 *            callback
+	 */
 	public void getItems(final ListingRequest request,
 			final AsyncCallback<ListingResponse> ping) {
 		assumeOnline();
@@ -232,6 +308,11 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 		});
 	}
 
+	/**
+	 * Manager is ready immediately.
+	 * 
+	 * @see cz.artique.client.manager.AbstractManager#ready(cz.artique.client.manager.ManagerReady)
+	 */
 	@Override
 	public void ready(ManagerReady ping) {
 		Managers.LABELS_MANAGER.ready(ping);
@@ -240,6 +321,12 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 	private final List<ModifiedHandler> handlers =
 		new ArrayList<ModifiedHandler>();
 
+	/**
+	 * Notify handlers about event.
+	 * 
+	 * @param event
+	 *            {@link ModifiedEvent} to be fired
+	 */
 	private void fireModifiedEvent(ModifiedEvent event) {
 		for (ModifiedHandler h : handlers) {
 			h.onModified(event);
@@ -255,6 +342,14 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 		};
 	}
 
+	/**
+	 * Just calls {@link ClientItemService#addManualItem(UserItem)} method.
+	 * 
+	 * @param item
+	 *            new manual item to add
+	 * @param ping
+	 *            callback
+	 */
 	public void addManualItem(UserItem item, final AsyncCallback<UserItem> ping) {
 		assumeOnline();
 		service.addManualItem(item, new AsyncCallback<UserItem>() {

@@ -6,6 +6,12 @@ import cz.artique.client.common.EnumRadioPicker;
 import cz.artique.client.i18n.I18n;
 import cz.artique.shared.model.label.BackupLevel;
 
+/**
+ * Provides radio selection of {@link BackupLevel}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class BackupLevelPicker extends EnumRadioPicker<BackupLevel> {
 
 	@UiConstructor

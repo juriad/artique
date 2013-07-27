@@ -13,6 +13,14 @@ import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.shortcut.Shortcut;
 import cz.artique.shared.model.shortcut.ShortcutType;
 
+/**
+ * Dialog shown when user wants to adjust behavior or the way the {@link Label}s
+ * are displayed.
+ * It also allows user to delete unused {@link Label}s.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class LabelsDialog extends UniversalDialog<Void> {
 
 	public static final LabelsDialog DIALOG = new LabelsDialog();
