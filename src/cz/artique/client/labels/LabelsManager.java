@@ -259,7 +259,6 @@ public class LabelsManager extends AbstractManager<ClientLabelServiceAsync> {
 	 *            optional desired type
 	 * @return list of {@link Label}s (optionally: of desired type)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Label> getLabels(LabelType filterType) {
 		if (filterType == null) {
 			return new CatList<Label>(systemLabels, userDefinedLabels,

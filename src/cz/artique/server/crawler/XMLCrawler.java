@@ -11,9 +11,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.HttpEntity;
+import org.apache.http.util.EntityUtils;
 
 import com.google.appengine.api.datastore.Link;
 import com.google.appengine.api.datastore.Text;
@@ -110,11 +109,13 @@ public class XMLCrawler extends AbstractCrawler<XMLSource, ArticleItem> {
 	protected SyndFeed getFeed(URL url) throws CrawlerException {
 		SyndFeedInput input = new SyndFeedInput();
 		try {
-			HttpClient client = getHttpClient();
-			HttpGet get = new HttpGet(url.toURI());
-			HttpResponse resp = client.execute(get);
-			InputStream is = resp.getEntity().getContent();
-			SyndFeed feed = input.build(new InputStreamReader(is));
+			HttpEntity entity = getEntity(url.toURI());
+			InputStream is = entity.getContent();
+			String charSet = EntityUtils.getContentCharSet(entity);
+			if (charSet == null) {
+				charSet = "UTF-8";
+			}
+			SyndFeed feed = input.build(new InputStreamReader(is, charSet));
 			return feed;
 		} catch (URISyntaxException e) {
 			throw new CrawlerException("URL is not valid URI", e);

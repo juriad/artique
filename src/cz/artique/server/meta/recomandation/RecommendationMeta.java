@@ -1,6 +1,6 @@
 package cz.artique.server.meta.recomandation;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-07-29 18:29:59")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-07-29 20:55:23")
 /** */
 public final class RecommendationMeta extends org.slim3.datastore.ModelMeta<cz.artique.shared.model.recomandation.Recommendation> {
 
