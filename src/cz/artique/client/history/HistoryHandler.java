@@ -10,7 +10,7 @@ import com.google.gwt.event.shared.EventHandler;
  */
 public interface HistoryHandler extends EventHandler {
 	/**
-	 * Called whenever {@link HistoryEvent} occures.
+	 * Called whenever {@link HistoryEvent} occurs.
 	 * 
 	 * @param e
 	 *            {@link HistoryEvent}

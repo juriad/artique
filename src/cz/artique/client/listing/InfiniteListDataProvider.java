@@ -6,13 +6,25 @@ import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import cz.artique.client.items.ItemsManager;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.items.ListingRequest;
 import cz.artique.shared.items.ListingResponse;
 import cz.artique.shared.model.config.client.ClientConfigKey;
+import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.label.ListFilterOrder;
 
+/**
+ * Provider of data for {@link InfiniteList}; the provider communicates with
+ * {@link ItemsManager}.
+ * 
+ * It keeps track of first and last known {@link UserItem} and current
+ * {@link ListFilter}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class InfiniteListDataProvider {
 	private Key first;
 
@@ -38,6 +50,15 @@ public class InfiniteListDataProvider {
 
 	private final ListFilter listFilter;
 
+	/**
+	 * Constructs new provider for {@link InfiniteList} providing
+	 * {@link UserItem}s matched by {@link ListFilter}.
+	 * 
+	 * @param listFilter
+	 *            {@link ListFilter} to be matched by {@link UserItem}s
+	 * @param list
+	 *            provides data for this {@link InfiniteList}
+	 */
 	public InfiniteListDataProvider(ListFilter listFilter, InfiniteList list) {
 		super();
 		this.listFilter = listFilter;
@@ -62,15 +83,22 @@ public class InfiniteListDataProvider {
 			.getConfig(ClientConfigKey.LIST_FETCH_INTERVAL)
 			.get()
 			.getI());
-		onStart();
 	}
 
-	protected void onStart() {}
-
+	/**
+	 * @return whether provider is ready to provide {@link UserItem}s
+	 */
 	protected boolean isReady() {
 		return true;
 	}
 
+	/**
+	 * Checks preconditions before actual fetch and calls {@link #doFetch(int)}.
+	 * 
+	 * @param count
+	 *            maximum number of {@link UserItem}s to fetch
+	 * @return whether the fetch will be performed
+	 */
 	public boolean fetch(int count) {
 		if (canceled) {
 			return false;
@@ -118,6 +146,12 @@ public class InfiniteListDataProvider {
 		return true;
 	}
 
+	/**
+	 * Does the actual fetching.
+	 * 
+	 * @param count
+	 *            number of {@link UserItem} to be requested
+	 */
 	protected void doFetch(int count) {
 		if (lastFetchProbeDate != null) {
 			return;
@@ -145,6 +179,12 @@ public class InfiniteListDataProvider {
 			});
 	}
 
+	/**
+	 * Applies fetched data to the {@link InfiniteList}.
+	 * 
+	 * @param result
+	 *            result of fetch
+	 */
 	protected void applyFetchedData(ListingResponse result) {
 		if (canceled) {
 			return;
@@ -177,18 +217,30 @@ public class InfiniteListDataProvider {
 		getList().setEndReached(result.isEndReached());
 	}
 
+	/**
+	 * @return date of last fetch
+	 */
 	public Date getLastFetch() {
 		return lastFetch;
 	}
 
+	/**
+	 * @return whether there is no more data
+	 */
 	public boolean isEndReached() {
 		return endReached;
 	}
 
+	/**
+	 * @return {@link InfiniteList} this provider is providing data for
+	 */
 	public InfiniteList getList() {
 		return list;
 	}
 
+	/**
+	 * Destroys this provider.
+	 */
 	public void destroy() {
 		this.canceled = true;
 		periodicTimer.cancel();

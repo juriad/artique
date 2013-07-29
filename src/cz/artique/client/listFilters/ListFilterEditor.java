@@ -14,7 +14,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -26,8 +25,14 @@ import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.shortcut.Shortcut;
 
-public class ListFilterEditor extends Composite
-		implements HasEnabled, HasValue<ListFilter> {
+/**
+ * Editor shown inside {@link ListFilterDialog} and {@link AdhocDialog}; it
+ * defines its layout and control.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
+public class ListFilterEditor extends Composite implements HasValue<ListFilter> {
 
 	private static ListFilterEditorUiBinder uiBinder = GWT
 		.create(ListFilterEditorUiBinder.class);
@@ -77,8 +82,13 @@ public class ListFilterEditor extends Composite
 	private Key listFilterKey;
 	private Key filterKey;
 
-	private boolean enabled = true;
-
+	/**
+	 * Proper editor contains persistent fields (name, hierarchy, export alias
+	 * and shortcut).
+	 * 
+	 * @param proper
+	 *            whether the editor shows persistent {@link ListFilter}
+	 */
 	public ListFilterEditor(boolean proper) {
 		initWidget(uiBinder.createAndBindUi(this));
 		Element element = grid.getCellFormatter().getElement(4, 0);
@@ -86,26 +96,16 @@ public class ListFilterEditor extends Composite
 		setProper(proper);
 	}
 
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-		name.setEnabled(enabled);
-		hierarchy.setEnabled(enabled);
-		exported.setEnabled(enabled);
-		startFrom.setEnabled(enabled);
-		endTo.setEnabled(enabled);
-		readPicker.setEnabled(enabled);
-		orderPicker.setEnabled(enabled);
-	}
-
 	public HandlerRegistration addValueChangeHandler(
 			ValueChangeHandler<ListFilter> handler) {
 		return addHandler(handler, ValueChangeEvent.getType());
 	}
 
+	/**
+	 * Currently specified {@link ListFilter}.
+	 * 
+	 * @see com.google.gwt.user.client.ui.HasValue#getValue()
+	 */
 	public ListFilter getValue() {
 		ListFilter lf = new ListFilter();
 		String _name = name.getValue().trim();
@@ -138,6 +138,11 @@ public class ListFilterEditor extends Composite
 		return lf;
 	}
 
+	/**
+	 * Sets field values to specified {@link ListFilter}.
+	 * 
+	 * @see com.google.gwt.user.client.ui.HasValue#setValue(java.lang.Object)
+	 */
 	public void setValue(ListFilter value) {
 		name.setValue(value.getName());
 		hierarchy.setValue(value.getHierarchy());
@@ -161,6 +166,12 @@ public class ListFilterEditor extends Composite
 		filterKey = value.getFilter();
 	}
 
+	/**
+	 * Shows shared links iff the {@link ListFilter} is exported.
+	 * 
+	 * @param exportAlias
+	 *            current export alias
+	 */
 	private void setShared(String exportAlias) {
 		if (exportAlias != null)
 			exportAlias.trim();
@@ -192,8 +203,14 @@ public class ListFilterEditor extends Composite
 		setValue(value);
 	}
 
+	/**
+	 * Hides persistent-related rows for {@link AdhocDialog}.
+	 * 
+	 * @param proper
+	 *            whether the editor shows persistent {@link ListFilter}
+	 */
 	private void setProper(boolean proper) {
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 4; i++) {
 			Element element = grid.getRowFormatter().getElement(i);
 			if (proper) {
 				element.getStyle().clearDisplay();

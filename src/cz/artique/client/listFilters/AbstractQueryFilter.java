@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.common.AddButton;
+import cz.artique.client.common.CloseButton;
 import cz.artique.client.labels.LabelWidget;
 import cz.artique.client.labels.suggestion.LabelSuggestion;
 import cz.artique.client.labels.suggestion.LabelsPool;
@@ -21,8 +22,22 @@ import cz.artique.client.labels.suggestion.SuggestionResult;
 import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.Label;
 
+/**
+ * Graphical component which allows user to define {@link Filter} consisting of
+ * {@link Label}s combined with operators AND and OR.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public abstract class AbstractQueryFilter extends Composite {
 
+	/**
+	 * Remove the {@link Label} and {@link AddButton} when clicked on
+	 * {@link CloseButton} at the {@link Label}.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	class LabelCloseHandler implements CloseHandler<LabelWidget> {
 		public void onClose(CloseEvent<LabelWidget> e) {
 			LabelWidget source = e.getTarget();
@@ -37,6 +52,14 @@ public abstract class AbstractQueryFilter extends Composite {
 		}
 	}
 
+	/**
+	 * Show {@link LabelSuggestion} when clicked on {@link AddButton}.
+	 * If a {@link Label} was selected, insert it into the bar and create a new
+	 * {@link AddButton}.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	class AddOpenHandler implements OpenHandler<AbstractQueryFilter> {
 		private final LabelSuggestion labelSuggestion;
 		private HandlerRegistration selectionHandler;
@@ -101,6 +124,12 @@ public abstract class AbstractQueryFilter extends Composite {
 
 	private final LabelsPool pool;
 
+	/**
+	 * Create a new query filter component defined by pool.
+	 * 
+	 * @param pool
+	 *            {@link LabelsPool}
+	 */
 	public AbstractQueryFilter(LabelsPool pool) {
 		this.pool = pool;
 		closeHandler = new LabelCloseHandler();
@@ -111,6 +140,12 @@ public abstract class AbstractQueryFilter extends Composite {
 		setFilter(new Filter());
 	}
 
+	/**
+	 * Sets new {@link Filter} to be represented by this component.
+	 * 
+	 * @param filter
+	 *            new {@link Filter} to be shown
+	 */
 	public void setFilter(Filter filter) {
 		if (filter == null) {
 			filter = new Filter();
@@ -120,6 +155,13 @@ public abstract class AbstractQueryFilter extends Composite {
 		fillPanel(labels);
 	}
 
+	/**
+	 * Fills panel with list of {@link Label}s separating them with
+	 * {@link AddButton}.
+	 * 
+	 * @param labels2
+	 *            list of {@link Label} to be shown
+	 */
 	private void fillPanel(List<Label> labels2) {
 		panel.clear();
 		{
@@ -141,15 +183,41 @@ public abstract class AbstractQueryFilter extends Composite {
 		}
 	}
 
+	/**
+	 * Creates a {@link LabelWidget} representing a {@link Label}.
+	 * 
+	 * @param l
+	 *            {@link Label} to be represented
+	 * @return widget of {@link Label}
+	 */
 	protected abstract LabelWidget createWidget(Label l);
 
+	/**
+	 * Extracts labels from a {@link Filter}.
+	 * 
+	 * @param filter
+	 *            {@link Filter} containing labels
+	 * @return list of {@link Label}s contained in {@link Filter}
+	 */
 	protected abstract List<Label> getLabelsFromFilter(Filter filter);
 
+	/**
+	 * @param selectedItem
+	 *            selection result of {@link LabelSuggestion}
+	 * @return {@link Label} to be added when selected by
+	 *         {@link LabelSuggestion}
+	 */
 	protected abstract Label getAddedLabel(SuggestionResult selectedItem);
 
+	/**
+	 * @return list of all {@link Label}s in the bar
+	 */
 	protected List<Label> getLabels() {
 		return labels;
 	}
 
+	/**
+	 * @return {@link Filter} represented by this bar
+	 */
 	public abstract Filter getFilter();
 }

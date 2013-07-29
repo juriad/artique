@@ -9,6 +9,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.ArtiqueWorld;
 
+/**
+ * Represents login page shown to user when user is not logged in.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class LoginPage extends Composite {
 
 	private static LoginUiBinder uiBinder = GWT.create(LoginUiBinder.class);

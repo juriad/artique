@@ -26,6 +26,14 @@ import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.ListFilter;
 
+/**
+ * Contains definition of UI of {@link TopPanel}; it consists of buttons
+ * controlling current {@link ListFilter}, widget showing currently applied
+ * {@link ListFilter} and buttons controlling items in {@link ArtiqueList}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class TopPanel extends Composite {
 	private static TopPanelUiBinder uiBinder = GWT
 		.create(TopPanelUiBinder.class);
@@ -60,6 +68,12 @@ public class TopPanel extends Composite {
 
 	private final ArtiqueList list;
 
+	/**
+	 * Update widgets when history changes and when new items are available.
+	 * 
+	 * @param list
+	 *            {@link ArtiqueList}
+	 */
 	public TopPanel(ArtiqueList list) {
 		this.list = list;
 		res.style().ensureInjected();
@@ -103,11 +117,23 @@ public class TopPanel extends Composite {
 		});
 	}
 
+	/**
+	 * When edit button was clicked.
+	 * 
+	 * @param event
+	 *            event
+	 */
 	@UiHandler("editButton")
 	protected void editButtonClicked(ClickEvent event) {
 		AdhocDialog.DIALOG.showDialog();
 	}
 
+	/**
+	 * When clear button was clicked.
+	 * 
+	 * @param event
+	 *            event
+	 */
 	@UiHandler("clearButton")
 	protected void clearButtonClicked(ClickEvent event) {
 		HistoryItem lastHistoryItem =
@@ -127,6 +153,12 @@ public class TopPanel extends Composite {
 			CachingHistoryUtils.UTILS.serializeListFilter(listFilter));
 	}
 
+	/**
+	 * When refresh button was clicked.
+	 * 
+	 * @param event
+	 *            event
+	 */
 	@UiHandler("refreshButton")
 	protected void refreshButtonClicked(ClickEvent event) {
 		HistoryItem lastHistoryItem =
@@ -137,11 +169,23 @@ public class TopPanel extends Composite {
 		}
 	}
 
+	/**
+	 * When add new items button was clicked.
+	 * 
+	 * @param event
+	 *            event
+	 */
 	@UiHandler("addNewItemsButton")
 	protected void addNewItemsButtonClicked(ClickEvent event) {
 		list.showHead();
 	}
 
+	/**
+	 * When mark all read button was clicked.
+	 * 
+	 * @param event
+	 *            event
+	 */
 	@UiHandler("markAllReadButton")
 	protected void markAllReadButtonClicked(ClickEvent event) {
 		list.markAllRead();

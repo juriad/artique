@@ -15,10 +15,23 @@ import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
 
+/**
+ * {@link AbstractLabelsBar} implementation shown in the {@link UserItemRow}
+ * header.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class UserItemLabelsBar extends AbstractLabelsBar {
 
 	private UserItem item;
 
+	/**
+	 * Allow new {@link Label}s and search only user-deined {@link Label}s.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	private static class MyLabelsPool implements LabelsPool {
 		public boolean isNewValueAllowed() {
 			return true;
@@ -73,10 +86,20 @@ public class UserItemLabelsBar extends AbstractLabelsBar {
 		}
 	}
 
+	/**
+	 * @return {@link UserItem} which this {@link UserItemLabelsBar} shows
+	 *         {@link Label}s for
+	 */
 	public UserItem getItem() {
 		return item;
 	}
 
+	/**
+	 * Sets new data (new list of {@link Label}s)
+	 * 
+	 * @param userItem
+	 *            new data
+	 */
 	public void setNewData(final UserItem userItem) {
 		onSuggestionClosed(new AsyncCallback<Void>() {
 			public void onFailure(Throwable caught) {}
@@ -87,6 +110,12 @@ public class UserItemLabelsBar extends AbstractLabelsBar {
 		});
 	}
 
+	/**
+	 * Does the actual setting of new data.
+	 * 
+	 * @param userItem
+	 *            new data
+	 */
 	private void doSetNewData(UserItem userItem) {
 		this.item = userItem;
 		List<Key> labels2 = userItem.getLabels();

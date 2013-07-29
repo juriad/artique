@@ -16,9 +16,17 @@ import com.google.gwt.user.client.ui.Widget;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.listFilters.ListFiltersConstants;
 import cz.artique.client.listFilters.ReadState;
+import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.label.ListFilterOrder;
 
+/**
+ * Shows human readable currently applied criteria of {@link ListFilter} except
+ * {@link Label} query.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class CurrentCriteria extends Composite {
 	private static CurrentCriteriaUiBinder uiBinder = GWT
 		.create(CurrentCriteriaUiBinder.class);
@@ -59,6 +67,12 @@ public class CurrentCriteria extends Composite {
 		setStylePrimaryName("currentCriteria");
 	}
 
+	/**
+	 * Sets a new {@link ListFilter} to be shown.
+	 * 
+	 * @param listFilter
+	 *            new {@link ListFilter}
+	 */
 	public void setListFilter(ListFilter listFilter) {
 		if (listFilter == null) {
 			listFilter = new ListFilter();

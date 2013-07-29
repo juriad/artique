@@ -16,7 +16,7 @@ import cz.artique.shared.utils.HasHierarchy;
 public interface HasHierarchyChangeHandlers<E extends HasHierarchy> {
 	/**
 	 * Adds handler to list of handlers notified when an
-	 * {@link HierarchyChangeEvent} occures.
+	 * {@link HierarchyChangeEvent} occurs.
 	 * 
 	 * @param handler
 	 *            handler to register

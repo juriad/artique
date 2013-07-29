@@ -12,6 +12,13 @@ import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.shortcut.Shortcut;
 import cz.artique.shared.model.shortcut.ShortcutType;
 
+/**
+ * Shows named persistent {@link ListFilter}.
+ * This dialog allows user to create, edit and delete any {@link ListFilter}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ListFilterDialog extends UniversalDialog<ListFilter> {
 
 	public static final ListFilterDialog DIALOG = new ListFilterDialog();

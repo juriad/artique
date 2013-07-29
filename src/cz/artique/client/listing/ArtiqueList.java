@@ -17,8 +17,21 @@ import cz.artique.client.shortcuts.ShortcutHandler;
 import cz.artique.shared.model.item.UserItem;
 import cz.artique.shared.model.label.Label;
 
+/**
+ * Concrete implementation of {@link InfiniteList} aware of shortcuts, scroll
+ * handlers and sizing.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ArtiqueList extends InfiniteList {
 
+	/**
+	 * Processes all list related shortcuts.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	private class MyShortcutHandler implements ShortcutHandler {
 		public void onShortcut(ShortcutEvent e) {
 			switch (e.getShortcut().getType()) {
@@ -92,6 +105,12 @@ public class ArtiqueList extends InfiniteList {
 		}
 	}
 
+	/**
+	 * Scrolls the selected row to the top of list.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	private class SelectionHandler implements Handler {
 		public void onSelectionChange(SelectionChangeEvent event) {
 			RowWidget selectedRowWidget = getSelectedRowWidget();
@@ -108,6 +127,12 @@ public class ArtiqueList extends InfiniteList {
 
 	private boolean resetScrollToTop;
 
+	/**
+	 * Fetch more items when near bottom. Show head when reached top.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	private class EndHandler implements ScrollEndHandler {
 
 		public void onScrollEnd(ScrollEndEvent event) {
@@ -128,6 +153,12 @@ public class ArtiqueList extends InfiniteList {
 		}
 	}
 
+	/**
+	 * Filters {@link ScrollEvent} and fires {@link ScrollEndEvent}s.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	private class MyScrollHandler implements ScrollHandler {
 		public void onScroll(ScrollEvent event) {
 			int pos = scrollPanel.getVerticalScrollPosition();
@@ -162,6 +193,9 @@ public class ArtiqueList extends InfiniteList {
 		Managers.SHORTCUTS_MANAGER.addShortcutHandler(new MyShortcutHandler());
 	}
 
+	/**
+	 * Marks all {@link UserItem}s read above the currently selected one.
+	 */
 	public void markAllRead() {
 		int selectedIndex = getSelectedIndex();
 		for (int i = 0; i <= selectedIndex; i++) {

@@ -16,8 +16,23 @@ import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.FilterLevel;
 import cz.artique.shared.model.label.Label;
 
+/**
+ * Implementation of {@link AbstractQueryFilter} shown in
+ * {@link ListFilterEditor}.
+ * The {@link QueryFilter} allows to edit the filter.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class QueryFilter extends AbstractQueryFilter {
 
+	/**
+	 * No new {@link Label}s and select the labels from all {@link Label}s
+	 * ignoring their type.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	private static class MyLabelsPool implements LabelsPool {
 		public boolean isNewValueAllowed() {
 			return false;
@@ -120,6 +135,13 @@ public class QueryFilter extends AbstractQueryFilter {
 		return filter;
 	}
 
+	/**
+	 * Extracts keys from collection of {@link Label}s.
+	 * 
+	 * @param labels
+	 *            list of {@link Label}s
+	 * @return list of keys
+	 */
 	private List<Key> labelsToKeys(List<Label> labels) {
 		List<Key> keys = new ArrayList<Key>();
 		for (Label l : labels) {

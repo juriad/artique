@@ -50,6 +50,12 @@ import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.source.SourceType;
 import cz.artique.shared.model.source.UserSource;
 
+/**
+ * Describes how the {@link RowWidget} looks like (its header and content).
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class UserItemRow extends RowWidget {
 
 	private static UserItemRowUiBinder uiBinder = GWT
@@ -65,6 +71,12 @@ public class UserItemRow extends RowWidget {
 		}
 	}
 
+	/**
+	 * Factory of {@link ContentsPanel} buttons.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	public static class UserItemContentFactory
 			implements ContentsPanel.ContentButtonFactory<Anchor> {
 
@@ -120,6 +132,12 @@ public class UserItemRow extends RowWidget {
 
 	private Image backupImage;
 
+	/**
+	 * Sets all the data shown in the header.
+	 * 
+	 * @param data
+	 *            {@link UserItem} represented by this row
+	 */
 	public UserItemRow(UserItem data) {
 		super(data);
 		res.style().ensureInjected();
@@ -147,13 +165,18 @@ public class UserItemRow extends RowWidget {
 		refresh();
 	}
 
+	/**
+	 * Fills link anchor with image and href attribute.
+	 */
 	private void fillLinkAnchor() {
 		Image open = new Image(res.open());
 		link.getElement().appendChild(open.getElement());
 		link.setHref(getValue().getItemObject().getUrl().getValue());
-		link.setStyleName("itemIcon", true);
 	}
 
+	/**
+	 * Fills source label with href and title.
+	 */
 	private void fillSourceLabel() {
 		Key userSourceKey = getValue().getUserSource();
 		UserSource userSource =
@@ -189,6 +212,9 @@ public class UserItemRow extends RowWidget {
 		}
 	}
 
+	/**
+	 * Fills date label with short date and title with precise timestamps.
+	 */
 	private void fillDateLabel() {
 		ListingConstants constants = I18n.getListingConstants();
 		Item itemObject = getValue().getItemObject();
@@ -253,10 +279,15 @@ public class UserItemRow extends RowWidget {
 		added.setTitle(full);
 	}
 
-	private void fillBackupAnchor() {
-		backup.setStyleName("itemIcon", true);
-	}
+	/**
+	 * Fills backup anchor; nothing to do (everything is done in
+	 * {@link #refresh()}).
+	 */
+	private void fillBackupAnchor() {}
 
+	/**
+	 * Fills title (makes it clickable and sets title).
+	 */
 	private void fillTitle() {
 		Item itemObject = getValue().getItemObject();
 		title.setText(itemObject.getTitle());
@@ -282,6 +313,9 @@ public class UserItemRow extends RowWidget {
 
 	private boolean contentHasBeenFilled = false;
 
+	/**
+	 * Fills content when the row is expanded for the first time.
+	 */
 	private void fillContent() {
 		if (contentHasBeenFilled) {
 			return;
@@ -332,6 +366,11 @@ public class UserItemRow extends RowWidget {
 		}
 	}
 
+	/**
+	 * Refreshes read state and backup icon a link.
+	 * 
+	 * @see cz.artique.client.listing.row.RowWidget#refresh()
+	 */
 	@Override
 	public void refresh() {
 		labels.setNewData(getValue());
@@ -344,6 +383,9 @@ public class UserItemRow extends RowWidget {
 		}
 	}
 
+	/**
+	 * Sets appropriate classes to the row according current read state.
+	 */
 	private void setReadState() {
 		boolean read = getValue().isRead();
 		setStyleDependentName("read", read);

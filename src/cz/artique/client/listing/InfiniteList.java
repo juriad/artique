@@ -24,13 +24,22 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SelectionChangeEvent.HasSelectionChangedHandlers;
 
+import cz.artique.client.labels.LabelsManager;
 import cz.artique.client.listing.NewDataEvent.NewDataType;
 import cz.artique.client.listing.row.RowWidget;
 import cz.artique.client.listing.row.UserItemRow;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.item.Item;
 import cz.artique.shared.model.item.UserItem;
+import cz.artique.shared.model.label.Label;
 
+/**
+ * Represents the potentially infinite list of {@link UserItem}s.
+ * The {@link UserItem}s are provided by {@link InfiniteListDataProvider}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class InfiniteList extends Composite
 		implements HasSelectionChangedHandlers, HasScrollEndHandlers,
 		HasNewDataHandlers {
@@ -43,6 +52,12 @@ public class InfiniteList extends Composite
 
 	private static final MyResources res = GWT.create(MyResources.class);
 
+	/**
+	 * Change selection when user opens/closes a row.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	private class OpenCloseHander
 			implements CloseHandler<RowWidget>, OpenHandler<RowWidget> {
 		public void onClose(CloseEvent<RowWidget> event) {
@@ -78,6 +93,9 @@ public class InfiniteList extends Composite
 		clear();
 	}
 
+	/**
+	 * @return number of displayed rows
+	 */
 	public int getRowCount() {
 		return rows.size();
 	}
@@ -86,6 +104,13 @@ public class InfiniteList extends Composite
 		return addHandler(handler, ScrollEndEvent.getType());
 	}
 
+	/**
+	 * Adds values to list of {@link UserItem}s which are below the last shown
+	 * {@link UserItem}.
+	 * 
+	 * @param values
+	 *            list of {@link UserItem}s
+	 */
 	public void appendValues(List<UserItem> values) {
 		if (values.size() > 0) {
 			List<UserItem> newItems = new ArrayList<UserItem>();
@@ -118,6 +143,13 @@ public class InfiniteList extends Composite
 		}
 	}
 
+	/**
+	 * Adds values to list of {@link UserItem}s which are above the first shown
+	 * {@link UserItem}.
+	 * 
+	 * @param values
+	 *            list of {@link UserItem}s
+	 */
 	public void prependValues(List<UserItem> values) {
 		if (values.size() > 0) {
 			List<UserItem> newItems = new ArrayList<UserItem>();
@@ -150,14 +182,28 @@ public class InfiniteList extends Composite
 		}
 	}
 
+	/**
+	 * @return number of {@link UserItem}s above the first shown
+	 *         {@link UserItem}
+	 */
 	public int getAvailableHeadSize() {
 		return head.size();
 	}
 
+	/**
+	 * @return number of {@link UserItem}s below the first shown
+	 *         {@link UserItem}
+	 */
 	public int getAvailableTailSize() {
 		return tail.size();
 	}
 
+	/**
+	 * Sets new value of row if the {@link UserItem} is already shown.
+	 * 
+	 * @param value
+	 *            new value to show
+	 */
 	public void setValue(final UserItem value) {
 		if (!hasAllLabels(value.getLabels())) {
 			Managers.LABELS_MANAGER.refresh(new AsyncCallback<Void>() {
@@ -172,6 +218,12 @@ public class InfiniteList extends Composite
 		}
 	}
 
+	/**
+	 * Does the actual value setting.
+	 * 
+	 * @param value
+	 *            new value to show
+	 */
 	private void doSetValue(UserItem value) {
 		RowWidget row = rows.get(value.getKey());
 		if (row != null) {
@@ -181,6 +233,9 @@ public class InfiniteList extends Composite
 		}
 	}
 
+	/**
+	 * Makes all pending {@link UserItem}s above the first one show.
+	 */
 	public void showHead() {
 		Set<Key> labels = new HashSet<Key>();
 		for (UserItem ui : head) {
@@ -199,6 +254,9 @@ public class InfiniteList extends Composite
 		}
 	}
 
+	/**
+	 * Does the actual addition of {@link UserItem}s to the top of the list.
+	 */
 	private void addHead() {
 		List<UserItem> l = head;
 		if (l.size() > 0) {
@@ -221,6 +279,9 @@ public class InfiniteList extends Composite
 		}
 	}
 
+	/**
+	 * Makes all pending {@link UserItem}s below the last one show.
+	 */
 	public void showTail() {
 		Set<Key> labels = new HashSet<Key>();
 		for (UserItem ui : tail) {
@@ -239,6 +300,9 @@ public class InfiniteList extends Composite
 		}
 	}
 
+	/**
+	 * Does the actual addition of {@link UserItem}s to the top of the list.
+	 */
 	public void addTail() {
 		List<UserItem> l = tail;
 		if (l.size() > 0) {
@@ -256,15 +320,28 @@ public class InfiniteList extends Composite
 		}
 	}
 
+	/**
+	 * Called when new rows are shown.
+	 */
 	protected void rowsAdded() {}
 
-	private RowWidget createRow(UserItem e) {
-		RowWidget row = UserItemRow.FACTORY.createWidget(e);
+	/**
+	 * Creates a new row for a {@link UserItem}.
+	 * 
+	 * @param userItem
+	 *            {@link UserItem} which is the row created for
+	 * @return widget representing the {@link UserItem}
+	 */
+	private RowWidget createRow(UserItem userItem) {
+		RowWidget row = UserItemRow.FACTORY.createWidget(userItem);
 		row.addOpenHandler(new OpenCloseHander());
 		row.addCloseHandler(new OpenCloseHander());
 		return row;
 	}
 
+	/**
+	 * Clears all shown rows and all {@link UserItem}s.
+	 */
 	public void clear() {
 		flowPanel.clear();
 		rows = new HashMap<Key, RowWidget>();
@@ -276,6 +353,14 @@ public class InfiniteList extends Composite
 		endReached = false;
 	}
 
+	/**
+	 * Sets the currently selected row by key of its {@link UserItem}.
+	 * 
+	 * @param key
+	 *            key of {@link UserItem}
+	 * @param forceExpand
+	 *            whether the selected row shall be expanded
+	 */
 	public void setSelectedKey(Key key, boolean forceExpand) {
 		if (key == null) {
 			RowWidget old = rows.get(selected);
@@ -307,10 +392,20 @@ public class InfiniteList extends Composite
 		}
 	}
 
+	/**
+	 * @return currently selected {@link RowWidget} or null if none is selected
+	 */
 	public RowWidget getSelectedRowWidget() {
 		return selected == null ? null : rows.get(selected);
 	}
 
+	/**
+	 * @param index
+	 *            index of row to be selected
+	 * @param forceExpand
+	 *            whether the selected row shall be expanded
+	 * @return whether the index exists
+	 */
 	protected boolean setSelectedIndex(int index, boolean forceExpand) {
 		try {
 			RowWidget w = (RowWidget) flowPanel.getWidget(index);
@@ -321,10 +416,18 @@ public class InfiniteList extends Composite
 		}
 	}
 
+	/**
+	 * @return index of currently selected row
+	 */
 	protected int getSelectedIndex() {
 		return flowPanel.getWidgetIndex(getSelectedRowWidget());
 	}
 
+	/**
+	 * @param index
+	 *            index
+	 * @return {@link RowWidget} by its index
+	 */
 	protected RowWidget getRow(int index) {
 		return (RowWidget) flowPanel.getWidget(index);
 	}
@@ -334,19 +437,36 @@ public class InfiniteList extends Composite
 		return addHandler(handler, SelectionChangeEvent.getType());
 	}
 
+	/**
+	 * Sets a new {@link InfiniteListDataProvider} providing {@link UserItem}s.
+	 * It also clears the list.
+	 * 
+	 * @param provider
+	 *            new provider
+	 */
 	public void setProvider(InfiniteListDataProvider provider) {
 		clear();
 		this.provider = provider;
 	}
 
+	/**
+	 * @return current provider of {@link UserItem}s
+	 */
 	public InfiniteListDataProvider getProvider() {
 		return provider;
 	}
 
+	/**
+	 * @return whether the end of list has been reached
+	 */
 	public boolean isEndReached() {
 		return endReached;
 	}
 
+	/**
+	 * @param endReached
+	 *            whether the end of list has been reached
+	 */
 	public void setEndReached(boolean endReached) {
 		this.endReached = endReached;
 	}
@@ -355,6 +475,14 @@ public class InfiniteList extends Composite
 		return addHandler(handler, NewDataEvent.getType());
 	}
 
+	/**
+	 * Tests whether all keys of {@link Label}s are known to
+	 * {@link LabelsManager}.
+	 * 
+	 * @param keys
+	 *            list of keys to be tested
+	 * @return whether all keys are known to {@link LabelsManager}
+	 */
 	protected boolean hasAllLabels(Iterable<Key> keys) {
 		boolean hasAll = true;
 		for (Key key : keys) {

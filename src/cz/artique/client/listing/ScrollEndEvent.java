@@ -2,11 +2,29 @@ package cz.artique.client.listing;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+/**
+ * Notifies about list being scrolled near or to the end.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ScrollEndEvent extends GwtEvent<ScrollEndHandler> {
 	public enum ScrollEndType {
+		/**
+		 * Top reached.
+		 */
 		TOP,
+		/**
+		 * Scrollbar is near top.
+		 */
 		NEAR_TOP,
+		/**
+		 * Scrollbar is near bottom.
+		 */
 		NEAR_BOTTOM,
+		/**
+		 * Bottom reached.
+		 */
 		BOTTOM;
 	}
 
@@ -19,6 +37,12 @@ public class ScrollEndEvent extends GwtEvent<ScrollEndHandler> {
 		return TYPE;
 	}
 
+	/**
+	 * Creates a new event representing particular scrollbar position.
+	 * 
+	 * @param scrollEndType
+	 *            scrollbar position
+	 */
 	public ScrollEndEvent(ScrollEndType scrollEndType) {
 		this.scrollEndType = scrollEndType;
 	}
@@ -33,6 +57,9 @@ public class ScrollEndEvent extends GwtEvent<ScrollEndHandler> {
 		handler.onScrollEnd(this);
 	}
 
+	/**
+	 * @return type of scroll position whoch caused this event
+	 */
 	public ScrollEndType getScrollEndType() {
 		return scrollEndType;
 	}

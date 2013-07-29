@@ -14,8 +14,15 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
+import cz.artique.client.labels.suggestion.LabelSuggestion;
 import cz.artique.shared.model.item.UserItem;
 
+/**
+ * General definition of a row consisting of header and content.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public abstract class RowWidget extends Composite
 		implements HasOpenHandlers<RowWidget>, HasCloseHandlers<RowWidget>,
 		HasValue<UserItem> {
@@ -26,16 +33,31 @@ public abstract class RowWidget extends Composite
 
 	private Widget content;
 
+	/**
+	 * Constructs a new {@link RowWidget} for a {@link UserItem}.
+	 * 
+	 * @param value
+	 *            {@link UserItem}
+	 */
 	public RowWidget(UserItem value) {
 		this.value = value;
 	}
 
+	/**
+	 * Sets content widget.
+	 * 
+	 * @param content
+	 *            content widget
+	 */
 	protected void setContent(Widget content) {
 		this.content = content;
 		content.setVisible(false);
 		collapse();
 	}
 
+	/**
+	 * Expands the row; makes the content visible.
+	 */
 	public void expand() {
 		if (isExpanded())
 			return;
@@ -47,6 +69,9 @@ public abstract class RowWidget extends Composite
 		OpenEvent.fire(this, this);
 	}
 
+	/**
+	 * Collapses the row; makes the content hidden.
+	 */
 	public void collapse() {
 		if (!isExpanded())
 			return;
@@ -58,6 +83,9 @@ public abstract class RowWidget extends Composite
 		CloseEvent.fire(this, this);
 	}
 
+	/**
+	 * Toggles expanded state.
+	 */
 	public void toggleExpanded() {
 		if (isExpanded()) {
 			collapse();
@@ -66,6 +94,9 @@ public abstract class RowWidget extends Composite
 		}
 	}
 
+	/**
+	 * @return whether the row is expanded.
+	 */
 	public boolean isExpanded() {
 		return expanded;
 	}
@@ -94,6 +125,9 @@ public abstract class RowWidget extends Composite
 		}
 	}
 
+	/**
+	 * Refreshes the content of the row after new value has been set.
+	 */
 	public abstract void refresh();
 
 	public HandlerRegistration addValueChangeHandler(
@@ -101,11 +135,20 @@ public abstract class RowWidget extends Composite
 		return addHandler(handler, ValueChangeEvent.getType());
 	}
 
+	/**
+	 * @return key of {@link UserItem} this row represents.
+	 */
 	public Key getKey() {
 		return getValue().getKey();
 	}
 
+	/**
+	 * Opens original webpage represented by the {@link UserItem}.
+	 */
 	public abstract void openOriginal();
 
+	/**
+	 * Opens {@link LabelSuggestion} of the {@link UserItemLabelsBar}.
+	 */
 	public abstract void openAddLabel();
 }

@@ -1,5 +1,6 @@
 /**
- * Defines manager responsible for managing labels and wrapping
+ * Defines manager responsible for managing
+ * {@link cz.artique.shared.model.label.Label}s and wrapping
  * {@link cz.artique.client.service.ClientLabelService}.
  * 
  * The package defines {@link cz.artique.client.labels.AbstractLabelsBar} which

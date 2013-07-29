@@ -12,7 +12,7 @@ import cz.artique.shared.model.item.UserItem;
  */
 public interface ModifiedHandler extends EventHandler {
 	/**
-	 * Called whenever {@link ModifiedEvent} occures.
+	 * Called whenever {@link ModifiedEvent} occurs.
 	 * 
 	 * @param e
 	 *            {@link ModifiedEvent}

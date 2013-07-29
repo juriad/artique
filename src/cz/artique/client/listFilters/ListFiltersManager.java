@@ -27,6 +27,14 @@ import cz.artique.client.service.ClientListFilterService.UpdateListFilter;
 import cz.artique.client.service.ClientListFilterServiceAsync;
 import cz.artique.shared.model.label.ListFilter;
 
+/**
+ * ListFilter manager wraps {@link ClientListFilterService}; provides its
+ * methods.
+ * It also provides {@link ListFilter}s in form of {@link Hierarchy}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ListFiltersManager
 		extends AbstractManager<ClientListFilterServiceAsync>
 		implements ProvidesHierarchy<ListFilter> {
@@ -37,6 +45,9 @@ public class ListFiltersManager
 
 	private Hierarchy<ListFilter> adhocItem;
 
+	/**
+	 * Init root and adhoc nodes; load all existing {@link ListFilter}s.
+	 */
 	private ListFiltersManager() {
 		super(
 			GWT
@@ -52,6 +63,11 @@ public class ListFiltersManager
 	private Map<Key, ListFilter> listFilterByKey =
 		new HashMap<Key, ListFilter>();
 
+	/**
+	 * Load all existing {@link ListFilter}s and put them into hierarchy.
+	 * 
+	 * @see cz.artique.client.manager.Manager#refresh(com.google.gwt.user.client.rpc.AsyncCallback)
+	 */
 	public void refresh(final AsyncCallback<Void> ping) {
 		assumeOnline();
 		service.getAllListFilters(new AsyncCallback<List<ListFilter>>() {
@@ -88,6 +104,14 @@ public class ListFiltersManager
 		});
 	}
 
+	/**
+	 * Updates hierarchy by comparing sets of new and old {@link ListFilter}s.
+	 * 
+	 * @param oldByKey
+	 *            set of old {@link ListFilter}s
+	 * @param newByKey
+	 *            set of new {@link ListFilter}s
+	 */
 	private void updateHierarchy(Map<Key, ListFilter> oldByKey,
 			Map<Key, ListFilter> newByKey) {
 		Set<Key> keys = new HashSet<Key>();
@@ -130,10 +154,24 @@ public class ListFiltersManager
 		return hierarchyRoot;
 	}
 
+	/**
+	 * @param key
+	 *            key of {@link ListFilter}
+	 * @return {@link ListFilter} defined by key or null if it does not exist
+	 */
 	public ListFilter getListFilterByKey(Key key) {
 		return listFilterByKey.get(key);
 	}
 
+	/**
+	 * Calls {@link ClientListFilterService#addListFilter(ListFilter)} and adds
+	 * the new {@link ListFilter} into hierarchy.
+	 * 
+	 * @param listFilter
+	 *            ListFilter to be created
+	 * @param ping
+	 *            callback
+	 */
 	public void addListFilter(final ListFilter listFilter,
 			final AsyncCallback<ListFilter> ping) {
 		assumeOnline();
@@ -162,6 +200,16 @@ public class ListFiltersManager
 		});
 	}
 
+	/**
+	 * Calls {@link ClientListFilterService#deleteListFilter(ListFilter)} and
+	 * deletes
+	 * the old {@link ListFilter} from hierarchy.
+	 * 
+	 * @param listFilter
+	 *            ListFilter to be deleted
+	 * @param ping
+	 *            callback
+	 */
 	public void deleteListFilter(ListFilter listFilter,
 			final AsyncCallback<Void> ping) {
 		final ListFilter lf = getListFilterByKey(listFilter.getKey());
@@ -192,6 +240,15 @@ public class ListFiltersManager
 		});
 	}
 
+	/**
+	 * Calls {@link ClientListFilterService#updateListFilter(ListFilter)} and
+	 * updates the {@link ListFilter} in hierarchy.
+	 * 
+	 * @param listFilter
+	 *            ListFilter to be updated
+	 * @param ping
+	 *            callback
+	 */
 	public void updateListFilter(final ListFilter listFilter,
 			final AsyncCallback<ListFilter> ping) {
 		assumeOnline();
@@ -222,6 +279,11 @@ public class ListFiltersManager
 		});
 	}
 
+	/**
+	 * Returns node representing ad-hoc {@link ListFilter}.
+	 * 
+	 * @see cz.artique.client.hierarchy.ProvidesHierarchy#getAdhocItem()
+	 */
 	public Hierarchy<ListFilter> getAdhocItem() {
 		return adhocItem;
 	}

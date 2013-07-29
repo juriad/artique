@@ -21,8 +21,21 @@ import cz.artique.shared.model.label.Filter;
 import cz.artique.shared.model.label.FilterLevel;
 import cz.artique.shared.model.label.Label;
 
+/**
+ * Read-only version of {@link AbstractQueryFilter}; it is used only to inform
+ * user about current {@link Filter}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class CurrentQueryFilter extends AbstractQueryFilter {
 
+	/**
+	 * Disallow new {@link Label}s.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	private static class MyLabelsPool implements LabelsPool {
 		public boolean isNewValueAllowed() {
 			return false;
@@ -141,6 +154,12 @@ public class CurrentQueryFilter extends AbstractQueryFilter {
 
 	private Widget emptyFilterWidget;
 
+	/**
+	 * Sets the widget to be shown when the {@link Filter} is empty.
+	 * 
+	 * @param emptyFilterWidget
+	 *            replacement of empty {@link Filter}
+	 */
 	@UiChild(tagname = "emptyFilterWidget", limit = 1)
 	public void addEmptyFilterWidget(Widget emptyFilterWidget) {
 		this.emptyFilterWidget = emptyFilterWidget;
@@ -150,6 +169,11 @@ public class CurrentQueryFilter extends AbstractQueryFilter {
 		}
 	}
 
+	/**
+	 * Shows empty filter widget if the {@link Filter} is empty.
+	 * 
+	 * @see cz.artique.client.listFilters.AbstractQueryFilter#setFilter(cz.artique.shared.model.label.Filter)
+	 */
 	@Override
 	public void setFilter(Filter filter) {
 		if (emptyFilterWidget != null) {

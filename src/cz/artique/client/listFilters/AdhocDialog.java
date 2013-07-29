@@ -10,6 +10,13 @@ import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.ListFilter;
 
+/**
+ * Shows nameless non-persistent current {@link ListFilter}.
+ * This dialog allows user to adjust currently applied {@link ListFilter}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class AdhocDialog extends UniversalDialog<ListFilter> {
 
 	public static final AdhocDialog DIALOG = new AdhocDialog();
