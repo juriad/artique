@@ -17,6 +17,13 @@ import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.config.client.ClientConfigKey;
 
+/**
+ * Manages hierarchy of {@link Message}s and fires {@link MessageEvent} when a
+ * new {@link Message} has been added.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class MessagesManager
 		implements ProvidesHierarchy<Message>, HasMessageHandlers, Manager {
 	public static final MessagesManager MESSENGER = new MessagesManager();
@@ -38,6 +45,15 @@ public class MessagesManager
 
 	private final LinkedList<Message> messages = new LinkedList<Message>();
 
+	/**
+	 * Informs handlers about new {@link Message} and optionally adds it to the
+	 * hierarchy.
+	 * 
+	 * @param message
+	 *            new {@link Message}
+	 * @param addToMessagesList
+	 *            whether the {@link Message} shall be added to hierarchy.
+	 */
 	public void addMessage(Message message, boolean addToMessagesList) {
 		if (addToMessagesList) {
 			messages.add(message);
@@ -56,7 +72,7 @@ public class MessagesManager
 	}
 
 	/**
-	 * Called by this class at the end of addListFilter if not issueEvent
+	 * Notifies all handlers about a new {@link Message}.
 	 */
 	private void fireMessageAdded(MessageEvent event) {
 		for (int i = 0; i < handlers.size(); i++) {
@@ -65,6 +81,9 @@ public class MessagesManager
 		}
 	}
 
+	/**
+	 * @return maximum number of messages to be shown in the tree
+	 */
 	public int getMaxItems() {
 		return maxItems;
 	}
@@ -73,6 +92,7 @@ public class MessagesManager
 	 * Never may be zero or negative.
 	 * 
 	 * @param maxItems
+	 *            maximum number of messages to be shown in the tree
 	 */
 	public void setMaxItems(int maxItems) {
 		this.maxItems = maxItems;
@@ -96,6 +116,16 @@ public class MessagesManager
 		};
 	}
 
+	/**
+	 * Clears the hierarchy of {@link Message}s.
+	 */
+	public void clear() {
+		while (messages.size() > 0) {
+			Message removed = messages.remove(0);
+			HierarchyUtils.remove(hierarchyRoot, removed);
+		}
+	}
+
 	/* trivial implementation of manager: */
 
 	public void refresh(AsyncCallback<Void> ping) {}
@@ -116,12 +146,5 @@ public class MessagesManager
 
 	public Hierarchy<Message> getAdhocItem() {
 		return null;
-	}
-
-	public void clear() {
-		while (messages.size() > 0) {
-			Message removed = messages.remove(0);
-			HierarchyUtils.remove(hierarchyRoot, removed);
-		}
 	}
 }

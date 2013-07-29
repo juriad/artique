@@ -12,6 +12,14 @@ import cz.artique.client.i18n.I18n;
 import cz.artique.client.messages.Message;
 import cz.artique.client.messages.MessageType;
 
+/**
+ * Abstract manager wrapping general RPC service.
+ * 
+ * @author Adam Juraszek
+ * 
+ * @param <E>
+ *            type of service
+ */
 public abstract class AbstractManager<E> implements Manager {
 
 	protected E service;
@@ -20,7 +28,7 @@ public abstract class AbstractManager<E> implements Manager {
 
 	protected AbstractManager(E service) {
 		this.service = service;
-		timeout = 1000;
+		timeout = 10000;
 	}
 
 	public void setTimeout(int timeout) {
@@ -35,6 +43,9 @@ public abstract class AbstractManager<E> implements Manager {
 
 	private List<ManagerReady> waitingForReady = new ArrayList<ManagerReady>();
 
+	/**
+	 * Used by subtypes to inform about being ready.
+	 */
 	protected synchronized void setReady() {
 		if (isReady()) {
 			return;
@@ -58,6 +69,9 @@ public abstract class AbstractManager<E> implements Manager {
 		return waitingForReady == null;
 	}
 
+	/**
+	 * Tests whether the user is likely to be connected to internet.
+	 */
 	protected void assumeOnline() {
 		if (!ArtiqueWorld.WORLD.isOnline()) {
 			ArtiqueConstants constant = I18n.getArtiqueConstants();
@@ -68,6 +82,12 @@ public abstract class AbstractManager<E> implements Manager {
 		}
 	}
 
+	/**
+	 * Tests the reason why the service call failed.
+	 * 
+	 * @param caught
+	 *            exception thrown
+	 */
 	protected void serviceFailed(Throwable caught) {
 		if (caught instanceof RequestTimeoutException) {
 			ArtiqueWorld.WORLD.testOnline();

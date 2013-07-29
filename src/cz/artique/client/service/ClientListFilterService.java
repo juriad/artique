@@ -9,6 +9,12 @@ import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.validation.HasIssue;
 import cz.artique.shared.validation.ValidationException;
 
+/**
+ * The service responsible for {@link ListFilter}s passing and related
+ * operations between client and server.
+ * 
+ * @author Adam Juraszek
+ */
 @RemoteServiceRelativePath("service.s3gwt")
 public interface ClientListFilterService extends RemoteService {
 
@@ -19,6 +25,11 @@ public interface ClientListFilterService extends RemoteService {
 		}
 	}
 
+	/**
+	 * Gets list of all {@link ListFilter} for current user.
+	 * 
+	 * @return list of all {@link ListFilter}s
+	 */
 	List<ListFilter> getAllListFilters();
 
 	public enum AddListFilter implements HasIssue {
@@ -33,6 +44,15 @@ public interface ClientListFilterService extends RemoteService {
 		}
 	}
 
+	/**
+	 * Creates a new {@link ListFilter} for current user.
+	 * 
+	 * @param listFilter
+	 *            {@link ListFilter} to be created
+	 * @return created {@link ListFilter}
+	 * @throws ValidationException
+	 *             if validation of the {@link ListFilter} fails
+	 */
 	ListFilter addListFilter(ListFilter listFilter) throws ValidationException;
 
 	public enum UpdateListFilter implements HasIssue {
@@ -47,6 +67,15 @@ public interface ClientListFilterService extends RemoteService {
 		}
 	}
 
+	/**
+	 * Updates existing {@link ListFilter}.
+	 * 
+	 * @param listFilter
+	 *            {@link ListFilter} to be updated
+	 * @return updated {@link ListFilter}
+	 * @throws ValidationException
+	 *             if validation of the {@link ListFilter} fails
+	 */
 	ListFilter updateListFilter(ListFilter listFilter)
 			throws ValidationException;
 
@@ -58,5 +87,13 @@ public interface ClientListFilterService extends RemoteService {
 		}
 	}
 
+	/**
+	 * Deletes existing {@link ListFilter}.
+	 * 
+	 * @param listFilter
+	 *            {@link ListFilter} to be deleted
+	 * @throws ValidationException
+	 *             if validation of the {@link ListFilter} fails
+	 */
 	void deleteListFilter(ListFilter listFilter) throws ValidationException;
 }

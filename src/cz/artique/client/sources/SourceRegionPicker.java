@@ -26,11 +26,26 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import cz.artique.client.common.ScrollableCellList;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.Managers;
+import cz.artique.shared.model.source.HTMLSource;
 import cz.artique.shared.model.source.Region;
+import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
 
+/**
+ * Allows user to select watched {@link Region} in case of {@link HTMLSource}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class SourceRegionPicker extends Composite
 		implements HasValue<UserSource> {
+	/**
+	 * Lists all existing {@link Region}s for the {@link Source} and also
+	 * "Custom" region.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	class RegionCell extends AbstractCell<Region> {
 
 		public RegionCell() {}
@@ -93,6 +108,12 @@ public class SourceRegionPicker extends Composite
 		});
 	}
 
+	/**
+	 * Updates content of fields when user changes the selected {@link Region}.
+	 * 
+	 * @param selected
+	 *            selected {@link Region}
+	 */
 	protected void selectionChanged(Region selected) {
 		name.setEnabled(selected.getKey() == null);
 		name.setValue(selected.getName());
@@ -108,6 +129,12 @@ public class SourceRegionPicker extends Composite
 		header.setText("» " + headerText);
 	}
 
+	/**
+	 * Checks {@link Region} when user clicks check region button
+	 * 
+	 * @param event
+	 *            event
+	 */
 	@UiHandler("checkButton")
 	protected void checkButtonClicked(ClickEvent event) {
 		Region selectedObject = cellList.getSelected();
@@ -125,6 +152,10 @@ public class SourceRegionPicker extends Composite
 		return addHandler(handler, ValueChangeEvent.getType());
 	}
 
+	/**
+	 * @return fake {@link UserSource} with set region and regionObject
+	 *         attributes
+	 */
 	public UserSource getValue() {
 		Region selectedObject = cellList.getSelected();
 		if (cellList.isEmpty() || selectedObject == null) {
@@ -150,6 +181,12 @@ public class SourceRegionPicker extends Composite
 		}
 	}
 
+	/**
+	 * Sets value of the picker according to the value.
+	 * 
+	 * @param value
+	 *            {@link UserSource} which may contain {@link Region}
+	 */
 	public void setValue(final UserSource value) {
 		this.userSource = value;
 		SourcesConstants constants = I18n.getSourcesConstants();

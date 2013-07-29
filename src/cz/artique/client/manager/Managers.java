@@ -15,6 +15,14 @@ import cz.artique.client.shortcuts.ShortcutsManager;
 import cz.artique.client.sources.SourcesManager;
 import cz.artique.shared.model.config.client.ClientConfigKey;
 
+/**
+ * Lists all existing {@link Manager}s, making sure they are used as singletons.
+ * It also provides functions allowing user to wait for several {@link Manager}s
+ * become ready.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class Managers {
 	private Managers() {}
 
@@ -85,6 +93,14 @@ public class Managers {
 		}
 	}
 
+	/**
+	 * Waits for several {@link Manager}s.
+	 * 
+	 * @param ping
+	 *            callback
+	 * @param managers
+	 *            list of {@link Manager}s to wait for
+	 */
 	public static void waitForManagers(ManagerReady ping, Manager... managers) {
 		List<Manager> managersList = new ArrayList<Manager>();
 		if (managers != null) {

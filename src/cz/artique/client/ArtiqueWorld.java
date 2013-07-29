@@ -61,7 +61,7 @@ public enum ArtiqueWorld {
 				message = new Message(MessageType.INFO, constants.gotOnline());
 			} else {
 				message =
-					new Message(MessageType.FAILURE, constants.gotOffline());
+					new Message(MessageType.OFFLINE, constants.gotOffline());
 			}
 			Managers.MESSAGES_MANAGER.addMessage(message, true);
 		}

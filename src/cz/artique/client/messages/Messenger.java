@@ -8,6 +8,12 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import cz.artique.client.manager.Managers;
 
+/**
+ * Messenger shows latest messages over the main content for specified time.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class Messenger extends VerticalPanel {
 	interface MyResources extends ClientBundle {
 		@NotStrict

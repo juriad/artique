@@ -15,6 +15,12 @@ import cz.artique.shared.model.shortcut.Shortcut;
 import cz.artique.shared.model.shortcut.ShortcutAction;
 import cz.artique.shared.model.shortcut.ShortcutType;
 
+/**
+ * Editor shown inside {@link ActionShortcutDialog}; defines layout and control.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ActionShortcutEditor extends Composite
 		implements HasValue<Shortcut> {
 	private static ActionShortcutEditorUiBinder uiBinder = GWT
@@ -38,6 +44,11 @@ public class ActionShortcutEditor extends Composite
 		return addHandler(handler, ValueChangeEvent.getType());
 	}
 
+	/**
+	 * Returns action shortcut defined by in the editor.
+	 * 
+	 * @see com.google.gwt.user.client.ui.HasValue#getValue()
+	 */
 	public Shortcut getValue() {
 		Shortcut s = new Shortcut();
 		s.setAction(action.getValue());
@@ -50,6 +61,12 @@ public class ActionShortcutEditor extends Composite
 		setValue(value, true);
 	}
 
+	/**
+	 * Clears the editor.
+	 * 
+	 * @see com.google.gwt.user.client.ui.HasValue#setValue(java.lang.Object,
+	 *      boolean)
+	 */
 	public void setValue(Shortcut value, boolean fireEvents) {
 		action.setValue(ShortcutAction.REFRESH);
 		keyStroke.setValue(null);

@@ -7,8 +7,17 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import cz.artique.client.common.UniversalDialog;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.Managers;
+import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.UserSource;
 
+/**
+ * Dialog shown in three cases: when user wants create custom {@link UserSource}
+ * , when user wants to watch recommended {@link Source}, when user wants to
+ * edit an existing {@link UserSource}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class UserSourceDialog extends UniversalDialog<UserSource> {
 
 	public static final UserSourceDialog DIALOG = new UserSourceDialog();

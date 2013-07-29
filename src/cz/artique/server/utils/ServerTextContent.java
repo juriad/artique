@@ -28,6 +28,15 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
+import cz.artique.client.utils.ClientTextContent;
+
+/**
+ * Reimplementation of {@link ClientTextContent} on server side by using DOM
+ * defined by jsoup.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ServerTextContent {
 	private static boolean isWhite(TextNode node) {
 		return !node.getWholeText().matches(".*[^\t\n\r ].*");
@@ -101,6 +110,13 @@ public class ServerTextContent {
 			.replaceAll("NEWLINE\n", "\n\n");
 	}
 
+	/**
+	 * Processes single {@link Element}.
+	 * 
+	 * @param element
+	 *            {@link Element} to process
+	 * @return plain text content
+	 */
 	public static String getPlainText(Element element) {
 		element = element.clone();
 		element.html(element.html().replaceAll("<br[ /]?>", "\n"));
@@ -116,6 +132,13 @@ public class ServerTextContent {
 		return normalize(sb.toString());
 	}
 
+	/**
+	 * Processes several {@link Elements} at once separating them by newline.
+	 * 
+	 * @param elements
+	 *            {@link Elements} to process
+	 * @return plain text content
+	 */
 	public static String asPlainText(Elements elements) {
 		StringBuilder sb = new StringBuilder();
 		for (Element e : elements) {

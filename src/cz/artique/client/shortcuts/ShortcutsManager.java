@@ -35,6 +35,15 @@ import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.ListFilter;
 import cz.artique.shared.model.shortcut.Shortcut;
 
+/**
+ * Manages all existing shortcuts, registers key handlers watching keys pressed
+ * and fires a {@link ShortcutEvent} when a shortcut has been matched.
+ * 
+ * It also normalizes the shortcut keystroke.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ShortcutsManager
 		extends AbstractManager<ClientShortcutServiceAsync>
 		implements HasShortcutHandlers {
@@ -43,6 +52,9 @@ public class ShortcutsManager
 	private Map<String, Shortcut> keystrokes = new HashMap<String, Shortcut>();
 	private Map<Key, Shortcut> referenced = new HashMap<Key, Shortcut>();
 
+	/**
+	 * Registers shortcut self as a shortcut handler of the general shortcuts.
+	 */
 	public ShortcutsManager() {
 		super(GWT
 			.<ClientShortcutServiceAsync> create(ClientShortcutService.class));
@@ -102,6 +114,14 @@ public class ShortcutsManager
 		});
 	}
 
+	/**
+	 * Gets shortcut from a {@link KeyEvent}.
+	 * 
+	 * @param event
+	 *            {@link KeyEvent}
+	 * @return shortcut defined by the keys pressed or null if such shortcut
+	 *         does not exist
+	 */
 	private Shortcut getShortcut(KeyEvent<?> event) {
 		String stroke;
 		if (event instanceof KeyPressEvent) {
@@ -128,12 +148,23 @@ public class ShortcutsManager
 		return shortcut;
 	}
 
+	/**
+	 * Nofities all handlers about a {@link Shortcut} to be processed.
+	 * 
+	 * @param shortcut
+	 *            {@link Shortcut} to be processed
+	 */
 	private void processShortcut(Shortcut shortcut) {
 		for (int i = 0; i < handlers.size(); i++) {
 			handlers.get(i).onShortcut(new ShortcutEvent(shortcut));
 		}
 	}
 
+	/**
+	 * Loads list of all exiting shortcuts. It also normalizes their keystrokes.
+	 * 
+	 * @see cz.artique.client.manager.Manager#refresh(com.google.gwt.user.client.rpc.AsyncCallback)
+	 */
 	public void refresh(final AsyncCallback<Void> ping) {
 		assumeOnline();
 		service.getAllShortcuts(new AsyncCallback<List<Shortcut>>() {
@@ -168,6 +199,13 @@ public class ShortcutsManager
 		});
 	}
 
+	/**
+	 * Fills referenced objects to the shortcut by their keys.
+	 * 
+	 * @param cut
+	 *            {@link Shortcut} to be filled
+	 * @return whether the {@link Shortcut} has been filled
+	 */
 	protected boolean fillShortcut(Shortcut cut) {
 		switch (cut.getType()) {
 		case LABEL:
@@ -190,6 +228,11 @@ public class ShortcutsManager
 		}
 	}
 
+	/**
+	 * Registers key handlers on {@link RootPanel} of the application.
+	 * 
+	 * @see cz.artique.client.manager.AbstractManager#setReady()
+	 */
 	@Override
 	protected synchronized void setReady() {
 		if (isReady()) {
@@ -218,14 +261,33 @@ public class ShortcutsManager
 		super.setReady();
 	}
 
+	/**
+	 * @return map of all {@link Shortcut}s by their strokes.
+	 */
 	public Map<String, Shortcut> getAllShortcuts() {
 		return keystrokes;
 	}
 
+	/**
+	 * Gets shortcut which references the object.
+	 * 
+	 * @param referencedKey
+	 *            key of reference
+	 * @return {@link Shortcut} or null if it does not exist
+	 */
 	public Shortcut getByReferenced(Key referencedKey) {
 		return referenced.get(referencedKey);
 	}
 
+	/**
+	 * Deletes a shortcut by calling
+	 * {@link ClientShortcutService#deleteShortcut(Key)}.
+	 * 
+	 * @param value
+	 *            {@link Shortcut} to be deleted
+	 * @param ping
+	 *            callback
+	 */
 	public void deleteShortcut(final Shortcut value,
 			final AsyncCallback<Void> ping) {
 		assumeOnline();
@@ -255,6 +317,15 @@ public class ShortcutsManager
 		});
 	}
 
+	/**
+	 * Creates a shortcut by calling
+	 * {@link ClientShortcutService#createShortcut(Shortcut)}.
+	 * 
+	 * @param value
+	 *            {@link Shortcut} to be created
+	 * @param ping
+	 *            callback
+	 */
 	public void createShortcut(final Shortcut value,
 			final AsyncCallback<Shortcut> ping) {
 		assumeOnline();
@@ -287,6 +358,13 @@ public class ShortcutsManager
 		});
 	}
 
+	/**
+	 * Normalizes keystroke provided by the user.
+	 * 
+	 * @param keyStroke
+	 *            keystroke to normalize
+	 * @return normalized keystroke
+	 */
 	protected String normalizeKeyStroke(String keyStroke) {
 		if (keyStroke == null) {
 			return null;
@@ -342,6 +420,11 @@ public class ShortcutsManager
 		};
 	}
 
+	/**
+	 * @param event
+	 *            {@link KeyEvent}
+	 * @return whether the keys pressed collide with an existing shortcut
+	 */
 	public boolean isColliding(KeyEvent<?> event) {
 		return getShortcut(event) != null;
 	}

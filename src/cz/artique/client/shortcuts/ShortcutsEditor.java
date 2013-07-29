@@ -3,15 +3,11 @@ package cz.artique.client.shortcuts;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -26,17 +22,29 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import cz.artique.client.common.ScrollableCellList;
 import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.Managers;
-import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.shortcut.Shortcut;
 import cz.artique.shared.model.shortcut.ShortcutAction;
 import cz.artique.shared.model.shortcut.ShortcutType;
 
+/**
+ * Editor shown inside {@link ShortcutsDialog}; defines layout and control.
+ * It shows list of all defined shortcuts.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ShortcutsEditor extends Composite {
 	private static ShortcutsEditorUiBinder uiBinder = GWT
 		.create(ShortcutsEditorUiBinder.class);
 
 	interface ShortcutsEditorUiBinder extends UiBinder<Widget, ShortcutsEditor> {}
 
+	/**
+	 * Cell used to render a shortcut.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	class ShortcutCell extends AbstractCell<Shortcut> {
 
 		public ShortcutCell() {}
@@ -81,6 +89,11 @@ public class ShortcutsEditor extends Composite {
 	@UiField
 	Button actionShortcutButton;
 
+	/**
+	 * @param type
+	 *            type of shortcut
+	 * @return internationalized string representing the shortcut type
+	 */
 	private String shortcutTypeAsString(ShortcutType type) {
 		ShortcutsConstants constants = I18n.getShortcutsConstants();
 		String method = "shortcutType_" + type.name();
@@ -97,11 +110,12 @@ public class ShortcutsEditor extends Composite {
 		});
 	}
 
-	public HandlerRegistration addValueChangeHandler(
-			ValueChangeHandler<List<Label>> handler) {
-		return addHandler(handler, ValueChangeEvent.getType());
-	}
-
+	/**
+	 * When the delete button has been clicked.
+	 * 
+	 * @param event
+	 *            event
+	 */
 	@UiHandler("deleteButton")
 	protected void deleteButtonClicked(ClickEvent event) {
 		Shortcut selected = cellList.getSelected();
@@ -120,11 +134,20 @@ public class ShortcutsEditor extends Composite {
 			});
 	}
 
+	/**
+	 * When the add action shortcut button has been clicked.
+	 * 
+	 * @param event
+	 *            event
+	 */
 	@UiHandler("actionShortcutButton")
 	protected void actionShortcutButtonClicked(ClickEvent event) {
 		ActionShortcutDialog.DIALOG.showDialog();
 	}
 
+	/**
+	 * Clears the editor and loads list of existing shortcuts.
+	 */
 	public void setValue() {
 		cellList.clearSelection();
 		setFields();
@@ -144,6 +167,9 @@ public class ShortcutsEditor extends Composite {
 		cellList.setRowData(list);
 	}
 
+	/**
+	 * Sets content of fields describing currently selected shortcut.
+	 */
 	private void setFields() {
 		Shortcut selected = cellList.getSelected();
 		if (selected == null) {
@@ -166,6 +192,12 @@ public class ShortcutsEditor extends Composite {
 		}
 	}
 
+	/**
+	 * @param shortcut
+	 *            the shortcut
+	 * @return internationalized string representing the shortcut referenced
+	 *         object or action.
+	 */
 	private String referencedAsString(Shortcut selected) {
 		switch (selected.getType()) {
 		case LABEL:
@@ -179,6 +211,11 @@ public class ShortcutsEditor extends Composite {
 		}
 	}
 
+	/**
+	 * @param action
+	 *            action of the shortcut
+	 * @return internationalized string representing the shortcut's action
+	 */
 	private String getActionString(ShortcutAction action) {
 		String method = "shortcutAction_" + action.name();
 		String actionName = I18n.getShortcutsConstants().getString(method);

@@ -2,6 +2,13 @@ package cz.artique.client.messages;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+/**
+ * Describes a messages which has been added and shall be processed (e.g.
+ * shown).
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class MessageEvent extends GwtEvent<MessageHandler> {
 
 	private static final Type<MessageHandler> TYPE = new Type<MessageHandler>();
@@ -25,6 +32,9 @@ public class MessageEvent extends GwtEvent<MessageHandler> {
 		handler.onMessageAdded(this);
 	}
 
+	/**
+	 * @return the {@link Message}
+	 */
 	public Message getMessage() {
 		return message;
 	}

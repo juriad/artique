@@ -3,6 +3,12 @@ package cz.artique.client.shortcuts;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Enumized {@link com.google.gwt.event.dom.client.KeyCodes}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public enum KeyCodesEnum {
 
 	KEY_ALT(18),
@@ -52,10 +58,20 @@ public enum KeyCodesEnum {
 		this.code = code;
 	}
 
+	/**
+	 * Gets keycode by its name
+	 * 
+	 * @param name
+	 *            name of key-code
+	 * @return enum item with such name
+	 */
 	public static KeyCodesEnum getByName(String name) {
 		return lookup.get(name);
 	}
 
+	/**
+	 * @return keycode
+	 */
 	public int getCode() {
 		return code;
 	}

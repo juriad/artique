@@ -12,11 +12,14 @@ import cz.artique.client.labels.suggestion.LabelsPool;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
-import cz.artique.shared.model.source.UserSource;
 
+/**
+ * {@link AbstractLabelsBar} shown inside {@link UserSourceDialog}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class SourceLabelsBar extends AbstractLabelsBar {
-
-	private UserSource source;
 
 	private static class MyLabelsPool implements LabelsPool {
 		public boolean isNewValueAllowed() {
@@ -68,18 +71,17 @@ public class SourceLabelsBar extends AbstractLabelsBar {
 		}
 	}
 
-	public UserSource getItem() {
-		return source;
-	}
-
-	public void setNewData(UserSource userSource) {
-		this.source = userSource;
-		List<Key> defaultLabels = userSource.getDefaultLabels();
-		if (defaultLabels == null) {
-			defaultLabels = new ArrayList<Key>();
+	/**
+	 * Sets list of {@link Label}s to be shown on the bar.
+	 * 
+	 * @param labels
+	 *            list of {@link Label}s
+	 */
+	public void setNewData(List<Key> labels) {
+		if (labels == null) {
+			labels = new ArrayList<Key>();
 		}
-		List<Label> newList =
-			Managers.LABELS_MANAGER.getSortedList(defaultLabels);
+		List<Label> newList = Managers.LABELS_MANAGER.getSortedList(labels);
 
 		removeAllLabels();
 

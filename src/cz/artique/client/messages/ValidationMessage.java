@@ -12,6 +12,14 @@ import cz.artique.shared.validation.Issue;
 import cz.artique.shared.validation.IssueType;
 import cz.artique.shared.validation.ValidationException;
 
+/**
+ * Factory of {@link Message}s shown on success of failure.
+ * 
+ * @author Adam Juraszek
+ * 
+ * @param <E>
+ *            type of service method which caused this {@link ValidationMessage}
+ */
 public class ValidationMessage<E extends Enum<E> & HasIssue> {
 
 	private final E general;
@@ -23,10 +31,22 @@ public class ValidationMessage<E extends Enum<E> & HasIssue> {
 	private static final ValidationConstants constants = GWT
 		.create(ValidationConstants.class);
 
+	/**
+	 * Shows message of failure of unknown cause with severity ERROR.
+	 * 
+	 * @param caught
+	 *            exception
+	 */
 	public void onFailure(Throwable caught) {
 		onFailure(caught, MessageType.ERROR);
 	}
 
+	/**
+	 * Shows message of failure of unknown cause with adjustable severity.
+	 * 
+	 * @param caught
+	 *            exception
+	 */
 	public void onFailure(Throwable caught, MessageType type) {
 		ValidationException exception;
 
@@ -40,10 +60,22 @@ public class ValidationMessage<E extends Enum<E> & HasIssue> {
 		onFailure(exception, type);
 	}
 
+	/**
+	 * Shows message of failed validation with severity ERROR.
+	 * 
+	 * @param exception
+	 *            exception describing failed validation
+	 */
 	public void onFailure(ValidationException exception) {
 		onFailure(exception, MessageType.ERROR);
 	}
 
+	/**
+	 * Shows message of failed validation with adjustable severity.
+	 * 
+	 * @param exception
+	 *            exception describing failed validation
+	 */
 	public void onFailure(ValidationException exception, MessageType type) {
 		List<Issue<? extends HasIssue>> issues = exception.getIssues();
 		for (Issue<? extends HasIssue> _issue : issues) {
@@ -58,10 +90,16 @@ public class ValidationMessage<E extends Enum<E> & HasIssue> {
 		}
 	}
 
+	/**
+	 * Shows message informing about success with severity INFO.
+	 */
 	public void onSuccess() {
 		onSuccess(MessageType.INFO);
 	}
 
+	/**
+	 * Shows message informing about success with adjustable severity.
+	 */
 	public void onSuccess(MessageType type) {
 		String enumName = general.enumName();
 		String property = general.name();
@@ -69,6 +107,15 @@ public class ValidationMessage<E extends Enum<E> & HasIssue> {
 		showMessage(method, type);
 	}
 
+	/**
+	 * Shows message described by service method (either real or fake) which
+	 * caused this message.
+	 * 
+	 * @param method
+	 *            method of service
+	 * @param type
+	 *            severity
+	 */
 	private void showMessage(String method, MessageType type) {
 		Message message;
 		try {
@@ -76,7 +123,7 @@ public class ValidationMessage<E extends Enum<E> & HasIssue> {
 			message = new Message(type, messageContent);
 		} catch (MissingResourceException e) {
 			message =
-				new Message(MessageType.FAILURE,
+				new Message(MessageType.OFFLINE,
 					"Couldn't find validation resource: " + method);
 		}
 		Managers.MESSAGES_MANAGER.addMessage(message, true);

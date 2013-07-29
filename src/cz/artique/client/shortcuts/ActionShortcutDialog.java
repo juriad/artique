@@ -9,6 +9,12 @@ import cz.artique.client.i18n.I18n;
 import cz.artique.client.manager.Managers;
 import cz.artique.shared.model.shortcut.Shortcut;
 
+/**
+ * Dialog shown to user when he wants to add a new action shortcut.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class ActionShortcutDialog extends UniversalDialog<Void> {
 
 	public static final ActionShortcutDialog DIALOG =

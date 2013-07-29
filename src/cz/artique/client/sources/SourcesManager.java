@@ -32,11 +32,22 @@ import cz.artique.client.service.ClientSourceServiceAsync;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.LabelType;
 import cz.artique.shared.model.recomandation.Recommendation;
+import cz.artique.shared.model.source.ManualSource;
 import cz.artique.shared.model.source.Region;
 import cz.artique.shared.model.source.Source;
 import cz.artique.shared.model.source.SourceType;
 import cz.artique.shared.model.source.UserSource;
 
+/**
+ * Manages all existing {@link UserSource} and provides some functionality for
+ * {@link Source}s, {@link Region} and {@link Recommendation}s by wrapping
+ * {@link ClientSourceService}.
+ * 
+ * The manager provides the {@link UserSource} in the {@link Hierarchy}.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 		implements ProvidesHierarchy<UserSource> {
 	public static final SourcesManager MANAGER = new SourcesManager();
@@ -50,6 +61,11 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 	private Map<Key, UserSource> sourcesLabels = new HashMap<Key, UserSource>();
 	private UserSource manualSource;
 
+	/**
+	 * Loads list of all existing {@link UserSource}s.
+	 * 
+	 * @see cz.artique.client.manager.Manager#refresh(com.google.gwt.user.client.rpc.AsyncCallback)
+	 */
 	public void refresh(final AsyncCallback<Void> ping) {
 		assumeOnline();
 		service.getUserSources(new AsyncCallback<List<UserSource>>() {
@@ -91,6 +107,15 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 		});
 	}
 
+	/**
+	 * Creates a new {@link Source} by calling
+	 * {@link ClientSourceService#addSource(Source)}
+	 * 
+	 * @param source
+	 *            {@link Source} to be created
+	 * @param ping
+	 *            callback
+	 */
 	public <T extends Source> void addSource(T source,
 			final AsyncCallback<T> ping) {
 		assumeOnline();
@@ -114,6 +139,14 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 		});
 	}
 
+	/**
+	 * Updates hierarchy according to list of old and new {@link UserSource}s.
+	 * 
+	 * @param sourcesKeys
+	 *            list of old {@link UserSource}s
+	 * @param newSourcesKeys
+	 *            list of new {@link UserSource}s
+	 */
 	private void updateHierarchy(Map<Key, UserSource> sourcesKeys,
 			Map<Key, UserSource> newSourcesKeys) {
 		Set<Key> keys = new HashSet<Key>();
@@ -152,14 +185,27 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 		}
 	}
 
+	/**
+	 * @return list of all cached known {@link UserSource}s
+	 */
 	public List<UserSource> getSources() {
 		return new ArrayList<UserSource>(sourcesKeys.values());
 	}
 
+	/**
+	 * @param key
+	 *            key of {@link UserSource}
+	 * @return {@link UserSource} defined by its key
+	 */
 	public UserSource getSourceByKey(Key key) {
 		return sourcesKeys.get(key);
 	}
 
+	/**
+	 * @param label
+	 *            {@link Label} of type user-source
+	 * @return {@link UserSource} defined by its user-source {@link Label}
+	 */
 	public UserSource getByLabel(Label label) {
 		if (!LabelType.USER_SOURCE.equals(label.getLabelType())) {
 			return null;
@@ -174,10 +220,25 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 		return hierarchyRoot;
 	}
 
+	/**
+	 * There is no ad-hoc item for {@link UserSource}s.
+	 * 
+	 * @see cz.artique.client.hierarchy.ProvidesHierarchy#getAdhocItem()
+	 */
 	public Hierarchy<UserSource> getAdhocItem() {
 		return null;
 	}
 
+	/**
+	 * Creates a new {@link UserSource} by calling
+	 * {@link ClientSourceService#addUserSource(UserSource)} and adds it into
+	 * the hierarchy.
+	 * 
+	 * @param value
+	 *            {@link UserSource} to be created
+	 * @param ping
+	 *            callback
+	 */
 	public void addUserSource(UserSource value,
 			final AsyncCallback<UserSource> ping) {
 		assumeOnline();
@@ -210,6 +271,16 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 		});
 	}
 
+	/**
+	 * Updates an existing {@link UserSource} by calling
+	 * {@link ClientSourceService#updateUserSource(UserSource)} and updates it
+	 * also in the hierarchy.
+	 * 
+	 * @param value
+	 *            {@link UserSource} to be updated
+	 * @param ping
+	 *            callback
+	 */
 	public void updateUserSource(UserSource value,
 			final AsyncCallback<UserSource> ping) {
 		assumeOnline();
@@ -245,10 +316,26 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 		});
 	}
 
+	/**
+	 * Apply filter to created or updated {@link UserSource} for items shown in
+	 * main content.
+	 * 
+	 * @param result
+	 *            {@link UserSource} which has been created or updated
+	 */
 	protected void selectSource(UserSource result) {
 		// TODO nice to have: selected source after creating or update
 	}
 
+	/**
+	 * Gets list of all know {@link Region}s for a {@link Source} by calling
+	 * {@link ClientSourceService#getRegions(Key)}.
+	 * 
+	 * @param source
+	 *            {@link Source} the {@link Region}s are gotten for
+	 * @param ping
+	 *            callback
+	 */
 	public void getRegions(Key source, final AsyncCallback<List<Region>> ping) {
 		assumeOnline();
 		service.getRegions(source, new AsyncCallback<List<Region>>() {
@@ -271,6 +358,15 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 		});
 	}
 
+	/**
+	 * Checks the {@link Region} by calling
+	 * {@link ClientSourceService#checkRegion(Region)}.
+	 * 
+	 * @param region
+	 *            {@link Region} to be checked
+	 * @param ping
+	 *            callback
+	 */
 	public void checkRegion(Region region, final AsyncCallback<Region> ping) {
 		assumeOnline();
 		service.checkRegion(region, new AsyncCallback<Region>() {
@@ -293,6 +389,15 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 		});
 	}
 
+	/**
+	 * Plans immediate {@link Source} check by calling
+	 * {@link ClientSourceService#planSourceCheck(Key)}.
+	 * 
+	 * @param source
+	 *            {@link Source} to be checked
+	 * @param ping
+	 *            callback
+	 */
 	public void planSourceCheck(Key source, final AsyncCallback<Date> ping) {
 		assumeOnline();
 		service.planSourceCheck(source, new AsyncCallback<Date>() {
@@ -315,6 +420,12 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 		});
 	}
 
+	/**
+	 * Gets list of {@link Source}s recommended to be watched for the user.
+	 * 
+	 * @param ping
+	 *            callback
+	 */
 	public void getRecommendation(final AsyncCallback<Recommendation> ping) {
 		assumeOnline();
 		service.getRecommendation(new AsyncCallback<Recommendation>() {
@@ -338,6 +449,9 @@ public class SourcesManager extends AbstractManager<ClientSourceServiceAsync>
 		});
 	}
 
+	/**
+	 * @return the {@link UserSource} of {@link ManualSource}
+	 */
 	public UserSource getManualSource() {
 		return manualSource;
 	}

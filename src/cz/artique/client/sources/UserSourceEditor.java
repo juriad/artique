@@ -48,6 +48,16 @@ import cz.artique.shared.model.source.UserSource;
 import cz.artique.shared.model.source.WebSiteSource;
 import cz.artique.shared.model.source.XMLSource;
 
+/**
+ * Editor shown inside {@link UserSourceDialog}; defines layout and control.
+ * When the editor is supplied null value, the selection between custom and
+ * recommended source is shown (this is hidden for existing source).
+ * When the {@link Source} is created, the fields for {@link UserSource} are
+ * shown.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class UserSourceEditor extends Composite implements HasValue<UserSource> {
 
 	private static UserSourceEditorUiBinder uiBinder = GWT
@@ -56,6 +66,12 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 	interface UserSourceEditorUiBinder
 			extends UiBinder<Widget, UserSourceEditor> {}
 
+	/**
+	 * Cell rendering recommended source.
+	 * 
+	 * @author Adam Juraszek
+	 * 
+	 */
 	class SourceCell extends AbstractCell<Source> {
 
 		public SourceCell() {}
@@ -160,6 +176,10 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		});
 	}
 
+	/**
+	 * Sets content of source-related fields when switching between recommended
+	 * sources.
+	 */
 	protected void setFields() {
 		Source selected = cellList.getSelected();
 		if (selected != null) {
@@ -180,6 +200,10 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		}
 	}
 
+	/**
+	 * Sets content of source-related fields when switching between custom and
+	 * recommended source.
+	 */
 	private void setSource() {
 		Element domainRow = grid.getRowFormatter().getElement(3);
 		if (SourceSource.CUSTOM.equals(sourceSource.getValue())) {
@@ -253,6 +277,11 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		return addHandler(handler, ValueChangeEvent.getType());
 	}
 
+	/**
+	 * Returns the {@link UserSource} described by the editor.
+	 * 
+	 * @see com.google.gwt.user.client.ui.HasValue#getValue()
+	 */
 	public UserSource getValue() {
 		UserSource us = new UserSource();
 		// empty name is handled in dialog
@@ -294,12 +323,21 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		return us;
 	}
 
+	/**
+	 * Shows select region message to user.
+	 */
 	private void selectRegion() {
 		SourcesConstants constants = I18n.getSourcesConstants();
 		Managers.MESSAGES_MANAGER.addMessage(new Message(MessageType.INFO,
 			constants.selectRegion()), true);
 	}
 
+	/**
+	 * When user changed watching state.
+	 * 
+	 * @param event
+	 *            event
+	 */
 	@UiHandler("watching")
 	protected void watchingChanged(ValueChangeEvent<Boolean> event) {
 		if (watchState != null) {
@@ -308,6 +346,9 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		}
 	}
 
+	/**
+	 * Sets watching button to have the appropriate state.
+	 */
 	private void setWatch() {
 		if (watchState == null
 			|| SourceType.MANUAL.equals(sourceType.getValue())) {
@@ -319,6 +360,11 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		}
 	}
 
+	/**
+	 * Sets content of all fields in the editor according to the value.
+	 * 
+	 * @see com.google.gwt.user.client.ui.HasValue#setValue(java.lang.Object)
+	 */
 	public void setValue(UserSource value) {
 		userSource = value;
 		source = userSource.getSourceObject();
@@ -388,9 +434,7 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		setWatch();
 		hierarchy.setValue(userSource.getHierarchy());
 
-		UserSource us = new UserSource();
-		us.setDefaultLabels(userSource.getDefaultLabels());
-		defaultLabels.setNewData(us);
+		defaultLabels.setNewData(userSource.getDefaultLabels());
 
 		region.setValue(userSource);
 		if (userSource.getKey() != null && type.isSupportRegion()
@@ -454,6 +498,13 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		}
 	}
 
+	/**
+	 * Parses URL to get its domain part with schema.
+	 * 
+	 * @param url
+	 *            URL to parse
+	 * @return domain with schema
+	 */
 	private String getDomain(Link url) {
 		if (url == null) {
 			return "";
@@ -469,6 +520,12 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		setValue(value);
 	}
 
+	/**
+	 * Plan source check when user clicks on next check button.
+	 * 
+	 * @param event
+	 *            event
+	 */
 	@UiHandler("nextCheck")
 	protected void checkNowClicked(ClickEvent event) {
 		if (userSource.getKey() == null || source == null) {
@@ -492,6 +549,14 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 			});
 	}
 
+	/**
+	 * Create a new {@link Source} when user clicks on the Fix and continue
+	 * button.
+	 * Successful source creation causes call of {@link #sourceCreated(Source)}.
+	 * 
+	 * @param event
+	 *            event
+	 */
 	@UiHandler("setUrlButton")
 	protected void setUrlButtonClicked(ClickEvent event) {
 		if (source != null) {
@@ -576,6 +641,13 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		}
 	}
 
+	/**
+	 * Sets the source created by clicking on Fix and continue.
+	 * This makes the {@link UserSource} fields to be shown.
+	 * 
+	 * @param result
+	 *            {@link Source}
+	 */
 	protected void sourceCreated(Source result) {
 		source = result;
 		for (int i = 5; i < grid.getRowCount(); i++) {

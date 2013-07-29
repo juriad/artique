@@ -8,6 +8,16 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
+/**
+ * Concatenates several {@link List}s together.
+ * The concatenation still works with the original {@link List}s in order to
+ * reduce memory requirements.
+ * 
+ * @author Adam Juraszek
+ * 
+ * @param <E>
+ *            type of elements in the {@link List}
+ */
 public class CatList<E> implements List<E> {
 
 	List<List<E>> lists = new ArrayList<List<E>>();

@@ -17,6 +17,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 import cz.artique.client.common.CloseButton;
 
+/**
+ * Widget representing message to be shown.
+ * 
+ * @author Adam Juraszek
+ * 
+ */
 public class MessageWidget extends Composite {
 	interface MyResources extends ClientBundle {
 		@NotStrict
@@ -60,7 +66,7 @@ public class MessageWidget extends Composite {
 		setStylePrimaryName("message");
 		setStyleDependentName(message.getMessageType().name(), true);
 
-		if (MessageType.FAILURE.equals(message.getMessageType())) {
+		if (MessageType.OFFLINE.equals(message.getMessageType())) {
 			closeButton.setEnabled(false);
 		}
 
@@ -74,11 +80,20 @@ public class MessageWidget extends Composite {
 		}
 	}
 
+	/**
+	 * Delete the message, when close button has been clicked.
+	 * 
+	 * @param e
+	 *            event
+	 */
 	@UiHandler(value = "closeButton")
 	protected void closeClosed(CloseEvent<MessageWidget> e) {
 		this.removeFromParent();
 	}
 
+	/**
+	 * @return backed message
+	 */
 	public Message getMessage() {
 		return message;
 	}
