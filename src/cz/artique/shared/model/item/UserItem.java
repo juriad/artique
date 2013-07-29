@@ -11,7 +11,6 @@ import com.google.appengine.api.datastore.Key;
 
 import cz.artique.client.listing.ArtiqueList;
 import cz.artique.server.crawler.Crawler;
-import cz.artique.server.service.BackupServlet;
 import cz.artique.shared.model.label.BackupLevel;
 import cz.artique.shared.model.label.Label;
 import cz.artique.shared.model.label.ListFilter;
@@ -90,7 +89,10 @@ public class UserItem implements Serializable {
 	private Key userSource;
 
 	@Attribute(unindexed = true)
-	private String backupBlobKey;
+	private boolean backup;
+
+	@Attribute(persistent = false)
+	private String serializedKey;
 
 	/**
 	 * Default constructor for slim3 framework.
@@ -301,22 +303,28 @@ public class UserItem implements Serializable {
 	}
 
 	/**
-	 * Returns blob key which can be provided to {@link BackupServlet} to show
-	 * backed-up version of original page. Backup is automatically created when
-	 * a {@link Label} with {@link BackupLevel} higher than NO_BACKUP is
-	 * assigned.
+	 * Backup is automatically created when a {@link Label} with
+	 * {@link BackupLevel} higher than NO_BACKUP is assigned.
 	 * 
-	 * @return blob key if exists, null otherwise
+	 * @return whether this {@link UserItem} has been backed up
 	 */
-	public String getBackupBlobKey() {
-		return backupBlobKey;
+	public boolean isBackup() {
+		return backup;
 	}
 
 	/**
-	 * @param backupBlobKey
-	 *            blob key if exists, null otherwise
+	 * @param backup
+	 *            whether the {@link UserItem} is backed up
 	 */
-	public void setBackupBlobKey(String backupBlobKey) {
-		this.backupBlobKey = backupBlobKey;
+	public void setBackup(boolean backup) {
+		this.backup = backup;
+	}
+
+	public String getSerializedKey() {
+		return serializedKey;
+	}
+
+	public void setSerializedKey(String serializedKey) {
+		this.serializedKey = serializedKey;
 	}
 }

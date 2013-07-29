@@ -25,130 +25,7 @@ $title = preg_replace("/h2/i", "title", $matches[0]);
 echo $title;
 ?>
 
-<style>
-	#top {
-		background: #666;
-		height: 3em;
-		color: white;	
-		border-bottom: 2px solid black;
-		position: absolute;
-		width: 100%;
-	}
-
-	#name {
-		padding: 0.1em 0.5em;
-		margin: 0;
-	}
-
-	#name a {
-		color: white;
-		text-decoration: none;
-	}
-
-	#name a:hover {
-		color: red;
-	}
-
-
-	#back {
-		margin: 0;
-		padding: 3px 5px;
-		text-decoration: none;
-		cursor: pointer;
-		font-size: large;
-
-		float: right;
-		margin-top: 0.7em;
-		border: 1px outset #222;
-		margin-right: 2em;
-		background: #222;
-		color: white;
-	}
-
-	#back:hover {
-		border-color: red;
-	}
-
-	#menu {
-		float: left;
-		width: 15em;
-		background: #666;
-
-		color: white;
-		padding: 1em;
-		padding-top: 4em;
-	}
-
-	#menu li {
-		list-style-type: none;	
-	}
-
-	#menu ul {
-		padding-left: 0;
-	}
-
-	#menu ul ul {
-		padding-left: 2em;
-	}
-
-	#menu a {
-		color: white;
-		text-decoration: none;
-	}
-
-	#menu a:hover {
-		color: red;
-	}
-
-	html, body, #menu {	
-		background-color: #666;
-	}
-
-	html, body {
-		margin:0;
-		padding: 0;
-		font-size: large;
-		height: 100%;
-	}
-
-	#content {
-		margin-left: 17em;
-		margin-right: 10em;
-		min-height: 100%;
-		background-color: white;
-		border-left: 2px solid black;
-		border-right: 2px solid black;
-	}
-
-	#innerContent {
-		padding: 1em;
-		padding-top: 4em;
-	}
-
-	.img {
-		position: relative;
-	}
-
-	.img .full {
-		position: absolute;
-		display:none;
-		top: 0;
-		left: 0;
-	}
-
-	.img .small {
-		max-width: 20em;
-		max-height: 15em;
-	}
-
-	.img .small:hover+.full, .full:hover {
-		display: block;
-		max-width: 60em;
-		max-height: 45em;
-		z-index: 2;
-	}
-</style>
-
+		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
 		<div id="top">
@@ -168,8 +45,9 @@ echo $menu;
 			<div id="innerContent">
 <?php
 $content = preg_replace("/<img src=\"(.*?)\"(.*?)>/i", "<div class=\"img\"><img class=\"small\" src=\"images/\\1\" \\2><img class=\"full\" src=\"images/\\1\" \\2></div>", $content);
-$content = preg_replace("/\n{2,}(?![\n<])/", "<p>", $content);
-$content = preg_replace("/\n{2,}/", "", $content);
+$content = preg_replace("/\n*$/s", "", $content);
+$content = preg_replace("/\n{2,}</s", "<", $content);
+$content = preg_replace("/\n{2,}/s", "<p>", $content);
 echo $content;
 ?>
 			</div>

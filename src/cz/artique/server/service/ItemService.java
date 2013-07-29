@@ -14,8 +14,9 @@ import org.slim3.datastore.Datastore;
 import org.slim3.datastore.FilterCriterion;
 import org.slim3.datastore.ModelQuery;
 
-import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.KeyRange;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Transaction;
 
@@ -162,6 +163,7 @@ public class ItemService {
 						.limit(request.getFetchCount())
 						.asList();
 				fillItems(tail);
+				fillSerializedKeys(tail);
 				if (tail.size() < request.getFetchCount()) {
 					endReached = true;
 				} else {
@@ -181,6 +183,7 @@ public class ItemService {
 						headQuery.filter(meta.key.greaterThan(lastHave));
 					head = headQuery.sort(meta.key.desc).asList();
 					fillItems(head);
+					fillSerializedKeys(head);
 				} else {
 					head = new ArrayList<UserItem>();
 				}
@@ -201,6 +204,7 @@ public class ItemService {
 						.limit(request.getFetchCount())
 						.asList();
 				fillItems(tail);
+				fillSerializedKeys(tail);
 				if (tail.size() < request.getFetchCount()) {
 					endReached = true;
 				} else {
@@ -417,8 +421,9 @@ public class ItemService {
 		userItem.setLabels(new ArrayList<Key>(labels));
 		userItem.setUserSource(manualUserSource.getKey());
 
-		Key userItemKey = Datastore.put(userItem);
-		userItem.setKey(userItemKey);
+		Key allocatedId = Datastore.allocateId(UserItemMeta.get());
+		userItem.setKey(allocatedId);
+		Datastore.put(userItem);
 	}
 
 	/**
@@ -463,13 +468,13 @@ public class ItemService {
 	 * @param blobKey
 	 *            key of backed up webpage
 	 */
-	public void setBackup(Key userItemKey, BlobKey blobKey) {
+	public void setBackup(Key userItemKey, boolean backup) {
 		// TODO nice to have: delete old backup if current backupBlobKey != null
 		Transaction tx = Datastore.beginTransaction();
 		try {
 			UserItem userItem =
 				Datastore.get(tx, UserItemMeta.get(), userItemKey);
-			userItem.setBackupBlobKey(blobKey.getKeyString());
+			userItem.setBackup(true);
 			userItem.setLastChanged(new Date());
 			Datastore.put(tx, userItem);
 			tx.commit();
@@ -545,12 +550,15 @@ public class ItemService {
 	 *            list of {@link UserItem}s to save
 	 */
 	public void saveUserItems(List<UserItem> userItems) {
-		List<Key> keys = Datastore.put(userItems);
+		KeyRange allocatedIds =
+			Datastore.allocateIds(UserItemMeta.get(), userItems.size());
 		int i = 0;
-		for (UserItem ui : userItems) {
-			ui.setKey(keys.get(i));
+		for (Key key : allocatedIds) {
+			UserItem ui = userItems.get(i);
+			ui.setKey(key);
 			i++;
 		}
+		Datastore.put(userItems);
 	}
 
 	/**
@@ -571,5 +579,11 @@ public class ItemService {
 				.filter(meta.hash.equal(hash))
 				.asList();
 		return items;
+	}
+
+	public void fillSerializedKeys(List<UserItem> userItems) {
+		for (UserItem ui : userItems) {
+			ui.setSerializedKey(KeyFactory.keyToString(ui.getKey()));
+		}
 	}
 }

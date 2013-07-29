@@ -48,7 +48,7 @@ public class ClientItemServiceImpl implements ClientItemService {
 		validator.checkNullability(AddManualItem.USER_ITEM, false, item);
 		String userId = UserService.getCurrentUserId();
 		item.setUserId(userId);
-		item.setBackupBlobKey(null);
+		item.setBackup(false);
 		item.setAdded(new Date());
 
 		LabelService ls = new LabelService();
@@ -118,6 +118,7 @@ public class ClientItemServiceImpl implements ClientItemService {
 		ItemService is = new ItemService();
 		List<UserItem> userItemsByKeys =
 			is.getUserItemsByKeys(changeSets.keySet());
+		is.fillSerializedKeys(userItemsByKeys);
 
 		BackupService bs = new BackupService();
 		List<UserItem> toUpdate = new ArrayList<UserItem>();

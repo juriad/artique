@@ -375,11 +375,10 @@ public class UserItemRow extends RowWidget {
 	public void refresh() {
 		labels.setNewData(getValue());
 		setReadState();
-		if (backupImage == null && getValue().getBackupBlobKey() != null) {
+		if (backupImage == null && getValue().isBackup()) {
 			backupImage = new Image(res.backup());
 			backup.getElement().appendChild(backupImage.getElement());
-			String blobKey = getValue().getBackupBlobKey();
-			backup.setHref("/export/backupService?backup=" + blobKey);
+			backup.setHref("/export/backupService?backup=" + getValue().getSerializedKey());
 		}
 	}
 

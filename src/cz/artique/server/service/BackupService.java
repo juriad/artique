@@ -21,13 +21,15 @@ import org.jsoup.select.Elements;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-import com.google.appengine.api.files.AppEngineFile;
-import com.google.appengine.api.files.FileService;
-import com.google.appengine.api.files.FileServiceFactory;
-import com.google.appengine.api.files.FileWriteChannel;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.appengine.tools.cloudstorage.GcsFileOptions;
+import com.google.appengine.tools.cloudstorage.GcsFilename;
+import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
+import com.google.appengine.tools.cloudstorage.GcsService;
+import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 
 import cz.artique.server.crawler.CrawlerException;
 import cz.artique.server.crawler.Fetcher;
@@ -58,7 +60,7 @@ public class BackupService extends Fetcher {
 	 * @throws CrawlerException
 	 *             when something went wrong during backup
 	 */
-	public BlobKey backup(UserItem userItem, BackupLevel backupLevel)
+	public void backup(UserItem userItem, BackupLevel backupLevel)
 			throws CrawlerException {
 		if (userItem.getItemObject().getUrl() == null
 			|| userItem.getItemObject().getUrl().getValue() == null) {
@@ -79,16 +81,31 @@ public class BackupService extends Fetcher {
 			throw e;
 		}
 
+		changeEncoding(doc);
+
 		if (backupLevel.isInlineCss()) {
 			embedAllStyleSheetLinks(doc);
 		}
 		absolutizeAllLinks(doc);
 
 		try {
-			return saveToBlobStore(doc);
+			saveToBlobStore(doc, userItem);
 		} catch (Exception e) {
 			throw new CrawlerException("Failed to save html page to blob store");
 		}
+	}
+
+	/**
+	 * Changes encoding of backed up page to utf-8.
+	 * 
+	 * @param doc
+	 */
+	private void changeEncoding(Document doc) {
+		Elements elements = doc.select("meta[http-equiv=Content-Type]");
+		elements.remove();
+		elements = doc.select("meta[charset]");
+		elements.remove();
+		doc.head().appendElement("meta").attr("charset", "utf-8");
 	}
 
 	/**
@@ -96,26 +113,31 @@ public class BackupService extends Fetcher {
 	 * 
 	 * @param doc
 	 *            DOM representation of webpage
+	 * @param userItem
 	 * @return key of backup
 	 * @throws IOException
 	 *             when something went wrong during saving to blobstore
 	 */
-	private BlobKey saveToBlobStore(Document doc) throws IOException {
+	private void saveToBlobStore(Document doc, UserItem userItem)
+			throws IOException {
 		String html = doc.outerHtml();
 
-		FileService fileService = FileServiceFactory.getFileService();
-		AppEngineFile file = fileService.createNewBlobFile("text/html");
-		FileWriteChannel writeChannel =
-			fileService.openWriteChannel(file, true);
+		String name = KeyFactory.keyToString(userItem.getKey());
+		GcsFilename filename = new GcsFilename("artique-data", name);
+		GcsFileOptions options =
+			new GcsFileOptions.Builder()
+				.mimeType("text/html")
+				.acl("public-read")
+				.build();
+
+		GcsService fileService = GcsServiceFactory.createGcsService();
+		GcsOutputChannel writeChannel =
+			fileService.createOrReplace(filename, options);
 
 		PrintWriter out =
 			new PrintWriter(Channels.newWriter(writeChannel, "UTF8"));
 		out.println(html);
 		out.close();
-
-		writeChannel.closeFinally();
-		BlobKey blobKey = fileService.getBlobKey(file);
-		return blobKey;
 	}
 
 	/**
@@ -184,12 +206,15 @@ public class BackupService extends Fetcher {
 		return null;
 	}
 
-	public void serveBackup(String blobKey, HttpServletResponse response)
+	public void serveBackup(String userItemKey, HttpServletResponse response)
 			throws IOException {
+		GcsFilename filename = new GcsFilename("artique-data", userItemKey);
 		BlobstoreService blobstoreService =
 			BlobstoreServiceFactory.getBlobstoreService();
-		BlobKey bk = new BlobKey(blobKey);
-		blobstoreService.serve(bk, response);
+		BlobKey blobKey =
+			blobstoreService.createGsBlobKey("/gs/" + filename.getBucketName()
+				+ "/" + filename.getObjectName());
+		blobstoreService.serve(blobKey, response);
 	}
 
 	/**

@@ -33,4 +33,5 @@
 		</ul>
 	</li>
 	<li>top/Top panel</li>
+	<li>devel/Development</li>
 </ul>

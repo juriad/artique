@@ -1,6 +1,5 @@
 package cz.artique.server.service;
 
-import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.taskqueue.DeferredTask;
 
@@ -50,10 +49,9 @@ public class BackupTask implements DeferredTask {
 		Label backupLabel = ls.getLabelByKey(backupLabelKey);
 
 		BackupService bs = new BackupService();
-		BlobKey blobKey;
 		try {
-			blobKey = bs.backup(userItem, backupLabel.getBackupLevel());
-			is.setBackup(userItemKey, blobKey);
+			bs.backup(userItem, backupLabel.getBackupLevel());
+			is.setBackup(userItemKey, true);
 		} catch (CrawlerException e) {
 			throw new RuntimeException("Backuping item " + userItem.getKey()
 				+ " failed.", e);

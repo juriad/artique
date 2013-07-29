@@ -22,6 +22,7 @@ public class CatList<E> implements List<E> {
 
 	List<List<E>> lists = new ArrayList<List<E>>();
 
+	@SafeVarargs
 	public CatList(List<E>... ls) {
 		if (ls != null && ls.length > 0) {
 			lists = Arrays.asList(ls);
