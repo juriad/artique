@@ -10,9 +10,9 @@ The header provides most information about the item (from the left):
 <ul>
 	<li>List of assigned labels. Labels are sorted alphabetically. User may assign another label by clicking plus-sign button.</li>
 	<li>The source the item belongs to / comes from. Hovering cursor over the source name gives more information about the source.</li>
-	<li>Open icon. Clicking onto this icon, original webpage will be loaded in a new tab.</li>
+	<li>Open icon. Clicking onto this icon, original web-page will be loaded in a new tab.</li>
 	<li>Title of the item. Clicking on the title (or blank space around it) selects the item and toggles its expanded/collapsed state.
-		Clicking while holding control modifier opens original webpage in a new tab.</li>
+		Clicking while holding control modifier opens original web-page in a new tab.</li>
 	<li>Backup item. If this icon is present, there exists backup of the item. Clicking on the icon opens the backup in a new tab.</li>
 	<li>Date of addition. Date when the item was imported. 
 		Hovering cursor over the date shown more information: precise timestamps of when the item was added and when it was published (only for RSS/Atom source).</li>

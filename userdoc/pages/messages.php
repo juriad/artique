@@ -10,7 +10,7 @@ Messages are shown in application in two places:
 
 <img src="10.png">
 
-When a user-initiated action ends either successfully or it failed, a message box is shown hovering over the middle thrird of main content.
+When a user-initiated action ends either successfully or it failed, a message box is shown hovering over the middle third of main content.
 If the message is of type error, its message describes what went wrong.
 
 The message is shown only for a limited time depending on its severity (error are shown longer).

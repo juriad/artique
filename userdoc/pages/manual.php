@@ -5,7 +5,7 @@
 User can add custom item into application in two ways:
 <ul>
 	<li>using Manual item dialog,</li>
-	<li>via optional extension in common brosers.</li>
+	<li>via optional extension in common browsers.</li>
 </ul>
 
 <h3>Using dialog</h3>

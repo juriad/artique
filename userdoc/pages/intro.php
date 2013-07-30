@@ -32,6 +32,6 @@ It can:
 
 <h3>No content</h3>
 
-When the user loggs in the first time, he may be surprised by lack of any content in the application.
+When the user logs in the first time, he may be surprised by lack of any content in the application.
 Therefore, it is desired to walk through this documentation at least briefly in order to understand principles of the application and configure it properly prior its usage.
 The lack of content is intentional; advanced users are willing to configure the application in a way they like.

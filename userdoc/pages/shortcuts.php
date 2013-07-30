@@ -12,7 +12,7 @@ Shortcuts are of three different types:
 		Action shortcuts performs one of pre-defined actions.
 		The list of supported action shortcuts can be found in Action shortcut dialog.</li>
 	<li>Labels.
-		Label shortcuts assigns spcified label to currently selected item; if the label is already present, it will be removed instead.</li>
+		Label shortcuts assigns specified label to currently selected item; if the label is already present, it will be removed instead.</li>
 	<li>Filters.
 		Filter shortcuts changes currently applied filter to the specified one.</li>
 </ul>
@@ -29,11 +29,11 @@ The other operation, the user may perform, is to delete any of existing shortcut
 <h3>Key stroke</h3>
 
 Shortcuts are fired as soon as user presses appropriate key combination.
-The combination may constist of virtually any key on keyboard combined with any of four modifiers (Control, Shift, Alt, Meta).
+The combination may consists of virtually any key on keyboard combined with any of four modifiers (Control, Shift, Alt, Meta).
 
 Key strokes require user to specify them in particular format:
 <ul>
-	<li>modifiers are specified as their first letter in UpperCase separated by plus sign from the rest of key stroke.
+	<li>modifiers are specified as their first letter in Uppercase separated by plus sign from the rest of key stroke.
 		If there are no modifiers, the plus sign is optional.
 		<br>
 		Examples:

@@ -2,7 +2,7 @@
 
 <img src="6.png">
 
-Left panel contains all the control options which user may nees in order to manage data in the application.
+Left panel contains all the control options which user may needs in order to manage data in the application.
 Panel is expanded to show its whole content when user hovers mouse cursor over it.
 
 Left panel consists of four tabs; each of them has different function:
@@ -17,4 +17,4 @@ Left panel consists of four tabs; each of them has different function:
 		Shows list of several last messages shown to user and also some common messages about successes.</li>
 </ul>
 
-To show each particular tab, click onto its corresponging header.
+To show each particular tab, click onto its corresponding header.

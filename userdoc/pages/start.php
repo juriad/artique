@@ -1,6 +1,6 @@
-<h2>Cookbook</h2>
+<h2>Getting started</h2>
 
-When a new user signes to the application for the first time, he shall add his own sources, labels and set shortcuts.
+When a new user signs to the application for the first time, he shall add his own sources, labels and set shortcuts.
 
 <h3>Adding sources</h3>
 

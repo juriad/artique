@@ -2,7 +2,7 @@
 <ul>
 	<li>intro/Introduction</li>
 	<li>overview/Overview</li>
-	<li>cookbook/Cookbook</li>
+	<li>start/Getting started</li>
 	<li>items/Lists of items
 		<ul>
 			<li>item/Detail of item</li>
