@@ -264,7 +264,8 @@ public class InfiniteList extends Composite
 			headKeys = new HashSet<Key>();
 
 			int offsetHeight = flowPanel.getOffsetHeight();
-			for (UserItem e : l) {
+			for (int i = l.size() - 1; i >= 0; i--) {
+				UserItem e = l.get(i);
 				RowWidget row = createRow(e);
 				flowPanel.insert(row, 0);
 				rows.put(row.getKey(), row);

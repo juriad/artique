@@ -1,11 +1,14 @@
 body {
 	width: 100%;
+	font-size: large;
 }
 
 .main {
 	padding: 5em;
 	width: 70%;
 	margin: auto;
+	opacity: 0.95;
+	filter: alpha(opacity \= 95)
 }
 
 .desc {
@@ -22,11 +25,12 @@ body {
 	padding: 4%;
 }
 
-.loginDesc {
+.loginDesc,.generalDesc {
+	margin: 3em 0px;
 	margin: 3em 0px;
 }
 
-.signIn {
+.button {
 	color: black;
 	display: block;
 	width: 10em;

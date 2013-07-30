@@ -25,6 +25,7 @@ $title = preg_replace("/h2/i", "title", $matches[0]);
 echo $title;
 ?>
 
+		<link href="/favicon.ico" rel="shortcut icon">
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>

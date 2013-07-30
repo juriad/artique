@@ -24,6 +24,7 @@ import cz.artique.client.listFilters.AdhocDialog;
 import cz.artique.client.manager.AbstractManager;
 import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
+import cz.artique.client.manager.Managers.ManagerInitCallback;
 import cz.artique.client.messages.MessageType;
 import cz.artique.client.messages.ValidationMessage;
 import cz.artique.client.service.ClientShortcutService;
@@ -58,11 +59,6 @@ public class ShortcutsManager
 	public ShortcutsManager() {
 		super(GWT
 			.<ClientShortcutServiceAsync> create(ClientShortcutService.class));
-		Managers.waitForManagers(new ManagerReady() {
-			public void onReady() {
-				refresh(null);
-			}
-		}, Managers.LABELS_MANAGER, Managers.LIST_FILTERS_MANAGER);
 
 		addShortcutHandler(new ShortcutHandler() {
 			public void onShortcut(ShortcutEvent e) {
@@ -110,6 +106,17 @@ public class ShortcutsManager
 					}
 					Managers.HISTORY_MANAGER.setListFilter(listFilter, token);
 				}
+			}
+		});
+
+		Managers.addManagerInitCallback(new ManagerInitCallback() {
+			@Override
+			public void initManager() {
+				Managers.waitForManagers(new ManagerReady() {
+					public void onReady() {
+						refresh(null);
+					}
+				}, Managers.LABELS_MANAGER, Managers.LIST_FILTERS_MANAGER);
 			}
 		});
 	}

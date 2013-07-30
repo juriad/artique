@@ -1,0 +1,20 @@
+Installation of the application requires a Google Account.
+
+The main steps to do in order to deploy the application:
+1. Create a new Google AppEngine project.
+2. Install Eclipse IDE and Google Plugin for Eclipse.
+3. Import the Artique project into Eclipse.
+4. Adjust the source code (change name, logos, domain).
+5. Hit the Deploy to AppEngine button.
+6. The application shall be running online.
+
+The optional extension into common browsers require:
+1. Create account at http://crossrider.com .
+2. Adjust sourc code of the extension (change name, logos, domain).
+3. Either copy the code to CrossRider online editor or upload zip file.
+4. Adjust extension settings: turn on the browser button.
+5. Switch the extension to production mode.
+6. The extensino shall be available to be installed.
+
+The user documentation present online requires any hosting with PHP (at least 5).
+The java documentation present online requires any hosting.

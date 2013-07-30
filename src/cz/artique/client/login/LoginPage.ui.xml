@@ -12,18 +12,39 @@
 			background-position: center center;
 			background-repeat: no-repeat;
 			width: 100%;
+			height: 100%;
+			position: absolute;
+			z-index: -2;
 		}
 	</ui:style>
 
-	<g:HTMLPanel styleName="{style.main}">
+	<g:HTMLPanel>
+		<g:HTMLPanel styleName="{style.main}"></g:HTMLPanel>
 		<div class="main">
 			<div class="desc col">
-				<ui:msg description="General description">
-					Artique is an application which
-					follows
-					several internet sources and presents new article to the
-					users.
-				</ui:msg>
+				<div class="generalDesc">
+					<p>
+						<ui:msg description="General description">
+							Artique is a web reader which allows
+							users to watch new content on several internet sources. User may
+							organize the imported items; build his own library.
+						</ui:msg>
+					</p>
+					<p>
+						<ui:msg description="See documentation">
+							For more information see the user
+							documentation.
+						</ui:msg>
+					</p>
+				</div>
+				<g:Anchor ui:field="seeDoc" styleName="button"
+					href="http://userdoc.artique.cz/intro">
+					<ui:msg description="See documentation button">
+						<div>
+							Documentation
+						</div>
+					</ui:msg>
+				</g:Anchor>
 			</div>
 
 			<div class="login col">
@@ -31,8 +52,7 @@
 					<p>
 						<ui:msg description="Login text, paragraph 1">
 							This application uses Google Account to identify each user.
-							If
-							you
+							If you
 							don't have one, obtain one on
 							<ui:ph name="accounts">
 								<a href="http://accounts.google.com">Google Accounts</a>
@@ -41,7 +61,7 @@
 						</ui:msg>
 					</p>
 				</div>
-				<g:Anchor ui:field="signIn" styleName="signIn">
+				<g:Anchor ui:field="signIn" styleName="button">
 					<ui:msg description="Login button">
 						<div>
 							Sign in

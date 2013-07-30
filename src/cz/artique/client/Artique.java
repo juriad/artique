@@ -83,10 +83,7 @@ public class Artique extends Composite {
 	@UiField(provided = true)
 	TopPanel topPanel;
 
-	// private static ArtiqueResources resources;
-
 	static {
-		// resources.style().ensureInjected();
 		res.style().ensureInjected();
 	}
 
@@ -147,7 +144,6 @@ public class Artique extends Composite {
 
 		// fire initial history when managers are ready
 		Managers.waitForManagers(new ManagerReady() {
-
 			public void onReady() {
 				ArtiqueConstants constants = I18n.getArtiqueConstants();
 				Managers.MESSAGES_MANAGER.addMessage(new Message(
@@ -157,7 +153,8 @@ public class Artique extends Composite {
 				showPanel();
 			}
 		}, Managers.CONFIG_MANAGER, Managers.LABELS_MANAGER,
-			Managers.SOURCES_MANAGER, Managers.ITEMS_MANAGER);
+			Managers.SOURCES_MANAGER, Managers.ITEMS_MANAGER,
+			Managers.LIST_FILTERS_MANAGER, Managers.SHORTCUTS_MANAGER);
 	}
 
 	/**

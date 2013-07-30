@@ -16,7 +16,6 @@ import org.slim3.datastore.ModelQuery;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.KeyRange;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Transaction;
 
@@ -421,7 +420,7 @@ public class ItemService {
 		userItem.setLabels(new ArrayList<Key>(labels));
 		userItem.setUserSource(manualUserSource.getKey());
 
-		Key allocatedId = Datastore.allocateId(UserItemMeta.get());
+		Key allocatedId = createSequenceKey();
 		userItem.setKey(allocatedId);
 		Datastore.put(userItem);
 	}
@@ -465,8 +464,8 @@ public class ItemService {
 	 * 
 	 * @param userItemKey
 	 *            key of {@link UserItem}
-	 * @param blobKey
-	 *            key of backed up webpage
+	 * @param backup
+	 *            whether backup exists
 	 */
 	public void setBackup(Key userItemKey, boolean backup) {
 		// TODO nice to have: delete old backup if current backupBlobKey != null
@@ -550,12 +549,10 @@ public class ItemService {
 	 *            list of {@link UserItem}s to save
 	 */
 	public void saveUserItems(List<UserItem> userItems) {
-		KeyRange allocatedIds =
-			Datastore.allocateIds(UserItemMeta.get(), userItems.size());
+		List<Key> sequenceKeys = createSequenceKeys(userItems.size());
 		int i = 0;
-		for (Key key : allocatedIds) {
-			UserItem ui = userItems.get(i);
-			ui.setKey(key);
+		for (UserItem ui : userItems) {
+			ui.setKey(sequenceKeys.get(i));
 			i++;
 		}
 		Datastore.put(userItems);
@@ -581,9 +578,41 @@ public class ItemService {
 		return items;
 	}
 
+	/**
+	 * @param userItems
+	 *            list of {@link UserItem}s to filled with serialized keys
+	 */
 	public void fillSerializedKeys(List<UserItem> userItems) {
 		for (UserItem ui : userItems) {
 			ui.setSerializedKey(KeyFactory.keyToString(ui.getKey()));
 		}
+	}
+
+	/**
+	 * Create monotonous sequence of random keys based on current date.
+	 * 
+	 * @param count
+	 *            number of keys requested
+	 * @return monotonous sequence of random keys
+	 */
+	private List<Key> createSequenceKeys(int count) {
+		List<Key> keys = new ArrayList<Key>();
+		double id = new Date().getTime();
+		for (int i = 0; i < count; i++) {
+			double id2 = id + (i / count);
+			double random = Math.random();
+			id2 += random / count;
+			long id3 = (long) (id2 * (1 << 18));
+			Key key = Datastore.createKey(UserItemMeta.get(), id3);
+			keys.add(key);
+		}
+		return keys;
+	}
+
+	/**
+	 * @return random key based on current date
+	 */
+	private Key createSequenceKey() {
+		return createSequenceKeys(1).get(0);
 	}
 }

@@ -1,8 +1,6 @@
 package cz.artique.client.manager;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import cz.artique.client.config.ConfigManager;
@@ -24,11 +22,33 @@ import cz.artique.shared.model.config.client.ClientConfigKey;
  * 
  */
 public class Managers {
-	private Managers() {}
 
-	// must be before all managers
-	private static List<Manager> ready = new ArrayList<Manager>();
-	private static List<WaitRequest> waiting = new LinkedList<WaitRequest>();
+	private static class WaitRequest {
+		List<Manager> managers;
+		ManagerReady ping;
+
+		public WaitRequest(List<Manager> managers, ManagerReady ping) {
+			this.managers = managers;
+			this.ping = ping;
+		}
+	}
+
+	public static interface ManagerInitCallback {
+		void initManager();
+	}
+
+	private static List<ManagerInitCallback> callbacks =
+		new ArrayList<ManagerInitCallback>();
+
+	private static boolean complete = false;
+
+	public static void addManagerInitCallback(ManagerInitCallback callback) {
+		if (!complete) {
+			callbacks.add(callback);
+		} else {
+			callback.initManager();
+		}
+	}
 
 	public static final ConfigManager CONFIG_MANAGER = ConfigManager.MANAGER;
 	public static final ItemsManager ITEMS_MANAGER = ItemsManager.MANAGER;
@@ -42,7 +62,7 @@ public class Managers {
 	public static final ShortcutsManager SHORTCUTS_MANAGER =
 		ShortcutsManager.MANAGER;
 
-	public static final Manager[] MANAGERS = new Manager[] {
+	private static final Manager[] MANAGERS = new Manager[] {
 		CONFIG_MANAGER,
 		ITEMS_MANAGER,
 		LABELS_MANAGER,
@@ -52,55 +72,64 @@ public class Managers {
 		MESSAGES_MANAGER,
 		SHORTCUTS_MANAGER };
 
+	private static List<Manager> ready = new ArrayList<Manager>();
+	private static List<WaitRequest> waiting = new ArrayList<WaitRequest>();
+
 	static {
+		registerOnReady();
+		setTimeout();
+		processCallbacks();
+	}
+
+	private static void processCallbacks() {
+		if (complete) {
+			return;
+		}
+		for (ManagerInitCallback callback : callbacks) {
+			callback.initManager();
+		}
+		complete = true;
+	}
+
+	private static void registerOnReady() {
 		for (final Manager m : MANAGERS) {
 			m.ready(new ManagerReady() {
 				public void onReady() {
 					ready.add(m);
-					Iterator<WaitRequest> iter = waiting.iterator();
-					while (iter.hasNext()) {
-						WaitRequest r = iter.next();
+
+					List<WaitRequest> newWaiting = new ArrayList<WaitRequest>();
+					List<WaitRequest> toBeFired = new ArrayList<WaitRequest>();
+					for (WaitRequest r : waiting) {
 						r.managers.remove(m);
 						if (r.managers.isEmpty()) {
-							iter.remove();
-							r.ping.onReady();
+							toBeFired.add(r);
+						} else {
+							newWaiting.add(r);
 						}
+					}
+					waiting = newWaiting;
+
+					for (WaitRequest r : toBeFired) {
+						r.ping.onReady();
 					}
 				}
 			});
 		}
+	}
+
+	private static void setTimeout() {
 		waitForManagers(new ManagerReady() {
 			public void onReady() {
 				for (Manager m : MANAGERS) {
-					if (m instanceof AbstractManager) {
-						((AbstractManager<?>) m).setTimeout(CONFIG_MANAGER
-							.getConfig(ClientConfigKey.SERVICE_TIMEOUT)
-							.get()
-							.getI());
-					}
+					m.setTimeout(CONFIG_MANAGER
+						.getConfig(ClientConfigKey.SERVICE_TIMEOUT)
+						.get()
+						.getI());
 				}
 			}
 		}, CONFIG_MANAGER);
 	}
 
-	private static class WaitRequest {
-		List<Manager> managers;
-		ManagerReady ping;
-
-		public WaitRequest(List<Manager> managers, ManagerReady ping) {
-			this.managers = managers;
-			this.ping = ping;
-		}
-	}
-
-	/**
-	 * Waits for several {@link Manager}s.
-	 * 
-	 * @param ping
-	 *            callback
-	 * @param managers
-	 *            list of {@link Manager}s to wait for
-	 */
 	public static void waitForManagers(ManagerReady ping, Manager... managers) {
 		List<Manager> managersList = new ArrayList<Manager>();
 		if (managers != null) {

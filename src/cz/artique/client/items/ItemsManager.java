@@ -13,10 +13,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import cz.artique.client.history.HistoryEvent;
 import cz.artique.client.history.HistoryHandler;
-import cz.artique.client.history.HistoryManager;
 import cz.artique.client.manager.AbstractManager;
 import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
+import cz.artique.client.manager.Managers.ManagerInitCallback;
 import cz.artique.client.messages.ValidationMessage;
 import cz.artique.client.service.ClientItemService;
 import cz.artique.client.service.ClientItemService.AddManualItem;
@@ -65,11 +65,24 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 
 		// TODO nice to have: configure timeout for
 		timer.scheduleRepeating(Math.max(getTimeout(), 3000));
-		HistoryManager.HISTORY.addHistoryHandler(new HistoryHandler() {
-			public void onHistoryChanged(HistoryEvent e) {
-				refresh(null);
+		Managers.addManagerInitCallback(new ManagerInitCallback() {
+			@Override
+			public void initManager() {
+				Managers.HISTORY_MANAGER.addHistoryHandler(
+					new HistoryHandler() {
+						public void onHistoryChanged(HistoryEvent e) {
+							refresh(null);
+						}
+					}, 1);
+
+				Managers.waitForManagers(new ManagerReady() {
+					@Override
+					public void onReady() {
+						setReady();
+					}
+				}, Managers.LABELS_MANAGER);
 			}
-		}, 1);
+		});
 	}
 
 	/**
@@ -306,16 +319,6 @@ public class ItemsManager extends AbstractManager<ClientItemServiceAsync>
 				}
 			}
 		});
-	}
-
-	/**
-	 * Manager is ready immediately.
-	 * 
-	 * @see cz.artique.client.manager.AbstractManager#ready(cz.artique.client.manager.ManagerReady)
-	 */
-	@Override
-	public void ready(ManagerReady ping) {
-		Managers.LABELS_MANAGER.ready(ping);
 	}
 
 	private final List<ModifiedHandler> handlers =

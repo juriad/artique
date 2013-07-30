@@ -19,6 +19,7 @@ import cz.artique.client.hierarchy.TimedLeafNode;
 import cz.artique.client.manager.Manager;
 import cz.artique.client.manager.ManagerReady;
 import cz.artique.client.manager.Managers;
+import cz.artique.client.manager.Managers.ManagerInitCallback;
 import cz.artique.client.utils.SortedList;
 import cz.artique.shared.model.config.client.ClientConfigKey;
 import cz.artique.shared.model.label.Filter;
@@ -67,15 +68,19 @@ public class HistoryManager
 		// observe GWT history
 		History.addValueChangeHandler(new ArtiqueHistoryHandler());
 
-		Managers.waitForManagers(new ManagerReady() {
-
-			public void onReady() {
-				setMaxItems(Managers.CONFIG_MANAGER
-					.getConfig(ClientConfigKey.HISTORY_MAX_ITEMS)
-					.get()
-					.getI());
+		Managers.addManagerInitCallback(new ManagerInitCallback() {
+			@Override
+			public void initManager() {
+				Managers.waitForManagers(new ManagerReady() {
+					public void onReady() {
+						setMaxItems(Managers.CONFIG_MANAGER
+							.getConfig(ClientConfigKey.HISTORY_MAX_ITEMS)
+							.get()
+							.getI());
+					}
+				}, Managers.CONFIG_MANAGER);
 			}
-		}, Managers.CONFIG_MANAGER);
+		});
 	}
 
 	// const, same as HISTORY_MAX_ITEMS

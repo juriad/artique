@@ -56,7 +56,6 @@ public class BackupService extends Fetcher {
 	 *            {@link UserItem} to back up
 	 * @param backupLevel
 	 *            level of backup
-	 * @return key of backup
 	 * @throws CrawlerException
 	 *             when something went wrong during backup
 	 */
@@ -206,6 +205,16 @@ public class BackupService extends Fetcher {
 		return null;
 	}
 
+	/**
+	 * Serves the backup.
+	 * 
+	 * @param userItemKey
+	 *            UserItem to be served.
+	 * @param response
+	 *            response to be written into
+	 * @throws IOException
+	 *             when serve failed
+	 */
 	public void serveBackup(String userItemKey, HttpServletResponse response)
 			throws IOException {
 		GcsFilename filename = new GcsFilename("artique-data", userItemKey);
