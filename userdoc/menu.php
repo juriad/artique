@@ -2,6 +2,7 @@
 <ul>
 	<li>intro/Introduction</li>
 	<li>overview/Overview</li>
+	<li>cookbook/Cookbook</li>
 	<li>items/Lists of items
 		<ul>
 			<li>item/Detail of item</li>
@@ -33,5 +34,6 @@
 		</ul>
 	</li>
 	<li>top/Top panel</li>
+	<li>ext/Extension</li>
 	<li>devel/Development</li>
 </ul>

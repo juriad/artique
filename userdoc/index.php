@@ -46,9 +46,9 @@ echo $menu;
 			<div id="innerContent">
 <?php
 $content = preg_replace("/<img src=\"(.*?)\"(.*?)>/i", "<div class=\"img\"><img class=\"small\" src=\"images/\\1\" \\2><img class=\"full\" src=\"images/\\1\" \\2></div>", $content);
-$content = preg_replace("/\n*$/s", "", $content);
-$content = preg_replace("/\n{2,}</s", "<", $content);
-$content = preg_replace("/\n{2,}/s", "<p>", $content);
+$content = preg_replace("/\\n(\\s*\\n)+$/", "\n", $content);
+$content = preg_replace("/\\n(\\s*\\n)+</", "\n<", $content);
+$content = preg_replace("/\\n(\\s*\\n)+/", "\n<p>", $content);
 echo $content;
 ?>
 			</div>

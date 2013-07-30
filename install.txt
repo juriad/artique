@@ -2,7 +2,7 @@ Installation of the application requires a Google Account.
 
 The main steps to do in order to deploy the application:
 1. Create a new Google AppEngine project.
-2. Install Eclipse IDE and Google Plugin for Eclipse.
+2. Install Eclipse IDE, Google Plugin for Eclipse and Slim3 Plugin for Eclipse.
 3. Import the Artique project into Eclipse.
 4. Adjust the source code (change name, logos, domain).
 5. Hit the Deploy to AppEngine button.
