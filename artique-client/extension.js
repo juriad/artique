@@ -15,7 +15,7 @@ appAPI.ready(function($) {
 		return text;
 	}
 
-	if (appAPI.isMatchPages("*localhost:8888*")) {
+	if (appAPI.isMatchPages("*www.artique.cz*")) {
 		window.setTimeout(function() {
 			var meta = $('head meta[name="clientToken"]');
 			if (meta.length > 0) {
@@ -23,7 +23,7 @@ appAPI.ready(function($) {
 				appAPI.db.set('clientToken', token);
 
 				appAPI.message.toBackground({
-					message : "tokenAvailable",
+					message : "tokenAvailable"
 				});
 			}
 		}, 5000);
@@ -45,7 +45,7 @@ appAPI.ready(function($) {
 				message : "page",
 				url : url,
 				title : title,
-				content : content,
+				content : content
 			});
 		}
 	});

@@ -2,6 +2,7 @@ package cz.artique.server.service;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -73,6 +74,8 @@ public class ClientServlet extends HttpServlet {
 	 */
 	protected void process(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		resp.setContentType("application/json;charset=UTF-8");
+
 		@SuppressWarnings("unchecked")
 		Map<String, String[]> parameterMap = req.getParameterMap();
 
@@ -114,12 +117,11 @@ public class ClientServlet extends HttpServlet {
 		} else if (action.equalsIgnoreCase("addItem")) {
 			String item;
 			if (parameterMap.containsKey("item")) {
-				String[] items = parameterMap.get("item");
-				if (items == null || items.length == 0) {
+				item = URLDecoder.decode(req.getParameter("item"), "UTF-8");
+				if (item == null || item.length() == 0) {
 					resp.sendError(400, "Missing item");
 					return;
 				}
-				item = items[0];
 			} else {
 				resp.sendError(400, "Missing item");
 				return;

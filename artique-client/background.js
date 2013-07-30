@@ -6,12 +6,12 @@
 appAPI.ready(function($) {
 	var token = appAPI.db.get('clientToken');
 	var icon;
-	if (token == null) {
+	if (token === null) {
 		appAPI.browserAction.setResourceIcon('icon-bw.png');
 		appAPI.browserAction.setTitle('Client is not available.');
 		appAPI.browserAction.onClick(function() {
 			appAPI.openURL({
-				url : "http://localhost:8888/",
+				url : "http://www.artique.cz/",
 				where : "tab"
 			});
 		});
@@ -32,11 +32,11 @@ appAPI.ready(function($) {
 			appAPI.browserAction.setPopup({
 				resourcePath : 'popup.html',
 				height : 230,
-				width : 500,
+				width : 500
 			});
 		} else if (msg.message == "labels") {
 			appAPI.request.post({
-				url : 'http://localhost:8888/export/clientService',
+				url : 'http://www.artique.cz/export/clientService',
 				postData : {
 					token : appAPI.db.get('clientToken'),
 					action : 'getLabels'
@@ -45,39 +45,40 @@ appAPI.ready(function($) {
 					var labels = appAPI.JSON.parse(response);
 					appAPI.message.toPopup({
 						message : "labels",
-						labels : labels,
-					});
-				},
-			});
-		} else if (msg.message == "item") {
-			var item = {
-				url : msg.url,
-				title : msg.title,
-				content : msg.content,
-				labels : msg.labels,
-			};
-			var itemStr = appAPI.JSON.stringify(item);
-			appAPI.request.post({
-				url : 'http://localhost:8888/export/clientService',
-				postData : {
-					token : appAPI.db.get('clientToken'),
-					action : 'addItem',
-					item : itemStr,
-				},
-				onSuccess : function(response) {
-					appAPI.message.toPopup({
-						message : "item",
-						status : "OK",
-					});
-				},
-				onFailure : function(httpCode) {
-					appAPI.message.toPopup({
-						message : "item",
-						status : "FAIL",
-						code : httpCode,
+						labels : labels
 					});
 				}
 			});
-		}
-	});
+		} else if (msg.message == "item") {
+            var item = {
+                url : msg.url,
+                title : msg.title,
+                content : msg.content,
+                labels : msg.labels
+            };
+            var itemStr = appAPI.JSON.stringify(item);
+            appAPI.request.post({
+                url : 'http://www.artique.cz/export/clientService',
+                postData : {
+                    token : appAPI.db.get('clientToken'),
+                    action : 'addItem',
+                    item : encodeURIComponent(itemStr)
+                },
+                onSuccess : function(response) {
+                    appAPI.message.toPopup({
+                        message : "item",
+                        status : "OK"
+                    });
+                },
+                onFailure : function(httpCode) {
+                    appAPI.message.toPopup({
+                        message : "item",
+                        status : "FAIL",
+                        code : httpCode
+                    });
+                }
+            });
+        }
+    });
 });
+

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8">
 <!-- This meta tag is relevant only for IE -->
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
@@ -16,7 +17,7 @@
 				url : $('#url').val(),
 				title : $('#title').val(),
 				content : $('#content').val(),
-				labels : labels,
+				labels : labels
 			});
 			event.preventDefault();
 		});
@@ -35,7 +36,7 @@
 										{
 											plugins : 'tags prompt suggestions autocomplete arrow',
 											tags : {
-												items : defs,
+												items : defs
 											},
 											suggestions : labels,
 											prompt : '+',
@@ -64,11 +65,11 @@
 				});
 
 		appAPI.message.toBackground({
-			message : 'labels',
+			message : 'labels'
 		});
 
 		appAPI.message.toActiveTab({
-			message : 'page',
+			message : 'page'
 		});
 	}
 </script>
