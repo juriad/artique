@@ -5,6 +5,10 @@
  ******************************************************************************/
 
 appAPI.ready(function($) {
+	function log(msg) {
+		//console.log(msg);
+	}
+	
 	function getSelectionText() {
 		var text = "";
 		if (window.getSelection) {
@@ -31,6 +35,7 @@ appAPI.ready(function($) {
 
 	appAPI.message.addListener(function(msg) {
 		if (msg.message == "page") {
+			log("ext: page");
 			var url = window.location.href;
 
 			var titleElems = $('title');
@@ -47,6 +52,8 @@ appAPI.ready(function($) {
 				title : title,
 				content : content
 			});
+		} else if(msg.message == "log") {
+			log(msg.msg);
 		}
 	});
 });

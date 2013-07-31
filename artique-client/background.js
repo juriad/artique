@@ -35,6 +35,7 @@ appAPI.ready(function($) {
 				width : 500
 			});
 		} else if (msg.message == "labels") {
+			log("back: labels");
 			appAPI.request.post({
 				url : 'http://www.artique.cz/export/clientService',
 				postData : {
@@ -80,5 +81,12 @@ appAPI.ready(function($) {
             });
         }
     });
+    
+    function log(msg) {
+		appAPI.message.toActiveTab({
+			message : 'log',
+			msg: msg
+		});
+	}
 });
 
