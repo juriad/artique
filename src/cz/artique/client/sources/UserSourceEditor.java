@@ -124,9 +124,6 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 	Anchor domain;
 
 	@UiField
-	Button setUrlButton;
-
-	@UiField
 	ToggleButton watching;
 
 	@UiField
@@ -158,7 +155,13 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 
 	private Recommendation recommandation;
 
-	public UserSourceEditor() {
+	private Button saveButton;
+
+	private Button setUrlButton;
+
+	public UserSourceEditor(Button setUrlButton, Button saveButton) {
+		this.setUrlButton = setUrlButton;
+		this.saveButton = saveButton;
 		cellList = new ScrollableCellList<Source>(new SourceCell());
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -367,6 +370,11 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 	 */
 	public void setValue(UserSource value) {
 		userSource = value;
+
+		setUrlButton.setVisible(userSource.getKey() == null);
+		setUrlButton.setEnabled(true);
+		saveButton.setVisible(userSource.getKey() != null);
+
 		source = userSource.getSourceObject();
 		SourcesConstants constants = I18n.getSourcesConstants();
 
@@ -418,14 +426,6 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 			domain.setHref(domainValue);
 		}
 
-		Element setUrlRow = grid.getRowFormatter().getElement(4);
-		if (userSource.getKey() == null) {
-			setUrlButton.setEnabled(true);
-			setUrlRow.getStyle().clearDisplay();
-		} else {
-			setUrlButton.setEnabled(false);
-			setUrlRow.getStyle().setDisplay(Display.NONE);
-		}
 		// user source part
 
 		name.setValue(userSource.getName());
@@ -479,7 +479,7 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 			nextCheck.setEnabled(false);
 		}
 
-		for (int i = 5; i < grid.getRowCount(); i++) {
+		for (int i = 4; i < grid.getRowCount(); i++) {
 			Element element = grid.getRowFormatter().getElement(i);
 			if (userSource.getKey() == null) {
 				element.getStyle().setDisplay(Display.NONE);
@@ -489,7 +489,7 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		}
 
 		// DANGER, constant number
-		Element regionRow = grid.getRowFormatter().getElement(9);
+		Element regionRow = grid.getRowFormatter().getElement(8);
 		if (userSource.getSourceType() != null
 			&& userSource.getSourceType().isSupportRegion()) {
 			regionRow.getStyle().clearDisplay();
@@ -554,11 +554,10 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 	 * button.
 	 * Successful source creation causes call of {@link #sourceCreated(Source)}.
 	 * 
-	 * @param event
-	 *            event
+	 * @param saveButton
+	 * @param setUrlButton
 	 */
-	@UiHandler("setUrlButton")
-	protected void setUrlButtonClicked(ClickEvent event) {
+	public void setUrlButtonClicked() {
 		if (source != null) {
 			return;
 		}
@@ -584,9 +583,7 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 		final Element sourceRow = grid.getRowFormatter().getElement(0);
 		sourceRow.getStyle().setDisplay(Display.NONE);
 
-		final Element setUrlRow = grid.getRowFormatter().getElement(4);
 		setUrlButton.setEnabled(false);
-		setUrlRow.getStyle().setDisplay(Display.NONE);
 
 		final Element domainRow = grid.getRowFormatter().getElement(3);
 		domainRow.getStyle().clearDisplay();
@@ -618,8 +615,7 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 			Managers.SOURCES_MANAGER.addSource(newSource,
 				new AsyncCallback<Source>() {
 					public void onFailure(Throwable caught) {
-						setUrlButton.setEnabled(true);
-						setUrlRow.getStyle().clearDisplay();
+						UserSourceEditor.this.setUrlButton.setEnabled(true);
 						sourceRow.getStyle().clearDisplay();
 
 						sourceType.setEnabled(true);
@@ -650,12 +646,16 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 	 */
 	protected void sourceCreated(Source result) {
 		source = result;
-		for (int i = 5; i < grid.getRowCount(); i++) {
+
+		UserSourceEditor.this.saveButton.setVisible(true);
+		UserSourceEditor.this.setUrlButton.setVisible(false);
+
+		for (int i = 4; i < grid.getRowCount(); i++) {
 			Element e = grid.getRowFormatter().getElement(i);
 			e.getStyle().clearDisplay();
 		}
 
-		Element element = grid.getRowFormatter().getElement(9);
+		Element element = grid.getRowFormatter().getElement(8);
 		if (sourceType.getValue().isSupportRegion()) {
 			UserSource us = new UserSource();
 			us.setSourceObject(source);

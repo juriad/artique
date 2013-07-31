@@ -1,5 +1,6 @@
 .hoverPanel {
 	position: relative;
+	height: 1em;
 }
 
 .hoverPanelInner {

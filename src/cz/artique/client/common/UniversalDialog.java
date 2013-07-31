@@ -92,7 +92,12 @@ public class UniversalDialog<T> extends StopDialog {
 	 * @return added button
 	 */
 	public Button addButton(String name, ClickHandler handler) {
-		Button button = new Button(name, handler);
+		Button button;
+		if (handler != null) {
+			button = new Button(name, handler);
+		} else {
+			button = new Button(name);
+		}
 		return addButton(button);
 	}
 

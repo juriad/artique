@@ -45,15 +45,6 @@
 				</g:row>
 				<g:row>
 					<g:cell>
-					</g:cell>
-					<g:customCell>
-						<g:Button ui:field="setUrlButton">
-							<ui:text from="{res.setUrl}" />
-						</g:Button>
-					</g:customCell>
-				</g:row>
-				<g:row>
-					<g:cell>
 						<ui:text from='{res.name}' />
 					</g:cell>
 					<g:customCell>

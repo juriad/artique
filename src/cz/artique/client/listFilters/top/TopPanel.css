@@ -47,6 +47,7 @@
 
 .topPanel .queryFilter {
 	padding: 0.2em;
+	padding-bottom: 0;
 }
 
 .topPanel .queryFilter .emptyFilter {

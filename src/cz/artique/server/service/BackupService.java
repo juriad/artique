@@ -140,27 +140,6 @@ public class BackupService extends Fetcher {
 	}
 
 	/**
-	 * Makes all links (href, src, link) absolute.
-	 * 
-	 * @param doc
-	 *            DOM representation of webpage
-	 */
-	private void absolutizeAllLinks(Document doc) {
-		Elements links = doc.select("a[href]");
-		for (Element e : links) {
-			e.attr("href", e.attr("abs:href"));
-		}
-		Elements media = doc.select("[src]");
-		for (Element e : media) {
-			e.attr("src", e.attr("abs:src"));
-		}
-		Elements imports = doc.select("link[href]");
-		for (Element e : imports) {
-			e.attr("href", e.attr("abs:href"));
-		}
-	}
-
-	/**
 	 * Embeds external stylesheets into head as style elements.
 	 * 
 	 * @param doc

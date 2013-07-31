@@ -7,7 +7,7 @@ When a new user signs to the application for the first time, he shall add his ow
 <img src="17.png">
 
 Click on Sources in left panel and click than on icon New source; a dialog will be shown.
-In the dialog choose type of source and fill in the URL and click Fix URL and continue button, clicking Save will cause an error.
+In the dialog choose type of source and fill in the URL and click Fix URL and continue button.
 That button checks whether that URL is valid.
 
 <img src="13.png">

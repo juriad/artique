@@ -3,6 +3,7 @@ package cz.artique.client.sources;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 
 import cz.artique.client.common.UniversalDialog;
 import cz.artique.client.i18n.I18n;
@@ -25,10 +26,22 @@ public class UserSourceDialog extends UniversalDialog<UserSource> {
 	public UserSourceDialog() {
 		SourcesConstants constants = I18n.getSourcesConstants();
 		setText(constants.userSourceDialog());
-		final UserSourceEditor editor = new UserSourceEditor();
+
+		final Button setUrlButton = addButton(constants.setUrl(), null);
+		final Button saveButton = addButton(constants.saveButton(), null);
+
+		final UserSourceEditor editor =
+			new UserSourceEditor(setUrlButton, saveButton);
 		setWidget(editor);
 
-		addButton(constants.saveButton(), new ClickHandler() {
+		setUrlButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				editor.setUrlButtonClicked();
+			}
+		});
+
+		saveButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				final UserSource value = editor.getValue();
 				if (value.getKey() == null) {

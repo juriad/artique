@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
 import org.jsoup.select.Elements;
 
 import com.google.appengine.api.datastore.Text;
@@ -121,7 +123,17 @@ public class PageChangeCrawler
 	protected PageChangeItem getPageChangeItem(Elements page, String diff) {
 		PageChangeItem change = new PageChangeItem(getSource());
 		change.setComparedTo(getSource().getLastCheck());
-		change.setContent(new Text(page.outerHtml()));
+
+		String html;
+		if (!page.isEmpty()) {
+			Element e = new Element(Tag.valueOf("div"), page.get(0).baseUri());
+			absolutizeAllLinks(e);
+			html = e.html();
+		} else {
+			html = page.outerHtml();
+		}
+
+		change.setContent(new Text(html));
 		change.setContentType(ContentType.HTML);
 		change.setDiff(new Text(diff));
 		change.setDiffType(ContentType.HTML);
