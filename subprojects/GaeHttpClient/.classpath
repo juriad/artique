@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="/home/adam/bakalarka/artique/war/WEB-INF/lib/httpclient-4.2.2.jar" sourcepath="/artique/libsrc/httpcomponents-client-4.2.2"/>
+	<classpathentry kind="lib" path="/home/adam/bakalarka/artique/war/WEB-INF/lib/httpcore-4.2.2.jar"/>
+	<classpathentry kind="lib" path="/home/adam/bakalarka/artique/war/WEB-INF/lib/httpmime-4.2.2.jar"/>
+	<classpathentry kind="lib" path="/home/adam/bakalarka/artique/war/WEB-INF/lib/appengine-api-1.0-sdk-1.7.3.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
