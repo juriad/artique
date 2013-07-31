@@ -4,7 +4,7 @@
 
 	<ui:with field='res' type='cz.artique.client.shortcuts.ShortcutsConstants' />
 
-	<g:Grid>
+	<g:Grid addStyleNames="editorTable">
 		<g:row>
 			<g:cell>
 				<ui:text from="{res.shortcutAction}" />

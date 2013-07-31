@@ -16,7 +16,7 @@
 			</c:ScrollableCellList>
 		</g:cell>
 		<g:cell>
-			<g:Grid>
+			<g:Grid addStyleNames="editorTable">
 				<g:row>
 					<g:cell>
 						<ui:text from="{res.name}" />

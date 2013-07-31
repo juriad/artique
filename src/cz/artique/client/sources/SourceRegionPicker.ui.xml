@@ -10,7 +10,7 @@
 		</g:customHeader>
 		<g:HorizontalPanel>
 			<c:ScrollableCellList ui:field="cellList" />
-			<g:Grid>
+			<g:Grid addStyleNames="editorTable">
 				<g:row>
 					<g:cell>
 						<ui:text from="{res.name}" />

@@ -7,7 +7,7 @@
 
 	<g:HorizontalPanel>
 		<g:cell>
-			<g:Grid ui:field="grid">
+			<g:Grid ui:field="grid" addStyleNames="editorTable">
 				<g:row>
 					<g:cell>
 						<ui:text from='{res.sourceSource}' />

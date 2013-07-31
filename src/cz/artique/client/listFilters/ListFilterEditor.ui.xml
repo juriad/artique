@@ -6,7 +6,7 @@
 	<ui:with field='res'
 		type='cz.artique.client.listFilters.ListFiltersConstants' />
 
-	<g:Grid ui:field="grid">
+	<g:Grid ui:field="grid" addStyleNames="editorTable">
 		<g:row>
 			<g:cell>
 				<ui:text from='{res.name}' />

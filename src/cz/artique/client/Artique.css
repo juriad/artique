@@ -52,3 +52,8 @@
 .gwt-DisclosurePanel .header:hover {
 	color: red;
 }
+
+/* fixing wrapping of labels in editor inside dialogs */
+table.editorTable>tbody>tr>td:first-child {
+	white-space: nowrap;
+}
