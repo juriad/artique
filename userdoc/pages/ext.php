@@ -4,7 +4,7 @@ There exists an extension to common browsers: Internet Explorer, Firefox and Chr
 
 The extension allows the user to add new item to the Manual source by clicking on button in the browser bar when he is outside of the application.
 
-On any page when the button is clicked, pop-up window is shown with filled URL and title. If text has been selected on the page, the selection will be filled in Content.
+On any page when the button is clicked, pop-up window is shown with filled URL and title. If text has been selected on the page, the selection will be filled in the Content.
 The user also may assign labels to the new item, all existing labels will be suggested.
 
 As soon as the pop-up form is submitted, a new item is created in the application.
