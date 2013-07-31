@@ -159,6 +159,15 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 
 	private Button setUrlButton;
 
+	/**
+	 * Creates a new editor.
+	 * Two buttons are injected inside.
+	 * 
+	 * @param setUrlButton
+	 *            button clicked to create {@link Source}
+	 * @param saveButton
+	 *            button clicked to create or update {@link UserSource}
+	 */
 	public UserSourceEditor(Button setUrlButton, Button saveButton) {
 		this.setUrlButton = setUrlButton;
 		this.saveButton = saveButton;
@@ -553,9 +562,6 @@ public class UserSourceEditor extends Composite implements HasValue<UserSource> 
 	 * Create a new {@link Source} when user clicks on the Fix and continue
 	 * button.
 	 * Successful source creation causes call of {@link #sourceCreated(Source)}.
-	 * 
-	 * @param saveButton
-	 * @param setUrlButton
 	 */
 	public void setUrlButtonClicked() {
 		if (source != null) {
